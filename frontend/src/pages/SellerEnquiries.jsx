@@ -36,7 +36,7 @@ function SellerEnquiries() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/enquiries/seller",
+        "https://xevoprop.onrender.com/api/enquiries/seller",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ function SellerEnquiries() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/enquiries/${enquiryId}/status`,
+        `https://xevoprop.onrender.com/api/enquiries/${enquiryId}/status`,
         {
           method: "PUT",
           headers: {

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import "./Projects.css";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  import.meta.env.VITE_API_URL || "https://xevoprop.onrender.com/api";
 
 function Projects() {
   const [projects, setProjects] = useState([]);

@@ -72,7 +72,7 @@ const [visit, setVisit] = useState({
         setError("");
 
         const response = await fetch(
-          `http://localhost:5000/api/properties/${id}`
+          `https://xevoprop.onrender.com/api/properties/${id}`
         );
 
         const data = await response.json();
@@ -212,7 +212,7 @@ const submitEnquiry = async () => {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/enquiries",
+      "https://xevoprop.onrender.com/api/enquiries",
       {
         method: "POST",
 
@@ -292,7 +292,7 @@ const submitVisit = async () => {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/visits",
+      "https://xevoprop.onrender.com/api/visits",
       {
         method: "POST",
 

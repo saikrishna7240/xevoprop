@@ -42,7 +42,7 @@ useEffect(() => {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/visits/seller",
+        "https://xevoprop.onrender.com/api/visits/seller",
         {
           headers: {
             Authorization:
@@ -119,7 +119,7 @@ useEffect(() => {
       localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:5000/api/visits/${visitId}/status`,
+      `https://xevoprop.onrender.com/api/visits/${visitId}/status`,
       {
         method: "PUT",
 
@@ -186,7 +186,7 @@ const rescheduleVisitRequest = async () => {
       localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:5000/api/visits/${rescheduleVisit.id}/reschedule`,
+      `https://xevoprop.onrender.com/api/visits/${rescheduleVisit.id}/reschedule`,
       {
         method: "PUT",
 

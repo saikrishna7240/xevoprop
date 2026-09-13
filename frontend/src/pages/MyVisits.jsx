@@ -37,7 +37,7 @@ function MyVisits() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/visits/buyer",
+        "https://xevoprop.onrender.com/api/visits/buyer",
         {
           headers: {
             Authorization:

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import "./MyProjects.css";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  import.meta.env.VITE_API_URL || "https://xevoprop.onrender.com/api";
 
 function MyProjects() {
   const navigate = useNavigate();

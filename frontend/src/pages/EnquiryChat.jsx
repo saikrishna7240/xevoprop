@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "./EnquiryChat.css";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://xevoprop.onrender.com/api";
 
 function EnquiryChat() {
   const navigate = useNavigate();

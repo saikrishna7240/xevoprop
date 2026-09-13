@@ -30,7 +30,7 @@ function MyEnquiries() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/enquiries/buyer",
+        "https://xevoprop.onrender.com/api/enquiries/buyer",
         {
           headers: {
             Authorization: `Bearer ${token}`,

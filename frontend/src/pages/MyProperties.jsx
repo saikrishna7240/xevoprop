@@ -44,7 +44,7 @@ function MyProperties() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/properties/my-properties",
+        "https://xevoprop.onrender.com/api/properties/my-properties",
         {
           method: "GET",
 
@@ -102,7 +102,7 @@ function MyProperties() {
         localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/properties/${id}`,
+        `https://xevoprop.onrender.com/api/properties/${id}`,
         {
           method: "DELETE",
 

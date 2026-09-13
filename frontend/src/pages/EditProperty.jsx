@@ -77,7 +77,7 @@ function EditProperty() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/properties/${id}`,
+        `https://xevoprop.onrender.com/api/properties/${id}`,
         {
           method: "GET",
           headers: {
@@ -315,7 +315,7 @@ function EditProperty() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/upload/property/${id}/image/${image.id}`,
+        `https://xevoprop.onrender.com/api/upload/property/${id}/image/${image.id}`,
         {
           method: "DELETE",
 
@@ -396,7 +396,7 @@ function EditProperty() {
       setSuccess("");
 
       const response = await fetch(
-        `http://localhost:5000/api/upload/property/${id}/image/${image.id}/primary`,
+        `https://xevoprop.onrender.com/api/upload/property/${id}/image/${image.id}/primary`,
         {
           method: "PUT",
 
@@ -495,7 +495,7 @@ function EditProperty() {
     );
 
     const response = await fetch(
-      `http://localhost:5000/api/upload/property/${id}`,
+      `https://xevoprop.onrender.com/api/upload/property/${id}`,
       {
         method: "POST",
 
@@ -590,7 +590,7 @@ function EditProperty() {
       ========================= */
 
       const response = await fetch(
-        `http://localhost:5000/api/properties/${id}`,
+        `https://xevoprop.onrender.com/api/properties/${id}`,
         {
           method: "PUT",
 

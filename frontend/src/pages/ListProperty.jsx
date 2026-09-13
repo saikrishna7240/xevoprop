@@ -265,7 +265,7 @@ function ListProperty() {
 
       const response =
         await fetch(
-          "http://localhost:5000/api/properties",
+          "https://xevoprop.onrender.com/api/properties",
           {
             method: "POST",
 
@@ -356,7 +356,7 @@ function ListProperty() {
 
         const uploadResponse =
           await fetch(
-            `http://localhost:5000/api/upload/property/${propertyId}`,
+            `https://xevoprop.onrender.com/api/upload/property/${propertyId}`,
             {
               method: "POST",
 

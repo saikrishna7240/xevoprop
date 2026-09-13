@@ -13,7 +13,7 @@ import {
 
 import "./Profile.css";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://xevoprop.onrender.com/api";
 
 function Profile() {
   const navigate = useNavigate();
