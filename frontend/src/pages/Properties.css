@@ -1,0 +1,487 @@
+.properties-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(0, 220, 255, 0.08),
+      transparent 32%
+    ),
+    #07111f;
+  color: #f5f7fa;
+  padding: 45px 20px 80px;
+}
+
+.properties-container {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.properties-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+.properties-eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #00dcff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.properties-header h1 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+
+.properties-header p {
+  margin: 0;
+  color: #8798ad;
+  font-size: 15px;
+}
+
+.property-count {
+  flex-shrink: 0;
+  padding: 10px 15px;
+  border: 1px solid rgba(0, 220, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(0, 220, 255, 0.06);
+  color: #00dcff;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.properties-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* =========================
+   PROPERTY CARD
+========================= */
+
+.property-card {
+  overflow: hidden;
+  border: 1px solid rgba(120, 150, 180, 0.13);
+  border-radius: 17px;
+  background: rgba(10, 25, 43, 0.92);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 220, 255, 0.32);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.property-image {
+  position: relative;
+  height: 235px;
+  overflow: hidden;
+  background: #0b1a2b;
+}
+
+.property-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.property-card:hover .property-image img {
+  transform: scale(1.045);
+}
+
+.property-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.08),
+    transparent 45%,
+    rgba(0, 0, 0, 0.28)
+  );
+}
+
+.property-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64768c;
+  font-size: 13px;
+  background:
+    linear-gradient(
+      135deg,
+      #0d2035,
+      #091725
+    );
+}
+
+/* =========================
+   VERIFIED
+========================= */
+
+.verified-badge {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  left: 14px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(0, 220, 160, 0.92);
+  color: #021711;
+  font-size: 11px;
+  font-weight: 750;
+  backdrop-filter: blur(8px);
+}
+
+/* =========================
+   FAVORITE
+========================= */
+
+.property-favorite {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+
+  width: 40px;
+  height: 40px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+
+  background: rgba(3, 12, 22, 0.65);
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.property-favorite:hover {
+  transform: scale(1.08);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(3, 12, 22, 0.9);
+}
+
+.property-favorite.active {
+  color: #ff5d7a;
+  border-color: rgba(255, 93, 122, 0.3);
+  background: rgba(255, 93, 122, 0.12);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.property-content {
+  padding: 20px;
+}
+
+.property-type {
+  display: inline-block;
+  margin-bottom: 9px;
+  color: #00dcff;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.property-content h2 {
+  margin: 0 0 11px;
+  color: #f4f8fb;
+  font-size: 19px;
+  line-height: 1.3;
+  font-weight: 680;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================
+   LOCATION
+========================= */
+
+.property-location {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 17px;
+  color: #8293a8;
+  font-size: 13px;
+}
+
+.property-location svg {
+  flex-shrink: 0;
+  color: #00dcff;
+}
+
+.property-location span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   META
+========================= */
+
+.property-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  padding: 13px 0;
+  border-top: 1px solid rgba(120, 150, 180, 0.09);
+  border-bottom: 1px solid rgba(120, 150, 180, 0.09);
+}
+
+.property-meta span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #a8b7c7;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.property-meta svg {
+  color: #6d8298;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.property-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+}
+
+.property-footer strong {
+  display: block;
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.property-footer small {
+  display: block;
+  margin-top: 6px;
+  color: #56dfb4;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.view-property-btn {
+  flex-shrink: 0;
+  padding: 10px 13px;
+  border: 1px solid rgba(0, 220, 255, 0.28);
+  border-radius: 9px;
+  background: rgba(0, 220, 255, 0.07);
+  color: #00dcff;
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.view-property-btn:hover {
+  background: #00dcff;
+  color: #03111d;
+  border-color: #00dcff;
+}
+
+/* =========================
+   STATES
+========================= */
+
+.properties-state {
+  min-height: 280px;
+  padding: 40px 25px;
+  border: 1px solid rgba(120, 150, 180, 0.12);
+  border-radius: 16px;
+  background: rgba(10, 25, 43, 0.8);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.properties-state h2 {
+  margin: 0 0 8px;
+  font-size: 21px;
+}
+
+.properties-state p {
+  margin: 0 0 20px;
+  color: #7f90a5;
+  font-size: 14px;
+}
+
+.properties-state.error {
+  color: #ff9191;
+}
+
+/* =========================
+   LIST PROPERTY BUTTON
+========================= */
+
+.list-property-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 11px 17px;
+
+  border-radius: 9px;
+  background: #00dcff;
+  color: #03111d;
+
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.list-property-link:hover {
+  background: #27e2ff;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+  .properties-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .properties-header h1 {
+    font-size: 30px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 680px) {
+  .properties-page {
+    padding: 28px 14px 60px;
+  }
+
+  .properties-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 25px;
+  }
+
+  .properties-header h1 {
+    font-size: 27px;
+  }
+
+  .properties-header p {
+    line-height: 1.5;
+  }
+
+  .property-count {
+    align-self: flex-start;
+  }
+
+  .properties-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .property-image {
+    height: 220px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+  .properties-page {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .properties-header h1 {
+    font-size: 24px;
+  }
+
+  .property-content {
+    padding: 17px;
+  }
+
+  .property-image {
+    height: 205px;
+  }
+
+  .property-meta span {
+    font-size: 10px;
+  }
+
+  .property-footer strong {
+    font-size: 15px;
+  }
+
+  .view-property-btn {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,804 @@
+/* =========================
+   SELLER VISITS PAGE
+========================= */
+
+.seller-visits-page {
+  min-height: 100vh;
+  background: #020617;
+  color: #f8fafc;
+  padding: 40px 20px 70px;
+}
+
+.seller-visits-container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.seller-visits-header {
+  margin-bottom: 35px;
+}
+
+.seller-visits-header > span {
+  display: block;
+  margin-top: 28px;
+  margin-bottom: 8px;
+
+  color: #00d9ff;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.seller-visits-header h1 {
+  margin: 0;
+
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.seller-visits-header p {
+  margin: 10px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.visits-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.15);
+
+  border-radius: 7px;
+
+  background: rgba(15, 23, 42, 0.7);
+
+  color: #94a3b8;
+
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.visits-back:hover {
+  color: #fff;
+
+  border-color:
+    rgba(0, 217, 255, 0.35);
+
+  transform: translateX(-2px);
+}
+
+/* =========================
+   MESSAGES
+========================= */
+
+.visits-message,
+.visits-error,
+.visits-empty {
+  border: 1px solid
+    rgba(148, 163, 184, 0.12);
+
+  border-radius: 14px;
+
+  background: rgba(15, 23, 42, 0.65);
+
+  padding: 50px 25px;
+
+  text-align: center;
+}
+
+.visits-message {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.visits-error {
+  color: #ff6b6b;
+
+  border-color:
+    rgba(255, 107, 107, 0.2);
+
+  background:
+    rgba(255, 107, 107, 0.04);
+
+  font-size: 12px;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.visits-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.visits-empty svg {
+  margin-bottom: 15px;
+  color: #00d9ff;
+}
+
+.visits-empty h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.visits-empty p {
+  max-width: 430px;
+
+  margin: 9px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* =========================
+   VISITS LIST
+========================= */
+
+.visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================
+   VISIT CARD
+========================= */
+
+.visit-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+
+  overflow: hidden;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.12);
+
+  border-radius: 14px;
+
+  background: rgba(15, 23, 42, 0.7);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.visit-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(0, 217, 255, 0.22);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   PROPERTY IMAGE
+========================= */
+
+.visit-property {
+  position: relative;
+
+  min-height: 300px;
+
+  overflow: hidden;
+
+  background: #0f172a;
+}
+
+.visit-property img {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.4s ease;
+}
+
+.visit-card:hover
+.visit-property img {
+  transform: scale(1.04);
+}
+
+.visit-property::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(2, 6, 23, 0.8),
+      transparent 55%
+    );
+
+  pointer-events: none;
+}
+
+.visit-property-info {
+  position: absolute;
+
+  left: 18px;
+  right: 15px;
+  bottom: 17px;
+
+  z-index: 2;
+}
+
+.visit-property-info span {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  color: #00d9ff;
+}
+
+.visit-property-info h2 {
+  margin: 5px 0 0;
+
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.visit-placeholder {
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #475569;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.visit-content {
+  padding: 25px;
+}
+
+/* =========================
+   HEADING
+========================= */
+
+.visit-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid
+    rgba(148, 163, 184, 0.1);
+}
+
+.visit-buyer-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  color: #00d9ff;
+}
+
+.visit-heading span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #64748b;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.visit-heading h3 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+/* =========================
+   SCHEDULE
+========================= */
+
+.visit-schedule {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.visit-schedule > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.1);
+
+  border-radius: 9px;
+
+  background:
+    rgba(2, 6, 23, 0.35);
+}
+
+.visit-schedule svg {
+  flex-shrink: 0;
+  color: #00d9ff;
+}
+
+.visit-schedule span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #475569;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.visit-schedule strong {
+  display: block;
+
+  color: #e2e8f0;
+
+  font-size: 11px;
+}
+
+/* =========================
+   CONTACT
+========================= */
+
+.visit-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  padding: 17px 0;
+}
+
+.visit-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #94a3b8;
+
+  text-decoration: none;
+
+  font-size: 10px;
+
+  transition: 0.2s ease;
+}
+
+.visit-contact a:hover {
+  color: #00d9ff;
+}
+
+.visit-contact svg {
+  color: #00d9ff;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.visit-message {
+  padding: 15px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.1);
+
+  border-radius: 9px;
+
+  background:
+    rgba(2, 6, 23, 0.4);
+}
+
+.visit-message strong {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #64748b;
+
+  font-size: 8px;
+  letter-spacing: 1.3px;
+}
+
+.visit-message p {
+  margin: 0;
+
+  color: #cbd5e1;
+
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.visit-actions button {
+  padding: 8px 14px;
+
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.visit-actions button:first-child {
+  border: 1px solid
+    rgba(34, 197, 94, 0.2);
+
+  background:
+    rgba(34, 197, 94, 0.08);
+
+  color: #86efac;
+}
+
+.visit-actions button:nth-child(2) {
+  border: 1px solid
+    rgba(255, 107, 107, 0.2);
+
+  background:
+    rgba(255, 107, 107, 0.06);
+
+  color: #ff8b8b;
+}
+
+.visit-actions button:nth-child(3) {
+  border: 1px solid
+    rgba(0, 217, 255, 0.18);
+
+  background:
+    rgba(0, 217, 255, 0.06);
+
+  color: #00d9ff;
+}
+
+.visit-actions button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.15);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.visit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 18px;
+  padding-top: 15px;
+
+  border-top: 1px solid
+    rgba(148, 163, 184, 0.1);
+
+  color: #475569;
+
+  font-size: 9px;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.visit-status {
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+}
+
+.visit-status.pending {
+  color: #fbbf24;
+
+  background:
+    rgba(251, 191, 36, 0.08);
+
+  border: 1px solid
+    rgba(251, 191, 36, 0.15);
+}
+
+.visit-status.accepted {
+  color: #86efac;
+
+  background:
+    rgba(34, 197, 94, 0.08);
+
+  border: 1px solid
+    rgba(34, 197, 94, 0.15);
+}
+
+.visit-status.rejected {
+  color: #ff8b8b;
+
+  background:
+    rgba(255, 107, 107, 0.07);
+
+  border: 1px solid
+    rgba(255, 107, 107, 0.15);
+}
+
+.visit-status.completed {
+  color: #00d9ff;
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  border: 1px solid
+    rgba(0, 217, 255, 0.15);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+  .seller-visits-page {
+    padding: 25px 15px 50px;
+  }
+
+  .visit-card {
+    grid-template-columns: 1fr;
+  }
+
+  .visit-property {
+    min-height: 230px;
+  }
+
+  .visit-property img {
+    min-height: 230px;
+    max-height: 280px;
+  }
+
+  .visit-placeholder {
+    min-height: 230px;
+  }
+}
+
+@media (max-width: 520px) {
+  .visit-content {
+    padding: 18px;
+  }
+
+  .visit-schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .visit-contact {
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .visit-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .visit-actions button {
+    width: 100%;
+  }
+
+  .visit-footer {
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* =========================
+   RESCHEDULE MODAL
+========================= */
+
+.reschedule-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(2, 6, 23, 0.82);
+
+  backdrop-filter: blur(8px);
+}
+
+.reschedule-modal {
+  position: relative;
+
+  width: min(420px, 100%);
+
+  padding: 28px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.15);
+
+  border-radius: 14px;
+
+  background: #0f172a;
+
+  box-shadow:
+    0 25px 70px
+    rgba(0, 0, 0, 0.45);
+}
+
+.reschedule-modal > span {
+  color: #00d9ff;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.reschedule-modal h2 {
+  margin: 8px 0 5px;
+
+  font-size: 21px;
+}
+
+.reschedule-modal p {
+  margin: 0 0 22px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+.reschedule-modal label {
+  display: block;
+
+  margin: 14px 0 6px;
+
+  color: #64748b;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.reschedule-modal input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.15);
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #020617;
+
+  color: #f8fafc;
+
+  font-size: 11px;
+}
+
+.reschedule-modal input:focus {
+  border-color:
+    rgba(0, 217, 255, 0.4);
+}
+
+.reschedule-close {
+  position: absolute;
+
+  top: 12px;
+  right: 12px;
+
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 50%;
+
+  background:
+    rgba(148, 163, 184, 0.08);
+
+  color: #94a3b8;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.confirm-reschedule {
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 11px;
+
+  border: 1px solid
+    rgba(0, 217, 255, 0.2);
+
+  border-radius: 7px;
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  color: #00d9ff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.confirm-reschedule:hover {
+  background:
+    rgba(0, 217, 255, 0.14);
+}

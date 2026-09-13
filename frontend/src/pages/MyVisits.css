@@ -1,0 +1,550 @@
+/* =========================
+   MY VISITS PAGE
+========================= */
+
+.my-visits-page {
+  min-height: 100vh;
+  padding: 40px 20px 70px;
+
+  background: #020617;
+  color: #f8fafc;
+}
+
+.my-visits-container {
+  width: min(1050px, 100%);
+  margin: 0 auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.my-visits-header {
+  margin-bottom: 35px;
+}
+
+.my-visits-header > span {
+  display: block;
+
+  margin-top: 28px;
+  margin-bottom: 8px;
+
+  color: #00d9ff;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.my-visits-header h1 {
+  margin: 0;
+
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.my-visits-header p {
+  margin: 10px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.my-visits-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.15);
+
+  border-radius: 7px;
+
+  background:
+    rgba(15, 23, 42, 0.7);
+
+  color: #94a3b8;
+
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.my-visits-back:hover {
+  color: #fff;
+
+  border-color:
+    rgba(0, 217, 255, 0.35);
+
+  transform: translateX(-2px);
+}
+
+/* =========================
+   MESSAGES
+========================= */
+
+.my-visits-message,
+.my-visits-error,
+.my-visits-empty {
+  border: 1px solid
+    rgba(148, 163, 184, 0.12);
+
+  border-radius: 14px;
+
+  background:
+    rgba(15, 23, 42, 0.65);
+
+  padding: 50px 25px;
+
+  text-align: center;
+}
+
+.my-visits-message {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.my-visits-error {
+  color: #ff6b6b;
+
+  border-color:
+    rgba(255, 107, 107, 0.2);
+
+  background:
+    rgba(255, 107, 107, 0.04);
+
+  font-size: 12px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.my-visits-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.my-visits-empty svg {
+  margin-bottom: 15px;
+  color: #00d9ff;
+}
+
+.my-visits-empty h2 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.my-visits-empty p {
+  max-width: 430px;
+
+  margin: 9px 0 20px;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.my-visits-empty button {
+  padding: 10px 16px;
+
+  border: 1px solid
+    rgba(0, 217, 255, 0.2);
+
+  border-radius: 7px;
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  color: #00d9ff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+/* =========================
+   VISITS LIST
+========================= */
+
+.my-visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================
+   VISIT CARD
+========================= */
+
+.my-visit-card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+
+  overflow: hidden;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.12);
+
+  border-radius: 14px;
+
+  background:
+    rgba(15, 23, 42, 0.7);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.my-visit-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(0, 217, 255, 0.22);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   PROPERTY IMAGE
+========================= */
+
+.my-visit-image {
+  min-height: 280px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #0f172a;
+
+  color: #475569;
+}
+
+.my-visit-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.4s ease;
+}
+
+.my-visit-card:hover
+.my-visit-image img {
+  transform: scale(1.04);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.my-visit-content {
+  padding: 25px;
+}
+
+/* =========================
+   TOP
+========================= */
+
+.my-visit-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid
+    rgba(148, 163, 184, 0.1);
+}
+
+.my-visit-top > div:first-child > span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #64748b;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.my-visit-top h2 {
+  margin: 0;
+
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.my-visit-top p {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+.my-visit-top p svg {
+  color: #00d9ff;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.my-visit-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+}
+
+.my-visit-status.pending {
+  color: #fbbf24;
+
+  background:
+    rgba(251, 191, 36, 0.08);
+
+  border: 1px solid
+    rgba(251, 191, 36, 0.15);
+}
+
+.my-visit-status.accepted {
+  color: #86efac;
+
+  background:
+    rgba(34, 197, 94, 0.08);
+
+  border: 1px solid
+    rgba(34, 197, 94, 0.15);
+}
+
+.my-visit-status.rejected {
+  color: #ff8b8b;
+
+  background:
+    rgba(255, 107, 107, 0.07);
+
+  border: 1px solid
+    rgba(255, 107, 107, 0.15);
+}
+
+.my-visit-status.completed {
+  color: #00d9ff;
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  border: 1px solid
+    rgba(0, 217, 255, 0.15);
+}
+
+/* =========================
+   SCHEDULE
+========================= */
+
+.my-visit-schedule {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.my-visit-schedule > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.1);
+
+  border-radius: 9px;
+
+  background:
+    rgba(2, 6, 23, 0.35);
+}
+
+.my-visit-schedule svg {
+  flex-shrink: 0;
+
+  color: #00d9ff;
+}
+
+.my-visit-schedule span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #475569;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.my-visit-schedule strong {
+  display: block;
+
+  color: #e2e8f0;
+
+  font-size: 11px;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.my-visit-message {
+  margin-top: 15px;
+  padding: 14px;
+
+  border: 1px solid
+    rgba(148, 163, 184, 0.1);
+
+  border-radius: 9px;
+
+  background:
+    rgba(2, 6, 23, 0.4);
+}
+
+.my-visit-message span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #64748b;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.my-visit-message p {
+  margin: 0;
+
+  color: #cbd5e1;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* =========================
+   VIEW PROPERTY
+========================= */
+
+.view-property-btn {
+  margin-top: 18px;
+
+  padding: 9px 15px;
+
+  border: 1px solid
+    rgba(0, 217, 255, 0.2);
+
+  border-radius: 7px;
+
+  background:
+    rgba(0, 217, 255, 0.06);
+
+  color: #00d9ff;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.view-property-btn:hover {
+  background:
+    rgba(0, 217, 255, 0.12);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+  .my-visits-page {
+    padding: 25px 15px 50px;
+  }
+
+  .my-visit-card {
+    grid-template-columns: 1fr;
+  }
+
+  .my-visit-image {
+    min-height: 220px;
+  }
+
+  .my-visit-image img {
+    min-height: 220px;
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 520px) {
+  .my-visit-content {
+    padding: 18px;
+  }
+
+  .my-visit-top {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .my-visit-schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .my-visit-status {
+    align-self: flex-start;
+  }
+}

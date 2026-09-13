@@ -1,0 +1,1 @@
+import {useEffect,useState} from "react";import {useNavigate,useParams} from "react-router-dom";import AddProject from "./AddProject";export default function EditProject(){const{id}=useParams();const[loading,setLoading]=useState(true);useEffect(()=>{setLoading(false)},[]);if(loading)return <div>Loading...</div>;return <AddProject editId={id}/>}

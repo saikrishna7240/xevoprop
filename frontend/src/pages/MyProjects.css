@@ -1,0 +1,600 @@
+/* =========================================
+   MY PROJECTS PAGE
+========================================= */
+
+.my-projects-page {
+  min-height: 100vh;
+  padding: 110px 24px 70px;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(0, 229, 255, 0.07),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 25%,
+      rgba(0, 229, 255, 0.05),
+      transparent 30%
+    ),
+    #050b16;
+
+  color: #fff;
+}
+
+.my-projects-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.my-projects-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 38px;
+}
+
+.my-projects-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #00e5ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.my-projects-header h1 {
+  margin: 0;
+
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.1;
+  font-weight: 700;
+
+  color: #fff;
+}
+
+.my-projects-header p {
+  margin: 10px 0 0;
+
+  color: #8492a6;
+  font-size: 15px;
+}
+
+
+/* =========================================
+   ADD PROJECT BUTTON
+========================================= */
+
+.add-project-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  padding: 13px 20px;
+
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  border-radius: 11px;
+
+  background: linear-gradient(
+    135deg,
+    #00e5ff,
+    #00b8d4
+  );
+
+  color: #031018;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px rgba(0, 229, 255, 0.12);
+
+  transition: 0.25s ease;
+}
+
+.add-project-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 35px rgba(0, 229, 255, 0.2);
+
+  filter: brightness(1.08);
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.my-projects-error {
+  margin-bottom: 25px;
+  padding: 15px 18px;
+
+  border: 1px solid rgba(255, 80, 80, 0.3);
+  border-radius: 12px;
+
+  background: rgba(255, 60, 60, 0.08);
+
+  color: #ff9292;
+  font-size: 14px;
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.my-projects-loading {
+  min-height: 65vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #8390a4;
+}
+
+.my-projects-loading p {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.projects-spinner {
+  color: #00e5ff;
+
+  animation: project-spin 0.9s linear infinite;
+}
+
+@keyframes project-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.my-projects-empty {
+  min-height: 400px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 45px 25px;
+
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+
+  background: rgba(11, 20, 35, 0.7);
+
+  text-align: center;
+}
+
+.empty-project-icon {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 20px;
+
+  background: rgba(0, 229, 255, 0.07);
+
+  color: #00e5ff;
+}
+
+.my-projects-empty h2 {
+  margin: 0;
+
+  color: #fff;
+  font-size: 23px;
+}
+
+.my-projects-empty p {
+  max-width: 420px;
+
+  margin: 10px 0 25px;
+
+  color: #7f8da1;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   PROJECT GRID
+========================================= */
+
+.my-projects-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+
+/* =========================================
+   PROJECT CARD
+========================================= */
+
+.my-project-card {
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background: #0a1423;
+
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.my-project-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(0, 229, 255, 0.2);
+
+  box-shadow:
+    0 25px 65px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.my-project-image {
+  position: relative;
+
+  height: 210px;
+
+  overflow: hidden;
+
+  background: #08111f;
+}
+
+.my-project-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.5s ease;
+}
+
+.my-project-card:hover
+.my-project-image img {
+  transform: scale(1.04);
+}
+
+.project-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0b1c30,
+      #07101d
+    );
+
+  color: #29435c;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.project-status {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+
+  background: rgba(4, 10, 20, 0.82);
+
+  color: #dbe5ef;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  backdrop-filter: blur(8px);
+}
+
+
+/* Available */
+
+.project-status.available {
+  border-color: rgba(0, 229, 255, 0.25);
+  color: #00e5ff;
+}
+
+/* Upcoming */
+
+.project-status.upcoming {
+  color: #ffd166;
+}
+
+/* Sold Out */
+
+.project-status.sold.out {
+  color: #ff8c8c;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.my-project-content {
+  padding: 20px;
+}
+
+.my-project-content h2 {
+  overflow: hidden;
+
+  margin: 0 0 10px;
+
+  color: #fff;
+
+  font-size: 20px;
+  font-weight: 650;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   LOCATION
+========================================= */
+
+.project-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 16px;
+
+  color: #8997aa;
+
+  font-size: 13px;
+}
+
+.project-location svg {
+  flex-shrink: 0;
+
+  color: #00e5ff;
+}
+
+
+/* =========================================
+   META
+========================================= */
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  padding: 14px 0;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.project-meta > div {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #9ba8ba;
+
+  font-size: 12px;
+}
+
+.project-meta svg {
+  color: #00e5ff;
+}
+
+
+/* =========================================
+   PRICE
+========================================= */
+
+.project-price {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin-top: 15px;
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.project-price svg {
+  color: #00e5ff;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.my-project-actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr auto;
+
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.my-project-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-height: 38px;
+
+  padding: 8px 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #aeb9c8;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.my-project-actions button:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+
+  background: rgba(0, 229, 255, 0.06);
+
+  color: #00e5ff;
+}
+
+
+/* DELETE */
+
+.my-project-actions
+.delete-project-btn {
+  width: 40px;
+
+  color: #c17d85;
+}
+
+.my-project-actions
+.delete-project-btn:hover {
+  border-color: rgba(255, 80, 80, 0.3);
+
+  background: rgba(255, 60, 60, 0.08);
+
+  color: #ff7777;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 950px) {
+  .my-projects-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .my-projects-page {
+    padding: 95px 16px 45px;
+  }
+
+  .my-projects-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .add-project-btn {
+    width: 100%;
+  }
+
+  .my-projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 450px) {
+  .my-projects-page {
+    padding: 85px 12px 35px;
+  }
+
+  .my-projects-header h1 {
+    font-size: 31px;
+  }
+
+  .my-projects-header p {
+    font-size: 13px;
+  }
+
+  .my-project-image {
+    height: 190px;
+  }
+
+  .my-project-content {
+    padding: 17px;
+  }
+}
