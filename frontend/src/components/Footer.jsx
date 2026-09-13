@@ -14,7 +14,7 @@ function Footer() {
 
             <Link to="/">
               <img
-                src="/xevoprop-logo.jpg"
+                src="/xevoprop-logo.png"
                 alt="Xevoprop"
               />
             </Link>
