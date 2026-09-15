@@ -1,311 +1,464 @@
-/* ================================
-   FOOTER
-================================ */
+/* =========================================================
+   XEVOPROP FOOTER
+   Theme: Earth Brown + Sage + Sand + Charcoal
+   ========================================================= */
 
 .footer {
   width: 100%;
-  background: #07111f;
+
+  background: #1f1e1e;
+
   color: #ffffff;
-  padding: 65px 7% 25px;
-  margin-top: 60px;
-  border-top: 1px solid rgba(0, 212, 255, 0.15);
+
+  padding: 62px 0 18px;
+
+  border-top: 1px solid #34312e;
 }
 
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
 .footer-container {
-  max-width: 1250px;
+  width: min(1180px, 92%);
+
   margin: 0 auto;
 }
 
-
-/* ================================
+/* =========================================================
    TOP SECTION
-================================ */
+   ========================================================= */
 
 .footer-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 70px;
+  display: grid;
+
+  grid-template-columns: 1fr 2fr;
+
+  gap: 90px;
+
+  padding-bottom: 52px;
 }
 
-
-/* ================================
+/* =========================================================
    BRAND
-================================ */
+   ========================================================= */
 
 .footer-brand {
-  width: 30%;
+  max-width: 290px;
 }
 
 .footer-brand > a {
-  display: inline-block;
+  display: inline-flex;
+
+  align-items: center;
 }
 
 .footer-brand img {
-  width: 155px;
-  height: auto;
   display: block;
-  border-radius: 6px;
+
+  width: 138px;
+
+  height: auto;
+
+  object-fit: contain;
+
+  /*
+    Your logo is designed for the light navbar.
+    This makes it readable on the charcoal footer.
+  */
+  filter:
+    brightness(0)
+    invert(1);
+
+  opacity: 0.96;
 }
+
+/* =========================================================
+   BRAND DESCRIPTION
+   ========================================================= */
 
 .footer-brand p {
-  margin: 20px 0;
-  max-width: 310px;
-  color: #9aa9bb;
-  font-size: 14px;
-  line-height: 1.7;
+  max-width: 270px;
+
+  margin-top: 18px;
+
+  color: #aaa39a;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 10px;
+
+  font-weight: 400;
+
+  line-height: 1.75;
 }
 
-
-/* ================================
+/* =========================================================
    SOCIAL ICONS
-================================ */
+   ========================================================= */
 
 .footer-socials {
   display: flex;
+
   align-items: center;
-  gap: 12px;
-  margin-top: 20px;
+
+  gap: 8px;
+
+  margin-top: 23px;
 }
 
 .footer-socials a {
-  width: 38px;
-  height: 38px;
+  width: 31px;
+  height: 31px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid #47433f;
+
   border-radius: 50%;
 
-  color: #c8d5e3;
-  text-decoration: none;
+  background: transparent;
 
-  font-size: 14px;
+  color: #c7c0b7;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 10px;
+
   font-weight: 600;
 
-  transition: all 0.3s ease;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-socials a:hover {
-  background: #00d4ff;
-  color: #07111f;
-  border-color: #00d4ff;
-  transform: translateY(-3px);
-}
+  background: #6f4e37;
 
-
-/* ================================
-   FOOTER LINKS
-================================ */
-
-.footer-links {
-  flex: 1;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 45px;
-}
-
-.footer-links h4 {
-  margin: 0 0 20px;
+  border-color: #6f4e37;
 
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
+
+  transform: translateY(-2px);
 }
+
+/* =========================================================
+   FOOTER LINK AREA
+   ========================================================= */
+
+.footer-links {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(120px, 1fr));
+
+  gap: 50px;
+}
+
+/* =========================================================
+   COLUMN TITLE
+   ========================================================= */
+
+.footer-links h4 {
+  margin-bottom: 17px;
+
+  color: #f9f7f4;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.1px;
+
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   FOOTER LINKS
+   ========================================================= */
 
 .footer-links a {
   display: block;
 
   width: fit-content;
 
-  margin-bottom: 13px;
+  margin-top: 10px;
 
-  color: #8fa0b3;
+  color: #9f9991;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 9px;
+
+  font-weight: 400;
+
+  line-height: 1.4;
+
   text-decoration: none;
 
-  font-size: 14px;
-
-  transition: all 0.3s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: #00d4ff;
-  transform: translateX(4px);
+  color: #eadcc8;
+
+  transform: translateX(2px);
 }
 
-
-/* ================================
+/* =========================================================
    DIVIDER
-================================ */
+   ========================================================= */
 
 .footer-divider {
   width: 100%;
+
   height: 1px;
 
-  margin: 50px 0 22px;
-
-  background: rgba(255, 255, 255, 0.08);
+  background: #3b3936;
 }
 
-
-/* ================================
-   BOTTOM
-================================ */
+/* =========================================================
+   FOOTER BOTTOM
+   ========================================================= */
 
 .footer-bottom {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 20px;
 
-  color: #68798d;
-  font-size: 13px;
+  padding-top: 17px;
 }
 
-.footer-tagline {
-  color: #8495a8;
-  letter-spacing: 0.5px;
+/* =========================================================
+   COPYRIGHT
+   ========================================================= */
+
+.footer-bottom > span {
+  color: #817b74;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 8px;
+
+  font-weight: 400;
 }
 
+/* =========================================================
+   CENTER TAGLINE
+   ========================================================= */
 
-/* ================================
-   BOTTOM RIGHT
-================================ */
+.footer-bottom .footer-tagline {
+  color: #b3aaa0;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 10px;
+
+  font-weight: 500;
+
+  font-style: italic;
+}
+
+/* =========================================================
+   BOTTOM LINKS
+   ========================================================= */
 
 .footer-bottom-right {
   display: flex;
+
   align-items: center;
-  gap: 20px;
+
+  gap: 18px;
 }
 
-.footer-bottom-right > a {
-  color: #718197;
+.footer-bottom-right a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  color: #817b74;
+
+  font-family: "Inter", sans-serif;
+
+  font-size: 8px;
+
+  font-weight: 500;
+
   text-decoration: none;
-  font-size: 13px;
 
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
-.footer-bottom-right > a:hover {
-  color: #00d4ff;
+.footer-bottom-right a:hover {
+  color: #eadcc8;
 }
 
-
-/* ================================
+/* =========================================================
    BACK TO TOP
-================================ */
+   ========================================================= */
 
 .back-top {
-  display: flex !important;
+  display: inline-flex !important;
+
   align-items: center;
+
   gap: 5px;
 
-  color: #00d4ff !important;
+  color: #b7afa6 !important;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.back-top svg {
+  width: 12px;
+
+  height: 12px;
+
+  transition:
+    transform 0.2s ease;
 }
 
 .back-top:hover {
-  color: #ffffff !important;
+  color: #eadcc8 !important;
 }
 
+.back-top:hover svg {
+  transform: translate(2px, -2px);
+}
 
-/* ================================
+/* =========================================================
    TABLET
-================================ */
+   ========================================================= */
 
 @media (max-width: 900px) {
-
   .footer {
-    padding: 55px 5% 25px;
+    padding-top: 52px;
   }
 
   .footer-top {
-    gap: 40px;
-  }
+    grid-template-columns: 1fr 1.7fr;
 
-  .footer-brand {
-    width: 35%;
+    gap: 50px;
   }
 
   .footer-links {
     gap: 25px;
   }
-
 }
 
-
-/* ================================
+/* =========================================================
    MOBILE
-================================ */
+   ========================================================= */
 
-@media (max-width: 650px) {
-
-  .footer {
-    padding: 45px 6% 20px;
-    margin-top: 40px;
-  }
-
+@media (max-width: 700px) {
   .footer-top {
-    flex-direction: column;
-    gap: 40px;
+    grid-template-columns: 1fr;
+
+    gap: 42px;
+
+    padding-bottom: 38px;
   }
 
   .footer-brand {
-    width: 100%;
+    max-width: 360px;
   }
 
   .footer-brand p {
-    max-width: 100%;
+    max-width: 330px;
   }
 
   .footer-links {
-    width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+    grid-template-columns:
+      repeat(3, 1fr);
+
+    gap: 20px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 45px 0 17px;
   }
 
-  .footer-divider {
-    margin: 35px 0 20px;
+  .footer-container {
+    width: 90%;
+  }
+
+  .footer-brand img {
+    width: 125px;
+  }
+
+  .footer-links {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    row-gap: 32px;
+  }
+
+  .footer-links h4 {
+    margin-bottom: 13px;
+  }
+
+  .footer-links a {
+    font-size: 8px;
+
+    margin-top: 8px;
   }
 
   .footer-bottom {
     flex-direction: column;
-    text-align: center;
-    gap: 15px;
+
+    align-items: flex-start;
+
+    gap: 13px;
+  }
+
+  .footer-bottom .footer-tagline {
+    display: none;
   }
 
   .footer-bottom-right {
-    justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
-  }
 
+    gap: 12px;
+  }
 }
 
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
 
-/* ================================
-   SMALL MOBILE
-================================ */
-
-@media (max-width: 420px) {
-
+@media (max-width: 350px) {
   .footer-links {
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
   }
 
-  .footer-links h4 {
-    font-size: 14px;
+  .footer-bottom-right {
+    gap: 9px;
   }
-
-  .footer-links a {
-    font-size: 13px;
-  }
-
-  .footer-brand img {
-    width: 135px;
-  }
-
 }

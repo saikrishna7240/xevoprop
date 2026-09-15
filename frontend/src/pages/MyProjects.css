@@ -1,566 +1,412 @@
-/* =========================================
-   MY PROJECTS PAGE
-========================================= */
+/* MyProjects.css */
 
 .my-projects-page {
   min-height: 100vh;
-  padding: 110px 24px 70px;
-
-  background:
-    radial-gradient(
-      circle at 10% 10%,
-      rgba(0, 229, 255, 0.07),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 90% 25%,
-      rgba(0, 229, 255, 0.05),
-      transparent 30%
-    ),
-    #050b16;
-
-  color: #fff;
+  background: var(--off-white);
+  padding: 72px 0 100px;
 }
 
 .my-projects-container {
-  width: 100%;
-  max-width: 1180px;
+  width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
 }
 
-
-/* =========================================
-   HEADER
-========================================= */
+/* HEADER */
 
 .my-projects-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 30px;
-
-  margin-bottom: 38px;
+  gap: 32px;
+  margin-bottom: 48px;
+  padding-bottom: 34px;
+  border-bottom: 1px solid rgba(111, 78, 55, 0.18);
 }
 
 .my-projects-label {
-  display: block;
-
-  margin-bottom: 8px;
-
-  color: #00e5ff;
-  font-size: 11px;
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--earth-brown);
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.18em;
 }
 
 .my-projects-header h1 {
-  margin: 0;
-
-  font-size: clamp(32px, 4vw, 46px);
-  line-height: 1.1;
-  font-weight: 700;
-
-  color: #fff;
+  margin: 0 0 10px;
+  color: var(--charcoal);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 .my-projects-header p {
-  margin: 10px 0 0;
-
-  color: #8492a6;
-  font-size: 15px;
+  max-width: 520px;
+  margin: 0;
+  color: #746e67;
+  font-size: 0.98rem;
+  line-height: 1.7;
 }
 
-
-/* =========================================
-   ADD PROJECT BUTTON
-========================================= */
+/* CREATE BUTTON */
 
 .add-project-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-
+  gap: 9px;
   flex-shrink: 0;
-
-  padding: 13px 20px;
-
-  border: 1px solid rgba(0, 229, 255, 0.45);
-  border-radius: 11px;
-
-  background: linear-gradient(
-    135deg,
-    #00e5ff,
-    #00b8d4
-  );
-
-  color: #031018;
-
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--earth-brown);
+  border-radius: 2px;
+  background: var(--earth-brown);
+  color: #fff;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.86rem;
   font-weight: 700;
-
   cursor: pointer;
-
-  box-shadow:
-    0 10px 30px rgba(0, 229, 255, 0.12);
-
-  transition: 0.25s ease;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .add-project-btn:hover {
+  background: #5b3f2d;
+  box-shadow: 0 10px 24px rgba(111, 78, 55, 0.18);
   transform: translateY(-2px);
-
-  box-shadow:
-    0 15px 35px rgba(0, 229, 255, 0.2);
-
-  filter: brightness(1.08);
 }
 
-
-/* =========================================
-   ERROR
-========================================= */
+/* ERROR */
 
 .my-projects-error {
-  margin-bottom: 25px;
+  margin-bottom: 32px;
   padding: 15px 18px;
-
-  border: 1px solid rgba(255, 80, 80, 0.3);
-  border-radius: 12px;
-
-  background: rgba(255, 60, 60, 0.08);
-
-  color: #ff9292;
-  font-size: 14px;
+  border: 1px solid rgba(155, 72, 57, 0.2);
+  background: #fbefec;
+  color: #8c4134;
+  font-size: 0.88rem;
 }
 
-
-/* =========================================
-   LOADING
-========================================= */
-
-.my-projects-loading {
-  min-height: 65vh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  color: #8390a4;
-}
-
-.my-projects-loading p {
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.projects-spinner {
-  color: #00e5ff;
-
-  animation: project-spin 0.9s linear infinite;
-}
-
-@keyframes project-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* =========================================
-   EMPTY STATE
-========================================= */
-
-.my-projects-empty {
-  min-height: 400px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 45px 25px;
-
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 22px;
-
-  background: rgba(11, 20, 35, 0.7);
-
-  text-align: center;
-}
-
-.empty-project-icon {
-  width: 70px;
-  height: 70px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 20px;
-
-  border: 1px solid rgba(0, 229, 255, 0.2);
-  border-radius: 20px;
-
-  background: rgba(0, 229, 255, 0.07);
-
-  color: #00e5ff;
-}
-
-.my-projects-empty h2 {
-  margin: 0;
-
-  color: #fff;
-  font-size: 23px;
-}
-
-.my-projects-empty p {
-  max-width: 420px;
-
-  margin: 10px 0 25px;
-
-  color: #7f8da1;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-
-/* =========================================
-   PROJECT GRID
-========================================= */
+/* GRID */
 
 .my-projects-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 22px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
 }
 
-
-/* =========================================
-   PROJECT CARD
-========================================= */
+/* PROJECT CARD */
 
 .my-project-card {
   overflow: hidden;
-
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 18px;
-
-  background: #0a1423;
-
-  box-shadow:
-    0 20px 55px rgba(0, 0, 0, 0.2);
-
+  border: 1px solid rgba(111, 78, 55, 0.13);
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(43, 35, 29, 0.05);
   transition:
     transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .my-project-card:hover {
+  border-color: rgba(111, 78, 55, 0.25);
+  box-shadow: 0 18px 42px rgba(43, 35, 29, 0.1);
   transform: translateY(-5px);
-
-  border-color: rgba(0, 229, 255, 0.2);
-
-  box-shadow:
-    0 25px 65px rgba(0, 0, 0, 0.3);
 }
 
-
-/* =========================================
-   IMAGE
-========================================= */
+/* IMAGE */
 
 .my-project-image {
   position: relative;
-
-  height: 210px;
-
+  height: 235px;
   overflow: hidden;
-
-  background: #08111f;
+  background: var(--sand);
 }
 
 .my-project-image img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: cover;
-
   transition: transform 0.5s ease;
 }
 
-.my-project-card:hover
-.my-project-image img {
-  transform: scale(1.04);
+.my-project-card:hover .my-project-image img {
+  transform: scale(1.045);
 }
 
 .project-image-placeholder {
   width: 100%;
   height: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background:
     linear-gradient(
       135deg,
-      #0b1c30,
-      #07101d
+      #e8ddcd 0%,
+      #d9c9b4 100%
     );
-
-  color: #29435c;
+  color: var(--earth-brown);
 }
 
-
-/* =========================================
-   STATUS
-========================================= */
+/* STATUS */
 
 .project-status {
   position: absolute;
-  top: 14px;
-  right: 14px;
-
-  padding: 6px 10px;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-
-  background: rgba(4, 10, 20, 0.82);
-
-  color: #dbe5ef;
-
-  font-size: 11px;
-  font-weight: 600;
-
+  top: 16px;
+  right: 16px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(31, 30, 30, 0.82);
+  color: #fff;
   backdrop-filter: blur(8px);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-
-/* Available */
-
-.project-status.available {
-  border-color: rgba(0, 229, 255, 0.25);
-  color: #00e5ff;
+.project-status.available,
+.project-status.active,
+.project-status.published {
+  background: rgba(46, 74, 56, 0.92);
 }
 
-/* Upcoming */
+.project-status.sold,
+.project-status.closed {
+  background: rgba(92, 76, 65, 0.9);
+}
 
+.project-status.pending,
 .project-status.upcoming {
-  color: #ffd166;
+  background: rgba(111, 78, 55, 0.92);
 }
 
-/* Sold Out */
-
-.project-status.sold.out {
-  color: #ff8c8c;
-}
-
-
-/* =========================================
-   CONTENT
-========================================= */
+/* CONTENT */
 
 .my-project-content {
-  padding: 20px;
+  padding: 24px;
 }
 
 .my-project-content h2 {
-  overflow: hidden;
-
   margin: 0 0 10px;
-
-  color: #fff;
-
-  font-size: 20px;
-  font-weight: 650;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  color: var(--charcoal);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
-
-/* =========================================
-   LOCATION
-========================================= */
+/* LOCATION */
 
 .project-location {
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  margin-bottom: 16px;
-
-  color: #8997aa;
-
-  font-size: 13px;
+  gap: 7px;
+  margin-bottom: 18px;
+  color: #77716b;
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 .project-location svg {
   flex-shrink: 0;
-
-  color: #00e5ff;
+  color: var(--earth-brown);
 }
 
-
-/* =========================================
-   META
-========================================= */
+/* META */
 
 .project-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-
-  padding: 14px 0;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 8px;
+  padding: 15px 0;
+  border-top: 1px solid rgba(111, 78, 55, 0.1);
+  border-bottom: 1px solid rgba(111, 78, 55, 0.1);
 }
 
 .project-meta > div {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-
-  color: #9ba8ba;
-
-  font-size: 12px;
+  padding: 7px 9px;
+  background: #f5f1eb;
+  color: #5e5953;
+  font-size: 0.73rem;
+  font-weight: 600;
 }
 
 .project-meta svg {
-  color: #00e5ff;
+  color: var(--earth-brown);
 }
 
-
-/* =========================================
-   PRICE
-========================================= */
+/* PRICE */
 
 .project-price {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  margin-top: 15px;
-
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 600;
+  margin-top: 18px;
+  color: var(--earth-brown);
 }
 
 .project-price svg {
-  color: #00e5ff;
+  flex-shrink: 0;
 }
 
+.project-price span {
+  font-size: 1.05rem;
+  font-weight: 750;
+}
 
-/* =========================================
-   ACTIONS
-========================================= */
+/* ACTIONS */
 
 .my-project-actions {
   display: grid;
-
-  grid-template-columns:
-    1fr 1fr auto;
-
+  grid-template-columns: 1fr 1fr auto;
   gap: 8px;
-
-  margin-top: 18px;
+  margin-top: 22px;
 }
 
 .my-project-actions button {
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-
-  min-height: 38px;
-
-  padding: 8px 10px;
-
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 9px;
-
-  background: rgba(255, 255, 255, 0.025);
-
-  color: #aeb9c8;
-
+  gap: 7px;
+  border: 1px solid rgba(111, 78, 55, 0.2);
+  background: transparent;
+  color: var(--charcoal);
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-
+  font-size: 0.76rem;
+  font-weight: 700;
   cursor: pointer;
-
-  transition: 0.25s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .my-project-actions button:hover {
-  border-color: rgba(0, 229, 255, 0.3);
-
-  background: rgba(0, 229, 255, 0.06);
-
-  color: #00e5ff;
+  border-color: var(--earth-brown);
+  background: #f5eee5;
+  color: var(--earth-brown);
 }
 
-
-/* DELETE */
-
-.my-project-actions
-.delete-project-btn {
+.my-project-actions .delete-project-btn {
   width: 40px;
-
-  color: #c17d85;
+  padding: 0;
+  color: #98564b;
 }
 
-.my-project-actions
-.delete-project-btn:hover {
-  border-color: rgba(255, 80, 80, 0.3);
-
-  background: rgba(255, 60, 60, 0.08);
-
-  color: #ff7777;
+.my-project-actions .delete-project-btn:hover {
+  border-color: #98564b;
+  background: #f9ece9;
+  color: #8a4036;
 }
 
+/* EMPTY STATE */
 
-/* =========================================
-   TABLET
-========================================= */
+.my-projects-empty {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px 25px;
+  border: 1px dashed rgba(111, 78, 55, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
 
-@media (max-width: 950px) {
-  .my-projects-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+.empty-project-icon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--earth-brown);
+}
+
+.my-projects-empty h2 {
+  margin: 0 0 9px;
+  color: var(--charcoal);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.my-projects-empty p {
+  max-width: 420px;
+  margin: 0 0 25px;
+  color: #77716b;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* LOADING */
+
+.my-projects-loading {
+  min-height: 65vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  color: #716a63;
+}
+
+.my-projects-loading p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.projects-spinner {
+  color: var(--earth-brown);
+  animation: projects-spin 1s linear infinite;
+}
+
+@keyframes projects-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
+/* RESPONSIVE */
 
-/* =========================================
-   MOBILE
-========================================= */
+@media (max-width: 1000px) {
+  .my-projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
-@media (max-width: 700px) {
+@media (max-width: 720px) {
   .my-projects-page {
-    padding: 95px 16px 45px;
+    padding: 48px 0 70px;
+  }
+
+  .my-projects-container {
+    width: min(100% - 28px, 620px);
   }
 
   .my-projects-header {
     align-items: flex-start;
     flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding-bottom: 28px;
+  }
+
+  .my-projects-header h1 {
+    font-size: 2.6rem;
   }
 
   .add-project-btn {
@@ -569,32 +415,28 @@
 
   .my-projects-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
-@media (max-width: 450px) {
-  .my-projects-page {
-    padding: 85px 12px 35px;
-  }
-
-  .my-projects-header h1 {
-    font-size: 31px;
-  }
-
-  .my-projects-header p {
-    font-size: 13px;
+    gap: 18px;
   }
 
   .my-project-image {
-    height: 190px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 430px) {
+  .my-projects-page {
+    padding-top: 36px;
+  }
+
+  .my-projects-header h1 {
+    font-size: 2.25rem;
   }
 
   .my-project-content {
-    padding: 17px;
+    padding: 20px;
+  }
+
+  .my-project-actions {
+    grid-template-columns: 1fr 1fr auto;
   }
 }

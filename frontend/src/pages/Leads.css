@@ -1,85 +1,79 @@
+/* =========================================================
+   LEADS — XEVOPROP PREMIUM EDITORIAL THEME
+   ========================================================= */
+
 .leads-page {
   min-height: 100vh;
-
-  padding: 130px 0 90px;
-
-  background:
-    radial-gradient(
-      circle at 70% 0%,
-      rgba(0, 217, 255, 0.04),
-      transparent 35%
-    ),
-    #020617;
+  padding: 120px 0 90px;
+  background: var(--off-white);
 }
 
 .leads-container {
-  width: min(1000px, 92%);
-
-  margin: auto;
+  width: min(1100px, calc(100% - 48px));
+  margin: 0 auto;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+   ========================= */
 
 .leads-header {
   display: flex;
-
   align-items: flex-end;
-
   justify-content: space-between;
-
   gap: 30px;
+
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+
+  border-bottom: 1px solid rgba(111, 78, 55, 0.15);
 }
 
 .leads-eyebrow {
-  color: #00d9ff;
+  display: block;
+  margin-bottom: 11px;
 
-  font-size: 9px;
+  color: var(--earth-brown);
 
+  font-size: 10px;
   font-weight: 800;
-
-  letter-spacing: 1.5px;
+  letter-spacing: 0.18em;
 }
 
 .leads-header h1 {
-  margin-top: 9px;
+  margin: 0;
 
-  color: #f8fafc;
+  color: var(--charcoal);
 
-  font-size: clamp(
-    36px,
-    5vw,
-    54px
-  );
-
-  letter-spacing: -2.5px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(40px, 5vw, 54px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
 .leads-header h1 span {
-  color: #00d9ff;
+  color: var(--earth-brown);
 }
 
 .leads-header p {
-  margin-top: 8px;
+  margin: 12px 0 0;
 
-  color: #64748b;
-
-  font-size: 11px;
+  color: #7d756d;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-/* COUNT */
+/* =========================
+   COUNT
+   ========================= */
 
 .leads-count {
-  min-width: 100px;
+  min-width: 125px;
+  padding: 17px 20px;
 
-  padding: 15px;
-
-  border:
-    1px solid
-    rgba(0, 217, 255, 0.1);
-
-  border-radius: 10px;
-
-  background: #061329;
+  border: 1px solid rgba(111, 78, 55, 0.13);
+  background: #fffdf9;
 
   text-align: center;
 }
@@ -87,438 +81,383 @@
 .leads-count strong {
   display: block;
 
-  color: #00d9ff;
+  color: var(--earth-brown);
 
-  font-size: 25px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .leads-count span {
   display: block;
+  margin-top: 6px;
 
-  margin-top: 4px;
+  color: #817970;
 
-  color: #64748b;
-
-  font-size: 8px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* LIST */
+/* =========================
+   LEADS LIST
+   ========================= */
 
 .leads-list {
   display: flex;
-
   flex-direction: column;
-
-  gap: 12px;
-
-  margin-top: 40px;
+  gap: 14px;
 }
 
-/* CARD */
-
 .lead-card {
-  padding: 20px;
+  padding: 22px 24px;
 
-  border:
-    1px solid
-    rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(111, 78, 55, 0.13);
+  background: #fffdf9;
 
-  border-radius: 13px;
+  box-shadow: 0 8px 25px rgba(55, 45, 35, 0.035);
 
-  background: #061329;
-
-  transition: 0.2s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .lead-card:hover {
-  border-color:
-    rgba(0, 217, 255, 0.18);
+  transform: translateY(-2px);
+
+  border-color: rgba(111, 78, 55, 0.24);
+
+  box-shadow: 0 15px 35px rgba(55, 45, 35, 0.075);
 }
 
-/* TOP */
+/* =========================
+   LEAD TOP
+   ========================= */
 
 .lead-top {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
+  gap: 20px;
 }
 
 .lead-buyer {
   display: flex;
-
   align-items: center;
-
-  gap: 11px;
+  gap: 12px;
+  min-width: 0;
 }
 
 .lead-avatar {
-  width: 38px;
-
-  height: 38px;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  border-radius: 9px;
-
-  background:
-    rgba(0, 217, 255, 0.07);
-
-  color: #00d9ff;
+  background: var(--sand);
+  color: var(--earth-brown);
 }
 
-.lead-buyer h2 {
-  color: #e2e8f0;
+.lead-buyer strong {
+  display: block;
 
-  font-size: 13px;
+  color: var(--charcoal);
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .lead-buyer span {
   display: block;
+  max-width: 360px;
 
   margin-top: 3px;
 
-  color: #475569;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-  font-size: 8px;
+  color: #8a8178;
+  font-size: 10px;
 }
 
-/* STATUS */
+/* =========================
+   STATUS
+   ========================= */
 
 .lead-status {
-  display: flex;
+  flex-shrink: 0;
 
-  align-items: center;
+  padding: 6px 10px;
 
-  gap: 5px;
+  border-radius: 999px;
 
-  padding: 5px 8px;
-
-  border-radius: 5px;
-
-  background:
-    rgba(0, 217, 255, 0.06);
-
-  color: #00d9ff;
+  background: rgba(111, 78, 55, 0.08);
+  color: var(--earth-brown);
 
   font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
 
-  font-weight: 700;
+.lead-status.new {
+  background: rgba(111, 78, 55, 0.08);
+  color: var(--earth-brown);
 }
 
 .lead-status.contacted {
-  color: #64748b;
-
-  background:
-    rgba(148, 163, 184, 0.06);
+  background: rgba(46, 74, 56, 0.08);
+  color: var(--sage-green);
 }
 
-.status-dot {
-  width: 5px;
-
-  height: 5px;
-
-  border-radius: 50%;
-
-  background: #00d9ff;
+.lead-status.resolved {
+  background: rgba(46, 74, 56, 0.14);
+  color: var(--sage-green);
 }
 
-/* PROPERTY */
+/* =========================
+   PROPERTY / MESSAGE
+   ========================= */
 
-.lead-property {
-  margin-top: 18px;
+.lead-card > p {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
 
-  padding:
-    12px 13px;
+  margin: 15px 0 0;
 
-  border-radius: 8px;
-
-  background:
-    rgba(2, 6, 23, 0.35);
-}
-
-.lead-property strong {
-  display: block;
-
-  color: #cbd5e1;
+  color: #706860;
 
   font-size: 11px;
+  line-height: 1.65;
 }
 
-.lead-property span {
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-
-  margin-top: 5px;
-
-  color: #64748b;
-
-  font-size: 8px;
+.lead-card > p svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--earth-brown);
 }
 
-.lead-property svg {
-  color: #00d9ff;
+.lead-card > p + p {
+  display: block;
+
+  margin-top: 8px;
+  padding-left: 20px;
+
+  color: #817970;
 }
 
-/* CONTACT */
+/* =========================
+   CONTACT
+   ========================= */
 
 .lead-contact {
   display: flex;
-
+  align-items: center;
   flex-wrap: wrap;
+  gap: 8px;
 
-  gap: 20px;
+  margin-top: 17px;
+  padding-top: 15px;
 
-  margin-top: 14px;
+  border-top: 1px solid rgba(111, 78, 55, 0.1);
 }
 
 .lead-contact a {
-  display: flex;
-
+  display: inline-flex;
   align-items: center;
-
   gap: 6px;
 
-  color: #64748b;
+  min-height: 32px;
+  padding: 0 11px;
+
+  border: 1px solid rgba(111, 78, 55, 0.16);
+
+  color: var(--earth-brown);
 
   font-size: 9px;
-
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-decoration: none;
+  text-transform: uppercase;
+
+  transition: all 0.2s ease;
 }
 
 .lead-contact a:hover {
-  color: #00d9ff;
+  border-color: var(--earth-brown);
+  background: var(--sand);
 }
 
-.lead-contact svg {
-  color: #00d9ff;
+.lead-contact a svg {
+  stroke-width: 1.8;
 }
 
-/* MESSAGE */
-
-.lead-message {
-  display: flex;
-
-  gap: 8px;
-
-  margin-top: 14px;
-
-  padding-top: 14px;
-
-  border-top:
-    1px solid
-    rgba(148, 163, 184, 0.07);
-
-  color: #475569;
-}
-
-.lead-message svg {
-  flex-shrink: 0;
-
-  margin-top: 2px;
-
-  color: #00d9ff;
-}
-
-.lead-message p {
-  color: #64748b;
-
-  font-size: 9px;
-
-  line-height: 1.6;
-}
-
-/* FOOTER */
-
-.lead-footer {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  margin-top: 16px;
-
-  padding-top: 14px;
-
-  border-top:
-    1px solid
-    rgba(148, 163, 184, 0.07);
-}
-
-.lead-date {
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-
-  color: #475569;
-
-  font-size: 8px;
-}
+/* =========================
+   STATUS ACTIONS
+   ========================= */
 
 .lead-actions {
   display: flex;
-
   align-items: center;
-
+  flex-wrap: wrap;
   gap: 7px;
+
+  margin-top: 12px;
 }
 
-.contacted-btn {
-  display: flex;
-
+.lead-actions button {
+  display: inline-flex;
   align-items: center;
-
   gap: 5px;
 
-  padding: 7px 10px;
+  min-height: 30px;
+  padding: 0 10px;
 
-  border:
-    1px solid
-    rgba(0, 217, 255, 0.12);
-
-  border-radius: 6px;
-
-  background:
-    rgba(0, 217, 255, 0.04);
-
-  color: #00d9ff;
-
-  font-size: 8px;
-
-  cursor: pointer;
-}
-
-.delete-lead-btn {
-  width: 29px;
-
-  height: 29px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border:
-    1px solid
-    rgba(148, 163, 184, 0.1);
-
-  border-radius: 6px;
-
+  border: 1px solid rgba(111, 78, 55, 0.13);
   background: transparent;
+  color: #817970;
 
-  color: #475569;
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 
   cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
-.delete-lead-btn:hover {
-  color: #00d9ff;
+.lead-actions button:hover {
+  border-color: var(--earth-brown);
+  color: var(--earth-brown);
+  background: #f8f1e8;
 }
 
-/* EMPTY */
+.lead-actions button:nth-child(2):hover,
+.lead-actions button:nth-child(3):hover {
+  border-color: var(--sage-green);
+  color: var(--sage-green);
+  background: rgba(46, 74, 56, 0.06);
+}
+
+/* =========================
+   EMPTY / LOADING
+   ========================= */
 
 .leads-empty {
-  min-height: 350px;
-
-  margin-top: 40px;
+  min-height: 300px;
 
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   justify-content: center;
 
-  border:
-    1px dashed
-    rgba(148, 163, 184, 0.1);
+  padding: 40px;
 
-  border-radius: 14px;
+  border: 1px dashed rgba(111, 78, 55, 0.2);
+  background: #fffdf9;
+
+  color: #817970;
 
   text-align: center;
-
-  color: #475569;
 }
 
 .leads-empty svg {
-  color: #00d9ff;
+  width: 54px;
+  height: 54px;
+
+  margin-bottom: 16px;
+  padding: 13px;
+
+  box-sizing: border-box;
+
+  background: var(--sand);
+  color: var(--earth-brown);
 }
 
 .leads-empty h2 {
-  margin-top: 14px;
+  margin: 0;
 
-  color: #cbd5e1;
+  color: var(--charcoal);
 
-  font-size: 18px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
 }
 
 .leads-empty p {
-  max-width: 350px;
+  margin: 8px 0 0;
 
-  margin-top: 7px;
-
-  color: #475569;
-
-  font-size: 9px;
-
-  line-height: 1.6;
+  color: #817970;
+  font-size: 12px;
 }
 
-/* MOBILE */
+/* =========================
+   RESPONSIVE
+   ========================= */
 
-@media (max-width: 600px) {
-
+@media (max-width: 650px) {
   .leads-page {
-    padding-top: 105px;
+    padding: 100px 0 60px;
+  }
+
+  .leads-container {
+    width: min(100% - 30px, 560px);
   }
 
   .leads-header {
-    align-items: flex-start;
-
-    flex-direction: column;
+    display: block;
   }
 
   .leads-count {
-    width: 100%;
-
-    box-sizing: border-box;
+    width: fit-content;
+    min-width: 110px;
+    margin-top: 20px;
   }
 
-  .lead-contact {
-    flex-direction: column;
-
-    gap: 8px;
+  .lead-card {
+    padding: 19px;
   }
 
-  .lead-footer {
+  .lead-top {
     align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 12px;
   }
 
+  .lead-buyer span {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 430px) {
+  .leads-header h1 {
+    font-size: 38px;
+  }
+
+  .lead-top {
+    display: block;
+  }
+
+  .lead-status {
+    display: inline-block;
+    margin-top: 12px;
+  }
+
+  .lead-contact,
   .lead-actions {
-    width: 100%;
+    gap: 6px;
   }
 
-  .contacted-btn {
+  .lead-contact a {
     flex: 1;
-
-    justify-content: center;
   }
-
 }

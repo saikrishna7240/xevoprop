@@ -1,0 +1,577 @@
+.developers-page {
+  min-height: 100vh;
+  background: var(--off-white);
+  color: var(--charcoal);
+}
+
+/* =========================
+   HERO
+   ========================= */
+
+.developers-hero {
+  position: relative;
+  min-height: 650px;
+  padding: 150px 7vw 100px;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(228, 215, 194, 0.72),
+      rgba(249, 247, 243, 0.96)
+    );
+}
+
+.developers-hero-content {
+  position: relative;
+  z-index: 2;
+
+  max-width: 760px;
+}
+
+.developers-eyebrow,
+.developers-section-label {
+  display: inline-block;
+
+  color: var(--earth-brown);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.developers-hero h1 {
+  margin: 18px 0 25px;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(55px, 7vw, 88px);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+.developers-hero h1 em {
+  color: var(--earth-brown);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.developers-hero p {
+  max-width: 590px;
+  margin: 0;
+
+  color: #746d65;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.developers-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-top: 34px;
+}
+
+.developers-primary-btn,
+.developers-secondary-btn,
+.developers-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 46px;
+  padding: 0 21px;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.developers-primary-btn {
+  background: var(--earth-brown);
+  color: #fff;
+}
+
+.developers-primary-btn:hover {
+  background: var(--sage-green);
+  transform: translateY(-2px);
+}
+
+.developers-secondary-btn {
+  border: 1px solid rgba(111, 78, 55, 0.25);
+  color: var(--earth-brown);
+}
+
+.developers-secondary-btn:hover {
+  background: var(--sand);
+  transform: translateY(-2px);
+}
+
+.developers-hero-mark {
+  position: absolute;
+  right: 7vw;
+  bottom: 85px;
+
+  width: 175px;
+  height: 175px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  border: 1px solid rgba(111, 78, 55, 0.18);
+  border-radius: 50%;
+
+  color: var(--earth-brown);
+  text-align: center;
+}
+
+.developers-hero-mark span {
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: 0.18em;
+}
+
+/* =========================
+   INTRO
+   ========================= */
+
+.developers-intro {
+  padding: 100px 7vw;
+
+  background: #fffdf9;
+}
+
+.developers-intro-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  gap: 100px;
+}
+
+.developers-intro h2,
+.developers-benefits h2,
+.developers-platform h2,
+.developers-cta h2 {
+  margin: 17px 0 0;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(40px, 4.5vw, 60px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.developers-intro h2 em,
+.developers-benefits h2 em,
+.developers-platform h2 em,
+.developers-cta h2 em {
+  color: var(--earth-brown);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.developers-intro-copy {
+  padding-top: 12px;
+}
+
+.developers-intro-copy p {
+  margin: 0 0 20px;
+
+  color: #756e66;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* =========================
+   BENEFITS
+   ========================= */
+
+.developers-benefits {
+  padding: 105px 7vw;
+
+  background: var(--off-white);
+}
+
+.developers-benefits-header {
+  max-width: 1120px;
+  margin: 0 auto 55px;
+
+  display: grid;
+  grid-template-columns: 1fr 0.65fr;
+  gap: 100px;
+  align-items: end;
+}
+
+.developers-benefits-header > p {
+  margin: 0;
+
+  color: #756e66;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.developers-benefits-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  border-top: 1px solid rgba(111, 78, 55, 0.14);
+}
+
+.developers-benefit-card {
+  min-height: 270px;
+  padding: 28px 25px;
+
+  border-right: 1px solid rgba(111, 78, 55, 0.14);
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.developers-benefit-card:first-child {
+  border-left: 1px solid rgba(111, 78, 55, 0.14);
+}
+
+.developers-benefit-card:hover {
+  background: #fffdf9;
+  transform: translateY(-4px);
+}
+
+.developers-benefit-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.developers-benefit-top > span {
+  color: #a79b90;
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.developers-benefit-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--sand);
+  color: var(--earth-brown);
+}
+
+.developers-benefit-card h3 {
+  margin: 48px 0 13px;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.developers-benefit-card p {
+  margin: 0;
+
+  color: #817970;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+/* =========================
+   PLATFORM
+   ========================= */
+
+.developers-platform {
+  padding: 105px 7vw;
+
+  background: var(--sage-green);
+  color: #fff;
+}
+
+.developers-platform-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  gap: 100px;
+  align-items: center;
+}
+
+.developers-platform .developers-section-label {
+  color: #d9c6ad;
+}
+
+.developers-platform h2 {
+  margin-bottom: 22px;
+}
+
+.developers-platform h2 em {
+  color: #d9c6ad;
+}
+
+.developers-platform-content > p {
+  max-width: 500px;
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.developers-platform-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px 25px;
+
+  margin-top: 35px;
+}
+
+.developers-platform-point {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: rgba(255, 255, 255, 0.84);
+
+  font-size: 10px;
+}
+
+.developers-platform-point svg {
+  flex-shrink: 0;
+  color: #d9c6ad;
+}
+
+/* =========================
+   PLATFORM CARD
+   ========================= */
+
+.developers-platform-card {
+  padding: 32px;
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.developers-platform-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 25px;
+  margin-bottom: 8px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.developers-platform-card-top span {
+  color: #d9c6ad;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.developers-platform-card-top svg {
+  color: #d9c6ad;
+}
+
+.developers-platform-card-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 21px 0;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.developers-platform-card-line span {
+  color: rgba(255, 255, 255, 0.6);
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.developers-platform-card-line strong {
+  color: #fff;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.developers-platform-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding-top: 25px;
+
+  color: #d9c6ad;
+  font-size: 10px;
+}
+
+/* =========================
+   CTA
+   ========================= */
+
+.developers-cta {
+  padding: 110px 24px;
+
+  text-align: center;
+
+  background: #fffdf9;
+}
+
+.developers-cta > span {
+  color: var(--earth-brown);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.developers-cta h2 {
+  margin-top: 17px;
+}
+
+.developers-cta p {
+  max-width: 520px;
+  margin: 24px auto 30px;
+
+  color: #766e66;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.developers-cta-btn {
+  background: var(--earth-brown);
+  color: #fff;
+}
+
+.developers-cta-btn:hover {
+  background: var(--sage-green);
+  transform: translateY(-2px);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1000px) {
+  .developers-hero-mark {
+    opacity: 0.55;
+    right: 4vw;
+  }
+
+  .developers-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .developers-benefit-card {
+    border-bottom: 1px solid rgba(111, 78, 55, 0.14);
+  }
+
+  .developers-platform-inner {
+    gap: 55px;
+  }
+}
+
+@media (max-width: 800px) {
+  .developers-hero {
+    min-height: auto;
+    padding: 125px 6vw 80px;
+  }
+
+  .developers-hero-mark {
+    display: none;
+  }
+
+  .developers-intro,
+  .developers-benefits,
+  .developers-platform {
+    padding: 80px 6vw;
+  }
+
+  .developers-intro-grid,
+  .developers-benefits-header,
+  .developers-platform-inner {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .developers-platform-card {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 600px) {
+  .developers-hero {
+    padding: 115px 22px 70px;
+  }
+
+  .developers-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .developers-primary-btn,
+  .developers-secondary-btn {
+    width: 100%;
+  }
+
+  .developers-intro,
+  .developers-benefits,
+  .developers-platform {
+    padding: 70px 22px;
+  }
+
+  .developers-benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .developers-benefit-card,
+  .developers-benefit-card:first-child {
+    border-left: 1px solid rgba(111, 78, 55, 0.14);
+  }
+
+  .developers-platform-points {
+    grid-template-columns: 1fr;
+  }
+
+  .developers-platform-card {
+    padding: 23px 19px;
+  }
+
+  .developers-cta {
+    padding: 80px 22px;
+  }
+}

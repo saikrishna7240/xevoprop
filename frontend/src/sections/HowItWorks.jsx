@@ -2,9 +2,7 @@ import { motion } from "framer-motion";
 import {
   Search,
   MessageCircle,
-  GitCompare,
-  CalendarCheck,
-  ArrowRight,
+  ArrowUpRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./HowItWorks.css";
@@ -12,34 +10,29 @@ import "./HowItWorks.css";
 const steps = [
   {
     number: "01",
-    icon: Search,
-    title: "Discover",
+    label: "FIND",
+    title: "Discover the right property.",
     description:
-      "Explore relevant properties using intelligent search, meaningful filters and verified information.",
+      "Explore verified properties using meaningful filters, locations and details that actually matter.",
+    icon: Search,
     action: "/properties",
   },
   {
     number: "02",
-    icon: MessageCircle,
-    title: "Connect",
+    label: "CONNECT",
+    title: "Meet the right people.",
     description:
-      "Connect directly with developers, builders, sellers and relevant property stakeholders.",
+      "Connect directly with developers, sellers and property stakeholders without unnecessary friction.",
+    icon: MessageCircle,
     action: "/properties",
   },
   {
     number: "03",
-    icon: GitCompare,
-    title: "Decide",
+    label: "MOVE FORWARD",
+    title: "Turn interest into action.",
     description:
-      "Compare opportunities, understand the details and make a decision with greater confidence.",
-    action: "/properties",
-  },
-  {
-    number: "04",
-    icon: CalendarCheck,
-    title: "Book",
-    description:
-      "Move from property discovery toward visits, enquiries and a seamless booking journey.",
+      "Send enquiries, schedule visits and move confidently toward your next property decision.",
+    icon: ArrowUpRight,
     action: "/properties",
   },
 ];
@@ -51,7 +44,7 @@ function HowItWorks() {
     <section className="how-section" id="how-it-works">
       <div className="how-container">
 
-        {/* Header */}
+        {/* HEADER */}
         <motion.div
           className="how-header"
           initial={{ opacity: 0, y: 25 }}
@@ -60,28 +53,24 @@ function HowItWorks() {
           transition={{ duration: 0.6 }}
         >
           <span className="how-label">
-            THE XEVOPROP JOURNEY
+            HOW XEVOPROP WORKS
           </span>
 
           <h2>
-            From discovery
+            Property decisions,
             <br />
-            <span>to decision.</span>
+            <span>made simpler.</span>
           </h2>
 
           <p>
-            We've simplified the property journey into a
-            connected experience designed around you.
+            From the first search to the next step,
+            Xevoprop keeps your property journey
+            connected and clear.
           </p>
         </motion.div>
 
-        {/* Journey */}
-        <div className="journey">
-
-          {/* Connecting line */}
-          <div className="journey-line">
-            <div className="journey-progress"></div>
-          </div>
+        {/* STEPS */}
+        <div className="how-steps">
 
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -89,7 +78,7 @@ function HowItWorks() {
             return (
               <motion.button
                 type="button"
-                className="journey-step"
+                className="how-step"
                 key={step.number}
                 onClick={() => navigate(step.action)}
                 initial={{
@@ -102,46 +91,71 @@ function HowItWorks() {
                 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: 0.5,
+                  duration: 0.55,
                   delay: index * 0.12,
                 }}
               >
-                <div className="step-number">
-                  {step.number}
+
+                {/* STEP TOP */}
+                <div className="how-step-top">
+
+                  <span className="how-step-number">
+                    {step.number}
+                  </span>
+
+                  <span className="how-step-label">
+                    {step.label}
+                  </span>
+
+                  <span className="how-step-icon">
+                    <Icon size={18} />
+                  </span>
+
                 </div>
 
-                <div className="step-icon">
-                  <Icon size={22} />
+                {/* STEP CONTENT */}
+                <div className="how-step-content">
+
+                  <h3>{step.title}</h3>
+
+                  <p>
+                    {step.description}
+                  </p>
+
+                  <span className="how-step-link">
+                    Explore
+                    <ArrowUpRight size={15} />
+                  </span>
+
                 </div>
 
-                <h3>{step.title}</h3>
-
-                <p>{step.description}</p>
-
-                {index < steps.length - 1 && (
-                  <ArrowRight
-                    className="step-arrow"
-                    size={18}
-                  />
-                )}
               </motion.button>
             );
           })}
+
         </div>
 
-        {/* Bottom message */}
+        {/* BOTTOM STATEMENT */}
         <motion.div
-          className="journey-message"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="how-bottom"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <span>ONE PLATFORM</span>
+          <div className="how-bottom-line"></div>
 
-          <strong>
-            Less searching. More certainty.
-          </strong>
+          <div className="how-bottom-content">
+            <span>
+              ONE CONNECTED EXPERIENCE
+            </span>
+
+            <strong>
+              Less searching. More certainty.
+            </strong>
+          </div>
+
+          <div className="how-bottom-line"></div>
         </motion.div>
 
       </div>

@@ -1,185 +1,147 @@
-/* =========================
-   MY VISITS PAGE
-========================= */
+/* =========================================================
+   MY VISITS — XEVOPROP EDITORIAL THEME
+   ========================================================= */
 
 .my-visits-page {
   min-height: 100vh;
-  padding: 40px 20px 70px;
-
-  background: #020617;
-  color: #f8fafc;
+  background: #f9f7f4;
+  color: #1f1e1e;
+  padding: 52px 24px 80px;
 }
 
 .my-visits-container {
-  width: min(1050px, 100%);
+  width: min(1120px, 100%);
   margin: 0 auto;
 }
 
 /* =========================
    HEADER
-========================= */
+   ========================= */
 
 .my-visits-header {
-  margin-bottom: 35px;
+  margin-bottom: 42px;
 }
-
-.my-visits-header > span {
-  display: block;
-
-  margin-top: 28px;
-  margin-bottom: 8px;
-
-  color: #00d9ff;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.my-visits-header h1 {
-  margin: 0;
-
-  font-size: clamp(28px, 5vw, 42px);
-  line-height: 1.1;
-  letter-spacing: -1px;
-}
-
-.my-visits-header p {
-  margin: 10px 0 0;
-
-  color: #64748b;
-
-  font-size: 13px;
-}
-
-/* =========================
-   BACK BUTTON
-========================= */
 
 .my-visits-back {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-
-  padding: 8px 12px;
-
-  border: 1px solid
-    rgba(148, 163, 184, 0.15);
-
-  border-radius: 7px;
-
-  background:
-    rgba(15, 23, 42, 0.7);
-
-  color: #94a3b8;
-
-  font-size: 10px;
-
+  gap: 8px;
+  padding: 0;
+  margin-bottom: 28px;
+  border: 0;
+  background: transparent;
+  color: #6f4e37;
+  font-size: 13px;
+  font-weight: 650;
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition: gap 0.2s ease;
 }
 
 .my-visits-back:hover {
-  color: #fff;
+  gap: 12px;
+}
 
-  border-color:
-    rgba(0, 217, 255, 0.35);
+.my-visits-header > span {
+  display: block;
+  margin-bottom: 11px;
+  color: #6f4e37;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
 
-  transform: translateX(-2px);
+.my-visits-header h1 {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(40px, 5vw, 58px);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: #1f1e1e;
+}
+
+.my-visits-header p {
+  max-width: 500px;
+  margin: 15px 0 0;
+  color: #79716a;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 /* =========================
-   MESSAGES
-========================= */
+   STATES
+   ========================= */
 
 .my-visits-message,
-.my-visits-error,
-.my-visits-empty {
-  border: 1px solid
-    rgba(148, 163, 184, 0.12);
-
-  border-radius: 14px;
-
-  background:
-    rgba(15, 23, 42, 0.65);
-
-  padding: 50px 25px;
-
+.my-visits-error {
+  padding: 24px;
+  border: 1px solid #e4dcd2;
+  border-radius: 16px;
+  background: #fff;
   text-align: center;
-}
-
-.my-visits-message {
-  color: #94a3b8;
-  font-size: 12px;
+  color: #777069;
+  font-size: 13px;
 }
 
 .my-visits-error {
-  color: #ff6b6b;
-
-  border-color:
-    rgba(255, 107, 107, 0.2);
-
-  background:
-    rgba(255, 107, 107, 0.04);
-
-  font-size: 12px;
+  background: #fbf1ed;
+  border-color: #ead2c7;
+  color: #9b4d37;
 }
 
 /* =========================
-   EMPTY STATE
-========================= */
+   EMPTY
+   ========================= */
 
 .my-visits-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 72px 24px;
+  border: 1px solid #e4dcd2;
+  border-radius: 20px;
+  background: #fff;
+  text-align: center;
 }
 
-.my-visits-empty svg {
+.my-visits-empty > svg {
   margin-bottom: 15px;
-  color: #00d9ff;
+  color: #6f4e37;
 }
 
 .my-visits-empty h2 {
   margin: 0;
-
-  font-size: 20px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #272421;
 }
 
 .my-visits-empty p {
   max-width: 430px;
-
-  margin: 9px 0 20px;
-
-  color: #64748b;
-
-  font-size: 12px;
+  margin: 10px auto 0;
+  color: #817971;
+  font-size: 13px;
   line-height: 1.7;
 }
 
 .my-visits-empty button {
-  padding: 10px 16px;
-
-  border: 1px solid
-    rgba(0, 217, 255, 0.2);
-
-  border-radius: 7px;
-
-  background:
-    rgba(0, 217, 255, 0.08);
-
-  color: #00d9ff;
-
-  font-size: 10px;
-  font-weight: 800;
-
+  margin-top: 23px;
+  padding: 11px 18px;
+  border: 1px solid #6f4e37;
+  border-radius: 8px;
+  background: #6f4e37;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 650;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.my-visits-empty button:hover {
+  background: #5d402d;
 }
 
 /* =========================
    VISITS LIST
-========================= */
+   ========================= */
 
 .my-visits-list {
   display: flex;
@@ -187,364 +149,304 @@
   gap: 18px;
 }
 
-/* =========================
-   VISIT CARD
-========================= */
-
 .my-visit-card {
   display: grid;
-  grid-template-columns: 260px 1fr;
-
+  grid-template-columns: 285px 1fr;
   overflow: hidden;
-
-  border: 1px solid
-    rgba(148, 163, 184, 0.12);
-
-  border-radius: 14px;
-
-  background:
-    rgba(15, 23, 42, 0.7);
-
+  border: 1px solid #e4dcd2;
+  border-radius: 20px;
+  background: #fff;
   transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .my-visit-card:hover {
   transform: translateY(-2px);
-
-  border-color:
-    rgba(0, 217, 255, 0.22);
-
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.25);
+  border-color: #d5c7b8;
+  box-shadow: 0 14px 35px rgba(55, 42, 30, 0.08);
 }
 
 /* =========================
-   PROPERTY IMAGE
-========================= */
+   IMAGE
+   ========================= */
 
 .my-visit-image {
-  min-height: 280px;
-
+  min-height: 270px;
+  background: #eadcc8;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  color: #6f4e37;
   overflow: hidden;
-
-  background: #0f172a;
-
-  color: #475569;
 }
 
 .my-visit-image img {
   width: 100%;
   height: 100%;
-  min-height: 280px;
-
+  min-height: 270px;
   display: block;
-
   object-fit: cover;
-
-  transition:
-    transform 0.4s ease;
-}
-
-.my-visit-card:hover
-.my-visit-image img {
-  transform: scale(1.04);
 }
 
 /* =========================
    CONTENT
-========================= */
+   ========================= */
 
 .my-visit-content {
-  padding: 25px;
+  min-width: 0;
+  padding: 27px 30px 24px;
+  display: flex;
+  flex-direction: column;
 }
-
-/* =========================
-   TOP
-========================= */
 
 .my-visit-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-
-  gap: 20px;
-
-  padding-bottom: 18px;
-
-  border-bottom: 1px solid
-    rgba(148, 163, 184, 0.1);
+  gap: 22px;
 }
 
 .my-visit-top > div:first-child > span {
   display: block;
-
-  margin-bottom: 5px;
-
-  color: #64748b;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  color: #8b8178;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
 }
 
 .my-visit-top h2 {
   margin: 0;
-
-  font-size: 18px;
-  line-height: 1.3;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #272421;
 }
 
 .my-visit-top p {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  margin: 7px 0 0;
-
-  color: #64748b;
-
-  font-size: 10px;
+  margin: 9px 0 0;
+  color: #746c64;
+  font-size: 12px;
 }
 
 .my-visit-top p svg {
-  color: #00d9ff;
+  color: #8c725b;
+  flex-shrink: 0;
 }
 
 /* =========================
    STATUS
-========================= */
+   ========================= */
 
 .my-visit-status {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-
   flex-shrink: 0;
-
-  padding: 6px 10px;
-
-  border-radius: 6px;
-
-  font-size: 8px;
-  font-weight: 800;
-
-  letter-spacing: 0.8px;
-
-  text-transform: uppercase;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
 .my-visit-status.pending {
-  color: #fbbf24;
-
-  background:
-    rgba(251, 191, 36, 0.08);
-
-  border: 1px solid
-    rgba(251, 191, 36, 0.15);
+  background: #f3e7d8;
+  color: #8b5b2d;
 }
 
 .my-visit-status.accepted {
-  color: #86efac;
-
-  background:
-    rgba(34, 197, 94, 0.08);
-
-  border: 1px solid
-    rgba(34, 197, 94, 0.15);
+  background: #e7eee8;
+  color: #2e4a38;
 }
 
 .my-visit-status.rejected {
-  color: #ff8b8b;
-
-  background:
-    rgba(255, 107, 107, 0.07);
-
-  border: 1px solid
-    rgba(255, 107, 107, 0.15);
-}
-
-.my-visit-status.completed {
-  color: #00d9ff;
-
-  background:
-    rgba(0, 217, 255, 0.08);
-
-  border: 1px solid
-    rgba(0, 217, 255, 0.15);
+  background: #f7e9e5;
+  color: #9b4d37;
 }
 
 /* =========================
    SCHEDULE
-========================= */
+   ========================= */
 
 .my-visit-schedule {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
   gap: 12px;
-
-  margin-top: 18px;
+  margin-top: 25px;
 }
 
 .my-visit-schedule > div {
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  padding: 13px;
-
-  border: 1px solid
-    rgba(148, 163, 184, 0.1);
-
-  border-radius: 9px;
-
-  background:
-    rgba(2, 6, 23, 0.35);
+  gap: 11px;
+  padding: 14px;
+  border: 1px solid #e8e0d7;
+  border-radius: 10px;
+  background: #faf8f5;
 }
 
-.my-visit-schedule svg {
+.my-visit-schedule > div > svg {
   flex-shrink: 0;
+  color: #6f4e37;
+}
 
-  color: #00d9ff;
+.my-visit-schedule > div > div {
+  min-width: 0;
 }
 
 .my-visit-schedule span {
   display: block;
-
-  margin-bottom: 4px;
-
-  color: #475569;
-
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  margin-bottom: 3px;
+  color: #948a81;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
 }
 
 .my-visit-schedule strong {
   display: block;
-
-  color: #e2e8f0;
-
-  font-size: 11px;
+  color: #302c28;
+  font-size: 12px;
+  font-weight: 650;
 }
 
 /* =========================
    MESSAGE
-========================= */
+   ========================= */
 
 .my-visit-message {
-  margin-top: 15px;
-  padding: 14px;
-
-  border: 1px solid
-    rgba(148, 163, 184, 0.1);
-
-  border-radius: 9px;
-
-  background:
-    rgba(2, 6, 23, 0.4);
+  margin-top: 17px;
+  padding: 13px 15px;
+  border-left: 3px solid #b49776;
+  border-radius: 0 8px 8px 0;
+  background: #f8f5f0;
 }
 
 .my-visit-message span {
   display: block;
-
-  margin-bottom: 6px;
-
-  color: #64748b;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
+  margin-bottom: 5px;
+  color: #6f4e37;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
 }
 
 .my-visit-message p {
   margin: 0;
-
-  color: #cbd5e1;
-
-  font-size: 10px;
-  line-height: 1.6;
+  color: #665f58;
+  font-size: 12px;
+  line-height: 1.65;
 }
 
 /* =========================
    VIEW PROPERTY
-========================= */
+   ========================= */
 
-.view-property-btn {
-  margin-top: 18px;
-
-  padding: 9px 15px;
-
-  border: 1px solid
-    rgba(0, 217, 255, 0.2);
-
-  border-radius: 7px;
-
-  background:
-    rgba(0, 217, 255, 0.06);
-
-  color: #00d9ff;
-
-  font-size: 9px;
-  font-weight: 800;
-
+.my-visit-content .view-property-btn {
+  align-self: flex-start;
+  margin-top: 20px;
+  padding: 10px 17px;
+  border: 1px solid #6f4e37;
+  border-radius: 8px;
+  background: #6f4e37;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 650;
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
-.view-property-btn:hover {
-  background:
-    rgba(0, 217, 255, 0.12);
-
+.my-visit-content .view-property-btn:hover {
+  background: #5d402d;
   transform: translateY(-1px);
 }
 
 /* =========================
    RESPONSIVE
-========================= */
+   ========================= */
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
+  .my-visit-card {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .my-visit-image,
+  .my-visit-image img {
+    min-height: 250px;
+  }
+
+  .my-visit-content {
+    padding: 23px;
+  }
+
+  .my-visit-top h2 {
+    font-size: 21px;
+  }
+}
+
+@media (max-width: 700px) {
   .my-visits-page {
-    padding: 25px 15px 50px;
+    padding: 35px 16px 60px;
+  }
+
+  .my-visits-header {
+    margin-bottom: 30px;
+  }
+
+  .my-visits-header h1 {
+    font-size: 42px;
   }
 
   .my-visit-card {
     grid-template-columns: 1fr;
   }
 
-  .my-visit-image {
-    min-height: 220px;
+  .my-visit-image,
+  .my-visit-image img {
+    height: 210px;
+    min-height: 210px;
   }
 
-  .my-visit-image img {
-    min-height: 220px;
-    max-height: 280px;
+  .my-visit-content {
+    padding: 21px 19px;
+  }
+
+  .my-visit-top {
+    gap: 14px;
   }
 }
 
-@media (max-width: 520px) {
-  .my-visit-content {
-    padding: 18px;
+@media (max-width: 500px) {
+  .my-visits-header h1 {
+    font-size: 37px;
+  }
+
+  .my-visits-empty {
+    padding: 55px 18px;
   }
 
   .my-visit-top {
     flex-direction: column;
-    gap: 12px;
+  }
+
+  .my-visit-status {
+    align-self: flex-start;
   }
 
   .my-visit-schedule {
     grid-template-columns: 1fr;
   }
 
-  .my-visit-status {
-    align-self: flex-start;
+  .my-visit-content .view-property-btn {
+    width: 100%;
   }
 }

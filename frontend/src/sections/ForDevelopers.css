@@ -1,265 +1,269 @@
+/* =========================================================
+   FOR DEVELOPERS
+   XEVOPROP — Premium Property Theme
+   ========================================================= */
+
 .developers-section {
   position: relative;
-
-  padding: 120px 0;
-
-  background: #020617;
-
+  padding: 115px 0;
+  background: #eadcc8;
   overflow: hidden;
 }
 
-.developers-section::before {
+.developers-section::after {
   content: "";
-
   position: absolute;
-
-  width: 500px;
-  height: 500px;
-
-  top: 50%;
-  right: -200px;
-
-  transform: translateY(-50%);
-
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  bottom: -220px;
   border-radius: 50%;
-
-  background: rgba(0, 217, 255, 0.04);
-
-  filter: blur(100px);
-
+  background: rgba(111, 78, 55, 0.1);
+  filter: blur(70px);
   pointer-events: none;
 }
 
 .developers-container {
   position: relative;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
   z-index: 1;
-
-  width: min(1120px, 92%);
-
-  margin: auto;
-
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 80px;
-
-  align-items: center;
 }
 
-/* =========================
-   CONTENT
-========================= */
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.developers-content {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 80px;
+}
+
+/* =========================================================
+   LEFT SIDE
+   ========================================================= */
 
 .developers-label {
-  color: #00d9ff;
+  display: inline-block;
+  margin-bottom: 20px;
 
-  font-size: 11px;
-
-  font-weight: 800;
-
-  letter-spacing: 1.5px;
+  color: #6f4e37;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .developers-content h2 {
-  margin-top: 14px;
+  max-width: 650px;
 
-  color: #f8fafc;
+  margin: 0;
 
-  font-size: clamp(40px, 5vw, 58px);
-
-  line-height: 1.05;
-
-  letter-spacing: -3px;
+  color: #1f1e1e;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(44px, 5vw, 66px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
 }
 
 .developers-content h2 span {
-  color: #64748b;
+  color: #6f4e37;
 }
 
-.developers-content > p {
-  max-width: 500px;
+.developers-content p {
+  max-width: 540px;
 
-  margin-top: 22px;
+  margin: 24px 0 30px;
 
-  color: #64748b;
-
-  font-size: 14px;
-
-  line-height: 1.8;
+  color: #655d56;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
-/* =========================
-   BUTTON
-========================= */
+/* =========================================================
+   CTA
+   ========================================================= */
 
 .developers-btn {
   display: inline-flex;
-
   align-items: center;
+  justify-content: center;
+  gap: 10px;
 
-  gap: 8px;
+  min-height: 50px;
+  padding: 0 23px;
 
-  margin-top: 28px;
+  border: 1px solid #6f4e37;
+  border-radius: 3px;
 
-  padding: 13px 18px;
+  background: #6f4e37;
+  color: #ffffff;
 
-  border: 1px solid rgba(0, 217, 255, 0.25);
-
-  border-radius: 9px;
-
-  background: rgba(0, 217, 255, 0.07);
-
-  color: #67e8f9;
-
-  font-family: inherit;
-
+  font-family: "Inter", sans-serif;
   font-size: 12px;
-
   font-weight: 700;
 
+  text-decoration: none;
   cursor: pointer;
 
   transition:
-    transform 0.25s ease,
     background 0.25s ease,
-    border-color 0.25s ease;
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .developers-btn:hover {
+  background: #573c2b;
   transform: translateY(-2px);
-
-  background: rgba(0, 217, 255, 0.13);
-
-  border-color: rgba(0, 217, 255, 0.45);
+  box-shadow: 0 12px 25px rgba(75, 51, 36, 0.18);
 }
 
-.developers-btn:active {
-  transform: translateY(0);
+.developers-btn svg {
+  transition: transform 0.25s ease;
 }
 
-/* =========================
+.developers-btn:hover svg {
+  transform: translate(3px, -3px);
+}
+
+/* =========================================================
    FEATURES
-========================= */
+   ========================================================= */
 
 .developers-features {
   display: flex;
-
   flex-direction: column;
 
-  gap: 12px;
+  border-top: 1px solid rgba(111, 78, 55, 0.25);
 }
 
 .developer-feature {
   display: flex;
-
-  align-items: flex-start;
-
+  align-items: center;
   gap: 18px;
 
-  padding: 24px;
+  padding: 22px 0;
 
-  border: 1px solid rgba(148, 163, 184, 0.09);
-
-  border-radius: 17px;
-
-  background: #061329;
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+  border-bottom: 1px solid rgba(111, 78, 55, 0.25);
 }
-
-.developer-feature:hover {
-  transform: translateX(5px);
-
-  border-color: rgba(0, 217, 255, 0.22);
-
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
-}
-
-/* =========================
-   ICON
-========================= */
 
 .developer-feature-icon {
-  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  height: 44px;
+  width: 46px;
+  height: 46px;
 
   flex-shrink: 0;
 
-  display: flex;
+  border: 1px solid rgba(111, 78, 55, 0.28);
+  border-radius: 50%;
 
-  align-items: center;
-
-  justify-content: center;
-
-  border-radius: 12px;
-
-  background: rgba(0, 217, 255, 0.07);
-
-  color: #00d9ff;
+  background: rgba(255, 255, 255, 0.4);
+  color: #6f4e37;
 
   transition:
-    background 0.3s ease,
-    transform 0.3s ease;
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .developer-feature:hover .developer-feature-icon {
-  background: rgba(0, 217, 255, 0.12);
-
-  transform: scale(1.05);
+  background: #6f4e37;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
-/* =========================
-   TEXT
-========================= */
-
 .developer-feature h3 {
-  color: #f8fafc;
+  margin: 0 0 5px;
 
-  font-size: 16px;
-
-  line-height: 1.3;
+  color: #292624;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .developer-feature p {
-  margin-top: 7px;
+  margin: 0;
 
-  color: #64748b;
-
-  font-size: 12px;
-
-  line-height: 1.7;
+  color: #756c64;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   DECORATIVE PROPERTY FRAME
+   ========================================================= */
 
-@media (max-width: 850px) {
-  .developers-container {
-    grid-template-columns: 1fr;
+.developers-content::before {
+  content: "";
+  position: absolute;
 
-    gap: 50px;
+  right: -30px;
+  top: 50%;
+
+  width: 420px;
+  height: 420px;
+
+  border: 1px solid rgba(111, 78, 55, 0.12);
+
+  transform: translateY(-50%) rotate(45deg);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .developers-section {
+    padding: 90px 0;
   }
 
-  .developers-content > p {
+  .developers-content {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+  .developers-content::before {
+    display: none;
+  }
+
+  .developers-features {
     max-width: 650px;
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 600px) {
   .developers-section {
-    padding: 85px 0;
+    padding: 75px 0;
+  }
+
+  .developers-container {
+    width: calc(100% - 30px);
+  }
+
+  .developers-label {
+    margin-bottom: 16px;
   }
 
   .developers-content h2 {
     font-size: 40px;
+  }
 
-    letter-spacing: -2px;
+  .developers-content p {
+    margin: 18px 0 25px;
+    font-size: 13px;
   }
 
   .developers-btn {
@@ -267,6 +271,34 @@
   }
 
   .developer-feature {
-    padding: 20px;
+    gap: 14px;
+    padding: 18px 0;
+  }
+
+  .developer-feature-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .developer-feature h3 {
+    font-size: 17px;
+  }
+
+  .developer-feature p {
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .developers-content h2 {
+    font-size: 35px;
+  }
+
+  .developer-feature {
+    align-items: flex-start;
   }
 }

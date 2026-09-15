@@ -1,287 +1,396 @@
+/* =========================================================
+   HOW XEVOPROP WORKS
+   Premium Editorial Property Theme
+   ========================================================= */
+
 .how-section {
   position: relative;
-
   padding: 120px 0;
-
-  background: #030a18;
-
+  background: #f9f7f4;
   overflow: hidden;
 }
 
 .how-container {
-  width: min(1120px, 92%);
-  margin: auto;
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .how-header {
-  max-width: 650px;
-
-  margin-bottom: 75px;
+  max-width: 720px;
+  margin-bottom: 70px;
 }
 
 .how-label {
-  color: #00d9ff;
+  display: inline-block;
+  margin-bottom: 20px;
 
-  font-size: 11px;
-  font-weight: 800;
-
-  letter-spacing: 1.5px;
+  color: #6f4e37;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .how-header h2 {
-  margin-top: 12px;
+  margin: 0;
 
-  font-size: clamp(40px, 5vw, 60px);
-
-  line-height: 1.05;
-
-  letter-spacing: -3px;
+  color: #1f1e1e;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(44px, 5vw, 68px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
 }
 
 .how-header h2 span {
-  color: #64748b;
+  color: #6f4e37;
 }
 
 .how-header p {
-  max-width: 500px;
+  max-width: 540px;
+  margin: 24px 0 0;
 
-  margin-top: 18px;
-
-  color: #64748b;
-
-  font-size: 14px;
-
-  line-height: 1.7;
+  color: #756e67;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
-/* JOURNEY */
+/* =========================================================
+   STEPS
+   ========================================================= */
 
-.journey {
-  position: relative;
-
+.how-steps {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
 
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 25px;
+  border-top: 1px solid #d9d0c6;
+  border-bottom: 1px solid #d9d0c6;
 }
 
-/* CONNECTING LINE */
+/* =========================================================
+   STEP CARD
+   ========================================================= */
 
-.journey-line {
-  position: absolute;
-
-  top: 35px;
-  left: 10%;
-
-  width: 80%;
-
-  height: 1px;
-
-  background: rgba(148, 163, 184, 0.12);
-
-  z-index: 0;
-}
-
-.journey-progress {
-  width: 100%;
-  height: 100%;
-
-  background: linear-gradient(
-    90deg,
-    #00d9ff,
-    #1677ff
-  );
-
-  opacity: 0.4;
-}
-
-/* STEP */
-
-.journey-step {
+.how-step {
   position: relative;
 
-  z-index: 1;
-
-  padding: 0 15px;
-
-  text-align: center;
-}
-
-/* NUMBER */
-
-.step-number {
-  color: #334155;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  letter-spacing: 1px;
-}
-
-/* ICON */
-
-.step-icon {
-  width: 70px;
-  height: 70px;
-
-  margin: 17px auto 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(0, 217, 255, 0.18);
-
-  border-radius: 50%;
-
-  background: #061329;
-
-  color: #00d9ff;
-
-  box-shadow:
-    0 0 30px rgba(0, 217, 255, 0.06);
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.journey-step:hover .step-icon {
-  transform: scale(1.08);
-
-  border-color: rgba(0, 217, 255, 0.45);
-
-  box-shadow:
-    0 0 35px rgba(0, 217, 255, 0.15);
-}
-
-/* TEXT */
-
-.journey-step h3 {
-  margin-top: 22px;
-
-  color: #f8fafc;
-
-  font-size: 18px;
-}
-
-.journey-step p {
-  max-width: 210px;
-
-  margin: 10px auto 0;
-
-  color: #64748b;
-
-  font-size: 12px;
-
-  line-height: 1.7;
-}
-
-/* ARROW */
-
-.step-arrow {
-  position: absolute;
-
-  top: 65px;
-  right: -18px;
-
-  color: #334155;
-}
-
-/* MESSAGE */
-
-.journey-message {
-  margin-top: 75px;
-
-  padding-top: 25px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 15px;
-
-  border-top: 1px solid rgba(148, 163, 184, 0.08);
-}
-
-.journey-message span {
-  color: #00d9ff;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  letter-spacing: 1.5px;
-}
-
-.journey-message strong {
-  color: #94a3b8;
-
-  font-size: 13px;
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 850px) {
-
-  .journey {
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 55px 20px;
-  }
-
-  .journey-line,
-  .step-arrow {
-    display: none;
-  }
-}
-
-@media (max-width: 550px) {
-
-  .how-section {
-    padding: 85px 0;
-  }
-
-  .journey {
-    grid-template-columns: 1fr;
-  }
-
-  .journey-step p {
-    max-width: 300px;
-  }
-
-  .journey-message {
-    flex-direction: column;
-  }
-}
-.journey-step {
-  width: 100%;
+  min-height: 390px;
+  padding: 34px 36px 38px;
 
   border: none;
+  border-right: 1px solid #d9d0c6;
 
   background: transparent;
 
+  color: inherit;
   font-family: inherit;
+  text-align: left;
 
   cursor: pointer;
 
-  color: inherit;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
 }
 
-.journey-step:focus-visible {
-  outline: 2px solid #00d9ff;
-  outline-offset: 5px;
-  border-radius: 12px;
+.how-step:first-child {
+  border-left: 1px solid #d9d0c6;
 }
 
-.journey-step:hover h3 {
-  color: #67e8f9;
+.how-step:hover {
+  background: #f1ebe3;
 }
 
-.journey-step h3 {
-  transition: color 0.25s ease;
+/* =========================================================
+   STEP TOP
+   ========================================================= */
+
+.how-step-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.how-step-number {
+  color: #6f4e37;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.how-step-label {
+  color: #958b81;
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.how-step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  margin-left: auto;
+
+  border: 1px solid #d2c5b7;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #6f4e37;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.how-step:hover .how-step-icon {
+  background: #6f4e37;
+  color: #ffffff;
+  transform: translate(2px, -2px);
+}
+
+/* =========================================================
+   STEP CONTENT
+   ========================================================= */
+
+.how-step-content {
+  display: flex;
+  flex-direction: column;
+
+  height: 300px;
+
+  padding-top: 75px;
+}
+
+.how-step-content h3 {
+  max-width: 290px;
+
+  margin: 0 0 18px;
+
+  color: #292624;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.how-step-content p {
+  max-width: 285px;
+
+  margin: 0;
+
+  color: #756e67;
+
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   EXPLORE LINK
+   ========================================================= */
+
+.how-step-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-top: auto;
+
+  color: #6f4e37;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.how-step-link svg {
+  transition: transform 0.25s ease;
+}
+
+.how-step:hover .how-step-link svg {
+  transform: translate(3px, -3px);
+}
+
+/* =========================================================
+   BOTTOM STATEMENT
+   ========================================================= */
+
+.how-bottom {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  margin-top: 55px;
+}
+
+.how-bottom-line {
+  flex: 1;
+  height: 1px;
+
+  background: #d9d0c6;
+}
+
+.how-bottom-content {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  white-space: nowrap;
+}
+
+.how-bottom-content span {
+  color: #958b81;
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.how-bottom-content strong {
+  color: #6f4e37;
+
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .how-section {
+    padding: 90px 0;
+  }
+
+  .how-header {
+    margin-bottom: 55px;
+  }
+
+  .how-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .how-step {
+    min-height: auto;
+    padding: 30px;
+    border-right: none;
+    border-bottom: 1px solid #d9d0c6;
+  }
+
+  .how-step:first-child {
+    border-left: none;
+  }
+
+  .how-step:last-child {
+    border-bottom: none;
+  }
+
+  .how-step-content {
+    height: auto;
+    padding-top: 45px;
+    padding-bottom: 10px;
+  }
+
+  .how-step-content h3,
+  .how-step-content p {
+    max-width: 600px;
+  }
+
+  .how-bottom-content {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .how-section {
+    padding: 75px 0;
+  }
+
+  .how-container {
+    width: calc(100% - 30px);
+  }
+
+  .how-header {
+    margin-bottom: 45px;
+  }
+
+  .how-label {
+    margin-bottom: 16px;
+  }
+
+  .how-header h2 {
+    font-size: 40px;
+  }
+
+  .how-header p {
+    margin-top: 18px;
+    font-size: 13px;
+  }
+
+  .how-step {
+    padding: 25px 20px 28px;
+  }
+
+  .how-step-content {
+    padding-top: 38px;
+  }
+
+  .how-step-content h3 {
+    font-size: 23px;
+  }
+
+  .how-step-content p {
+    font-size: 12px;
+  }
+
+  .how-bottom {
+    gap: 15px;
+    margin-top: 40px;
+  }
+
+  .how-bottom-line {
+    display: none;
+  }
+
+  .how-bottom-content {
+    width: 100%;
+    padding-top: 5px;
+
+    text-align: center;
+  }
+
+  .how-bottom-content strong {
+    font-size: 15px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .how-header h2 {
+    font-size: 35px;
+  }
+
+  .how-step-content h3 {
+    font-size: 21px;
+  }
 }

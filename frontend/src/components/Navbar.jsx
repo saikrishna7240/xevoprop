@@ -12,6 +12,10 @@ import {
   LogIn,
   Menu,
   X,
+  CalendarDays,
+  ChevronDown,
+  Info,
+  Phone,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,15 +26,11 @@ function Navbar() {
   const { user } = useAuth();
   const location = useLocation();
 
-  const [mobileOpen, setMobileOpen] =
-    useState(false);
-
-  const isHomePage =
-    location.pathname === "/";
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   /*
-   * PUBLIC NAVBAR
-   * Shown before login and on Home page
+   * PUBLIC NAVIGATION
    */
 
   const publicLinks = [
@@ -40,13 +40,19 @@ function Navbar() {
       icon: Search,
     },
     {
-      label: "About",
-      path: "/about",
+      label: "Projects",
+      path: "/projects",
+      icon: Building2,
+    },
+    {
+      label: "Developers",
+      path: "/developers",
+      icon: Building2,
     },
   ];
 
   /*
-   * BUYER
+   * BUYER NAVIGATION
    */
 
   const buyerLinks = [
@@ -54,6 +60,11 @@ function Navbar() {
       label: "Properties",
       path: "/properties",
       icon: Search,
+    },
+    {
+      label: "Projects",
+      path: "/projects",
+      icon: Building2,
     },
     {
       label: "Saved",
@@ -65,10 +76,15 @@ function Navbar() {
       path: "/my-enquiries",
       icon: MessageCircle,
     },
+    {
+      label: "Visits",
+      path: "/my-visits",
+      icon: CalendarDays,
+    },
   ];
 
   /*
-   * SELLER
+   * SELLER NAVIGATION
    */
 
   const sellerLinks = [
@@ -90,12 +106,12 @@ function Navbar() {
     {
       label: "Leads",
       path: "/leads",
-      icon: MessageCircle,
+      icon: BarChart3,
     },
   ];
 
   /*
-   * DEVELOPER
+   * DEVELOPER NAVIGATION
    */
 
   const developerLinks = [
@@ -103,6 +119,11 @@ function Navbar() {
       label: "Properties",
       path: "/properties",
       icon: Search,
+    },
+    {
+      label: "Projects",
+      path: "/projects",
+      icon: Building2,
     },
     {
       label: "My Projects",
@@ -119,12 +140,6 @@ function Navbar() {
       path: "/leads",
       icon: BarChart3,
     },
-    {
-  label: "Notifications",
-  path: "/notifications",
-  icon: Bell,
-},
-
   ];
 
   /*
@@ -133,9 +148,8 @@ function Navbar() {
 
   let navLinks = publicLinks;
 
-  if (!isHomePage && user) {
-    const role =
-      user.role || "Buyer";
+  if (user) {
+    const role = user.role || "Buyer";
 
     if (role === "Seller") {
       navLinks = sellerLinks;
@@ -146,38 +160,66 @@ function Navbar() {
     }
   }
 
+  /*
+   * MORE MENU
+   */
+
+  const moreLinks = [
+    {
+      label: "About Xevoprop",
+      path: "/about",
+      icon: Info,
+    },
+    {
+      label: "Contact Us",
+      path: "/contact",
+      icon: Phone,
+    },
+  ];
+
+  /*
+   * MOBILE MENU CLOSE
+   */
+
   const closeMenu = () => {
     setMobileOpen(false);
+    setMoreOpen(false);
   };
+
+  /*
+   * CHECK MORE ACTIVE
+   */
+
+  const isMoreActive = moreLinks.some(
+    (link) => location.pathname === link.path
+  );
 
   return (
     <header className="xevoprop-navbar">
-
       <div className="navbar-container">
 
-        {/* LOGO */}
+        {/* =====================================================
+            LOGO
+            ===================================================== */}
 
         <Link
           to="/"
           className="navbar-logo"
           onClick={closeMenu}
         >
-
           <img
-  src="/xevoprop-logo.png"
-  alt="Xevoprop"
-/>
-
-          
-
+            src="/xevoprop-logo.png"
+            alt="Xevoprop"
+          />
         </Link>
 
-        {/* DESKTOP NAVIGATION */}
+        {/* =====================================================
+            DESKTOP NAVIGATION
+            ===================================================== */}
 
         <nav className="navbar-links">
 
           {navLinks.map((link) => {
-
             const Icon = link.icon;
 
             return (
@@ -190,28 +232,75 @@ function Navbar() {
                     : "navbar-link"
                 }
               >
+                {Icon && <Icon size={14} />}
 
-                {Icon && (
-                  <Icon size={14} />
-                )}
-
-                <span>
-                  {link.label}
-                </span>
-
+                <span>{link.label}</span>
               </NavLink>
             );
-
           })}
+
+          {/* MORE */}
+
+          <div className="navbar-more">
+
+            <button
+              type="button"
+              className={
+                isMoreActive
+                  ? "navbar-link navbar-more-button active"
+                  : "navbar-link navbar-more-button"
+              }
+              onClick={() => setMoreOpen(!moreOpen)}
+            >
+              <span>More</span>
+              <ChevronDown
+                size={13}
+                className={
+                  moreOpen
+                    ? "more-chevron rotated"
+                    : "more-chevron"
+                }
+              />
+            </button>
+
+            {moreOpen && (
+              <div className="navbar-dropdown">
+
+                {moreLinks.map((link) => {
+                  const Icon = link.icon;
+
+                  return (
+                    <NavLink
+                      key={link.path}
+                      to={link.path}
+                      onClick={closeMenu}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "navbar-dropdown-link active"
+                          : "navbar-dropdown-link"
+                      }
+                    >
+                      <Icon size={15} />
+
+                      <span>{link.label}</span>
+                    </NavLink>
+                  );
+                })}
+
+              </div>
+            )}
+
+          </div>
 
         </nav>
 
-        {/* RIGHT SIDE */}
+        {/* =====================================================
+            RIGHT SIDE
+            ===================================================== */}
 
         <div className="navbar-actions">
 
-          {isHomePage || !user ? (
-
+          {!user ? (
             <>
               <Link
                 to="/login"
@@ -228,10 +317,20 @@ function Navbar() {
                 Get Started
               </Link>
             </>
-
           ) : (
-
             <>
+              {/* NOTIFICATIONS */}
+
+              <Link
+                to="/notifications"
+                className="navbar-notification"
+                aria-label="Notifications"
+              >
+                <Bell size={17} />
+              </Link>
+
+              {/* DASHBOARD */}
+
               <Link
                 to="/dashboard"
                 className="navbar-dashboard"
@@ -239,52 +338,53 @@ function Navbar() {
                 Dashboard
               </Link>
 
+              {/* PROFILE */}
+
               <Link
                 to="/profile"
                 className="navbar-avatar"
+                aria-label="Profile"
               >
                 {user.name
                   ?.charAt(0)
                   .toUpperCase() || "U"}
               </Link>
             </>
-
           )}
 
         </div>
 
-        {/* MOBILE BUTTON */}
+        {/* =====================================================
+            MOBILE BUTTON
+            ===================================================== */}
 
         <button
           type="button"
           className="navbar-mobile-button"
           onClick={() =>
-            setMobileOpen(
-              !mobileOpen
-            )
+            setMobileOpen(!mobileOpen)
           }
+          aria-label="Toggle navigation"
         >
-
           {mobileOpen ? (
             <X size={21} />
           ) : (
             <Menu size={21} />
           )}
-
         </button>
 
       </div>
 
-      {/* MOBILE NAVIGATION */}
+      {/* =====================================================
+          MOBILE NAVIGATION
+          ===================================================== */}
 
       {mobileOpen && (
-
         <div className="mobile-navbar">
 
           <nav>
 
             {navLinks.map((link) => {
-
               const Icon = link.icon;
 
               return (
@@ -298,29 +398,53 @@ function Navbar() {
                       : "mobile-nav-link"
                   }
                 >
+                  {Icon && <Icon size={16} />}
 
-                  {Icon && (
-                    <Icon size={16} />
-                  )}
-
-                  {link.label}
-
+                  <span>{link.label}</span>
                 </NavLink>
               );
+            })}
 
+            {/* MOBILE MORE LINKS */}
+
+            <div className="mobile-more-title">
+              More
+            </div>
+
+            {moreLinks.map((link) => {
+              const Icon = link.icon;
+
+              return (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "mobile-nav-link active"
+                      : "mobile-nav-link"
+                  }
+                >
+                  <Icon size={16} />
+
+                  <span>{link.label}</span>
+                </NavLink>
+              );
             })}
 
           </nav>
 
+          {/* MOBILE ACTIONS */}
+
           <div className="mobile-actions">
 
-            {isHomePage || !user ? (
-
+            {!user ? (
               <>
                 <Link
                   to="/login"
                   onClick={closeMenu}
                 >
+                  <LogIn size={15} />
                   Login
                 </Link>
 
@@ -329,29 +453,53 @@ function Navbar() {
                   onClick={closeMenu}
                 >
                   Get Started
+                  <ArrowRightIcon />
                 </Link>
               </>
-
             ) : (
+              <>
+                <Link
+                  to="/notifications"
+                  onClick={closeMenu}
+                >
+                  <Bell size={15} />
+                  Notifications
+                </Link>
 
-              <Link
-                to="/dashboard"
-                onClick={closeMenu}
-              >
-                <UserRound size={15} />
-                Dashboard
-              </Link>
+                <Link
+                  to="/dashboard"
+                  onClick={closeMenu}
+                >
+                  <UserRound size={15} />
+                  Dashboard
+                </Link>
 
+                <Link
+                  to="/profile"
+                  onClick={closeMenu}
+                >
+                  <UserRound size={15} />
+                  Profile
+                </Link>
+              </>
             )}
 
           </div>
 
         </div>
-
       )}
 
     </header>
   );
+}
+
+/*
+ * Small arrow component used only
+ * inside the mobile Get Started button.
+ */
+
+function ArrowRightIcon() {
+  return <span aria-hidden="true">→</span>;
 }
 
 export default Navbar;

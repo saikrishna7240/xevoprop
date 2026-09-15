@@ -1,0 +1,187 @@
+/* ProjectDetails.css */
+
+/* Reuses the project page shell from MyProjects */
+
+.my-projects-page {
+  min-height: 100vh;
+  background: var(--off-white);
+  padding: 64px 0 100px;
+}
+
+.my-projects-container {
+  width: min(1000px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* BACK BUTTON */
+
+.add-project-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(111, 78, 55, 0.2);
+  background: #fff;
+  color: #625b54;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.add-project-back:hover {
+  border-color: var(--earth-brown);
+  background: var(--sand);
+  color: var(--earth-brown);
+  transform: translateX(-2px);
+}
+
+/* PROJECT CARD */
+
+.project-card {
+  overflow: hidden;
+  border: 1px solid rgba(111, 78, 55, 0.14);
+  background: #fff;
+  box-shadow: 0 14px 45px rgba(43, 35, 29, 0.07);
+}
+
+/* IMAGE */
+
+.project-image {
+  position: relative;
+  width: 100%;
+  height: 430px;
+  overflow: hidden;
+  background: #e8ddcd;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.project-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(
+      135deg,
+      #e8ddcd 0%,
+      #d9c9b4 100%
+    );
+  color: var(--earth-brown);
+}
+
+/* CONTENT */
+
+.project-card-content {
+  padding: 38px 42px 44px;
+}
+
+.project-card-content h1 {
+  margin: 0 0 12px;
+  color: var(--charcoal);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.project-card-content p {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 18px;
+  color: #6f6861;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.project-card-content p svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--earth-brown);
+}
+
+.project-card-content p:nth-of-type(2) {
+  display: inline-flex;
+  margin-bottom: 26px;
+  padding: 9px 13px;
+  background: #f5f0e9;
+  color: var(--earth-brown);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.project-card-content p:last-child {
+  max-width: 780px;
+  margin-bottom: 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(111, 78, 55, 0.12);
+  color: #625c55;
+  font-size: 0.94rem;
+  line-height: 1.85;
+}
+
+/* LOADING */
+
+.projects-empty {
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(111, 78, 55, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  color: #746d65;
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+  .my-projects-page {
+    padding: 42px 0 70px;
+  }
+
+  .my-projects-container {
+    width: min(100% - 28px, 620px);
+  }
+
+  .project-image {
+    height: 300px;
+  }
+
+  .project-card-content {
+    padding: 28px 24px 32px;
+  }
+
+  .project-card-content h1 {
+    font-size: 2.15rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .project-image {
+    height: 240px;
+  }
+
+  .project-card-content {
+    padding: 24px 19px 28px;
+  }
+
+  .project-card-content h1 {
+    font-size: 1.9rem;
+  }
+
+  .project-card-content p {
+    font-size: 0.85rem;
+  }
+}
