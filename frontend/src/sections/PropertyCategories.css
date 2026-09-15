@@ -1,77 +1,106 @@
 /* =========================================================
-   XEVOPROP — PROPERTY CATEGORIES
+   PROPERTY CATEGORIES
+   XEVOPROP — Bright PropTech Theme
    ========================================================= */
 
 .categories-section {
   position: relative;
-  padding: 95px 0;
-  background: #eadcc8;
   overflow: hidden;
+  padding: 105px 0;
+
+  background:
+    radial-gradient(
+      circle at 92% 15%,
+      rgba(0, 198, 255, 0.07),
+      transparent 28%
+    ),
+    #ffffff;
 }
 
 .categories-container {
-  position: relative;
-  z-index: 2;
-  width: min(1180px, 92%);
+  width: min(1380px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-/* =========================================================
-   SECTION LABEL
-   ========================================================= */
-
-.categories-section .section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-
-  margin-bottom: 14px;
-
-  color: #6f4e37;
-  font-family: "Inter", sans-serif;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-}
-
-.categories-section .section-label::before {
-  content: "";
-
-  width: 24px;
-  height: 1px;
-
-  background: #6f4e37;
-}
 
 /* =========================================================
    HEADING
    ========================================================= */
 
 .categories-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 50px;
+
+  margin-bottom: 48px;
+}
+
+.categories-heading > div {
   max-width: 700px;
+}
 
-  margin: 0 0 40px;
+.categories-heading .section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
 
-  color: #1f1e1e !important;
+  margin-bottom: 16px;
 
-  font-family: "Playfair Display", Georgia, serif;
+  color: var(--primary);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.categories-heading .section-label::before {
+  content: "";
+
+  width: 27px;
+  height: 2px;
+
+  border-radius: 999px;
+  background: var(--gradient-primary);
+}
+
+.categories-heading h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
 
   font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.08;
+  font-weight: 850;
 
-  font-weight: 600;
-
-  line-height: 1.02;
-
-  letter-spacing: -1.5px;
+  letter-spacing: -2.4px;
 }
 
-/* Make nested text visible */
+.categories-heading h2 span {
+  background: var(--gradient-primary);
 
-.categories-heading *,
-.categories-heading span {
-  color: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
 }
+
+.categories-heading > p {
+  max-width: 450px;
+
+  margin: 0 0 4px;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+  line-height: 1.8;
+}
+
 
 /* =========================================================
    CATEGORY GRID
@@ -79,12 +108,10 @@
 
 .categories-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 15px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
+
 
 /* =========================================================
    CATEGORY CARD
@@ -93,338 +120,379 @@
 .category-card {
   position: relative;
 
-  min-height: 215px;
-
   display: flex;
   flex-direction: column;
+
+  min-width: 0;
+  min-height: 235px;
 
   padding: 24px;
 
   overflow: hidden;
 
-  border: 1px solid rgba(111, 78, 55, 0.16);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 
-  border-radius: 10px;
+  background: #ffffff;
+  color: inherit;
 
-  background: #f9f7f4;
+  text-align: left;
+
+  box-shadow: var(--shadow-card);
 
   cursor: pointer;
 
   transition:
-    transform 0.3s ease,
+    border-color 0.3s ease,
     box-shadow 0.3s ease,
-    border-color 0.3s ease;
+    background 0.3s ease;
 }
 
 .category-card:hover {
-  transform: translateY(-6px);
+  border-color: #cfe0ff;
 
-  border-color: rgba(111, 78, 55, 0.35);
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #f6faff 100%
+    );
 
-  box-shadow:
-    0 18px 35px rgba(31, 30, 30, 0.12);
+  box-shadow: var(--shadow-md);
 }
 
+
 /* =========================================================
-   CARD TOP
+   TOP
    ========================================================= */
 
 .category-top {
-  position: relative;
-
-  z-index: 2;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 }
 
-/* =========================================================
-   ICON
-   ========================================================= */
-
 .category-icon {
-  width: 42px;
-  height: 42px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
 
-  background: #eadcc8;
+  border: 1px solid #d4e4fa;
+  border-radius: 14px;
 
-  color: #6f4e37;
+  background:
+    linear-gradient(
+      135deg,
+      #edf5ff,
+      #e8faff
+    );
+
+  color: var(--primary);
 
   transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.category-icon svg {
-  width: 19px;
-  height: 19px;
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .category-card:hover .category-icon {
-  background: #6f4e37;
-
+  background: var(--gradient-primary);
   color: #ffffff;
 
-  transform: rotate(-5deg);
+  transform: scale(1.05);
 }
 
-/* =========================================================
-   CONTENT
-   ========================================================= */
-
-.category-content {
-  position: relative;
-
-  z-index: 2;
-
-  margin-top: auto;
-}
-
-/* =========================================================
-   CATEGORY NAME
-   ========================================================= */
-
-.category-content h3 {
-  margin: 0;
-
-  color: #1f1e1e !important;
-
-  font-family: "Playfair Display", Georgia, serif;
-
-  font-size: 26px;
-
-  font-weight: 600;
-
-  line-height: 1.1;
-
-  letter-spacing: -0.4px;
-}
-
-/* =========================================================
-   CATEGORY COUNT
-   ========================================================= */
-
-.category-count {
-  margin-top: 7px;
-
-  color: #81766c;
-
-  font-family: "Inter", sans-serif;
-
-  font-size: 9px;
-
-  font-weight: 600;
-
-  letter-spacing: 0.5px;
-}
-
-/* =========================================================
-   DECORATIVE LINE
-   ========================================================= */
-
-.category-line {
-  width: 100%;
-
-  height: 1px;
-
-  margin-top: 18px;
-
-  background: rgba(111, 78, 55, 0.16);
-
-  transition:
-    background 0.25s ease;
-}
-
-.category-card:hover .category-line {
-  background: #6f4e37;
-}
 
 /* =========================================================
    ARROW
    ========================================================= */
 
 .category-arrow {
-  position: absolute;
-
-  right: 22px;
-  bottom: 20px;
-
-  width: 32px;
-  height: 32px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(111, 78, 55, 0.2);
-
-  border-radius: 50%;
-
-  color: #6f4e37;
+  color: #9aabc1;
 
   transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
-}
-
-.category-arrow svg {
-  width: 14px;
-  height: 14px;
+    color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .category-card:hover .category-arrow {
-  background: #6f4e37;
-
-  color: #ffffff;
-
-  transform: translateX(3px);
+  color: var(--primary);
+  transform: translate(3px, -3px);
 }
+
 
 /* =========================================================
-   ALTERNATE CARD
+   CONTENT
    ========================================================= */
 
-.category-card:nth-child(2),
-.category-card:nth-child(5) {
-  background: #2e4a38;
-
-  border-color: #2e4a38;
+.category-content {
+  margin-top: 27px;
 }
 
-.category-card:nth-child(2) .category-icon,
-.category-card:nth-child(5) .category-icon {
-  background: rgba(255, 255, 255, 0.12);
+.category-content h3 {
+  margin: 0;
 
-  color: #eadcc8;
+  color: var(--text-primary);
+
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
+
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 800;
+
+  letter-spacing: -0.35px;
 }
 
-.category-card:nth-child(2) .category-content h3,
-.category-card:nth-child(5) .category-content h3 {
-  color: #ffffff !important;
+.category-content p {
+  max-width: 310px;
+
+  margin: 8px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+  line-height: 1.65;
 }
 
-.category-card:nth-child(2) .category-count,
-.category-card:nth-child(5) .category-count {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.category-card:nth-child(2) .category-line,
-.category-card:nth-child(5) .category-line {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.category-card:nth-child(2) .category-arrow,
-.category-card:nth-child(5) .category-arrow {
-  border-color: rgba(255, 255, 255, 0.25);
-
-  color: #eadcc8;
-}
-
-.category-card:nth-child(2):hover .category-arrow,
-.category-card:nth-child(5):hover .category-arrow {
-  background: #eadcc8;
-
-  color: #2e4a38;
-}
 
 /* =========================================================
-   BROWN CARD
+   COUNT
    ========================================================= */
 
-.category-card:nth-child(4) {
-  background: #6f4e37;
+.category-count {
+  display: inline-flex;
+  align-items: center;
 
-  border-color: #6f4e37;
+  margin-top: auto;
+  padding-top: 20px;
+
+  color: var(--primary);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
 }
 
-.category-card:nth-child(4) .category-icon {
-  background: rgba(255, 255, 255, 0.13);
 
-  color: #eadcc8;
+/* =========================================================
+   BOTTOM LINE
+   ========================================================= */
+
+.category-line {
+  position: absolute;
+  left: 24px;
+  bottom: 0;
+
+  width: 0;
+  height: 3px;
+
+  border-radius: 999px 999px 0 0;
+
+  background: var(--gradient-primary);
+
+  transition: width 0.35s ease;
 }
 
-.category-card:nth-child(4) .category-content h3 {
-  color: #ffffff !important;
+.category-card:hover .category-line {
+  width: 75px;
 }
 
-.category-card:nth-child(4) .category-count {
-  color: rgba(255, 255, 255, 0.68);
+
+/* =========================================================
+   DECORATIVE CARD EFFECT
+   ========================================================= */
+
+.category-card::before {
+  content: "";
+
+  position: absolute;
+  right: -55px;
+  top: -55px;
+
+  width: 140px;
+  height: 140px;
+
+  border: 1px solid rgba(18, 100, 255, 0.055);
+  border-radius: 50%;
+
+  transition: transform 0.4s ease;
 }
 
-.category-card:nth-child(4) .category-line {
-  background: rgba(255, 255, 255, 0.2);
+.category-card:hover::before {
+  transform: scale(1.25);
 }
 
-.category-card:nth-child(4) .category-arrow {
-  border-color: rgba(255, 255, 255, 0.25);
 
-  color: #eadcc8;
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.category-card:focus-visible {
+  outline: 3px solid rgba(18, 100, 255, 0.18);
+  outline-offset: 3px;
 }
 
-.category-card:nth-child(4):hover .category-arrow {
-  background: #eadcc8;
 
-  color: #6f4e37;
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .categories-section {
+    padding: 85px 0;
+  }
+
+  .categories-container {
+    width: min(100% - 48px, 1380px);
+  }
+
+  .categories-heading {
+    gap: 35px;
+  }
+
+  .categories-heading h2 {
+    font-size: 46px;
+  }
+
+  .category-card {
+    min-height: 225px;
+    padding: 21px;
+  }
+
+  .category-line {
+    left: 21px;
+  }
 }
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .categories-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .categories-heading > p {
+    max-width: 600px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 900px) {
-  .categories-section {
-    padding: 75px 0;
-  }
-
-  .categories-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 600px) {
   .categories-section {
-    padding: 65px 0;
+    padding: 72px 0;
+  }
+
+  .categories-container {
+    width: calc(100% - 32px);
   }
 
   .categories-heading {
-    margin-bottom: 28px;
+    margin-bottom: 34px;
+  }
 
+  .categories-heading h2 {
     font-size: 40px;
+    letter-spacing: -1.6px;
+  }
 
-    letter-spacing: -1px;
+  .categories-heading > p {
+    font-size: 13px;
+    line-height: 1.7;
   }
 
   .categories-grid {
     grid-template-columns: 1fr;
-
-    gap: 12px;
+    gap: 14px;
   }
 
   .category-card {
-    min-height: 190px;
+    min-height: 205px;
+  }
+}
 
-    padding: 21px;
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .categories-section {
+    padding: 60px 0;
+  }
+
+  .categories-container {
+    width: calc(100% - 24px);
+  }
+
+  .categories-heading h2 {
+    font-size: 35px;
+    letter-spacing: -1.2px;
+  }
+
+  .categories-heading .section-label {
+    font-size: 10px;
+    letter-spacing: 1.3px;
+  }
+
+  .category-card {
+    min-height: 195px;
+    padding: 19px;
+    border-radius: 17px;
+  }
+
+  .category-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+  }
+
+  .category-content {
+    margin-top: 22px;
   }
 
   .category-content h3 {
-    font-size: 24px;
+    font-size: 16px;
   }
 
-  .category-arrow {
-    right: 20px;
-    bottom: 18px;
+  .category-content p {
+    font-size: 11px;
+  }
+
+  .category-line {
+    left: 19px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .category-card,
+  .category-icon,
+  .category-arrow,
+  .category-line,
+  .category-card::before {
+    transition: none;
   }
 }

@@ -1,241 +1,312 @@
 /* =========================================================
-   LEADS — XEVOPROP PREMIUM EDITORIAL THEME
+   XEVOPROP — LEADS
+   BRIGHT PROPTECH / MODERN SAAS THEME
    ========================================================= */
 
 .leads-page {
   min-height: 100vh;
-  padding: 120px 0 90px;
-  background: var(--off-white);
+  padding: 48px 24px 80px;
+  background:
+    radial-gradient(
+      circle at 5% 4%,
+      rgba(0, 198, 255, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 96% 10%,
+      rgba(105, 87, 255, 0.07),
+      transparent 26%
+    ),
+    #f7faff;
 }
 
 .leads-container {
-  width: min(1100px, calc(100% - 48px));
+  width: min(1280px, 100%);
   margin: 0 auto;
 }
 
-/* =========================
+/* =========================================================
    HEADER
-   ========================= */
+   ========================================================= */
 
 .leads-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 30px;
-
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-
-  border-bottom: 1px solid rgba(111, 78, 55, 0.15);
+  margin-bottom: 34px;
 }
 
 .leads-eyebrow {
-  display: block;
-  margin-bottom: 11px;
-
-  color: var(--earth-brown);
-
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  margin-bottom: 12px;
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+  background: #edf5ff;
+  color: #1264ff;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.15em;
 }
 
 .leads-header h1 {
   margin: 0;
-
-  color: var(--charcoal);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(40px, 5vw, 54px);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  color: #0b1736;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
 }
 
 .leads-header h1 span {
-  color: var(--earth-brown);
+  color: #1264ff;
 }
 
 .leads-header p {
-  margin: 12px 0 0;
-
-  color: #7d756d;
+  margin: 11px 0 0;
+  color: #64748b;
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
-/* =========================
-   COUNT
-   ========================= */
+/* =========================================================
+   LEADS COUNT
+   ========================================================= */
 
 .leads-count {
   min-width: 125px;
   padding: 17px 20px;
-
-  border: 1px solid rgba(111, 78, 55, 0.13);
-  background: #fffdf9;
-
+  border: 1px solid #dce8f7;
+  border-radius: 16px;
+  background: #ffffff;
   text-align: center;
+  box-shadow: 0 8px 25px rgba(11, 23, 54, 0.055);
 }
 
 .leads-count strong {
   display: block;
-
-  color: var(--earth-brown);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 30px;
-  font-weight: 500;
+  color: #1264ff;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 27px;
+  font-weight: 800;
   line-height: 1;
 }
 
 .leads-count span {
   display: block;
-  margin-top: 6px;
-
-  color: #817970;
-
+  margin-top: 7px;
+  color: #8190a8;
   font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-/* =========================
-   LEADS LIST
-   ========================= */
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
 
-.leads-list {
+.leads-empty {
+  min-height: 320px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 25px;
+  border: 1px solid #e1e9f3;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #64748b;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(11, 23, 54, 0.05);
 }
 
+.leads-empty svg {
+  margin-bottom: 14px;
+  color: #1264ff;
+}
+
+.leads-empty h2 {
+  margin: 0;
+  color: #0b1736;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.leads-empty p {
+  margin: 8px 0 0;
+  color: #8190a8;
+  font-size: 12px;
+}
+
+/* =========================================================
+   LEADS LIST
+   ========================================================= */
+
+.leads-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* =========================================================
+   LEAD CARD
+   ========================================================= */
+
 .lead-card {
-  padding: 22px 24px;
-
-  border: 1px solid rgba(111, 78, 55, 0.13);
-  background: #fffdf9;
-
-  box-shadow: 0 8px 25px rgba(55, 45, 35, 0.035);
-
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid #e1e9f3;
+  border-radius: 19px;
+  background: #ffffff;
+  box-shadow: 0 7px 25px rgba(11, 23, 54, 0.055);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
 }
 
-.lead-card:hover {
-  transform: translateY(-2px);
-
-  border-color: rgba(111, 78, 55, 0.24);
-
-  box-shadow: 0 15px 35px rgba(55, 45, 35, 0.075);
+.lead-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #1264ff,
+    #00c6ff,
+    #6957ff
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
-/* =========================
+.lead-card:hover {
+  transform: translateY(-4px);
+  border-color: #cddcf1;
+  box-shadow: 0 17px 38px rgba(18, 100, 255, 0.1);
+}
+
+.lead-card:hover::before {
+  opacity: 1;
+}
+
+/* =========================================================
    LEAD TOP
-   ========================= */
+   ========================================================= */
 
 .lead-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
+  margin-bottom: 17px;
 }
 
 .lead-buyer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
   min-width: 0;
 }
 
 .lead-avatar {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #cfe0ff;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    #edf5ff,
+    #e8faff
+  );
+  color: #1264ff;
+}
 
-  background: var(--sand);
-  color: var(--earth-brown);
+.lead-buyer > div:last-child {
+  min-width: 0;
 }
 
 .lead-buyer strong {
   display: block;
-
-  color: var(--charcoal);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 18px;
-  font-weight: 500;
+  overflow: hidden;
+  color: #0b1736;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .lead-buyer span {
   display: block;
-  max-width: 360px;
-
-  margin-top: 3px;
-
+  max-width: 230px;
+  margin-top: 4px;
   overflow: hidden;
+  color: #8190a8;
+  font-size: 9px;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  color: #8a8178;
-  font-size: 10px;
 }
 
-/* =========================
+/* =========================================================
    STATUS
-   ========================= */
+   ========================================================= */
 
 .lead-status {
   flex-shrink: 0;
-
-  padding: 6px 10px;
-
+  padding: 6px 9px;
   border-radius: 999px;
-
-  background: rgba(111, 78, 55, 0.08);
-  color: var(--earth-brown);
-
   font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
 }
 
 .lead-status.new {
-  background: rgba(111, 78, 55, 0.08);
-  color: var(--earth-brown);
+  border: 1px solid #cfe0ff;
+  background: #edf5ff;
+  color: #1264ff;
 }
 
 .lead-status.contacted {
-  background: rgba(46, 74, 56, 0.08);
-  color: var(--sage-green);
+  border: 1px solid #d9d2ff;
+  background: #f0edff;
+  color: #6957ff;
 }
 
 .lead-status.resolved {
-  background: rgba(46, 74, 56, 0.14);
-  color: var(--sage-green);
+  border: 1px solid #c9efdd;
+  background: #e9f9f1;
+  color: #16a66a;
 }
 
-/* =========================
-   PROPERTY / MESSAGE
-   ========================= */
+.lead-status.pending {
+  border: 1px solid #ffe3b1;
+  background: #fff7e7;
+  color: #d58b15;
+}
+
+/* =========================================================
+   PROPERTY LOCATION / MESSAGE
+   ========================================================= */
 
 .lead-card > p {
   display: flex;
   align-items: flex-start;
   gap: 7px;
-
-  margin: 15px 0 0;
-
-  color: #706860;
-
+  margin: 0 0 11px;
+  color: #526078;
   font-size: 11px;
   line-height: 1.65;
 }
@@ -243,190 +314,166 @@
 .lead-card > p svg {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--earth-brown);
+  color: #1264ff;
 }
 
-.lead-card > p + p {
-  display: block;
-
-  margin-top: 8px;
-  padding-left: 20px;
-
-  color: #817970;
+.lead-card > p:nth-of-type(2) {
+  min-height: 42px;
+  padding: 12px 13px;
+  border: 1px solid #edf2f8;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #64748b;
 }
 
-/* =========================
-   CONTACT
-   ========================= */
+/* =========================================================
+   CONTACT ACTIONS
+   ========================================================= */
 
 .lead-contact {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-
-  margin-top: 17px;
-  padding-top: 15px;
-
-  border-top: 1px solid rgba(111, 78, 55, 0.1);
+  padding: 15px 0;
+  border-top: 1px solid #edf2f8;
+  border-bottom: 1px solid #edf2f8;
 }
 
 .lead-contact a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-
-  min-height: 32px;
-  padding: 0 11px;
-
-  border: 1px solid rgba(111, 78, 55, 0.16);
-
-  color: var(--earth-brown);
-
+  padding: 8px 11px;
+  border: 1px solid #dfe8f3;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #526078;
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.06em;
   text-decoration: none;
-  text-transform: uppercase;
-
-  transition: all 0.2s ease;
-}
-
-.lead-contact a:hover {
-  border-color: var(--earth-brown);
-  background: var(--sand);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .lead-contact a svg {
-  stroke-width: 1.8;
+  color: #1264ff;
 }
 
-/* =========================
+.lead-contact a:hover {
+  transform: translateY(-1px);
+  border-color: #cfe0ff;
+  background: #edf5ff;
+  color: #1264ff;
+}
+
+/* =========================================================
    STATUS ACTIONS
-   ========================= */
+   ========================================================= */
 
 .lead-actions {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
-
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 15px;
 }
 
 .lead-actions button {
+  flex: 1;
+  min-height: 34px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-
-  min-height: 30px;
-  padding: 0 10px;
-
-  border: 1px solid rgba(111, 78, 55, 0.13);
-  background: transparent;
-  color: #817970;
-
-  font-family: inherit;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
+  padding: 7px 9px;
+  border: 1px solid #dfe8f3;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #526078;
   cursor: pointer;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 800;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
 
-  transition: all 0.2s ease;
+.lead-actions button svg {
+  color: #1264ff;
 }
 
 .lead-actions button:hover {
-  border-color: var(--earth-brown);
-  color: var(--earth-brown);
-  background: #f8f1e8;
+  transform: translateY(-1px);
+  border-color: #cfe0ff;
+  background: #edf5ff;
+  color: #1264ff;
 }
 
-.lead-actions button:nth-child(2):hover,
-.lead-actions button:nth-child(3):hover {
-  border-color: var(--sage-green);
-  color: var(--sage-green);
-  background: rgba(46, 74, 56, 0.06);
+.lead-actions button:last-child:hover {
+  border-color: #c9efdd;
+  background: #e9f9f1;
+  color: #16a66a;
 }
 
-/* =========================
-   EMPTY / LOADING
-   ========================= */
-
-.leads-empty {
-  min-height: 300px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 40px;
-
-  border: 1px dashed rgba(111, 78, 55, 0.2);
-  background: #fffdf9;
-
-  color: #817970;
-
-  text-align: center;
+.lead-actions button:last-child:hover svg {
+  color: #16a66a;
 }
 
-.leads-empty svg {
-  width: 54px;
-  height: 54px;
+/* =========================================================
+   RESPONSIVE — 900px
+   ========================================================= */
 
-  margin-bottom: 16px;
-  padding: 13px;
-
-  box-sizing: border-box;
-
-  background: var(--sand);
-  color: var(--earth-brown);
+@media (max-width: 900px) {
+  .leads-list {
+    grid-template-columns: 1fr;
+  }
 }
 
-.leads-empty h2 {
-  margin: 0;
-
-  color: var(--charcoal);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 26px;
-  font-weight: 500;
-}
-
-.leads-empty p {
-  margin: 8px 0 0;
-
-  color: #817970;
-  font-size: 12px;
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* =========================================================
+   RESPONSIVE — 650px
+   ========================================================= */
 
 @media (max-width: 650px) {
   .leads-page {
-    padding: 100px 0 60px;
-  }
-
-  .leads-container {
-    width: min(100% - 30px, 560px);
+    padding: 32px 16px 60px;
   }
 
   .leads-header {
-    display: block;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .leads-count {
-    width: fit-content;
-    min-width: 110px;
-    margin-top: 20px;
+    min-width: 115px;
   }
 
   .lead-card {
     padding: 19px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .leads-page {
+    padding: 25px 11px 45px;
+  }
+
+  .leads-header h1 {
+    font-size: 30px;
+  }
+
+  .leads-header p {
+    font-size: 11px;
   }
 
   .lead-top {
@@ -434,30 +481,55 @@
   }
 
   .lead-buyer span {
-    max-width: 220px;
-  }
-}
-
-@media (max-width: 430px) {
-  .leads-header h1 {
-    font-size: 38px;
+    max-width: 155px;
   }
 
-  .lead-top {
-    display: block;
-  }
-
-  .lead-status {
-    display: inline-block;
-    margin-top: 12px;
-  }
-
-  .lead-contact,
-  .lead-actions {
+  .lead-contact {
     gap: 6px;
   }
 
   .lead-contact a {
-    flex: 1;
+    padding: 7px 9px;
+  }
+
+  .lead-actions {
+    gap: 5px;
+  }
+
+  .lead-actions button {
+    padding: 7px 5px;
+    font-size: 8px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 360px
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .lead-card {
+    padding: 16px;
+  }
+
+  .lead-top {
+    gap: 8px;
+  }
+
+  .lead-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lead-buyer strong {
+    font-size: 12px;
+  }
+
+  .lead-status {
+    padding: 5px 7px;
+    font-size: 7px;
+  }
+
+  .lead-actions button svg {
+    display: none;
   }
 }

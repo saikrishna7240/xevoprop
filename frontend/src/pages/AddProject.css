@@ -1,64 +1,71 @@
-/* =========================================
-   ADD PROJECT PAGE
-========================================= */
+/* =========================================================
+   XEVOPROP — ADD PROJECT
+   Bright PropTech / Modern SaaS Theme
+   ========================================================= */
 
 .add-project-page {
   min-height: 100vh;
-  padding: 110px 24px 60px;
+  padding: 42px 0 80px;
+
   background:
     radial-gradient(
-      circle at 15% 10%,
-      rgba(0, 229, 255, 0.08),
+      circle at 90% 5%,
+      rgba(0, 198, 255, 0.08),
       transparent 28%
     ),
     radial-gradient(
-      circle at 85% 30%,
-      rgba(0, 229, 255, 0.05),
-      transparent 30%
+      circle at 5% 45%,
+      rgba(105, 87, 255, 0.05),
+      transparent 25%
     ),
-    #050b16;
-  color: #ffffff;
+    #f7faff;
 }
 
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
 .add-project-container {
-  width: 100%;
-  max-width: 1050px;
+  width: min(1080px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-
-/* =========================================
+/* =========================================================
    BACK BUTTON
-========================================= */
+   ========================================================= */
 
 .add-project-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  margin-bottom: 30px;
-  padding: 10px 0;
+  margin-bottom: 34px;
+  padding: 0;
 
-  border: none;
+  color: #61708a;
+
   background: transparent;
+  border: none;
 
-  color: #9ca9bb;
-  font-size: 14px;
-  font-weight: 500;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
-  transition: 0.25s ease;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .add-project-back:hover {
-  color: #00e5ff;
+  color: var(--primary);
   transform: translateX(-3px);
 }
 
-
-/* =========================================
+/* =========================================================
    HEADER
-========================================= */
+   ========================================================= */
 
 .add-project-header {
   display: flex;
@@ -69,99 +76,136 @@
 }
 
 .add-project-icon {
-  width: 54px;
-  height: 54px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 58px;
+  height: 58px;
+
   flex-shrink: 0;
 
-  border: 1px solid rgba(0, 229, 255, 0.25);
+  color: #ffffff;
+
+  background: var(--gradient-primary);
+
   border-radius: 16px;
 
-  background: rgba(0, 229, 255, 0.08);
-  color: #00e5ff;
-
   box-shadow:
-    0 0 30px rgba(0, 229, 255, 0.08);
+    0 10px 24px rgba(18, 100, 255, 0.2);
 }
 
-.add-project-header span {
+.add-project-header > div:last-child > span {
   display: block;
 
   margin-bottom: 6px;
 
-  color: #00e5ff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  color: var(--primary);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
 }
 
 .add-project-header h1 {
   margin: 0;
 
-  color: #ffffff;
-  font-size: clamp(30px, 4vw, 44px);
-  font-weight: 700;
+  color: var(--text-primary);
+
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
+
+  font-size: 36px;
+  font-weight: 800;
   line-height: 1.1;
+  letter-spacing: -0.04em;
 }
 
 .add-project-header p {
-  margin: 8px 0 0;
+  margin: 7px 0 0;
 
-  color: #8d9bad;
-  font-size: 15px;
+  color: var(--text-secondary);
+
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-
-/* =========================================
+/* =========================================================
    ERROR
-========================================= */
+   ========================================================= */
 
 .add-project-error {
-  margin-bottom: 24px;
-  padding: 14px 18px;
+  display: flex;
+  align-items: center;
 
-  border: 1px solid rgba(255, 80, 80, 0.3);
-  border-radius: 12px;
+  margin-bottom: 22px;
+  padding: 13px 16px;
 
-  background: rgba(255, 60, 60, 0.08);
+  color: #b63f3f;
 
-  color: #ff8d8d;
-  font-size: 14px;
+  background: #fff2f2;
+
+  border: 1px solid #ffd3d3;
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(224, 82, 82, 0.05);
 }
 
+.add-project-error::before {
+  content: "!";
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-/* =========================================
+  width: 22px;
+  height: 22px;
+
+  margin-right: 10px;
+
+  color: #ffffff;
+
+  background: #e05252;
+
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* =========================================================
    FORM
-========================================= */
+   ========================================================= */
 
 .add-project-form {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
 }
 
-
-/* =========================================
+/* =========================================================
    FORM SECTION
-========================================= */
+   ========================================================= */
 
 .project-form-section {
-  padding: 30px;
+  padding: 32px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
+  background: #ffffff;
 
-  background: rgba(11, 20, 35, 0.78);
+  border: 1px solid #e1e9f3;
+  border-radius: 18px;
 
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.22);
-
-  backdrop-filter: blur(14px);
+    0 6px 24px rgba(11, 23, 54, 0.045);
 }
+
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
 
 .project-form-heading {
   display: flex;
@@ -181,51 +225,58 @@
 
   flex-shrink: 0;
 
-  border: 1px solid rgba(0, 229, 255, 0.25);
-  border-radius: 10px;
+  color: var(--primary);
 
-  background: rgba(0, 229, 255, 0.07);
+  background: #edf5ff;
 
-  color: #00e5ff;
-  font-size: 12px;
-  font-weight: 700;
+  border: 1px solid #d6e6ff;
+  border-radius: 9px;
+
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .project-form-heading h2 {
-  margin: 0;
+  margin: 0 0 5px;
 
-  color: #ffffff;
-  font-size: 20px;
-  font-weight: 600;
+  color: var(--text-primary);
+
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
+
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
 }
 
 .project-form-heading p {
-  margin: 5px 0 0;
+  margin: 0;
 
-  color: #7f8da1;
-  font-size: 13px;
+  color: var(--text-muted);
+
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-
-/* =========================================
+/* =========================================================
    FORM GRID
-========================================= */
+   ========================================================= */
 
 .project-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  gap: 22px 20px;
 }
 
-
-/* =========================================
+/* =========================================================
    FORM GROUP
-========================================= */
+   ========================================================= */
 
 .project-form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .project-form-group.full {
@@ -233,20 +284,25 @@
 }
 
 .project-form-group label {
-  color: #cbd5e1;
-  font-size: 13px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  margin-bottom: 8px;
+
+  color: #263653;
+
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .project-form-group label span {
-  margin-left: 4px;
-  color: #00e5ff;
+  color: #e05252;
 }
 
-
-/* =========================================
+/* =========================================================
    INPUTS
-========================================= */
+   ========================================================= */
 
 .project-form-group input,
 .project-form-group select,
@@ -254,79 +310,76 @@
   width: 100%;
   box-sizing: border-box;
 
-  padding: 13px 15px;
+  color: var(--text-primary);
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 11px;
+  background: #fbfdff;
+
+  border: 1px solid #dce6f1;
+  border-radius: 10px;
 
   outline: none;
 
-  background: #08111f;
-
-  color: #ffffff;
-
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
 
   transition:
-    border-color 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-.project-form-group input::placeholder,
-.project-form-group textarea::placeholder {
-  color: #526176;
-}
-
-.project-form-group input:hover,
-.project-form-group select:hover,
-.project-form-group textarea:hover {
-  border-color: rgba(0, 229, 255, 0.2);
-}
-
-.project-form-group input:focus,
-.project-form-group select:focus,
-.project-form-group textarea:focus {
-  border-color: rgba(0, 229, 255, 0.65);
-
-  background: #091525;
-
-  box-shadow:
-    0 0 0 3px rgba(0, 229, 255, 0.07);
-}
-
-
-/* =========================================
-   SELECT
-========================================= */
-
+.project-form-group input,
 .project-form-group select {
-  cursor: pointer;
+  height: 46px;
+  padding: 0 13px;
 }
-
-.project-form-group select option {
-  background: #08111f;
-  color: #ffffff;
-}
-
-
-/* =========================================
-   TEXTAREA
-========================================= */
 
 .project-form-group textarea {
   min-height: 145px;
+
+  padding: 13px;
 
   resize: vertical;
 
   line-height: 1.6;
 }
 
+.project-form-group input::placeholder,
+.project-form-group textarea::placeholder {
+  color: #a2afc0;
+}
 
-/* =========================================
+.project-form-group input:hover,
+.project-form-group select:hover,
+.project-form-group textarea:hover {
+  border-color: #c7d7eb;
+  background: #ffffff;
+}
+
+.project-form-group input:focus,
+.project-form-group select:focus,
+.project-form-group textarea:focus {
+  border-color: var(--primary);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(18, 100, 255, 0.08);
+}
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.project-form-group select {
+  cursor: pointer;
+
+  appearance: auto;
+}
+
+/* =========================================================
    ACTIONS
-========================================= */
+   ========================================================= */
 
 .add-project-actions {
   display: flex;
@@ -334,44 +387,49 @@
   justify-content: flex-end;
   gap: 12px;
 
-  padding-top: 5px;
+  padding-top: 8px;
 }
 
-
-/* CANCEL */
+/* =========================================================
+   CANCEL
+   ========================================================= */
 
 .project-cancel-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 46px;
+  padding: 0 21px;
 
-  min-width: 110px;
-  padding: 13px 20px;
+  color: #596981;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 11px;
+  background: #ffffff;
 
-  background: rgba(255, 255, 255, 0.03);
-
-  color: #aab5c5;
+  border: 1px solid #dce5ef;
+  border-radius: 10px;
 
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
 
   cursor: pointer;
 
-  transition: 0.25s ease;
+  transition: all 0.2s ease;
 }
 
-.project-cancel-btn:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+.project-cancel-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+
+  border-color: #c4d2e2;
+
+  background: #f8fbff;
 }
 
+.project-cancel-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
-/* CREATE */
+/* =========================================================
+   CREATE BUTTON
+   ========================================================= */
 
 .project-create-btn {
   display: inline-flex;
@@ -379,102 +437,122 @@
   justify-content: center;
   gap: 8px;
 
-  min-width: 160px;
-  padding: 13px 22px;
+  min-height: 46px;
+  padding: 0 22px;
 
-  border: 1px solid rgba(0, 229, 255, 0.5);
-  border-radius: 11px;
+  color: #ffffff;
 
-  background: linear-gradient(
-    135deg,
-    #00e5ff,
-    #00b8d4
-  );
+  background: var(--gradient-primary);
 
-  color: #031018;
+  border: none;
+  border-radius: 10px;
 
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 
   cursor: pointer;
 
   box-shadow:
-    0 10px 30px rgba(0, 229, 255, 0.12);
+    0 9px 22px rgba(18, 100, 255, 0.18);
 
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    filter 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .project-create-btn:hover:not(:disabled) {
   transform: translateY(-2px);
 
-  filter: brightness(1.08);
-
   box-shadow:
-    0 14px 35px rgba(0, 229, 255, 0.2);
+    0 13px 28px rgba(18, 100, 255, 0.25);
 }
 
 .project-create-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.project-create-btn:disabled,
-.project-cancel-btn:disabled {
-  opacity: 0.55;
+.project-create-btn:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-
-/* =========================================
+/* =========================================================
    LOADING
-========================================= */
+   ========================================================= */
 
 .project-loading {
-  animation: project-spin 0.9s linear infinite;
+  animation: projectSpin 0.8s linear infinite;
 }
 
-@keyframes project-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
+@keyframes projectSpin {
   to {
     transform: rotate(360deg);
   }
 }
 
+/* =========================================================
+   TABLET
+   ========================================================= */
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .add-project-page {
-    padding: 95px 16px 40px;
+    padding: 35px 0 65px;
+  }
+
+  .add-project-container {
+    width: min(100% - 50px, 760px);
+  }
+
+  .project-form-section {
+    padding: 27px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+  .add-project-container {
+    width: calc(100% - 32px);
   }
 
   .add-project-header {
     align-items: flex-start;
   }
 
+  .add-project-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 13px;
+  }
+
   .add-project-header h1 {
-    font-size: 32px;
+    font-size: 30px;
+  }
+
+  .add-project-header p {
+    font-size: 13px;
   }
 
   .project-form-section {
-    padding: 22px 18px;
-    border-radius: 16px;
+    padding: 22px;
+    border-radius: 15px;
   }
 
   .project-form-grid {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .project-form-group.full {
     grid-column: auto;
+  }
+
+  .project-form-heading {
+    margin-bottom: 23px;
   }
 
   .add-project-actions {
@@ -488,48 +566,74 @@
   }
 }
 
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 420px) {
   .add-project-page {
-    padding: 85px 12px 30px;
+    padding: 25px 0 50px;
+  }
+
+  .add-project-container {
+    width: calc(100% - 24px);
+  }
+
+  .add-project-back {
+    margin-bottom: 25px;
+    font-size: 12px;
   }
 
   .add-project-header {
     gap: 12px;
+    margin-bottom: 27px;
   }
 
   .add-project-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 13px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .add-project-icon svg {
+    width: 19px;
+    height: 19px;
   }
 
   .add-project-header h1 {
     font-size: 27px;
   }
 
-  .add-project-header p {
-    font-size: 13px;
+  .add-project-header > div:last-child > span {
+    font-size: 9px;
   }
 
   .project-form-section {
-    padding: 20px 15px;
+    padding: 19px;
   }
 
   .project-form-heading {
     gap: 11px;
-    margin-bottom: 22px;
+  }
+
+  .project-form-heading > span {
+    width: 30px;
+    height: 30px;
   }
 
   .project-form-heading h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .project-form-heading p {
-    font-size: 12px;
+    font-size: 11px;
   }
 
-  .project-form-grid {
-    gap: 16px;
+  .project-form-group input,
+  .project-form-group select {
+    height: 44px;
+  }
+
+  .project-form-group textarea {
+    min-height: 125px;
   }
 }

@@ -1,112 +1,90 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
-
 /* =========================================================
    XEVOPROP — GLOBAL DESIGN SYSTEM
-   Theme: Earth Brown + Sage Green + Sand + Off White
+   Bright PropTech Theme
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+
+/* =========================================================
+   DESIGN TOKENS
    ========================================================= */
 
 :root {
-  /* -------------------------
-     BRAND COLORS
-  ------------------------- */
+  /* Brand */
+  --primary: #1264ff;
+  --primary-dark: #084dcc;
+  --primary-light: #eaf2ff;
 
-  --earth-brown: #6f4e37;
-  --earth-brown-dark: #513622;
-  --earth-brown-light: #8b6a4e;
+  --cyan: #00c6ff;
+  --cyan-light: #e8faff;
 
-  --sage-green: #2e4a38;
-  --sage-green-dark: #21372a;
-  --sage-green-light: #54705d;
+  --violet: #6957ff;
+  --violet-light: #f0edff;
 
-  --sand: #eadcc8;
-  --sand-light: #f3eadf;
-  --sand-dark: #d7c5ad;
+  /* Text */
+  --text-primary: #0b1736;
+  --text-secondary: #526078;
+  --text-muted: #8190a8;
+  --text-light: #a5b0c0;
 
-  --charcoal: #1f1e1e;
-  --charcoal-light: #34312e;
+  /* Background */
+  --bg: #f7faff;
+  --bg-white: #ffffff;
+  --bg-soft: #f0f6ff;
+  --bg-blue: #edf5ff;
 
-  --off-white: #f9f7f4;
-  --white: #ffffff;
-  --paper: #fffdf9;
+  /* Borders */
+  --border: #e1e9f3;
+  --border-light: #edf2f8;
+  --border-blue: #cfe0ff;
 
-  /* -------------------------
-     TEXT
-  ------------------------- */
+  /* Status */
+  --success: #16a66a;
+  --success-bg: #e9f9f1;
 
-  --text-primary: #1f1e1e;
-  --text-secondary: #625c55;
-  --text-muted: #837b72;
-  --text-light: #a19a91;
+  --warning: #e69b20;
+  --warning-bg: #fff7e7;
 
-  /* -------------------------
-     BORDERS
-  ------------------------- */
+  --danger: #e05252;
+  --danger-bg: #fff0f0;
 
-  --border: #ded6cc;
-  --border-light: #ebe5dc;
-  --border-dark: #cfc4b7;
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
 
-  /* -------------------------
-     STATUS
-  ------------------------- */
+  /* Shadows */
+  --shadow-sm: 0 4px 14px rgba(18, 100, 255, 0.06);
+  --shadow-md: 0 10px 30px rgba(18, 100, 255, 0.09);
+  --shadow-lg: 0 20px 50px rgba(18, 100, 255, 0.12);
+  --shadow-card: 0 6px 24px rgba(11, 23, 54, 0.06);
 
-  --success: #47745a;
-  --success-light: #e5eee7;
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    #1264ff 0%,
+    #087cff 48%,
+    #00c6ff 100%
+  );
 
-  --danger: #a24e43;
-  --danger-light: #f5e4e0;
+  --gradient-soft: linear-gradient(
+    135deg,
+    #f1f7ff 0%,
+    #eef5ff 55%,
+    #f7f9ff 100%
+  );
 
-  --warning: #9a7441;
-  --warning-light: #f5ead8;
+  --gradient-violet: linear-gradient(
+    135deg,
+    #6957ff 0%,
+    #1264ff 100%
+  );
 
-  /* -------------------------
-     SHADOWS
-  ------------------------- */
-
-  --shadow-xs:
-    0 2px 8px rgba(31, 30, 30, 0.04);
-
-  --shadow-sm:
-    0 5px 18px rgba(31, 30, 30, 0.07);
-
-  --shadow-md:
-    0 12px 32px rgba(31, 30, 30, 0.1);
-
-  --shadow-lg:
-    0 24px 55px rgba(31, 30, 30, 0.14);
-
-  /* -------------------------
-     RADIUS
-  ------------------------- */
-
-  --radius-xs: 5px;
-  --radius-sm: 7px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
-  --radius-2xl: 24px;
-
-  /* -------------------------
-     LAYOUT
-  ------------------------- */
-
-  --container-width: 1180px;
-  --page-padding: 5vw;
-
-  /* -------------------------
-     TYPOGRAPHY
-  ------------------------- */
-
-  --font-body: "Inter", sans-serif;
-  --font-display: "Playfair Display", serif;
-
-  /* -------------------------
-     TRANSITIONS
-  ------------------------- */
-
-  --transition-fast: 0.18s ease;
-  --transition: 0.25s ease;
-  --transition-slow: 0.4s ease;
+  /* Layout */
+  --container: 1380px;
+  --page-padding: 40px;
 }
 
 /* =========================================================
@@ -116,52 +94,42 @@
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-/* =========================================================
-   HTML
-   ========================================================= */
-
 html {
   scroll-behavior: smooth;
-  background: var(--off-white);
 }
-
-/* =========================================================
-   BODY
-   ========================================================= */
 
 body {
-  min-width: 320px;
-
-  font-family: var(--font-body);
-
-  background:
-    linear-gradient(
-      180deg,
-      #f9f7f4 0%,
-      #f8f5f1 100%
-    );
-
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
   color: var(--text-primary);
-
-  overflow-x: hidden;
-
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 14px;
   line-height: 1.5;
-
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* =========================================================
-   ROOT
-   ========================================================= */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
 
-#root {
-  min-height: 100vh;
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
 }
 
 /* =========================================================
@@ -174,71 +142,146 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-display);
-  font-weight: 600;
+  margin-top: 0;
   color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", "Inter", Arial, sans-serif;
+}
+
+h1 {
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -2.5px;
+}
+
+h2 {
+  font-size: clamp(32px, 4vw, 50px);
   line-height: 1.1;
+  letter-spacing: -1.5px;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 p {
   color: var(--text-secondary);
 }
 
-strong {
-  font-weight: 700;
-}
+/* =========================================================
+   COMMON CONTAINER
+   ========================================================= */
 
-small {
-  font-size: 0.8em;
+.container {
+  width: min(var(--container), calc(100% - 80px));
+  margin: 0 auto;
 }
 
 /* =========================================================
-   LINKS
+   COMMON SECTION
    ========================================================= */
 
-a {
-  color: inherit;
-  text-decoration: none;
+.section {
+  padding: 90px 0;
 }
 
-a:hover {
-  color: inherit;
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.section-label::before {
+  width: 22px;
+  height: 2px;
+  display: inline-block;
+  border-radius: 2px;
+  background: var(--gradient-primary);
+  content: "";
 }
 
 /* =========================================================
    BUTTONS
    ========================================================= */
 
-button {
-  font-family: var(--font-body);
-  cursor: pointer;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
+.btn:hover {
+  transform: translateY(-1px);
 }
 
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 7px 20px rgba(18, 100, 255, 0.22);
 }
 
-/* Remove default button styling where required */
-button {
-  -webkit-tap-highlight-color: transparent;
+.btn-primary:hover {
+  box-shadow: 0 10px 28px rgba(18, 100, 255, 0.3);
+}
+
+.btn-secondary {
+  border-color: var(--border-blue);
+  background: white;
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-blue);
+  color: var(--primary);
 }
 
 /* =========================================================
-   INPUTS
+   COMMON CARD
+   ========================================================= */
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+/* =========================================================
+   FORM ELEMENTS
    ========================================================= */
 
 input,
 select,
 textarea {
-  font-family: var(--font-body);
   color: var(--text-primary);
 }
 
@@ -251,19 +294,58 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(18, 100, 255, 0.08);
 }
 
 /* =========================================================
-   IMAGES
+   BADGES
    ========================================================= */
 
-img {
-  display: block;
-  max-width: 100%;
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: var(--radius-pill);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
-svg {
-  flex-shrink: 0;
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.badge-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--primary-dark);
 }
 
 /* =========================================================
@@ -271,8 +353,8 @@ svg {
    ========================================================= */
 
 ::selection {
-  background: var(--sand);
-  color: var(--charcoal);
+  background: #bcd6ff;
+  color: #07132e;
 }
 
 /* =========================================================
@@ -284,440 +366,51 @@ svg {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1eee9;
+  background: #f0f4f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c9bfb2;
-  border-radius: 20px;
+  border-radius: 10px;
+  background: #b9c8dc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--earth-brown);
+  background: #8ea6c5;
 }
 
 /* =========================================================
-   GLOBAL CONTAINER
+   UTILITY
    ========================================================= */
 
-.container {
-  width: min(
-    var(--container-width),
-    calc(100% - 10vw)
-  );
-
-  margin: 0 auto;
+.text-primary {
+  color: var(--primary);
 }
 
-/* =========================================================
-   COMMON PAGE WRAPPER
-   ========================================================= */
-
-.page-container {
-  width: min(
-    var(--container-width),
-    calc(100% - 10vw)
-  );
-
-  margin: 0 auto;
-}
-
-/* =========================================================
-   COMMON SECTION
-   ========================================================= */
-
-.section {
-  position: relative;
-
-  width: 100%;
-
-  padding: 90px 0;
-
-  background: var(--off-white);
-}
-
-/* =========================================================
-   COMMON SECTION LABEL
-   ========================================================= */
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  color: var(--earth-brown);
-
-  font-size: 9px;
-  font-weight: 800;
-
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-}
-
-/* =========================================================
-   COMMON SECTION HEADING
-   ========================================================= */
-
-.section-title {
-  margin-top: 10px;
-
-  font-family: var(--font-display);
-
-  font-size: clamp(36px, 5vw, 58px);
-
-  font-weight: 600;
-
-  line-height: 0.98;
-
-  letter-spacing: -1.5px;
-}
-
-.section-title span {
-  color: var(--earth-brown);
-}
-
-/* =========================================================
-   COMMON DESCRIPTION
-   ========================================================= */
-
-.section-description {
-  margin-top: 15px;
-
-  max-width: 520px;
-
-  color: var(--text-secondary);
-
-  font-size: 12px;
-
-  line-height: 1.8;
-}
-
-/* =========================================================
-   PRIMARY BUTTON
-   ========================================================= */
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  min-height: 40px;
-
-  padding: 0 15px;
-
-  border: 1px solid var(--earth-brown);
-
-  border-radius: var(--radius-sm);
-
-  background: var(--earth-brown);
-
-  color: var(--white);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  transition:
-    background var(--transition),
-    border-color var(--transition),
-    transform var(--transition),
-    box-shadow var(--transition);
-}
-
-.btn-primary:hover {
-  background: var(--earth-brown-dark);
-  border-color: var(--earth-brown-dark);
-
-  transform: translateY(-1px);
-
-  box-shadow: var(--shadow-sm);
-}
-
-/* =========================================================
-   SECONDARY BUTTON
-   ========================================================= */
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  min-height: 40px;
-
-  padding: 0 15px;
-
-  border: 1px solid var(--border-dark);
-
-  border-radius: var(--radius-sm);
-
-  background: var(--white);
-
-  color: var(--text-primary);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  transition:
-    border-color var(--transition),
-    color var(--transition),
-    background var(--transition),
-    transform var(--transition);
-}
-
-.btn-secondary:hover {
-  border-color: var(--earth-brown);
-
-  color: var(--earth-brown);
-
-  background: #fffdfa;
-
-  transform: translateY(-1px);
-}
-
-/* =========================================================
-   SAGE BUTTON
-   ========================================================= */
-
-.btn-sage {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-
-  min-height: 40px;
-
-  padding: 0 15px;
-
-  border: 1px solid var(--sage-green);
-
-  border-radius: var(--radius-sm);
-
-  background: var(--sage-green);
-
-  color: var(--white);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  transition:
-    background var(--transition),
-    transform var(--transition);
-}
-
-.btn-sage:hover {
-  background: var(--sage-green-dark);
-
-  transform: translateY(-1px);
-}
-
-/* =========================================================
-   CARD
-   ========================================================= */
-
-.card {
-  background: var(--paper);
-
-  border: 1px solid var(--border);
-
-  border-radius: var(--radius-lg);
-
-  box-shadow: var(--shadow-xs);
-}
-
-/* =========================================================
-   PROPERTY CARD IMAGE DEFAULT
-   ========================================================= */
-
-.property-card img,
-.project-card img {
-  object-fit: cover;
-}
-
-/* =========================================================
-   COMMON EMPTY STATE
-   ========================================================= */
-
-.empty-state {
-  padding: 60px 25px;
-
-  text-align: center;
-
-  background: var(--paper);
-
-  border: 1px dashed var(--border-dark);
-
-  border-radius: var(--radius-lg);
-
+.text-muted {
   color: var(--text-muted);
 }
 
-.empty-state h2,
-.empty-state h3 {
-  margin-top: 10px;
-
-  font-family: var(--font-display);
-
-  color: var(--text-primary);
-}
-
-.empty-state p {
-  margin-top: 7px;
-
-  font-size: 11px;
-}
-
-/* =========================================================
-   COMMON LOADING
-   ========================================================= */
-
-.loading {
-  display: grid;
-  place-items: center;
-
-  min-height: 250px;
-
-  color: var(--text-muted);
-
-  font-size: 11px;
-}
-
-/* =========================================================
-   LOADING SPINNER
-   ========================================================= */
-
-.spinner {
-  width: 28px;
-  height: 28px;
-
-  margin: 0 auto 12px;
-
-  border: 3px solid var(--sand);
-
-  border-top-color: var(--earth-brown);
-
-  border-radius: 50%;
-
-  animation: xevoprop-spin 0.8s linear infinite;
-}
-
-@keyframes xevoprop-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* =========================================================
-   STATUS BADGES
-   ========================================================= */
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 5px 8px;
-
-  border-radius: 5px;
-
-  font-size: 8px;
-  font-weight: 800;
-
-  letter-spacing: 0.3px;
-}
-
-.status-badge.success {
-  background: var(--success-light);
+.text-success {
   color: var(--success);
 }
 
-.status-badge.warning {
-  background: var(--warning-light);
-  color: var(--warning);
+.bg-white {
+  background: white;
 }
 
-.status-badge.danger {
-  background: var(--danger-light);
-  color: var(--danger);
+.bg-soft {
+  background: var(--bg-soft);
 }
 
-.status-badge.default {
-  background: var(--sand-light);
-  color: var(--earth-brown);
+.bg-blue {
+  background: var(--bg-blue);
 }
 
-/* =========================================================
-   FORM GROUP
-   ========================================================= */
-
-.form-group {
-  display: grid;
-  gap: 6px;
-}
-
-.form-group label {
-  color: var(--text-secondary);
-
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-
-  border: 1px solid var(--border);
-
-  border-radius: var(--radius-sm);
-
-  background: var(--white);
-
-  color: var(--text-primary);
-
-  outline: none;
-
-  font-size: 10px;
-
-  transition:
-    border-color var(--transition),
-    box-shadow var(--transition);
-}
-
-.form-group input,
-.form-group select {
-  height: 40px;
-
-  padding: 0 11px;
-}
-
-.form-group textarea {
-  min-height: 100px;
-
-  padding: 10px;
-
-  resize: vertical;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: var(--earth-brown);
-
-  box-shadow:
-    0 0 0 3px rgba(111, 78, 55, 0.08);
-}
-
-/* =========================================================
-   DIVIDER
-   ========================================================= */
-
-.divider {
-  width: 100%;
-
-  height: 1px;
-
-  background: var(--border);
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* =========================================================
@@ -725,30 +418,44 @@ svg {
    ========================================================= */
 
 @media (max-width: 900px) {
-  .container,
-  .page-container {
-    width: min(
-      92%,
-      var(--container-width)
-    );
+  :root {
+    --page-padding: 25px;
+  }
+
+  .container {
+    width: calc(100% - 50px);
   }
 
   .section {
-    padding: 75px 0;
+    padding: 70px 0;
   }
 }
 
 @media (max-width: 600px) {
-  .container,
-  .page-container {
-    width: 92%;
+  .container {
+    width: calc(100% - 28px);
   }
 
   .section {
-    padding: 60px 0;
+    padding: 55px 0;
   }
 
-  .section-title {
-    font-size: clamp(34px, 10vw, 48px);
+  h1 {
+    font-size: 40px;
+    letter-spacing: -1.5px;
+  }
+
+  h2 {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  h3 {
+    font-size: 21px;
+  }
+
+  .btn {
+    min-height: 42px;
+    padding: 0 17px;
   }
 }

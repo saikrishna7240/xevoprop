@@ -1,112 +1,196 @@
-import { ArrowUpRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  Mail,
+} from "lucide-react";
+
 import { Link } from "react-router-dom";
+
 import "./Footer.css";
 
 function Footer() {
   return (
     <footer className="footer">
+
       <div className="footer-container">
 
-        <div className="footer-top">
+        {/* MAIN FOOTER */}
+        <div className="footer-main">
 
           {/* BRAND */}
           <div className="footer-brand">
 
-            <Link to="/">
+            <Link to="/" className="footer-logo">
               <img
                 src="/xevoprop-logo.png"
                 alt="Xevoprop"
               />
             </Link>
 
-            <p>
-              A smarter way to discover, connect
-              and decide in real estate.
+            <p className="footer-description">
+              Your trusted partner in real estate.
+              Discover premium properties, connect
+              with verified developers, and build a
+              brighter future with XevopropTech.
             </p>
 
+            {/* SOCIALS */}
             <div className="footer-socials">
-              <a href="#" aria-label="LinkedIn">
+
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="footer-social"
+              >
                 in
               </a>
 
-              <a href="#" aria-label="Instagram">
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="footer-social"
+              >
                 ◎
               </a>
 
-              <a href="#" aria-label="X">
-                𝕏
+              <a
+                href="#"
+                aria-label="YouTube"
+                className="footer-social"
+              >
+                ▶
               </a>
+
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="footer-social"
+              >
+                f
+              </a>
+
             </div>
 
           </div>
 
 
-          {/* EXPLORE */}
-          <div className="footer-links">
+          {/* QUICK LINKS */}
+          <div className="footer-column">
 
-            <div>
-              <h4>Explore</h4>
+            <h4>Quick Links</h4>
 
-              <Link to="/properties">
-                Properties
-              </Link>
+            <Link to="/">
+              Home
+            </Link>
 
-              <Link to="/search">
-                Search Properties
-              </Link>
+            <Link to="/properties">
+              Properties
+            </Link>
 
-              <Link to="/projects">
-                Projects
-              </Link>
+            <Link to="/projects">
+              Projects
+            </Link>
 
-              <Link to="/about">
-                Why Xevoprop
-              </Link>
-            </div>
+            <Link to="/about">
+              About
+            </Link>
 
+            <Link to="/contact">
+              Contact
+            </Link>
 
-            {/* PLATFORM */}
-            <div>
-              <h4>Platform</h4>
-
-              <Link to="/properties?type=buy">
-                Buy Property
-              </Link>
-
-              <Link to="/properties?type=rent">
-                Rent Property
-              </Link>
-
-              <Link to="/properties?type=commercial">
-                Commercial
-              </Link>
-
-              <Link to="/properties?type=plot">
-                Plots
-              </Link>
-            </div>
+          </div>
 
 
-            {/* ACCOUNT */}
-            <div>
-              <h4>Account</h4>
+          {/* PROPERTY TYPES */}
+          <div className="footer-column">
 
-              <Link to="/login">
-                Login
-              </Link>
+            <h4>Property Types</h4>
 
-              <Link to="/register">
-                Create Account
-              </Link>
+            <Link to="/properties?type=residential">
+              Residential
+            </Link>
 
-              <Link to="/profile">
-                My Profile
-              </Link>
+            <Link to="/properties?type=commercial">
+              Commercial
+            </Link>
 
-              <Link to="/favorites">
-                My Favorites
-              </Link>
-            </div>
+            <Link to="/properties?type=plot">
+              Plots
+            </Link>
+
+            <Link to="/properties?type=villa">
+              Villas
+            </Link>
+
+            <Link to="/properties?type=apartment">
+              Apartments
+            </Link>
+
+          </div>
+
+
+          {/* SUPPORT */}
+          <div className="footer-column">
+
+            <h4>Support</h4>
+
+            <Link to="/help">
+              Help Center
+            </Link>
+
+            <Link to="/terms">
+              Terms &amp; Conditions
+            </Link>
+
+            <Link to="/privacy">
+              Privacy Policy
+            </Link>
+
+            <Link to="/faq">
+              FAQ
+            </Link>
+
+            <Link to="/contact">
+              Contact Us
+            </Link>
+
+          </div>
+
+
+          {/* NEWSLETTER */}
+          <div className="footer-newsletter">
+
+            <h4>
+              Subscribe to our Newsletter
+            </h4>
+
+            <p>
+              Get the latest property updates and
+              investment opportunities.
+            </p>
+
+            <form
+              className="footer-newsletter-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
+
+              <div className="footer-email-wrapper">
+
+                <Mail size={14} />
+
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  aria-label="Email address"
+                />
+
+              </div>
+
+              <button type="submit">
+                Subscribe
+              </button>
+
+            </form>
 
           </div>
 
@@ -114,21 +198,18 @@ function Footer() {
 
 
         {/* DIVIDER */}
-        <div className="footer-divider"></div>
+        <div className="footer-divider" />
 
 
-        {/* BOTTOM */}
+        {/* BOTTOM FOOTER */}
         <div className="footer-bottom">
 
           <span>
-            © 2026 Xevoprop. All rights reserved.
+            © 2026 XevopropTech Pvt Ltd. All rights
+            reserved.
           </span>
 
-          <span className="footer-tagline">
-            Discover. Connect. Decide.
-          </span>
-
-          <div className="footer-bottom-right">
+          <div className="footer-bottom-links">
 
             <Link to="/privacy">
               Privacy
@@ -138,7 +219,10 @@ function Footer() {
               Contact
             </Link>
 
-            <a href="#top" className="back-top">
+            <a
+              href="#top"
+              className="back-top"
+            >
               Back to top
               <ArrowUpRight size={14} />
             </a>
@@ -148,6 +232,7 @@ function Footer() {
         </div>
 
       </div>
+
     </footer>
   );
 }

@@ -1,38 +1,62 @@
 /* =========================================================
    FINAL CTA
-   XEVOPROP — Premium Editorial Property Theme
+   XEVOPROP — Bright PropTech Theme
    ========================================================= */
 
 .final-cta-section {
   position: relative;
-  padding: 125px 0 105px;
-
-  background: #6f4e37;
-
   overflow: hidden;
+
+  padding: 105px 0 38px;
+
+  background:
+    radial-gradient(
+      circle at 15% 35%,
+      rgba(0, 198, 255, 0.16),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 85% 65%,
+      rgba(105, 87, 255, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #eef6ff 0%,
+      #f8fbff 48%,
+      #f1efff 100%
+    );
+
+  border-top: 1px solid #e2ebf7;
 }
 
+
 /* =========================================================
-   DECORATIVE GLOW
+   BACKGROUND GLOW
    ========================================================= */
 
 .final-cta-glow {
   position: absolute;
+  top: -180px;
+  left: 50%;
 
   width: 620px;
-  height: 620px;
+  height: 420px;
 
-  top: -310px;
-  right: -180px;
+  transform: translateX(-50%);
 
-  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(18, 100, 255, 0.12) 0%,
+      rgba(0, 198, 255, 0.06) 35%,
+      transparent 72%
+    );
 
-  background: rgba(255, 255, 255, 0.08);
-
-  filter: blur(80px);
-
+  filter: blur(25px);
   pointer-events: none;
 }
+
 
 /* =========================================================
    CONTAINER
@@ -40,71 +64,109 @@
 
 .final-cta-container {
   position: relative;
-
-  width: min(1050px, calc(100% - 48px));
-
-  margin: 0 auto;
-
   z-index: 1;
+
+  width: min(1180px, calc(100% - 80px));
+  margin: 0 auto;
 }
 
+
 /* =========================================================
-   CONTENT
+   MAIN CONTENT
    ========================================================= */
 
 .final-cta-content {
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 850px;
   margin: 0 auto;
 
   text-align: center;
 }
 
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
 .final-cta-label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-  margin-bottom: 22px;
+  min-height: 34px;
+  padding: 0 13px;
 
-  color: #eadcc8;
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--primary);
 
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 1.4px;
 
-  letter-spacing: 0.2em;
+  box-shadow:
+    0 6px 20px rgba(18, 100, 255, 0.06);
 
-  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
+.final-cta-label svg {
+  color: var(--violet);
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
 .final-cta-content h2 {
-  margin: 0;
+  margin: 22px 0 0;
 
-  color: #ffffff;
+  color: var(--text-primary);
 
-  font-family: "Playfair Display", Georgia, serif;
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
 
-  font-size: clamp(48px, 6vw, 76px);
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 1.05;
+  font-weight: 850;
 
-  font-weight: 600;
-
-  line-height: 1.02;
-
-  letter-spacing: -0.045em;
+  letter-spacing: -3px;
 }
 
 .final-cta-content h2 span {
-  color: #eadcc8;
+  background: var(--gradient-primary);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
 }
 
-.final-cta-content p {
-  max-width: 590px;
 
-  margin: 25px auto 0;
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
 
-  color: rgba(255, 255, 255, 0.72);
+.final-cta-content > p {
+  max-width: 650px;
 
-  font-size: 15px;
+  margin: 24px auto 0;
 
+  color: var(--text-secondary);
+
+  font-size: 16px;
   line-height: 1.75;
 }
+
 
 /* =========================================================
    ACTIONS
@@ -114,115 +176,164 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 12px;
 
-  margin-top: 36px;
+  margin-top: 32px;
 }
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
 
 .final-cta-primary,
 .final-cta-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   gap: 9px;
 
-  min-height: 50px;
+  min-height: 52px;
+  padding: 0 20px;
 
-  padding: 0 23px;
+  border-radius: var(--radius-md);
 
-  border-radius: 3px;
-
-  font-family: "Inter", sans-serif;
-
-  font-size: 12px;
-  font-weight: 700;
-
-  text-decoration: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 750;
 
   cursor: pointer;
 
   transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
     background 0.25s ease,
-    color 0.25s ease,
     border-color 0.25s ease,
-    transform 0.25s ease;
+    color 0.25s ease;
 }
 
-/* Primary */
-
 .final-cta-primary {
-  border: 1px solid #eadcc8;
+  border: 1px solid transparent;
 
-  background: #eadcc8;
+  background: var(--gradient-primary);
+  color: #ffffff;
 
-  color: #493324;
+  box-shadow:
+    0 10px 28px rgba(18, 100, 255, 0.22);
 }
 
 .final-cta-primary:hover {
-  background: #ffffff;
+  transform: translateY(-3px);
 
-  border-color: #ffffff;
-
-  color: #493324;
-
-  transform: translateY(-2px);
+  box-shadow:
+    0 15px 34px rgba(18, 100, 255, 0.3);
 }
 
-/* Secondary */
+.final-cta-primary svg:last-child {
+  transition: transform 0.25s ease;
+}
+
+.final-cta-primary:hover svg:last-child {
+  transform: translate(2px, -2px);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
 
 .final-cta-secondary {
-  border: 1px solid rgba(255, 255, 255, 0.42);
+  border: 1px solid #cfe0ff;
 
-  background: transparent;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-primary);
 
-  color: #ffffff;
+  box-shadow:
+    0 7px 20px rgba(11, 23, 54, 0.05);
 }
 
 .final-cta-secondary:hover {
-  border-color: #ffffff;
+  transform: translateY(-3px);
 
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
 
-  transform: translateY(-2px);
+  background: #ffffff;
+  color: var(--primary);
+
+  box-shadow:
+    0 10px 26px rgba(18, 100, 255, 0.1);
 }
 
+.final-cta-secondary svg {
+  transition: transform 0.25s ease;
+}
+
+.final-cta-secondary:hover svg {
+  transform: translate(2px, -2px);
+}
+
+
 /* =========================================================
-   BOTTOM
+   BOTTOM WORDS
    ========================================================= */
 
 .final-cta-bottom {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0;
 
-  gap: 20px;
+  margin-top: 90px;
+  padding-top: 24px;
 
-  margin-top: 75px;
-}
-
-.final-cta-bottom::before,
-.final-cta-bottom::after {
-  content: "";
-
-  width: 80px;
-  height: 1px;
-
-  background: rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(151, 174, 207, 0.35);
 }
 
 .final-cta-bottom span {
-  color: rgba(255, 255, 255, 0.55);
+  position: relative;
 
-  font-size: 9px;
+  padding: 0 32px;
 
-  font-weight: 700;
+  color: #8291a9;
 
-  letter-spacing: 0.16em;
-
-  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
+
+.final-cta-bottom span:not(:last-child)::after {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  right: 0;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: #b9c6d8;
+
+  transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   HOVER / ACTIVE
+   ========================================================= */
+
+.final-cta-primary:active,
+.final-cta-secondary:active {
+  transform: translateY(0);
+}
+
+.final-cta-primary:focus-visible,
+.final-cta-secondary:focus-visible {
+  outline: 3px solid rgba(18, 100, 255, 0.2);
+  outline-offset: 3px;
+}
+
 
 /* =========================================================
    TABLET
@@ -230,54 +341,56 @@
 
 @media (max-width: 900px) {
   .final-cta-section {
-    padding: 100px 0 85px;
+    padding: 90px 0 32px;
+  }
+
+  .final-cta-container {
+    width: min(100% - 48px, 1180px);
   }
 
   .final-cta-content h2 {
-    font-size: 58px;
+    letter-spacing: -2.2px;
   }
 
   .final-cta-bottom {
-    margin-top: 60px;
+    margin-top: 70px;
   }
 }
+
 
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .final-cta-section {
-    padding: 80px 0 70px;
+    padding: 75px 0 25px;
   }
 
   .final-cta-container {
-    width: calc(100% - 30px);
-  }
-
-  .final-cta-label {
-    margin-bottom: 17px;
-
-    font-size: 9px;
+    width: calc(100% - 32px);
   }
 
   .final-cta-content h2 {
-    font-size: 42px;
-    line-height: 1.05;
-  }
-
-  .final-cta-content p {
     margin-top: 18px;
 
-    font-size: 13px;
+    font-size: 42px;
+    line-height: 1.08;
+    letter-spacing: -1.8px;
+  }
+
+  .final-cta-content > p {
+    margin-top: 18px;
+
+    font-size: 14px;
+    line-height: 1.7;
   }
 
   .final-cta-actions {
     flex-direction: column;
 
     width: 100%;
-
-    margin-top: 30px;
+    margin-top: 27px;
   }
 
   .final-cta-primary,
@@ -286,30 +399,58 @@
   }
 
   .final-cta-bottom {
-    margin-top: 45px;
-  }
-
-  .final-cta-bottom::before,
-  .final-cta-bottom::after {
-    width: 35px;
+    margin-top: 60px;
   }
 
   .final-cta-bottom span {
+    padding: 0 15px;
+
     font-size: 8px;
-    text-align: center;
+    letter-spacing: 1.4px;
   }
 }
+
 
 /* =========================================================
    SMALL MOBILE
    ========================================================= */
 
-@media (max-width: 380px) {
-  .final-cta-content h2 {
-    font-size: 37px;
+@media (max-width: 400px) {
+  .final-cta-section {
+    padding-top: 62px;
   }
 
-  .final-cta-bottom {
-    gap: 10px;
+  .final-cta-content h2 {
+    font-size: 36px;
+    letter-spacing: -1.4px;
+  }
+
+  .final-cta-label {
+    font-size: 9px;
+    letter-spacing: 1.1px;
+  }
+
+  .final-cta-bottom span {
+    padding: 0 10px;
+    font-size: 7px;
+  }
+
+  .final-cta-bottom span:not(:last-child)::after {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .final-cta-primary,
+  .final-cta-secondary,
+  .final-cta-primary svg,
+  .final-cta-secondary svg {
+    transition: none;
   }
 }

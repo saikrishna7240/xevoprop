@@ -1,252 +1,468 @@
 /* =========================================================
-   MY PROPERTIES — XEVOPROP PREMIUM EDITORIAL THEME
+   MY PROPERTIES — XEVOPROP BRIGHT PROPTECH THEME
    ========================================================= */
 
 .my-properties-page {
   min-height: 100vh;
-  padding: 120px 0 90px;
-  background: var(--off-white);
+  padding: 44px 0 80px;
+  background:
+    radial-gradient(
+      circle at 7% 8%,
+      rgba(0, 198, 255, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 94% 16%,
+      rgba(105, 87, 255, 0.07),
+      transparent 27%
+    ),
+    #f7faff;
 }
 
 .my-properties-container {
-  width: min(1120px, calc(100% - 48px));
+  width: min(1240px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-/* =========================
+/* =========================================================
    HEADER
-   ========================= */
+   ========================================================= */
 
 .my-properties-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 30px;
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(111, 78, 55, 0.15);
+  margin-bottom: 28px;
+}
+
+.my-properties-header > div:first-child {
+  min-width: 0;
 }
 
 .my-properties-eyebrow {
-  display: block;
-  margin-bottom: 11px;
-  color: var(--earth-brown);
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+  background: #eaf2ff;
+  color: #1264ff;
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-weight: 850;
+  letter-spacing: 0.12em;
 }
 
 .my-properties-header h1 {
-  margin: 0;
-  color: var(--charcoal);
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(40px, 5vw, 54px);
-  font-weight: 500;
+  margin: 12px 0 7px;
+  color: #0b1736;
+  font-size: clamp(32px, 4vw, 46px);
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-weight: 850;
+  letter-spacing: -0.04em;
 }
 
 .my-properties-header h1 span {
-  color: var(--earth-brown);
+  color: #1264ff;
 }
 
 .my-properties-header p {
-  max-width: 540px;
-  margin: 12px 0 0;
-  color: #7d756d;
-  font-size: 13px;
+  margin: 0;
+  color: #526078;
+  font-size: 14px;
   line-height: 1.7;
 }
 
-/* =========================
+/* =========================================================
    ADD PROPERTY
-   ========================= */
+   ========================================================= */
 
 .add-property-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  flex-shrink: 0;
-
-  min-height: 45px;
-  padding: 0 18px;
-
-  background: var(--earth-brown);
-  color: #fff;
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  min-height: 44px;
+  padding: 0 17px;
+  border-radius: 11px;
+  background: linear-gradient(
+    135deg,
+    #1264ff 0%,
+    #087cff 50%,
+    #00c6ff 100%
+  );
+  color: #ffffff;
   text-decoration: none;
-  text-transform: uppercase;
-
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 9px 24px rgba(18, 100, 255, 0.2);
   transition:
-    background 0.25s ease,
-    transform 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .add-property-btn:hover {
-  background: var(--sage-green);
   transform: translateY(-2px);
+  box-shadow: 0 13px 30px rgba(18, 100, 255, 0.28);
 }
 
-/* =========================
+.add-property-btn svg {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   INLINE ERROR
+   ========================================================= */
+
+.my-properties-header ~ div[style] {
+  box-sizing: border-box;
+  border: 1px solid #ffd5d5 !important;
+  background: #fff3f3 !important;
+  color: #c94b4b !important;
+  line-height: 1.5;
+}
+
+/* =========================================================
    STATS
-   ========================= */
+   ========================================================= */
 
 .my-properties-stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 15px;
   margin-bottom: 25px;
 }
 
 .property-stat {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 13px;
+  min-height: 76px;
+  padding: 15px 18px;
+  border: 1px solid #e1e9f3;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 6px 22px rgba(11, 23, 54, 0.045);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
 
-  padding: 18px 20px;
-
-  border: 1px solid rgba(111, 78, 55, 0.13);
-  background: #fffdf9;
+.property-stat:hover {
+  transform: translateY(-2px);
+  border-color: #cfe0ff;
+  box-shadow: 0 10px 28px rgba(18, 100, 255, 0.08);
 }
 
 .property-stat > svg {
-  width: 40px;
-  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
   padding: 10px;
-  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border-radius: 11px;
+  background: linear-gradient(
+    135deg,
+    #edf5ff,
+    #e8faff
+  );
+  color: #1264ff;
+  box-sizing: content-box;
+}
 
-  background: var(--sand);
-  color: var(--earth-brown);
+.property-stat > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .property-stat strong {
-  display: block;
-  color: var(--charcoal);
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 24px;
-  font-weight: 500;
+  color: #0b1736;
+  font-size: 21px;
   line-height: 1;
+  font-weight: 850;
 }
 
 .property-stat span {
-  display: block;
-  margin-top: 5px;
-  color: #8a8178;
+  color: #8190a8;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-weight: 750;
 }
 
-/* =========================
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
+
+.my-properties-empty {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 70px 30px;
+  border: 1px solid #e1e9f3;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #1264ff;
+  box-shadow: 0 10px 35px rgba(11, 23, 54, 0.06);
+}
+
+.my-properties-empty::before {
+  content: "";
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  top: -155px;
+  left: -100px;
+  border-radius: 50%;
+  background: rgba(0, 198, 255, 0.08);
+  pointer-events: none;
+}
+
+.my-properties-empty::after {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  right: -105px;
+  bottom: -160px;
+  border-radius: 50%;
+  background: rgba(105, 87, 255, 0.07);
+  pointer-events: none;
+}
+
+.my-properties-empty > svg {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  padding: 16px;
+  border: 1px solid #cfe0ff;
+  border-radius: 17px;
+  background: linear-gradient(
+    135deg,
+    #edf5ff,
+    #e8faff
+  );
+  box-sizing: content-box;
+}
+
+.my-properties-empty h2 {
+  position: relative;
+  z-index: 1;
+  margin: 18px 0 8px;
+  color: #0b1736;
+  font-size: 21px;
+  font-weight: 850;
+}
+
+.my-properties-empty p {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+  margin: 0;
+  color: #718097;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.my-properties-empty > a {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 21px;
+  min-height: 39px;
+  padding: 0 15px;
+  border: 1px solid #cfe0ff;
+  border-radius: 10px;
+  background: #f4f8ff;
+  color: #1264ff;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 800;
+  transition: all 0.2s ease;
+}
+
+.my-properties-empty > a:hover {
+  transform: translateY(-2px);
+  border-color: #1264ff;
+  background: #edf5ff;
+}
+
+/* =========================================================
    PROPERTY LIST
-   ========================= */
+   ========================================================= */
 
 .my-properties-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 17px;
 }
 
+/* =========================================================
+   SELLER PROPERTY CARD
+   ========================================================= */
+
 .seller-property-card {
+  position: relative;
   display: grid;
-  grid-template-columns: 280px 1fr;
-  min-height: 235px;
-
-  border: 1px solid rgba(111, 78, 55, 0.13);
-  background: #fffdf9;
-
-  box-shadow: 0 10px 30px rgba(55, 45, 35, 0.035);
-
+  grid-template-columns: 290px minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e1e9f3;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 7px 27px rgba(11, 23, 54, 0.055);
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+    transform 0.24s ease,
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.seller-property-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #1264ff,
+    #00c6ff,
+    #6957ff
+  );
+  opacity: 0;
+  transition: opacity 0.24s ease;
 }
 
 .seller-property-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(111, 78, 55, 0.25);
-  box-shadow: 0 18px 40px rgba(55, 45, 35, 0.08);
+  border-color: #cfe0ff;
+  box-shadow: 0 14px 35px rgba(18, 100, 255, 0.09);
 }
 
-/* =========================
+.seller-property-card:hover::before {
+  opacity: 1;
+}
+
+/* =========================================================
    IMAGE
-   ========================= */
+   ========================================================= */
 
 .seller-property-image {
   position: relative;
-  min-height: 235px;
+  min-height: 220px;
   overflow: hidden;
-  background: #e9e1d7;
+  background: linear-gradient(
+    135deg,
+    #edf5ff,
+    #e8faff
+  );
 }
 
 .seller-property-image img {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
-
   transition: transform 0.5s ease;
 }
 
-.seller-property-card:hover .seller-property-image img {
-  transform: scale(1.04);
+.seller-property-card:hover
+.seller-property-image img {
+  transform: scale(1.045);
+}
+
+.seller-property-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 23, 54, 0.02),
+    rgba(11, 23, 54, 0.13)
+  );
+  pointer-events: none;
 }
 
 .no-property-image {
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #a29384;
-  background: #eee5da;
+  min-height: 220px;
+  color: #1264ff;
+  background:
+    radial-gradient(
+      circle at 25% 20%,
+      rgba(0, 198, 255, 0.18),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #edf5ff,
+      #f5f9ff
+    );
 }
 
 .no-property-image svg {
-  padding: 13px;
-  width: 52px;
-  height: 52px;
-  box-sizing: border-box;
-
-  border: 1px solid rgba(111, 78, 55, 0.15);
-  color: var(--earth-brown);
+  opacity: 0.7;
 }
+
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 .seller-status {
   position: absolute;
-  top: 14px;
-  left: 14px;
-
-  padding: 7px 10px;
-
-  background: #fffdf9;
-  color: var(--sage-green);
-
+  z-index: 2;
+  top: 13px;
+  left: 13px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #1264ff;
   font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  box-shadow: 0 5px 15px rgba(11, 23, 54, 0.1);
+  backdrop-filter: blur(8px);
 }
 
-/* =========================
+.seller-status {
+  color: #1264ff;
+}
+
+.seller-property-image
+.seller-status {
+  text-transform: capitalize;
+}
+
+/* =========================================================
    CONTENT
-   ========================= */
+   ========================================================= */
 
 .seller-property-content {
   display: flex;
   flex-direction: column;
-  padding: 25px 27px;
+  min-width: 0;
+  padding: 22px 24px;
 }
+
+/* =========================================================
+   TOP
+   ========================================================= */
 
 .seller-property-top {
   display: flex;
@@ -257,99 +473,93 @@
 
 .seller-property-type {
   display: block;
-  margin-bottom: 6px;
-
-  color: var(--earth-brown);
-
+  margin-bottom: 5px;
+  color: #1264ff;
   font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
+  font-weight: 850;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .seller-property-top h2 {
   margin: 0;
-
-  color: var(--charcoal);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 25px;
-  font-weight: 500;
-  line-height: 1.2;
+  color: #0b1736;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 850;
+  letter-spacing: -0.02em;
 }
 
 .seller-property-price {
   flex-shrink: 0;
-
-  color: var(--earth-brown);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 21px;
-  font-weight: 600;
+  color: #1264ff;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 850;
+  text-align: right;
 }
 
-/* =========================
+/* =========================================================
    LOCATION
-   ========================= */
+   ========================================================= */
 
 .seller-property-location {
   display: flex;
   align-items: center;
   gap: 6px;
-
-  margin-top: 13px;
-
-  color: #817970;
+  margin-top: 9px;
+  color: #66748a;
   font-size: 11px;
+  line-height: 1.5;
 }
 
 .seller-property-location svg {
   flex-shrink: 0;
-  color: var(--earth-brown);
+  color: #00a9df;
 }
 
-/* =========================
+/* =========================================================
    DETAILS
-   ========================= */
+   ========================================================= */
 
 .seller-property-details {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
-
-  margin-top: 20px;
-  padding: 15px 0;
-
-  border-top: 1px solid rgba(111, 78, 55, 0.1);
-  border-bottom: 1px solid rgba(111, 78, 55, 0.1);
+  gap: 9px;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #edf2f8;
 }
 
 .seller-property-details span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-
-  color: #716960;
-
+  gap: 5px;
+  min-height: 29px;
+  padding: 0 9px;
+  border: 1px solid #e2eaf4;
+  border-radius: 8px;
+  background: #f8fbff;
+  color: #526078;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 750;
 }
 
 .seller-property-details svg {
-  color: var(--earth-brown);
+  color: #1264ff;
 }
 
-/* =========================
+/* =========================================================
    ACTIONS
-   ========================= */
+   ========================================================= */
 
 .seller-property-actions {
   display: flex;
   align-items: center;
-  gap: 9px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: auto;
-  padding-top: 18px;
+  padding-top: 20px;
 }
 
 .view-property-btn,
@@ -359,205 +569,235 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-
-  min-height: 34px;
+  min-height: 36px;
   padding: 0 12px;
-
-  border: 1px solid transparent;
-
+  border-radius: 9px;
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.07em;
-  text-decoration: none;
-  text-transform: uppercase;
-
   cursor: pointer;
-  transition: all 0.25s ease;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+/* View */
+
 .view-property-btn {
-  background: var(--earth-brown);
-  color: #fff;
+  border: 1px solid #1264ff;
+  background: linear-gradient(
+    135deg,
+    #1264ff,
+    #087cff
+  );
+  color: #ffffff;
+  box-shadow: 0 6px 15px rgba(18, 100, 255, 0.16);
 }
 
 .view-property-btn:hover {
-  background: var(--sage-green);
+  transform: translateY(-1px);
+  box-shadow: 0 9px 20px rgba(18, 100, 255, 0.22);
 }
 
+/* Edit */
+
 .edit-property-btn {
-  border-color: rgba(111, 78, 55, 0.2);
-  background: #fffdf9;
-  color: var(--earth-brown);
+  border: 1px solid #d7ceff;
+  background: #f5f2ff;
+  color: #6250db;
 }
 
 .edit-property-btn:hover {
-  border-color: var(--earth-brown);
-  background: var(--sand);
+  transform: translateY(-1px);
+  border-color: #6957ff;
+  background: #f0edff;
 }
 
+/* Delete */
+
 .delete-property-btn {
-  border-color: rgba(150, 65, 55, 0.16);
-  background: transparent;
-  color: #9a5d54;
+  border: 1px solid #f0dede;
+  background: #fffafa;
+  color: #d45b5b;
 }
 
 .delete-property-btn:hover {
-  border-color: #9a5d54;
-  background: rgba(150, 65, 55, 0.06);
+  transform: translateY(-1px);
+  border-color: #efbcbc;
+  background: #fff0f0;
+  color: #c63f3f;
 }
 
-/* =========================
-   EMPTY / LOADING
-   ========================= */
+/* =========================================================
+   RESPONSIVE — 1000px
+   ========================================================= */
 
-.my-properties-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+@media (max-width: 1000px) {
+  .my-properties-container {
+    width: min(100% - 56px, 900px);
+  }
 
-  min-height: 300px;
-  padding: 40px;
-
-  border: 1px dashed rgba(111, 78, 55, 0.2);
-  background: #fffdf9;
-
-  text-align: center;
-}
-
-.my-properties-empty > svg {
-  width: 54px;
-  height: 54px;
-  padding: 13px;
-  box-sizing: border-box;
-
-  margin-bottom: 16px;
-
-  background: var(--sand);
-  color: var(--earth-brown);
-}
-
-.my-properties-empty h2 {
-  margin: 0;
-
-  color: var(--charcoal);
-
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 25px;
-  font-weight: 500;
-}
-
-.my-properties-empty p {
-  max-width: 400px;
-  margin: 8px 0 20px;
-
-  color: #817970;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.my-properties-empty a {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-
-  min-height: 40px;
-  padding: 0 15px;
-
-  background: var(--earth-brown);
-  color: #fff;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  text-transform: uppercase;
-
-  transition: background 0.25s ease;
-}
-
-.my-properties-empty a:hover {
-  background: var(--sage-green);
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-
-@media (max-width: 850px) {
   .seller-property-card {
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 245px minmax(0, 1fr);
   }
 
   .seller-property-content {
-    padding: 21px;
-  }
-
-  .seller-property-top h2 {
-    font-size: 21px;
-  }
-
-  .seller-property-price {
-    font-size: 18px;
+    padding: 19px;
   }
 }
 
-@media (max-width: 680px) {
+/* =========================================================
+   RESPONSIVE — 780px
+   ========================================================= */
+
+@media (max-width: 780px) {
   .my-properties-page {
-    padding: 100px 0 60px;
+    padding: 32px 0 60px;
   }
 
   .my-properties-container {
-    width: min(100% - 30px, 560px);
+    width: calc(100% - 32px);
   }
 
   .my-properties-header {
-    display: block;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
   }
 
   .add-property-btn {
-    margin-top: 20px;
+    width: fit-content;
+  }
+
+  .seller-property-card {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .seller-property-image,
+  .no-property-image {
+    min-height: 235px;
+  }
+
+  .seller-property-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .seller-property-price {
+    text-align: left;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 620px
+   ========================================================= */
+
+@media (max-width: 620px) {
+  .my-properties-page {
+    padding: 27px 0 55px;
+  }
+
+  .my-properties-container {
+    width: calc(100% - 24px);
+  }
+
+  .my-properties-header h1 {
+    font-size: 32px;
+  }
+
+  .my-properties-header p {
+    font-size: 12px;
+  }
+
+  .my-properties-stats {
+    gap: 10px;
+  }
+
+  .property-stat {
+    min-height: 68px;
+    padding: 12px;
+    gap: 9px;
+  }
+
+  .property-stat strong {
+    font-size: 18px;
+  }
+
+  .property-stat span {
+    font-size: 9px;
+  }
+
+  .seller-property-card {
+    grid-template-columns: 1fr;
+  }
+
+  .seller-property-image,
+  .no-property-image {
+    min-height: 210px;
+    height: 210px;
+  }
+
+  .seller-property-content {
+    padding: 17px;
+  }
+
+  .seller-property-top h2 {
+    font-size: 18px;
+  }
+
+  .seller-property-actions {
+    padding-top: 17px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 430px
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .my-properties-container {
+    width: calc(100% - 18px);
+  }
+
+  .my-properties-eyebrow {
+    padding: 6px 9px;
+    font-size: 8px;
+  }
+
+  .my-properties-header h1 {
+    margin-top: 10px;
+    font-size: 29px;
+  }
+
+  .add-property-btn {
+    width: 100%;
   }
 
   .my-properties-stats {
     grid-template-columns: 1fr;
   }
 
-  .seller-property-card {
-    display: block;
-  }
-
-  .seller-property-image {
-    height: 220px;
-    min-height: 220px;
+  .seller-property-image,
+  .no-property-image {
+    height: 190px;
+    min-height: 190px;
   }
 
   .seller-property-content {
-    padding: 20px;
-  }
-
-  .seller-property-actions {
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-width: 430px) {
-  .my-properties-header h1 {
-    font-size: 38px;
-  }
-
-  .seller-property-top {
-    display: block;
-  }
-
-  .seller-property-price {
-    display: block;
-    margin-top: 10px;
+    padding: 15px;
   }
 
   .seller-property-details {
-    gap: 12px;
+    gap: 6px;
+  }
+
+  .seller-property-details span {
+    font-size: 9px;
+    padding: 0 7px;
   }
 
   .seller-property-actions {
@@ -565,7 +805,36 @@
     grid-template-columns: 1fr 1fr;
   }
 
+  .view-property-btn,
+  .edit-property-btn,
+  .delete-property-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .delete-property-btn {
     grid-column: 1 / -1;
+  }
+
+  .my-properties-empty {
+    padding: 55px 18px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — 350px
+   ========================================================= */
+
+@media (max-width: 350px) {
+  .my-properties-header h1 {
+    font-size: 26px;
+  }
+
+  .seller-property-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .delete-property-btn {
+    grid-column: auto;
   }
 }

@@ -1,218 +1,271 @@
-/* =========================================================
-   SELLER ENQUIRIES — XEVOPROP EDITORIAL THEME
-   ========================================================= */
+/* =========================================
+   SELLER ENQUIRIES — XEVOPROP PROPTTECH THEME
+   ========================================= */
 
 .seller-enquiries-page {
-  min-height: 100vh;
-  background: #f9f7f4;
-  color: #1f1e1e;
-  padding: 48px 24px 80px;
+  min-height: calc(100vh - 76px);
+  padding: 44px 0 80px;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(0, 198, 255, 0.08), transparent 28%),
+    radial-gradient(circle at 92% 15%, rgba(105, 87, 255, 0.07), transparent 28%),
+    #f7faff;
 }
 
 .seller-enquiries-container {
-  width: min(1180px, 100%);
+  width: min(1240px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-/* =========================
+/* =========================================
    HEADER
-   ========================= */
+   ========================================= */
 
 .seller-enquiries-header {
-  margin-bottom: 42px;
+  position: relative;
+  margin-bottom: 30px;
 }
 
 .enquiries-back {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border: 0;
-  background: transparent;
-  color: #6f4e37;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 7px;
+  margin-bottom: 24px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
-  padding: 0;
-  margin-bottom: 28px;
-  transition: gap 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .enquiries-back:hover {
-  gap: 12px;
+  border-color: var(--border-blue);
+  color: var(--primary);
+  transform: translateX(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .seller-enquiries-header > span {
   display: block;
-  color: #6f4e37;
+  margin-bottom: 9px;
+  color: var(--primary);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  margin-bottom: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
 }
 
 .seller-enquiries-header h1 {
   margin: 0;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: clamp(38px, 5vw, 58px);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: #1f1e1e;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
 }
 
 .seller-enquiries-header p {
-  max-width: 560px;
-  margin: 16px 0 0;
-  color: #746e67;
+  max-width: 620px;
+  margin: 12px 0 0;
+  color: var(--text-secondary);
   font-size: 15px;
   line-height: 1.7;
 }
 
-/* =========================
-   STATES
-   ========================= */
-
-.enquiries-message,
-.enquiries-error,
-.enquiries-empty {
-  background: #fff;
-  border: 1px solid #e5ddd2;
-  border-radius: 18px;
-}
+/* =========================================
+   LOADING / ERROR / EMPTY
+   ========================================= */
 
 .enquiries-message {
-  padding: 28px;
-  text-align: center;
-  color: #746e67;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: #fff;
+  color: var(--text-secondary);
   font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
 }
 
 .enquiries-error {
-  padding: 20px 24px;
-  background: #fbf1ed;
-  border-color: #ead2c7;
-  color: #9b4d37;
-  font-size: 14px;
+  padding: 17px 20px;
+  border: 1px solid #ffd5d5;
+  border-left: 4px solid var(--danger);
+  border-radius: 12px;
+  background: var(--danger-bg);
+  color: #c83e3e;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .enquiries-empty {
-  padding: 70px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: 45px 25px;
+  border: 1px dashed var(--border-blue);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, rgba(237, 245, 255, 0.9), #fff);
   text-align: center;
 }
 
 .enquiries-empty svg {
-  color: #6f4e37;
-  margin-bottom: 14px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  padding: 13px;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 .enquiries-empty h2 {
   margin: 0 0 8px;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 27px;
-  font-weight: 500;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .enquiries-empty p {
-  max-width: 430px;
-  margin: 0 auto;
-  color: #817a73;
-  font-size: 14px;
+  max-width: 470px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
   line-height: 1.7;
 }
 
-/* =========================
+/* =========================================
    LEAD SUMMARY
-   ========================= */
+   ========================================= */
 
 .lead-summary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: #2e4a38;
-  border-radius: 18px;
-  overflow: hidden;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .lead-stat {
-  padding: 25px 28px;
-  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  position: relative;
+  overflow: hidden;
+  min-height: 104px;
+  padding: 20px 21px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
 }
 
-.lead-stat:last-child {
-  border-right: 0;
+.lead-stat::after {
+  content: "";
+  position: absolute;
+  right: -24px;
+  bottom: -28px;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: var(--primary-light);
 }
 
 .lead-stat span {
   display: block;
-  color: #c9d3c9;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 7px;
+  color: var(--text-muted);
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  margin-bottom: 9px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
 }
 
 .lead-stat strong {
+  position: relative;
+  z-index: 1;
   display: block;
-  color: #fff;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 30px;
-  font-weight: 500;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 29px;
+  font-weight: 800;
 }
 
-/* =========================
+/* =========================================
    FILTERS
-   ========================= */
+   ========================================= */
 
 .lead-filters {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
-  padding-bottom: 2px;
-  overflow-x: auto;
+  margin-bottom: 20px;
+  padding: 6px;
+  width: fit-content;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .lead-filter {
-  flex-shrink: 0;
-  border: 1px solid #ded5ca;
+  min-width: 82px;
+  padding: 9px 15px;
+  border: 0;
+  border-radius: 9px;
   background: transparent;
-  color: #625b54;
-  border-radius: 999px;
-  padding: 9px 17px;
+  color: var(--text-secondary);
+  font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 750;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .lead-filter:hover {
-  border-color: #6f4e37;
-  color: #6f4e37;
+  background: var(--bg-blue);
+  color: var(--primary);
 }
 
 .lead-filter.active {
-  background: #6f4e37;
-  border-color: #6f4e37;
+  background: var(--gradient-primary);
   color: #fff;
+  box-shadow: 0 5px 15px rgba(18, 100, 255, 0.2);
 }
 
-/* =========================
+/* =========================================
    ENQUIRY LIST
-   ========================= */
+   ========================================= */
 
 .enquiries-list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
+
+/* =========================================
+   ENQUIRY CARD
+   ========================================= */
 
 .enquiry-card {
   display: grid;
-  grid-template-columns: minmax(280px, 0.8fr) minmax(420px, 1.2fr);
-  background: #fff;
-  border: 1px solid #e5ddd2;
-  border-radius: 20px;
+  grid-template-columns: 310px minmax(0, 1fr);
   overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -220,155 +273,181 @@
 }
 
 .enquiry-card:hover {
-  transform: translateY(-2px);
-  border-color: #d8cabb;
-  box-shadow: 0 14px 35px rgba(64, 48, 34, 0.08);
+  transform: translateY(-3px);
+  border-color: #d5e3f8;
+  box-shadow: var(--shadow-md);
 }
 
-/* =========================
+/* =========================================
    PROPERTY SIDE
-   ========================= */
+   ========================================= */
 
 .enquiry-property {
-  min-height: 250px;
-  padding: 26px;
-  background: #eadcc8;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 16px;
+  min-width: 0;
+  border-right: 1px solid var(--border-light);
+  background: #f8fbff;
 }
 
-.enquiry-property > img,
+.enquiry-property img,
 .enquiry-property-placeholder {
   width: 100%;
-  height: 155px;
-  border-radius: 13px;
+  height: 180px;
   object-fit: cover;
+}
+
+.enquiry-property img {
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.enquiry-card:hover .enquiry-property img {
+  transform: scale(1.035);
 }
 
 .enquiry-property-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #d8c6ae;
-  color: #6f4e37;
+  background:
+    radial-gradient(circle at center, #e8f3ff, #dceaff);
+  color: var(--primary);
 }
 
 .enquiry-property > div:last-child {
-  min-width: 0;
+  padding: 18px 19px 20px;
 }
 
 .enquiry-property > div:last-child > span {
   display: block;
-  color: #80664f;
+  margin-bottom: 7px;
+  color: var(--primary);
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  margin-bottom: 5px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
 }
 
 .enquiry-property h2 {
   margin: 0;
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 21px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: #2b2724;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .enquiry-property p {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 5px;
-  margin: 7px 0 0;
-  color: #6f665e;
-  font-size: 12px;
+  margin: 9px 0 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
 }
 
-/* =========================
+.enquiry-property p svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--primary);
+}
+
+/* =========================================
    BUYER SIDE
-   ========================= */
+   ========================================= */
 
 .enquiry-buyer {
-  padding: 27px 30px 22px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  padding: 23px 25px 19px;
 }
 
 .buyer-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
 }
 
 .buyer-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #edf0ea;
-  color: #2e4a38;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #d4e4ff;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #edf5ff, #e8faff);
+  color: var(--primary);
 }
 
 .buyer-header span {
   display: block;
-  color: #8a8178;
+  margin-bottom: 3px;
+  color: var(--text-muted);
   font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  margin-bottom: 4px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
 .buyer-header h3 {
   margin: 0;
-  color: #252220;
-  font-size: 16px;
-  font-weight: 650;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
 }
 
-/* =========================
+/* =========================================
    CONTACT
-   ========================= */
+   ========================================= */
 
 .buyer-contact {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
-  margin: 18px 0;
+  gap: 7px 16px;
+  margin-top: 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--border-light);
+  border-radius: 11px;
+  background: #fbfdff;
 }
 
 .buyer-contact a {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  color: #625b54;
-  font-size: 12px;
+  gap: 6px;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 650;
   text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
 .buyer-contact a:hover {
-  color: #6f4e37;
+  color: var(--primary);
 }
 
 .buyer-contact svg {
-  color: #8d735c;
+  flex: 0 0 auto;
+  color: var(--primary);
 }
 
-/* =========================
+/* =========================================
    LEAD ACTIONS
-   ========================= */
+   ========================================= */
 
 .lead-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-  padding-bottom: 19px;
-  border-bottom: 1px solid #eee8e1;
+  gap: 8px;
+  margin-top: 15px;
 }
 
 .lead-action {
@@ -377,13 +456,14 @@
   justify-content: center;
   gap: 6px;
   min-height: 32px;
-  padding: 7px 12px;
-  border-radius: 8px;
-  border: 1px solid #ded6cd;
-  background: #faf8f5;
-  color: #504941;
-  font-size: 11px;
-  font-weight: 650;
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -391,184 +471,218 @@
 
 .lead-action:hover {
   transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .lead-action.call:hover {
-  background: #edf0ea;
-  border-color: #c9d4c9;
-  color: #2e4a38;
+  border-color: #bde8d3;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .lead-action.email:hover {
-  background: #f1ebe4;
-  border-color: #d8c8b8;
-  color: #6f4e37;
+  border-color: var(--border-blue);
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 .lead-action.whatsapp:hover {
-  background: #edf0ea;
-  border-color: #c9d4c9;
-  color: #2e4a38;
+  border-color: #bde8d3;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .lead-action.chat {
-  background: #6f4e37;
-  border-color: #6f4e37;
-  color: #fff;
+  border-color: #d9d2ff;
+  background: var(--violet-light);
+  color: var(--violet);
 }
 
 .lead-action.chat:hover {
-  background: #5d402d;
+  border-color: #c3b9ff;
+  background: #e9e5ff;
 }
 
-/* =========================
+/* =========================================
    BUYER MESSAGE
-   ========================= */
+   ========================================= */
 
 .buyer-message {
-  margin-top: 18px;
-  padding: 14px 16px;
-  background: #f8f5f0;
-  border-left: 3px solid #b49776;
-  border-radius: 0 9px 9px 0;
+  margin-top: 16px;
+  padding: 13px 15px;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 10px 10px 0;
+  background: var(--bg-blue);
 }
 
 .buyer-message strong {
   display: block;
-  color: #6f4e37;
+  margin-bottom: 5px;
+  color: var(--text-primary);
   font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .buyer-message p {
   margin: 0;
-  color: #655e57;
+  color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
-/* =========================
+/* =========================================
    FOOTER / STATUS
-   ========================= */
+   ========================================= */
 
 .enquiry-footer {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
   margin-top: auto;
-  padding-top: 18px;
-}
-
-.enquiry-footer > span:last-child {
-  color: #978e85;
-  font-size: 10px;
-  white-space: nowrap;
+  padding-top: 17px;
+  border-top: 1px solid var(--border-light);
 }
 
 .enquiry-status-section {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
 }
 
 .enquiry-status {
-  width: fit-content;
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
+  justify-content: center;
+  min-width: 65px;
   padding: 5px 10px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
 }
 
 .enquiry-status.new {
-  background: #f3e7d8;
-  color: #8b5b2d;
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
 .enquiry-status.contacted {
-  background: #e7eee8;
-  color: #2e4a38;
+  background: var(--warning-bg);
+  color: #b97910;
 }
 
 .enquiry-status.resolved {
-  background: #e8e6e3;
-  color: #5f5a55;
+  background: var(--success-bg);
+  color: var(--success);
 }
 
 .enquiry-actions {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 5px;
 }
 
 .enquiry-actions button {
-  border: 0;
-  background: transparent;
-  color: #7b7168;
-  padding: 0;
-  margin-right: 8px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.18s ease;
 }
 
 .enquiry-actions button:hover {
-  color: #6f4e37;
-  text-decoration: underline;
+  border-color: var(--border-blue);
+  background: var(--primary-light);
+  color: var(--primary);
 }
 
-/* =========================
+.enquiry-footer > span {
+  color: var(--text-muted);
+  font-size: 9px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* =========================================
    RESPONSIVE
-   ========================= */
+   ========================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
+  .seller-enquiries-container {
+    width: min(100% - 48px, 900px);
+  }
+
   .enquiry-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 250px minmax(0, 1fr);
   }
 
-  .enquiry-property {
-    min-height: auto;
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    align-items: end;
-    padding: 22px;
-  }
-
-  .enquiry-property > img,
+  .enquiry-property img,
   .enquiry-property-placeholder {
-    height: 120px;
+    height: 170px;
+  }
+
+  .enquiry-buyer {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .seller-enquiries-page {
+    padding-top: 32px;
   }
 
   .lead-summary {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .lead-stat:nth-child(2) {
-    border-right: 0;
+  .enquiry-card {
+    grid-template-columns: 1fr;
   }
 
-  .lead-stat:nth-child(-n + 2) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  .enquiry-property {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    border-right: 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .enquiry-property img,
+  .enquiry-property-placeholder {
+    height: 100%;
+    min-height: 145px;
+  }
+
+  .enquiry-property > div:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .enquiry-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .enquiry-footer > span {
+    text-align: left;
   }
 }
 
 @media (max-width: 600px) {
-  .seller-enquiries-page {
-    padding: 32px 16px 60px;
-  }
-
-  .seller-enquiries-header {
-    margin-bottom: 30px;
+  .seller-enquiries-container {
+    width: min(100% - 30px, 540px);
   }
 
   .seller-enquiries-header h1 {
-    font-size: 38px;
+    font-size: 30px;
   }
 
   .seller-enquiries-header p {
@@ -576,30 +690,42 @@
   }
 
   .lead-summary {
-    border-radius: 14px;
+    gap: 10px;
   }
 
   .lead-stat {
-    padding: 19px;
+    min-height: 92px;
+    padding: 16px;
   }
 
   .lead-stat strong {
     font-size: 25px;
   }
 
-  .enquiry-property {
-    display: block;
-    padding: 18px;
+  .lead-filters {
+    width: 100%;
+    overflow-x: auto;
   }
 
-  .enquiry-property > img,
+  .lead-filter {
+    flex: 1 0 auto;
+  }
+
+  .enquiry-property {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+
+  .enquiry-property img,
   .enquiry-property-placeholder {
-    height: 175px;
-    margin-bottom: 16px;
+    min-height: 125px;
+  }
+
+  .enquiry-property h2 {
+    font-size: 14px;
   }
 
   .enquiry-buyer {
-    padding: 21px 18px;
+    padding: 18px;
   }
 
   .buyer-contact {
@@ -608,39 +734,68 @@
   }
 
   .lead-actions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 
   .lead-action {
+    flex: 1 1 auto;
+  }
+
+  .enquiry-actions {
     width: 100%;
-  }
-
-  .enquiry-footer {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .enquiry-footer > span:last-child {
-    white-space: normal;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 420px) {
+  .seller-enquiries-container {
+    width: min(100% - 22px, 390px);
+  }
+
+  .enquiries-back {
+    font-size: 11px;
+  }
+
   .seller-enquiries-header h1 {
-    font-size: 33px;
+    font-size: 26px;
   }
 
   .lead-summary {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .lead-stat {
-    padding: 16px;
+    padding: 14px;
   }
 
-  .lead-actions {
+  .lead-stat span {
+    font-size: 8px;
+  }
+
+  .lead-stat strong {
+    font-size: 23px;
+  }
+
+  .enquiry-property {
     grid-template-columns: 1fr;
+  }
+
+  .enquiry-property img,
+  .enquiry-property-placeholder {
+    width: 100%;
+    height: 155px;
+    min-height: 0;
+  }
+
+  .enquiry-property > div:last-child {
+    padding: 15px 16px 17px;
+  }
+
+  .enquiry-status-section {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .enquiry-actions {
+    flex-wrap: wrap;
   }
 }
