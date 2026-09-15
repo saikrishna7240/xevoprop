@@ -208,7 +208,7 @@ function Navbar() {
           onClick={closeMenu}
         >
           <img
-            src="/xevoprop-logo.png"
+            src="/logo.png"
             alt="Xevoprop"
           />
         </Link>

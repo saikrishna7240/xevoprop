@@ -28,7 +28,7 @@ function Register() {
       <div className="auth-card">
 
         <img
-          src="/xevoprop-logo.png"
+          src="/logo.png"
           alt="Xevoprop"
           className="auth-logo"
         />
