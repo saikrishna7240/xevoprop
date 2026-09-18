@@ -1,91 +1,104 @@
 /* =========================================================
-   XEVOPROP — GLOBAL DESIGN SYSTEM
-   Bright PropTech Theme
+   XEVOPROP GLOBAL STYLES
+   Theme 1 — Smooth UI Foundation
    ========================================================= */
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
 
+
 /* =========================================================
-   DESIGN TOKENS
+   ROOT VARIABLES
    ========================================================= */
 
 :root {
-  /* Brand */
+  /* Primary */
   --primary: #1264ff;
   --primary-dark: #084dcc;
+  --primary-deep: #063b9e;
+
   --primary-light: #eaf2ff;
+  --primary-soft: #f3f7ff;
 
-  --cyan: #00c6ff;
-  --cyan-light: #e8faff;
-
-  --violet: #6957ff;
-  --violet-light: #f0edff;
+  --cyan: #19bfff;
+  --cyan-light: #eafaff;
 
   /* Text */
   --text-primary: #0b1736;
   --text-secondary: #526078;
-  --text-muted: #8190a8;
-  --text-light: #a5b0c0;
+  --text-muted: #7f8da4;
+  --text-light: #a4afbf;
 
   /* Background */
   --bg: #f7faff;
   --bg-white: #ffffff;
-  --bg-soft: #f0f6ff;
+  --bg-soft: #f2f6fc;
   --bg-blue: #edf5ff;
 
+  --bg-dark: #07152f;
+  --bg-dark-soft: #0d2144;
+
   /* Borders */
-  --border: #e1e9f3;
+  --border: #e1e9f4;
   --border-light: #edf2f8;
-  --border-blue: #cfe0ff;
+  --border-blue: #cbdcff;
 
   /* Status */
-  --success: #16a66a;
-  --success-bg: #e9f9f1;
+  --success: #16a56a;
+  --success-light: #eafaf3;
 
-  --warning: #e69b20;
-  --warning-bg: #fff7e7;
+  --warning: #e79a18;
+  --warning-light: #fff7e8;
 
-  --danger: #e05252;
-  --danger-bg: #fff0f0;
+  --danger: #e34d59;
+  --danger-light: #fff0f1;
+
+  /* Gradients */
+  --gradient-primary:
+    linear-gradient(
+      135deg,
+      #1264ff 0%,
+      #087dff 55%,
+      #19bfff 100%
+    );
+
+  --gradient-soft:
+    linear-gradient(
+      135deg,
+      #f3f7ff 0%,
+      #eafaff 100%
+    );
 
   /* Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
   --radius-pill: 999px;
 
   /* Shadows */
-  --shadow-sm: 0 4px 14px rgba(18, 100, 255, 0.06);
-  --shadow-md: 0 10px 30px rgba(18, 100, 255, 0.09);
-  --shadow-lg: 0 20px 50px rgba(18, 100, 255, 0.12);
-  --shadow-card: 0 6px 24px rgba(11, 23, 54, 0.06);
+  --shadow-sm:
+    0 4px 14px rgba(11, 23, 54, 0.06);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(
-    135deg,
-    #1264ff 0%,
-    #087cff 48%,
-    #00c6ff 100%
-  );
+  --shadow-card:
+    0 8px 28px rgba(11, 23, 54, 0.07);
 
-  --gradient-soft: linear-gradient(
-    135deg,
-    #f1f7ff 0%,
-    #eef5ff 55%,
-    #f7f9ff 100%
-  );
+  --shadow-md:
+    0 12px 32px rgba(11, 23, 54, 0.09);
 
-  --gradient-violet: linear-gradient(
-    135deg,
-    #6957ff 0%,
-    #1264ff 100%
-  );
+  --shadow-lg:
+    0 20px 50px rgba(11, 23, 54, 0.12);
 
   /* Layout */
   --container: 1380px;
   --page-padding: 40px;
+
+  /* Motion */
+  --transition-fast: 0.18s ease;
+  --transition-base: 0.28s ease;
+  --transition-smooth:
+    0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+
 
 /* =========================================================
    RESET
@@ -99,41 +112,123 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 body {
   margin: 0;
-  padding: 0;
+
+  min-width: 320px;
+
   background: var(--bg);
   color: var(--text-primary);
-  font-family: "Inter", Arial, sans-serif;
-  font-size: 14px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
   line-height: 1.5;
+
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   ROOT
+   ========================================================= */
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* =========================================================
+   COMMON ELEMENTS
+   ========================================================= */
+
+img {
+  max-width: 100%;
 }
 
 button,
 input,
-textarea,
-select {
+select,
+textarea {
   font: inherit;
 }
 
 button {
-  cursor: pointer;
-}
-
-img {
-  max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
   color: inherit;
 }
 
+::selection {
+  background: rgba(18, 100, 255, 0.18);
+  color: var(--text-primary);
+}
+
+
 /* =========================================================
-   TYPOGRAPHY
+   GLOBAL FOCUS
+   ========================================================= */
+
+:focus-visible {
+  outline: 3px solid rgba(18, 100, 255, 0.2);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   COMMON CONTAINER
+   ========================================================= */
+
+.container {
+  width: min(
+    var(--container),
+    calc(100% - (var(--page-padding) * 2))
+  );
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   SECTION LABEL
+   ========================================================= */
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  color: var(--primary);
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+}
+
+.section-label::before {
+  content: "";
+
+  width: 24px;
+  height: 2px;
+
+  border-radius: var(--radius-pill);
+
+  background: var(--primary);
+}
+
+
+/* =========================================================
+   COMMON HEADINGS
    ========================================================= */
 
 h1,
@@ -143,126 +238,57 @@ h4,
 h5,
 h6 {
   margin-top: 0;
+
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
+
   color: var(--text-primary);
-  font-family: "Plus Jakarta Sans", "Inter", Arial, sans-serif;
 }
 
-h1 {
-  font-size: clamp(42px, 5vw, 72px);
-  line-height: 1.05;
-  letter-spacing: -2.5px;
-}
-
+h1,
 h2 {
-  font-size: clamp(32px, 4vw, 50px);
-  line-height: 1.1;
   letter-spacing: -1.5px;
 }
 
-h3 {
-  font-size: 24px;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
-}
-
-p {
-  color: var(--text-secondary);
-}
 
 /* =========================================================
-   COMMON CONTAINER
+   BUTTON FOUNDATION
    ========================================================= */
 
-.container {
-  width: min(var(--container), calc(100% - 80px));
-  margin: 0 auto;
+button {
+  border: 0;
 }
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 
 /* =========================================================
-   COMMON SECTION
+   SMOOTH INTERACTION FOUNDATION
    ========================================================= */
 
-.section {
-  padding: 90px 0;
-}
-
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 14px;
-  color: var(--primary);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-}
-
-.section-label::before {
-  width: 22px;
-  height: 2px;
-  display: inline-block;
-  border-radius: 2px;
-  background: var(--gradient-primary);
-  content: "";
-}
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 20px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
+a,
+button,
+input,
+select,
+textarea {
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    opacity var(--transition-base),
+    transform var(--transition-base);
 }
 
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.btn-primary {
-  background: var(--gradient-primary);
-  color: white;
-  box-shadow: 0 7px 20px rgba(18, 100, 255, 0.22);
-}
-
-.btn-primary:hover {
-  box-shadow: 0 10px 28px rgba(18, 100, 255, 0.3);
-}
-
-.btn-secondary {
-  border-color: var(--border-blue);
-  background: white;
-  color: var(--primary);
-}
-
-.btn-secondary:hover {
-  background: var(--primary-light);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.btn-ghost:hover {
-  background: var(--bg-blue);
-  color: var(--primary);
-}
 
 /* =========================================================
    COMMON CARD
@@ -270,19 +296,56 @@ p {
 
 .card {
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: white;
+  border-radius: var(--radius-xl);
+
+  background: var(--bg-white);
+
   box-shadow: var(--shadow-card);
+
+  transition:
+    transform var(--transition-smooth),
+    box-shadow var(--transition-smooth),
+    border-color var(--transition-base);
 }
 
+.card:hover {
+  transform: translateY(-4px);
+
+  border-color: var(--border-blue);
+
+  box-shadow: var(--shadow-lg);
+}
+
+
 /* =========================================================
-   FORM ELEMENTS
+   PROPERTY CARD FOUNDATION
+   ========================================================= */
+
+.property-card {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.property-card img {
+  backface-visibility: hidden;
+}
+
+
+/* =========================================================
+   FORM FOUNDATION
    ========================================================= */
 
 input,
 select,
 textarea {
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  background: var(--bg-white);
   color: var(--text-primary);
+
+  outline: none;
 }
 
 input::placeholder,
@@ -290,96 +353,104 @@ textarea::placeholder {
   color: var(--text-light);
 }
 
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #c8d8ef;
+}
+
 input:focus,
 select:focus,
 textarea:focus {
-  outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(18, 100, 255, 0.08);
+
+  box-shadow:
+    0 0 0 4px rgba(18, 100, 255, 0.08);
 }
 
-/* =========================================================
-   BADGES
-   ========================================================= */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 24px;
-  padding: 0 9px;
-  border-radius: var(--radius-pill);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.badge-primary {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-.badge-success {
-  background: var(--success-bg);
-  color: var(--success);
-}
-
-.badge-warning {
-  background: var(--warning-bg);
-  color: var(--warning);
-}
-
-.badge-danger {
-  background: var(--danger-bg);
-  color: var(--danger);
-}
 
 /* =========================================================
    LINKS
    ========================================================= */
 
-.link {
-  color: var(--primary);
-  font-weight: 600;
+a {
   text-decoration: none;
 }
 
-.link:hover {
-  color: var(--primary-dark);
+a:hover {
+  color: var(--primary);
 }
+
 
 /* =========================================================
-   SELECTION
+   PAGE BACKGROUND
    ========================================================= */
 
-::selection {
-  background: #bcd6ff;
-  color: #07132e;
+.page {
+  min-height: 100vh;
+  background: var(--bg);
 }
+
+
+/* =========================================================
+   LOADING SPINNER
+   ========================================================= */
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+
+  border: 2px solid var(--border-blue);
+  border-top-color: var(--primary);
+
+  border-radius: 50%;
+
+  animation:
+    global-spin 0.75s linear infinite;
+}
+
+@keyframes global-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   SMOOTH PAGE CONTENT
+   ========================================================= */
+
+main {
+  width: 100%;
+}
+
 
 /* =========================================================
    SCROLLBAR
    ========================================================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f4f9;
+  background: #f2f5fa;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: #b9c8dc;
+  background: #c8d5e8;
+  border-radius: 999px;
+
+  transition: background 0.25s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8ea6c5;
+  background: #9eb4d2;
 }
 
+
 /* =========================================================
-   UTILITY
+   UTILITY CLASSES
    ========================================================= */
 
 .text-primary {
@@ -390,72 +461,95 @@ textarea:focus {
   color: var(--text-muted);
 }
 
-.text-success {
-  color: var(--success);
+.text-secondary {
+  color: var(--text-secondary);
 }
 
 .bg-white {
-  background: white;
+  background: var(--bg-white);
 }
 
-.bg-soft {
-  background: var(--bg-soft);
+.hidden {
+  display: none !important;
 }
 
-.bg-blue {
-  background: var(--bg-blue);
-}
-
-.gradient-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 
 /* =========================================================
-   RESPONSIVE
+   PAGE ENTER ANIMATION
    ========================================================= */
 
-@media (max-width: 900px) {
-  :root {
-    --page-padding: 25px;
+.page-enter {
+  animation:
+    page-enter-animation 0.4s
+    cubic-bezier(0.2, 0.7, 0.2, 1)
+    both;
+}
+
+@keyframes page-enter-animation {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 
-  .container {
-    width: calc(100% - 50px);
-  }
-
-  .section {
-    padding: 70px 0;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 600px) {
-  .container {
-    width: calc(100% - 28px);
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .section {
-    padding: 55px 0;
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  :root {
+    --page-padding: 24px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  :root {
+    --page-padding: 16px;
   }
 
-  h1 {
-    font-size: 40px;
-    letter-spacing: -1.5px;
+  body {
+    font-size: 14px;
   }
+}
 
-  h2 {
-    font-size: 32px;
-    letter-spacing: -1px;
-  }
 
-  h3 {
-    font-size: 21px;
-  }
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
 
-  .btn {
-    min-height: 42px;
-    padding: 0 17px;
+@media (max-width: 420px) {
+  :root {
+    --page-padding: 12px;
   }
 }
