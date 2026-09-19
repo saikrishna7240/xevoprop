@@ -575,3 +575,192 @@
     width: 100%;
   }
 }
+
+/* =========================================================
+   PASSWORD UPDATE
+========================================================= */
+
+.profile-password-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 42px;
+  padding: 0 16px;
+
+  border: 1px solid #dbe6f5;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #0b1736;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease;
+}
+
+.profile-password-button:hover {
+  border-color: #1264ff;
+  color: #1264ff;
+  background: #f3f7ff;
+  transform: translateY(-1px);
+}
+
+.password-update-card {
+  margin-top: 28px;
+  padding: 24px;
+
+  border: 1px solid #dfe8f5;
+  border-radius: 16px;
+
+  background: #f7faff;
+}
+
+.password-update-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-bottom: 22px;
+}
+
+.password-update-icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #eaf2ff;
+  color: #1264ff;
+}
+
+.password-update-header h3 {
+  margin: 0;
+
+  color: #0b1736;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.password-update-header p {
+  margin: 4px 0 0;
+
+  color: #7f8da4;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.password-update-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-password-input {
+  position: relative;
+  width: 100%;
+}
+
+.profile-password-input input {
+  width: 100%;
+  padding-right: 45px;
+}
+
+.profile-password-input button {
+  position: absolute;
+
+  top: 50%;
+  right: 9px;
+
+  width: 32px;
+  height: 32px;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #7f8da4;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.profile-password-input button:hover {
+  color: #1264ff;
+  background: #edf5ff;
+}
+
+.profile-password-hint {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #7f8da4;
+
+  font-size: 11px;
+}
+
+.password-update-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+@media (max-width: 900px) {
+  .password-update-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile-edit-button,
+  .profile-password-button {
+    width: 100%;
+  }
+
+  .password-update-card {
+    padding: 18px;
+  }
+
+  .password-update-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .password-update-actions button {
+    width: 100%;
+  }
+}

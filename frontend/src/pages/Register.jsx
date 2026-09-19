@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../lib/api";
 import "./Auth.css";
@@ -11,22 +13,42 @@ function Register() {
   const [role, setRole] = useState("Buyer");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async (e) => {
-    e.preventDefault(); setError(""); setLoading(true);
+    e.preventDefault();
+
+    setError("");
+    setLoading(true);
+
     const formData = new FormData(e.target);
+
     try {
-      const data = await apiFetch("/auth/register", { method: "POST", body: JSON.stringify({ name: formData.get("name"), email: formData.get("email"), phone: formData.get("phone"), password: formData.get("password"), role }) });
+      const data = await apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          phone: formData.get("phone"),
+          password: formData.get("password"),
+          role,
+        }),
+      });
+
       login(data);
       navigate("/dashboard");
-    } catch (error) { setError(error.message || "Unable to create account."); } finally { setLoading(false); }
+    } catch (error) {
+      setError(
+        error.message || "Unable to create account."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="auth-page">
-
       <div className="auth-card">
-
         <img
           src="/logo.png"
           alt="Xevoprop"
@@ -45,20 +67,7 @@ function Register() {
         </p>
 
         {error && (
-          <div
-            style={{
-              marginBottom: "15px",
-              padding: "10px",
-              borderRadius: "7px",
-              border:
-                "1px solid rgba(255,107,107,0.2)",
-              background:
-                "rgba(255,107,107,0.05)",
-              color: "#ff6b6b",
-              fontSize: "10px",
-              textAlign: "center",
-            }}
-          >
+          <div className="auth-error auth-register-error">
             {error}
           </div>
         )}
@@ -67,7 +76,6 @@ function Register() {
           className="auth-form"
           onSubmit={handleRegister}
         >
-
           <div className="auth-field">
             <label>Full name</label>
 
@@ -104,13 +112,38 @@ function Register() {
           <div className="auth-field">
             <label>Password</label>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Create a password"
-              minLength="6"
-              required
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Create a password"
+                minLength="6"
+                required
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                  setShowPassword((previous) => !previous)
+                }
+                aria-label={
+                  showPassword
+                    ? "Hide password"
+                    : "Show password"
+                }
+              >
+                {showPassword ? (
+                  <EyeOff size={17} />
+                ) : (
+                  <Eye size={17} />
+                )}
+              </button>
+            </div>
+
+            <span className="password-hint">
+              Minimum 6 characters
+            </span>
           </div>
 
           <p className="role-title">
@@ -118,7 +151,6 @@ function Register() {
           </p>
 
           <div className="role-grid">
-
             {[
               "Buyer",
               "Seller",
@@ -132,14 +164,11 @@ function Register() {
                     ? "role-option active"
                     : "role-option"
                 }
-                onClick={() =>
-                  setRole(item)
-                }
+                onClick={() => setRole(item)}
               >
                 {item}
               </button>
             ))}
-
           </div>
 
           <button
@@ -151,7 +180,6 @@ function Register() {
               ? "Creating account..."
               : "Create account"}
           </button>
-
         </form>
 
         <p className="auth-switch">
@@ -160,9 +188,7 @@ function Register() {
             Sign in
           </Link>
         </p>
-
       </div>
-
     </div>
   );
 }

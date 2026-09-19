@@ -1,13 +1,22 @@
-import { useState } from "react";
-import { ArrowLeft, Building2, Plus, Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import {
+  ArrowLeft,
+  Building2,
+  Plus,
+  Loader2,
+  ImagePlus,
+  X,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./AddProject.css";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "https://xevoprop.onrender.com/api";
+  import.meta.env.VITE_API_URL ||
+  "https://xevoprop.onrender.com/api";
 
 function AddProject() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,8 +28,10 @@ function AddProject() {
     price: "",
     description: "",
     status: "Available",
-    image: "",
   });
+
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,6 +43,75 @@ function AddProject() {
       ...previous,
       [name]: value,
     }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file.");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Image size must be less than 10MB.");
+      return;
+    }
+
+    setError("");
+
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
+    const preview = URL.createObjectURL(file);
+
+    setImage(file);
+    setImagePreview(preview);
+  };
+
+  const removeImage = () => {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
+    setImage(null);
+    setImagePreview("");
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const uploadProjectImage = async (projectId, token) => {
+    if (!image) return null;
+
+    const imageFormData = new FormData();
+
+    imageFormData.append("image", image);
+
+    const response = await fetch(
+      `${API_URL}/upload/project/${projectId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: imageFormData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Failed to upload project image."
+      );
+    }
+
+    return data.image;
   };
 
   const handleSubmit = async (e) => {
@@ -72,6 +152,10 @@ function AddProject() {
         .filter(Boolean)
         .join(", ");
 
+      /* =========================
+         CREATE PROJECT
+      ========================= */
+
       const response = await fetch(
         `${API_URL}/projects`,
         {
@@ -83,6 +167,7 @@ function AddProject() {
           body: JSON.stringify({
             name: formData.name.trim(),
             location: completeLocation,
+            city: formData.city.trim() || null,
             type: formData.type,
             units: formData.units
               ? Number(formData.units)
@@ -91,7 +176,6 @@ function AddProject() {
             description:
               formData.description.trim() || null,
             status: formData.status,
-            image: formData.image.trim() || null,
           }),
         }
       );
@@ -104,14 +188,37 @@ function AddProject() {
         );
       }
 
+      const projectId = data.project?.id;
+
+      if (!projectId) {
+        throw new Error(
+          "Project created but project ID was not returned."
+        );
+      }
+
+      /* =========================
+         UPLOAD IMAGE
+      ========================= */
+
+      if (image) {
+        await uploadProjectImage(
+          projectId,
+          token
+        );
+      }
+
       alert("Project created successfully!");
 
       navigate("/my-projects");
     } catch (err) {
-      console.error("CREATE PROJECT ERROR:", err);
+      console.error(
+        "CREATE PROJECT ERROR:",
+        err
+      );
 
       setError(
-        err.message || "Unable to create project."
+        err.message ||
+          "Unable to create project."
       );
     } finally {
       setLoading(false);
@@ -122,7 +229,6 @@ function AddProject() {
     <div className="add-project-page">
       <div className="add-project-container">
 
-        {/* BACK */}
         <button
           type="button"
           className="add-project-back"
@@ -132,7 +238,6 @@ function AddProject() {
           Back to my projects
         </button>
 
-        {/* HEADER */}
         <div className="add-project-header">
           <div className="add-project-icon">
             <Building2 size={22} />
@@ -150,22 +255,20 @@ function AddProject() {
           </div>
         </div>
 
-        {/* ERROR */}
         {error && (
           <div className="add-project-error">
             {error}
           </div>
         )}
 
-        {/* FORM */}
         <form
           className="add-project-form"
           onSubmit={handleSubmit}
         >
 
           {/* BASIC INFORMATION */}
-          <section className="project-form-section">
 
+          <section className="project-form-section">
             <div className="project-form-heading">
               <span>01</span>
 
@@ -179,7 +282,6 @@ function AddProject() {
 
             <div className="project-form-grid">
 
-              {/* NAME */}
               <div className="project-form-group full">
                 <label>
                   Project name
@@ -196,7 +298,6 @@ function AddProject() {
                 />
               </div>
 
-              {/* TYPE */}
               <div className="project-form-group">
                 <label>
                   Project type
@@ -212,30 +313,23 @@ function AddProject() {
                   <option value="Apartment">
                     Apartment
                   </option>
-
                   <option value="Villa">
                     Villa
                   </option>
-
                   <option value="Plot">
                     Plot
                   </option>
-
                   <option value="Commercial">
                     Commercial
                   </option>
-
                   <option value="House">
                     House
                   </option>
                 </select>
               </div>
 
-              {/* STATUS */}
               <div className="project-form-group">
-                <label>
-                  Status
-                </label>
+                <label>Status</label>
 
                 <select
                   name="status"
@@ -245,19 +339,15 @@ function AddProject() {
                   <option value="Available">
                     Available
                   </option>
-
                   <option value="Upcoming">
                     Upcoming
                   </option>
-
                   <option value="Sold Out">
                     Sold Out
                   </option>
-
                   <option value="Completed">
                     Completed
                   </option>
-
                   <option value="Draft">
                     Draft
                   </option>
@@ -268,8 +358,8 @@ function AddProject() {
           </section>
 
           {/* LOCATION */}
-          <section className="project-form-section">
 
+          <section className="project-form-section">
             <div className="project-form-heading">
               <span>02</span>
 
@@ -327,16 +417,16 @@ function AddProject() {
           </section>
 
           {/* PROJECT DETAILS */}
-          <section className="project-form-section">
 
+          <section className="project-form-section">
             <div className="project-form-heading">
               <span>03</span>
 
               <div>
                 <h2>Project details</h2>
                 <p>
-                  Add pricing and availability
-                  information.
+                  Add pricing, image and
+                  availability information.
                 </p>
               </div>
             </div>
@@ -344,9 +434,7 @@ function AddProject() {
             <div className="project-form-grid">
 
               <div className="project-form-group">
-                <label>
-                  Total units
-                </label>
+                <label>Total units</label>
 
                 <input
                   type="number"
@@ -359,9 +447,7 @@ function AddProject() {
               </div>
 
               <div className="project-form-group">
-                <label>
-                  Price
-                </label>
+                <label>Price</label>
 
                 <input
                   type="text"
@@ -372,24 +458,76 @@ function AddProject() {
                 />
               </div>
 
+              {/* IMAGE UPLOAD */}
+
               <div className="project-form-group full">
                 <label>
-                  Project image URL
+                  Project image
                 </label>
 
+                {!imagePreview ? (
+                  <button
+                    type="button"
+                    className="project-image-upload"
+                    onClick={() =>
+                      fileInputRef.current?.click()
+                    }
+                  >
+                    <ImagePlus size={28} />
+
+                    <strong>
+                      Upload project image
+                    </strong>
+
+                    <span>
+                      JPG, PNG or WEBP · Max 10MB
+                    </span>
+
+                    <em>
+                      Choose Image
+                    </em>
+                  </button>
+                ) : (
+                  <div className="project-image-preview">
+                    <img
+                      src={imagePreview}
+                      alt="Project preview"
+                    />
+
+                    <div className="project-image-overlay">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          fileInputRef.current?.click()
+                        }
+                      >
+                        Change Image
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        aria-label="Remove image"
+                      >
+                        <X size={17} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://..."
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleImageChange}
+                  hidden
                 />
               </div>
 
+              {/* DESCRIPTION */}
+
               <div className="project-form-group full">
-                <label>
-                  Description
-                </label>
+                <label>Description</label>
 
                 <textarea
                   name="description"
@@ -404,6 +542,7 @@ function AddProject() {
           </section>
 
           {/* ACTIONS */}
+
           <div className="add-project-actions">
 
             <button
@@ -439,7 +578,6 @@ function AddProject() {
             </button>
 
           </div>
-
         </form>
       </div>
     </div>

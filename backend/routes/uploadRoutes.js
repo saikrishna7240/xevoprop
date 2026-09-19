@@ -64,51 +64,29 @@ router.get("/test", (req, res) => {
    UPLOAD PROPERTY IMAGE
 ========================= */
 
+
 router.post(
-  "/property/:propertyId",
+  "/project/:projectId",
 
   authenticateToken,
 
-  authorizeRoles(
-    "Seller",
-    "Developer"
-  ),
+  authorizeRoles("Developer"),
 
   upload.single("image"),
 
   async (req, res) => {
     try {
-      console.log(
-        "================================"
-      );
+      const { projectId } = req.params;
 
-      console.log(
-        "PROPERTY IMAGE UPLOAD REQUEST"
-      );
-
-      console.log(
-        "Property ID:",
-        req.params.propertyId
-      );
-
-      console.log(
-        "User:",
-        req.user
-      );
-
+      console.log("================================");
+      console.log("PROJECT IMAGE UPLOAD REQUEST");
+      console.log("Project ID:", projectId);
+      console.log("User:", req.user);
       console.log(
         "File:",
-        req.file
-          ? req.file.originalname
-          : "NO FILE"
+        req.file ? req.file.originalname : "NO FILE"
       );
-
-      console.log(
-        "================================"
-      );
-
-      const { propertyId } =
-        req.params;
+      console.log("================================");
 
       /* =========================
          CHECK FILE
@@ -117,36 +95,29 @@ router.post(
       if (!req.file) {
         return res.status(400).json({
           success: false,
-          message:
-            "Please select an image",
+          message: "Please select an image.",
         });
       }
 
       /* =========================
-         CHECK PROPERTY OWNER
+         CHECK PROJECT OWNER
       ========================= */
 
-      const propertyResult =
-        await pool.query(
-          `
-          SELECT id
-          FROM properties
-          WHERE id = $1
-          AND owner_id = $2
-          `,
-          [
-            propertyId,
-            req.user.id,
-          ]
-        );
+      const projectResult = await pool.query(
+        `
+        SELECT id
+        FROM projects
+        WHERE id = $1
+        AND developer_id = $2
+        `,
+        [projectId, req.user.id]
+      );
 
-      if (
-        propertyResult.rows.length === 0
-      ) {
+      if (projectResult.rows.length === 0) {
         return res.status(403).json({
           success: false,
           message:
-            "You are not the owner of this property",
+            "You are not the owner of this project.",
         });
       }
 
@@ -154,120 +125,69 @@ router.post(
          CLOUDINARY UPLOAD
       ========================= */
 
-      const uploadResult =
-        await new Promise(
-          (resolve, reject) => {
-            const stream =
-              cloudinary.uploader.upload_stream(
-                {
-                  folder:
-                    "xevoprop/properties",
-
-                  resource_type:
-                    "image",
-                },
-
-                (error, result) => {
-                  if (error) {
-                    reject(error);
-                  } else {
-                    resolve(result);
-                  }
+      const uploadResult = await new Promise(
+        (resolve, reject) => {
+          const stream =
+            cloudinary.uploader.upload_stream(
+              {
+                folder: "xevoprop/projects",
+                resource_type: "image",
+              },
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result);
                 }
-              );
-
-            stream.end(
-              req.file.buffer
+              }
             );
-          }
-        );
 
-      console.log(
-        "Cloudinary upload successful:"
+          stream.end(req.file.buffer);
+        }
       );
 
       console.log(
+        "Project image uploaded:",
         uploadResult.secure_url
       );
 
       /* =========================
-         GET NEXT SORT ORDER
+         SAVE IMAGE URL
       ========================= */
 
-      const sortResult =
-        await pool.query(
-          `
-          SELECT COALESCE(
-            MAX(sort_order),
-            -1
-          ) + 1 AS next_order
-          FROM property_images
-          WHERE property_id = $1
-          `,
-          [propertyId]
-        );
+      const result = await pool.query(
+        `
+        UPDATE projects
+        SET
+          image = $1,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = $2
+        AND developer_id = $3
+        RETURNING id, image
+        `,
+        [
+          uploadResult.secure_url,
+          projectId,
+          req.user.id,
+        ]
+      );
 
-      const nextOrder =
-        sortResult.rows[0].next_order;
-
-      /* =========================
-         SAVE IMAGE
-      ========================= */
-
-      const imageResult =
-        await pool.query(
-          `
-          INSERT INTO property_images
-          (
-            property_id,
-            image_url,
-            sort_order
-          )
-          VALUES ($1, $2, $3)
-          RETURNING *
-          `,
-          [
-            propertyId,
-            uploadResult.secure_url,
-            nextOrder,
-          ]
-        );
-
-      /* =========================
-         SET PRIMARY IMAGE
-      ========================= */
-
-      if (Number(nextOrder) === 0) {
-        await pool.query(
-          `
-          UPDATE properties
-          SET image = $1
-          WHERE id = $2
-          `,
-          [
-            uploadResult.secure_url,
-            propertyId,
-          ]
-        );
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Project not found.",
+        });
       }
-
-      /* =========================
-         SUCCESS
-      ========================= */
 
       return res.status(201).json({
         success: true,
-
-        message:
-          "Image uploaded successfully",
-
-        image:
-          imageResult.rows[0],
+        message: "Project image uploaded successfully.",
+        image: result.rows[0].image,
+        project: result.rows[0],
       });
-
     } catch (error) {
       console.error(
-        "IMAGE UPLOAD ERROR:",
+        "PROJECT IMAGE UPLOAD ERROR:",
         error
       );
 
@@ -275,7 +195,7 @@ router.post(
         success: false,
         message:
           error.message ||
-          "Failed to upload image",
+          "Failed to upload project image.",
       });
     }
   }

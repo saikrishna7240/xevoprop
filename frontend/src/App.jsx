@@ -47,35 +47,57 @@ function App() {
 
         {/* =====================================================
             PUBLIC ROUTES
-            ===================================================== */}
+        ===================================================== */}
 
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
-        <Route path="/properties" element={<Properties />} />
+        <Route
+          path="/properties"
+          element={<Properties />}
+        />
 
         <Route
           path="/properties/:id"
           element={<PropertyDetails />}
         />
 
-        <Route path="/search" element={<Search />} />
+        <Route
+          path="/search"
+          element={<Search />}
+        />
 
-        <Route path="/projects" element={<Projects />} />
+        <Route
+          path="/projects"
+          element={<Projects />}
+        />
 
-        {/* Public project detail */}
         <Route
           path="/projects/:id"
           element={<ProjectDetails />}
         />
 
-        {/* Company pages */}
-        <Route path="/about" element={<About />} />
+        <Route
+          path="/about"
+          element={<About />}
+        />
 
-        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/contact"
+          element={<Contact />}
+        />
 
         <Route
           path="/developers"
@@ -85,7 +107,7 @@ function App() {
 
         {/* =====================================================
             GENERAL AUTHENTICATED ROUTES
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/dashboard"
@@ -117,7 +139,7 @@ function App() {
 
         {/* =====================================================
             BUYER ROUTES
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/favorites"
@@ -149,7 +171,7 @@ function App() {
 
         {/* =====================================================
             SELLER ROUTES
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/list-property"
@@ -163,7 +185,12 @@ function App() {
         <Route
           path="/my-properties"
           element={
-            <ProtectedRoute allowedRoles={["Seller"]}>
+            <ProtectedRoute
+              allowedRoles={[
+                "Seller",
+                "Developer",
+              ]}
+            >
               <MyProperties />
             </ProtectedRoute>
           }
@@ -172,7 +199,12 @@ function App() {
         <Route
           path="/edit-property/:id"
           element={
-            <ProtectedRoute allowedRoles={["Seller"]}>
+            <ProtectedRoute
+              allowedRoles={[
+                "Seller",
+                "Developer",
+              ]}
+            >
               <EditProperty />
             </ProtectedRoute>
           }
@@ -199,12 +231,17 @@ function App() {
 
         {/* =====================================================
             ENQUIRY CHAT
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/enquiries/:id/chat"
           element={
-            <ProtectedRoute allowedRoles={["Buyer", "Seller"]}>
+            <ProtectedRoute
+              allowedRoles={[
+                "Buyer",
+                "Seller",
+              ]}
+            >
               <EnquiryChat />
             </ProtectedRoute>
           }
@@ -213,12 +250,17 @@ function App() {
 
         {/* =====================================================
             SELLER / DEVELOPER LEADS
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/leads"
           element={
-            <ProtectedRoute allowedRoles={["Seller", "Developer"]}>
+            <ProtectedRoute
+              allowedRoles={[
+                "Seller",
+                "Developer",
+              ]}
+            >
               <Leads />
             </ProtectedRoute>
           }
@@ -227,7 +269,7 @@ function App() {
 
         {/* =====================================================
             DEVELOPER ROUTES
-            ===================================================== */}
+        ===================================================== */}
 
         <Route
           path="/my-projects"

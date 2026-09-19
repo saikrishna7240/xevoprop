@@ -1,7 +1,7 @@
 /* =========================================================
    XEVOPROP — ADD PROJECT
-   Bright PropTech / Modern SaaS Theme
-   ========================================================= */
+   Modern PropTech Theme
+========================================================= */
 
 .add-project-page {
   min-height: 100vh;
@@ -21,18 +21,20 @@
     #f7faff;
 }
 
+
 /* =========================================================
    CONTAINER
-   ========================================================= */
+========================================================= */
 
 .add-project-container {
   width: min(1080px, calc(100% - 80px));
   margin: 0 auto;
 }
 
+
 /* =========================================================
    BACK BUTTON
-   ========================================================= */
+========================================================= */
 
 .add-project-back {
   display: inline-flex;
@@ -43,7 +45,6 @@
   padding: 0;
 
   color: #61708a;
-
   background: transparent;
   border: none;
 
@@ -63,9 +64,10 @@
   transform: translateX(-3px);
 }
 
+
 /* =========================================================
    HEADER
-   ========================================================= */
+========================================================= */
 
 .add-project-header {
   display: flex;
@@ -86,7 +88,6 @@
   flex-shrink: 0;
 
   color: #ffffff;
-
   background: var(--gradient-primary);
 
   border-radius: 16px;
@@ -132,9 +133,10 @@
   line-height: 1.6;
 }
 
+
 /* =========================================================
    ERROR
-   ========================================================= */
+========================================================= */
 
 .add-project-error {
   display: flex;
@@ -144,7 +146,6 @@
   padding: 13px 16px;
 
   color: #b63f3f;
-
   background: #fff2f2;
 
   border: 1px solid #ffd3d3;
@@ -153,11 +154,13 @@
   font-size: 13px;
   font-weight: 600;
 
-  box-shadow: 0 4px 12px rgba(224, 82, 82, 0.05);
+  box-shadow:
+    0 4px 12px rgba(224, 82, 82, 0.05);
 }
 
 .add-project-error::before {
   content: "!";
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +171,6 @@
   margin-right: 10px;
 
   color: #ffffff;
-
   background: #e05252;
 
   border-radius: 50%;
@@ -177,9 +179,10 @@
   font-weight: 800;
 }
 
+
 /* =========================================================
    FORM
-   ========================================================= */
+========================================================= */
 
 .add-project-form {
   display: flex;
@@ -187,9 +190,10 @@
   gap: 18px;
 }
 
+
 /* =========================================================
    FORM SECTION
-   ========================================================= */
+========================================================= */
 
 .project-form-section {
   padding: 32px;
@@ -203,9 +207,10 @@
     0 6px 24px rgba(11, 23, 54, 0.045);
 }
 
+
 /* =========================================================
    SECTION HEADING
-   ========================================================= */
+========================================================= */
 
 .project-form-heading {
   display: flex;
@@ -226,7 +231,6 @@
   flex-shrink: 0;
 
   color: var(--primary);
-
   background: #edf5ff;
 
   border: 1px solid #d6e6ff;
@@ -260,19 +264,24 @@
   line-height: 1.5;
 }
 
+
 /* =========================================================
    FORM GRID
-   ========================================================= */
+========================================================= */
 
 .project-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 22px 20px;
 }
 
+
 /* =========================================================
    FORM GROUP
-   ========================================================= */
+========================================================= */
 
 .project-form-group {
   display: flex;
@@ -300,9 +309,10 @@
   color: #e05252;
 }
 
+
 /* =========================================================
    INPUTS
-   ========================================================= */
+========================================================= */
 
 .project-form-group input,
 .project-form-group select,
@@ -311,7 +321,6 @@
   box-sizing: border-box;
 
   color: var(--text-primary);
-
   background: #fbfdff;
 
   border: 1px solid #dce6f1;
@@ -367,39 +376,41 @@
     0 0 0 4px rgba(18, 100, 255, 0.08);
 }
 
+
 /* =========================================================
    SELECT
-   ========================================================= */
+========================================================= */
 
 .project-form-group select {
   cursor: pointer;
-
   appearance: auto;
 }
 
+
 /* =========================================================
    ACTIONS
-   ========================================================= */
+========================================================= */
 
 .add-project-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
 
+  gap: 12px;
   padding-top: 8px;
 }
 
+
 /* =========================================================
-   CANCEL
-   ========================================================= */
+   CANCEL BUTTON
+========================================================= */
 
 .project-cancel-btn {
   min-height: 46px;
+
   padding: 0 21px;
 
   color: #596981;
-
   background: #ffffff;
 
   border: 1px solid #dce5ef;
@@ -418,7 +429,6 @@
   color: var(--text-primary);
 
   border-color: #c4d2e2;
-
   background: #f8fbff;
 }
 
@@ -427,21 +437,22 @@
   cursor: not-allowed;
 }
 
+
 /* =========================================================
    CREATE BUTTON
-   ========================================================= */
+========================================================= */
 
 .project-create-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
 
   min-height: 46px;
   padding: 0 22px;
 
   color: #ffffff;
-
   background: var(--gradient-primary);
 
   border: none;
@@ -478,9 +489,10 @@
   cursor: not-allowed;
 }
 
+
 /* =========================================================
    LOADING
-   ========================================================= */
+========================================================= */
 
 .project-loading {
   animation: projectSpin 0.8s linear infinite;
@@ -492,9 +504,286 @@
   }
 }
 
+
+/* =========================================================
+   PROJECT IMAGE UPLOAD
+========================================================= */
+
+.project-image-upload {
+  width: 100%;
+  min-height: 220px;
+
+  box-sizing: border-box;
+
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: 1.5px dashed #b8c9e8;
+  border-radius: 16px;
+
+  background: #f7faff;
+  color: #526078;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.project-image-upload:hover {
+  border-color: #1264ff;
+  background: #edf5ff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(18, 100, 255, 0.08);
+}
+
+.project-image-upload svg {
+  width: 30px;
+  height: 30px;
+
+  margin-bottom: 5px;
+
+  color: #1264ff;
+}
+
+.project-image-upload strong {
+  color: #0b1736;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.project-image-upload span {
+  color: #7f8da4;
+
+  font-size: 13px;
+}
+
+.project-image-upload em {
+  margin-top: 8px;
+
+  padding: 9px 16px;
+
+  border-radius: 8px;
+
+  background: #1264ff;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   PROJECT IMAGE PREVIEW
+========================================================= */
+
+.project-image-preview {
+  position: relative;
+
+  width: 100%;
+  height: 280px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  background: #edf2f8;
+}
+
+.project-image-preview img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+
+/* =========================================================
+   IMAGE OVERLAY
+========================================================= */
+
+.project-image-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 12px;
+  padding: 18px;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(7, 21, 47, 0.78),
+      rgba(7, 21, 47, 0.08) 65%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   CHANGE IMAGE — ONLY BUTTON
+========================================================= */
+
+.project-image-overlay > button:only-child {
+  min-width: 145px;
+  height: 42px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #1264ff;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(18, 100, 255, 0.28);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-image-overlay > button:only-child:hover {
+  background: #084dcc;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(18, 100, 255, 0.36);
+}
+
+.project-image-overlay > button:only-child svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CHANGE IMAGE — TWO BUTTON STATE
+========================================================= */
+
+.project-image-overlay > button:not(:only-child):first-child {
+  min-width: 145px;
+  height: 42px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #1264ff;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(18, 100, 255, 0.28);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-image-overlay > button:not(:only-child):first-child:hover {
+  background: #084dcc;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(18, 100, 255, 0.36);
+}
+
+
+/* =========================================================
+   REMOVE IMAGE BUTTON
+========================================================= */
+
+.project-image-overlay > button:not(:only-child):last-child {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.96);
+  color: #d92d20;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.16);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.project-image-overlay > button:not(:only-child):last-child:hover {
+  background: #fff1f1;
+
+  transform: translateY(-2px);
+}
+
+
 /* =========================================================
    TABLET
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 900px) {
   .add-project-page {
@@ -510,9 +799,10 @@
   }
 }
 
+
 /* =========================================================
    MOBILE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 650px) {
   .add-project-container {
@@ -526,6 +816,7 @@
   .add-project-icon {
     width: 50px;
     height: 50px;
+
     border-radius: 13px;
   }
 
@@ -539,11 +830,13 @@
 
   .project-form-section {
     padding: 22px;
+
     border-radius: 15px;
   }
 
   .project-form-grid {
     grid-template-columns: 1fr;
+
     gap: 18px;
   }
 
@@ -564,11 +857,16 @@
   .project-create-btn {
     width: 100%;
   }
+
+  .project-image-preview {
+    height: 240px;
+  }
 }
+
 
 /* =========================================================
    SMALL MOBILE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 420px) {
   .add-project-page {
@@ -581,11 +879,13 @@
 
   .add-project-back {
     margin-bottom: 25px;
+
     font-size: 12px;
   }
 
   .add-project-header {
     gap: 12px;
+
     margin-bottom: 27px;
   }
 
@@ -635,5 +935,29 @@
 
   .project-form-group textarea {
     min-height: 125px;
+  }
+
+  .project-image-preview {
+    height: 210px;
+  }
+
+  .project-image-overlay {
+    padding: 12px;
+  }
+
+  .project-image-overlay > button:only-child,
+  .project-image-overlay > button:not(:only-child):first-child {
+    min-width: 125px;
+    height: 38px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
+  }
+
+  .project-image-overlay > button:not(:only-child):last-child {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
   }
 }
