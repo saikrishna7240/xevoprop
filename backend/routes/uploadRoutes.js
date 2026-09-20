@@ -151,8 +151,7 @@ router.post(
         UPDATE properties
         SET
           image = $1,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = $2
+          WHERE id = $2
         AND owner_id = $3
         RETURNING id, image
         `,
