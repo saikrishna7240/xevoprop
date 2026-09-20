@@ -241,49 +241,54 @@ router.post(
       }
 
       const result = await pool.query(
-        `
-        INSERT INTO properties (
-          owner_id,
-          title,
-          type,
-          location,
-          city,
-          price,
-          price_value,
-          bedrooms,
-          bathrooms,
-          area,
-          image,
-          description,
-          verified,
-          ready_to_move,
-          zero_brokerage
-        )
-        VALUES (
-          $1, $2, $3, $4, $5,
-          $6, $7, $8, $9, $10,
-          $11, $12, $13, $14, $15
-        )
-        RETURNING *
-        `,
-        [
-          req.user.id,
-          title.trim(),
-          type,
-          location.trim(),
-          city || null,
-          price || null,
-          price_value || null,
-          bedrooms || null,
-          bathrooms || null,
-          area || null,
-          image || null,
-          description || null,
-          verified || false,
-          ready_to_move || false,
-          zero_brokerage || false,
-        ]
-      );
+  `
+  INSERT INTO properties (
+    owner_id,
+    title,
+    type,
+    location,
+    city,
+    price,
+    price_value,
+    bedrooms,
+    bathrooms,
+    area,
+    image,
+    description,
+    verified,
+    ready_to_move,
+    zero_brokerage,
+    status
+  )
+  VALUES (
+    $1, $2, $3, $4, $5,
+    $6, $7, $8, $9, $10,
+    $11, $12, $13, $14, $15,
+    $16
+  )
+  RETURNING *
+  `,
+  [
+    req.user.id,
+    title.trim(),
+    type,
+    location.trim(),
+    city || null,
+    price || null,
+    price_value || null,
+    bedrooms || null,
+    bathrooms || null,
+    area || null,
+    image || null,
+    description || null,
+    verified || false,
+    ready_to_move || false,
+    zero_brokerage || false,
+
+    // Admin approval
+    "pending",
+  ]
+);
 
       res.status(201).json({
         success: true,
