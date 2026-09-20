@@ -58,11 +58,8 @@ router.get("/test", (req, res) => {
 
 router.post(
   "/property/:propertyId",
-
   authenticateToken,
-
   authorizeRoles("Seller"),
-
   upload.single("image"),
 
   async (req, res) => {
@@ -79,9 +76,7 @@ router.post(
       );
       console.log("================================");
 
-      /* -----------------------------------------------------
-         CHECK FILE
-      ----------------------------------------------------- */
+      /* CHECK FILE */
 
       if (!req.file) {
         return res.status(400).json({
@@ -90,16 +85,14 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         CHECK PROPERTY OWNER
-      ----------------------------------------------------- */
+      /* CHECK PROPERTY OWNER */
 
       const propertyResult = await pool.query(
         `
         SELECT id
         FROM properties
         WHERE id = $1
-        AND owner_id = $2
+          AND owner_id = $2
         `,
         [propertyId, req.user.id]
       );
@@ -112,9 +105,7 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         UPLOAD TO CLOUDINARY
-      ----------------------------------------------------- */
+      /* CLOUDINARY UPLOAD */
 
       const uploadResult = await new Promise(
         (resolve, reject) => {
@@ -142,17 +133,14 @@ router.post(
         uploadResult.secure_url
       );
 
-      /* -----------------------------------------------------
-         SAVE IMAGE URL TO PROPERTY
-      ----------------------------------------------------- */
+      /* SAVE IMAGE URL */
 
       const result = await pool.query(
         `
         UPDATE properties
-        SET
-          image = $1,
-          WHERE id = $2
-        AND owner_id = $3
+        SET image = $1
+        WHERE id = $2
+          AND owner_id = $3
         RETURNING id, image
         `,
         [
@@ -191,7 +179,6 @@ router.post(
     }
   }
 );
-
 /* =========================================================
    UPLOAD PROJECT IMAGE
 ========================================================= */

@@ -14,6 +14,16 @@ import {
 
 import "./ListProperty.css";
 
+/* =========================================================
+   API
+========================================================= */
+
+const API_URL = "https://xevoprop.onrender.com/api";
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
 function ListProperty() {
   const navigate = useNavigate();
 
@@ -21,8 +31,7 @@ function ListProperty() {
 
   const fileInputRef = useRef(null);
 
-  const [selectedImages, setSelectedImages] =
-    useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -41,18 +50,15 @@ function ListProperty() {
     zero_brokerage: false,
   });
 
-  const [submitting, setSubmitting] =
-    useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [submitError, setSubmitError] =
-    useState("");
+  const [submitError, setSubmitError] = useState("");
 
-  const [submitSuccess, setSubmitSuccess] =
-    useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
 
-  /* =========================
+  /* =========================================================
      INPUT CHANGE
-  ========================= */
+  ========================================================= */
 
   const handleChange = (e) => {
     const {
@@ -71,29 +77,41 @@ function ListProperty() {
     }));
   };
 
-  /* =========================
+  /* =========================================================
      IMAGE SELECT
-  ========================= */
+  ========================================================= */
 
   const handleImageSelect = (e) => {
     const files = Array.from(
       e.target.files || []
     );
 
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      return;
+    }
 
     const remainingSlots =
       10 - selectedImages.length;
 
-    const filesToAdd =
-      files.slice(0, remainingSlots);
-
-    const invalidFile =
-      filesToAdd.find(
-        (file) =>
-          !file.type.startsWith("image/") ||
-          file.size > 10 * 1024 * 1024
+    if (remainingSlots <= 0) {
+      setSubmitError(
+        "You can upload a maximum of 10 photos."
       );
+
+      e.target.value = "";
+      return;
+    }
+
+    const filesToAdd = files.slice(
+      0,
+      remainingSlots
+    );
+
+    const invalidFile = filesToAdd.find(
+      (file) =>
+        !file.type.startsWith("image/") ||
+        file.size > 10 * 1024 * 1024
+    );
 
     if (invalidFile) {
       setSubmitError(
@@ -104,16 +122,16 @@ function ListProperty() {
       return;
     }
 
-    const newImages =
-      filesToAdd.map((file) => ({
+    const newImages = filesToAdd.map(
+      (file) => ({
         file,
 
         preview:
           URL.createObjectURL(file),
 
-        id:
-          `${file.name}-${file.lastModified}-${Math.random()}`,
-      }));
+        id: `${file.name}-${file.lastModified}-${Math.random()}`,
+      })
+    );
 
     setSelectedImages((previous) => [
       ...previous,
@@ -125,9 +143,9 @@ function ListProperty() {
     e.target.value = "";
   };
 
-  /* =========================
+  /* =========================================================
      REMOVE IMAGE
-  ========================= */
+  ========================================================= */
 
   const removeImage = (id) => {
     setSelectedImages((previous) => {
@@ -147,9 +165,9 @@ function ListProperty() {
     });
   };
 
-  /* =========================
+  /* =========================================================
      NEXT
-  ========================= */
+  ========================================================= */
 
   const nextStep = () => {
     if (step < 4) {
@@ -159,9 +177,9 @@ function ListProperty() {
     }
   };
 
-  /* =========================
+  /* =========================================================
      PREVIOUS
-  ========================= */
+  ========================================================= */
 
   const previousStep = () => {
     if (step > 1) {
@@ -171,9 +189,9 @@ function ListProperty() {
     }
   };
 
-  /* =========================
+  /* =========================================================
      VALIDATION
-  ========================= */
+  ========================================================= */
 
   const validateStep = () => {
     if (step === 1) {
@@ -225,9 +243,9 @@ function ListProperty() {
     nextStep();
   };
 
-  /* =========================
+  /* =========================================================
      SUBMIT PROPERTY
-  ========================= */
+  ========================================================= */
 
   const submitProperty = async () => {
     setSubmitError("");
@@ -259,89 +277,116 @@ function ListProperty() {
     try {
       setSubmitting(true);
 
-      /* =========================
+      /* =====================================================
          CREATE PROPERTY
-      ========================= */
+      ===================================================== */
 
-      const response =
-        await fetch(
-          "https://xevoprop.onrender.com/api/properties",
-          {
-            method: "POST",
+      const response = await fetch(
+        `${API_URL}/properties`,
+        {
+          method: "POST",
 
-            headers: {
-              "Content-Type":
-                "application/json",
+          headers: {
+            "Content-Type":
+              "application/json",
 
-              Authorization:
-                `Bearer ${token}`,
-            },
+            Authorization:
+              `Bearer ${token}`,
+          },
 
-            body: JSON.stringify({
-              title: form.title,
-              type: form.type,
-              location: form.location,
-              city: form.city,
+          body: JSON.stringify({
+            title: form.title.trim(),
 
-              price: form.price,
+            type: form.type,
 
-              price_value:
-                form.price_value
-                  ? Number(
-                      form.price_value
-                    )
-                  : null,
+            location:
+              form.location.trim(),
 
-              bedrooms:
-                form.bedrooms
-                  ? Number(
-                      form.bedrooms
-                    )
-                  : null,
+            city:
+              form.city.trim(),
 
-              bathrooms:
-                form.bathrooms
-                  ? Number(
-                      form.bathrooms
-                    )
-                  : null,
+            price:
+              form.price.trim(),
 
-              area:
-                form.area
-                  ? Number(form.area)
-                  : null,
+            price_value:
+              form.price_value
+                ? Number(
+                    form.price_value
+                  )
+                : null,
 
-              description:
-                form.description,
+            bedrooms:
+              form.bedrooms
+                ? Number(
+                    form.bedrooms
+                  )
+                : null,
 
-              verified:
-                form.verified,
+            bathrooms:
+              form.bathrooms
+                ? Number(
+                    form.bathrooms
+                  )
+                : null,
 
-              ready_to_move:
-                form.ready_to_move,
+            area:
+              form.area
+                ? Number(form.area)
+                : null,
 
-              zero_brokerage:
-                form.zero_brokerage,
-            }),
-          }
+            description:
+              form.description.trim(),
+
+            verified:
+              form.verified,
+
+            ready_to_move:
+              form.ready_to_move,
+
+            zero_brokerage:
+              form.zero_brokerage,
+          }),
+        }
+      );
+
+      /* =====================================================
+         HANDLE NETWORK RESPONSE
+      ===================================================== */
+
+      let data = {};
+
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(
+          `Server returned an invalid response (${response.status}).`
         );
-
-      const data =
-        await response.json();
+      }
 
       if (!response.ok) {
         throw new Error(
           data.message ||
-            "Failed to create property"
+            "Failed to create property."
+        );
+      }
+
+      if (!data.property?.id) {
+        throw new Error(
+          "Property was created, but no property ID was returned."
         );
       }
 
       const propertyId =
         data.property.id;
 
-      /* =========================
+      console.log(
+        "PROPERTY CREATED:",
+        propertyId
+      );
+
+      /* =====================================================
          UPLOAD IMAGES
-      ========================= */
+      ===================================================== */
 
       for (
         const image of selectedImages
@@ -356,7 +401,7 @@ function ListProperty() {
 
         const uploadResponse =
           await fetch(
-            `https://xevoprop.onrender.com/api/upload/property/${propertyId}`,
+            `${API_URL}/upload/property/${propertyId}`,
             {
               method: "POST",
 
@@ -383,7 +428,7 @@ function ListProperty() {
           responseText
         );
 
-        let uploadData;
+        let uploadData = {};
 
         try {
           uploadData =
@@ -392,7 +437,7 @@ function ListProperty() {
             );
         } catch {
           throw new Error(
-            `Upload server returned non-JSON response (${uploadResponse.status})`
+            `Upload server returned an invalid response (${uploadResponse.status}).`
           );
         }
 
@@ -401,17 +446,17 @@ function ListProperty() {
         ) {
           throw new Error(
             uploadData.message ||
-              "Failed to upload property image"
+              "Failed to upload property image."
           );
         }
       }
 
-      /* =========================
+      /* =====================================================
          SUCCESS
-      ========================= */
+      ===================================================== */
 
       setSubmitSuccess(
-        "Property and images uploaded successfully!"
+        "Property submitted successfully for admin approval."
       );
 
       setTimeout(() => {
@@ -424,19 +469,28 @@ function ListProperty() {
         error
       );
 
-      setSubmitError(
-        error.message ||
-          "Unable to list property."
-      );
+      if (
+        error instanceof TypeError &&
+        error.message === "Failed to fetch"
+      ) {
+        setSubmitError(
+          "Unable to connect to the Xevoprop server. Please check your internet connection or try again."
+        );
+      } else {
+        setSubmitError(
+          error.message ||
+            "Unable to list property."
+        );
+      }
 
     } finally {
       setSubmitting(false);
     }
   };
 
-  /* =========================
+  /* =========================================================
      STEP 1
-  ========================= */
+  ========================================================= */
 
   const renderStepOne = () => (
     <div className="listing-card">
@@ -560,9 +614,9 @@ function ListProperty() {
     </div>
   );
 
-  /* =========================
+  /* =========================================================
      STEP 2
-  ========================= */
+  ========================================================= */
 
   const renderStepTwo = () => (
     <div className="listing-card">
@@ -683,9 +737,9 @@ function ListProperty() {
     </div>
   );
 
-  /* =========================
+  /* =========================================================
      STEP 3
-  ========================= */
+  ========================================================= */
 
   const renderStepThree = () => (
     <div className="listing-card">
@@ -756,8 +810,7 @@ function ListProperty() {
 
         </div>
 
-        {selectedImages.length >
-          0 && (
+        {selectedImages.length > 0 && (
           <div className="uploaded-images">
 
             {selectedImages.map(
@@ -776,6 +829,7 @@ function ListProperty() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
+
                       removeImage(
                         image.id
                       );
@@ -812,9 +866,9 @@ function ListProperty() {
     </div>
   );
 
-  /* =========================
+  /* =========================================================
      STEP 4
-  ========================= */
+  ========================================================= */
 
   const renderStepFour = () => (
     <div className="listing-card preview-card">
@@ -841,8 +895,7 @@ function ListProperty() {
 
       <div className="preview-content">
 
-        {selectedImages.length >
-          0 && (
+        {selectedImages.length > 0 && (
           <div className="uploaded-images">
 
             {selectedImages.map(
@@ -1045,9 +1098,9 @@ function ListProperty() {
     </div>
   );
 
-  /* =========================
+  /* =========================================================
      MAIN
-  ========================= */
+  ========================================================= */
 
   return (
     <div className="list-property-page">
@@ -1169,8 +1222,8 @@ function ListProperty() {
               disabled={submitting}
             >
               {submitting
-                ? "Publishing..."
-                : "Publish Property"}
+                ? "Submitting..."
+                : "Submit Property"}
 
               {!submitting && (
                 <Check size={13} />
