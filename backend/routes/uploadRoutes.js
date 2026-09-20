@@ -287,21 +287,19 @@ router.post(
       ----------------------------------------------------- */
 
       const result = await pool.query(
-        `
-        UPDATE projects
-        SET
-          image = $1,
-          
-        WHERE id = $2
-        AND developer_id = $3
-        RETURNING id, image
-        `,
-        [
-          uploadResult.secure_url,
-          projectId,
-          req.user.id,
-        ]
-      );
+  `
+  UPDATE properties
+  SET image = $1
+  WHERE id = $2
+  AND owner_id = $3
+  RETURNING id, image
+  `,
+  [
+    uploadResult.secure_url,
+    propertyId,
+    req.user.id,
+  ]
+);
 
       if (result.rows.length === 0) {
         return res.status(404).json({
