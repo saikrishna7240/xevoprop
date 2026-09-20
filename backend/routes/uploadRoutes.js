@@ -291,7 +291,7 @@ router.post(
         UPDATE projects
         SET
           image = $1,
-          updated_at = CURRENT_TIMESTAMP
+          
         WHERE id = $2
         AND developer_id = $3
         RETURNING id, image
