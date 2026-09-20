@@ -16,7 +16,7 @@ const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
-
+const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -131,6 +131,7 @@ app.use("/api/search", searchRoutes);
 
 app.use("/api/notifications", notificationRoutes);
 
+app.use("/api/admin", adminRoutes);
 // ======================================================
 // DATABASE TEST ROUTES
 // ======================================================
@@ -214,6 +215,8 @@ app.get(
     });
   }
 );
+
+
 
 // ======================================================
 // ERROR HANDLER

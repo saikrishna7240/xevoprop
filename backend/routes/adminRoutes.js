@@ -1,142 +1,136 @@
 const express = require("express");
-const router = express.Router();
 
-const pool = require("../config/db");
+const { pool } = require("../config/db");
+
 const {
   authenticateToken,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
 
+const router = express.Router();
 
 /* =========================================================
-   ADMIN DASHBOARD SUMMARY
-   GET /api/admin/dashboard
+   ADMIN AUTHENTICATION
 ========================================================= */
 
-router.get(
-  "/dashboard",
-  authenticateToken,
-  authorizeRoles("Admin"),
-  async (req, res) => {
-    try {
-      const [
-        propertiesResult,
-        projectsResult,
-        pendingPropertiesResult,
-        pendingProjectsResult,
-        usersResult,
-      ] = await Promise.all([
-        pool.query(
-          `SELECT COUNT(*)::int AS count
-           FROM properties
-           WHERE status = 'approved'`
-        ),
+router.use(authenticateToken);
+router.use(authorizeRoles("Admin"));
 
-        pool.query(
-          `SELECT COUNT(*)::int AS count
-           FROM projects
-           WHERE status = 'approved'`
-        ),
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
 
-        pool.query(
-          `SELECT COUNT(*)::int AS count
-           FROM properties
-           WHERE status = 'pending'`
-        ),
+router.get("/dashboard", async (req, res) => {
+  try {
+    const propertiesResult = await pool.query(`
+      SELECT
+        COUNT(*) AS total,
+        COUNT(*) FILTER (
+          WHERE status = 'pending'
+        ) AS pending,
+        COUNT(*) FILTER (
+          WHERE status = 'approved'
+        ) AS approved,
+        COUNT(*) FILTER (
+          WHERE status = 'rejected'
+        ) AS rejected
+      FROM properties
+    `);
 
-        pool.query(
-          `SELECT COUNT(*)::int AS count
-           FROM projects
-           WHERE status = 'pending'`
-        ),
+    const projectsResult = await pool.query(`
+      SELECT
+        COUNT(*) AS total,
+        COUNT(*) FILTER (
+          WHERE status = 'pending'
+        ) AS pending,
+        COUNT(*) FILTER (
+          WHERE status = 'approved'
+        ) AS approved,
+        COUNT(*) FILTER (
+          WHERE status = 'rejected'
+        ) AS rejected
+      FROM projects
+    `);
 
-        pool.query(
-          `SELECT COUNT(*)::int AS count
-           FROM users`
-        ),
-      ]);
+    const usersResult = await pool.query(`
+      SELECT COUNT(*) AS total
+      FROM users
+    `);
 
-      res.json({
-        success: true,
-        stats: {
-          approvedProperties: propertiesResult.rows[0].count,
-          approvedProjects: projectsResult.rows[0].count,
-          pendingProperties: pendingPropertiesResult.rows[0].count,
-          pendingProjects: pendingProjectsResult.rows[0].count,
-          totalUsers: usersResult.rows[0].count,
-        },
-      });
-    } catch (error) {
-      console.error("ADMIN DASHBOARD ERROR:", error);
+    res.json({
+      success: true,
+      properties: propertiesResult.rows[0],
+      projects: projectsResult.rows[0],
+      users: usersResult.rows[0],
+    });
+  } catch (error) {
+    console.error(
+      "ADMIN DASHBOARD ERROR:",
+      error
+    );
 
-      res.status(500).json({
-        success: false,
-        message: "Failed to load admin dashboard.",
-      });
-    }
+    res.status(500).json({
+      success: false,
+      message:
+        error.message ||
+        "Failed to load admin dashboard.",
+    });
   }
-);
-
+});
 
 /* =========================================================
    GET ALL PROPERTIES
-   GET /api/admin/properties
 ========================================================= */
 
-router.get(
-  "/properties",
-  authenticateToken,
-  authorizeRoles("Admin"),
-  async (req, res) => {
-    try {
-      const { status } = req.query;
+router.get("/properties", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        p.*,
 
-      let query = `
-        SELECT
-          p.*,
-          u.username AS seller_username,
-          u.email AS seller_email
-        FROM properties p
-        LEFT JOIN users u
-          ON p.seller_id = u.id
-      `;
+        u.username AS seller_username,
+        u.email AS seller_email
 
-      const values = [];
+      FROM properties p
 
-      if (status) {
-        query += ` WHERE p.status = $1`;
-        values.push(status);
-      }
+      LEFT JOIN users u
+        ON p.owner_id = u.id
 
-      query += ` ORDER BY p.created_at DESC`;
+      ORDER BY
+        CASE
+          WHEN p.status = 'pending' THEN 0
+          WHEN p.status = 'approved' THEN 1
+          ELSE 2
+        END,
 
-      const result = await pool.query(query, values);
+        p.id DESC
+    `);
 
-      res.json({
-        success: true,
-        properties: result.rows,
-      });
-    } catch (error) {
-      console.error("ADMIN PROPERTIES ERROR:", error);
+    res.json({
+      success: true,
+      properties: result.rows,
+    });
+  } catch (error) {
+    console.error(
+      "ADMIN PROPERTIES ERROR:",
+      error
+    );
 
-      res.status(500).json({
-        success: false,
-        message: "Failed to load properties.",
-      });
-    }
+    res.status(500).json({
+      success: false,
+      message:
+        error.message ||
+        "Failed to load properties.",
+    });
   }
-);
-
+});
 
 /* =========================================================
    GET SINGLE PROPERTY
-   GET /api/admin/properties/:id
 ========================================================= */
 
 router.get(
   "/properties/:id",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -145,17 +139,21 @@ router.get(
         `
         SELECT
           p.*,
+
           u.username AS seller_username,
           u.email AS seller_email
+
         FROM properties p
+
         LEFT JOIN users u
-          ON p.seller_id = u.id
+          ON p.owner_id = u.id
+
         WHERE p.id = $1
         `,
         [id]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Property not found.",
@@ -167,26 +165,27 @@ router.get(
         property: result.rows[0],
       });
     } catch (error) {
-      console.error("ADMIN PROPERTY DETAILS ERROR:", error);
+      console.error(
+        "ADMIN PROPERTY DETAILS ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to load property.",
+        message:
+          error.message ||
+          "Failed to load property.",
       });
     }
   }
 );
 
-
 /* =========================================================
    APPROVE PROPERTY
-   PUT /api/admin/properties/:id/approve
 ========================================================= */
 
 router.put(
   "/properties/:id/approve",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -194,19 +193,24 @@ router.put(
       const result = await pool.query(
         `
         UPDATE properties
+
         SET
           status = 'approved',
           reviewed_by = $1,
           reviewed_at = CURRENT_TIMESTAMP,
-          rejection_reason = NULL,
-          updated_at = CURRENT_TIMESTAMP
+          rejection_reason = NULL
+
         WHERE id = $2
+
         RETURNING *
         `,
-        [req.user.id, id]
+        [
+          req.user.id,
+          id,
+        ]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Property not found.",
@@ -215,51 +219,63 @@ router.put(
 
       res.json({
         success: true,
-        message: "Property approved successfully.",
+        message:
+          "Property approved successfully.",
         property: result.rows[0],
       });
     } catch (error) {
-      console.error("APPROVE PROPERTY ERROR:", error);
+      console.error(
+        "APPROVE PROPERTY ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to approve property.",
+        message:
+          error.message ||
+          "Failed to approve property.",
       });
     }
   }
 );
 
-
 /* =========================================================
    REJECT PROPERTY
-   PUT /api/admin/properties/:id/reject
 ========================================================= */
 
 router.put(
   "/properties/:id/reject",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
-      const { reason } = req.body;
+
+      const {
+        rejection_reason,
+      } = req.body;
 
       const result = await pool.query(
         `
         UPDATE properties
+
         SET
           status = 'rejected',
           reviewed_by = $1,
           reviewed_at = CURRENT_TIMESTAMP,
-          rejection_reason = $2,
-          updated_at = CURRENT_TIMESTAMP
+          rejection_reason = $2
+
         WHERE id = $3
+
         RETURNING *
         `,
-        [req.user.id, reason || null, id]
+        [
+          req.user.id,
+          rejection_reason ||
+            "Property did not meet approval requirements.",
+          id,
+        ]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Property not found.",
@@ -268,30 +284,32 @@ router.put(
 
       res.json({
         success: true,
-        message: "Property rejected successfully.",
+        message:
+          "Property rejected successfully.",
         property: result.rows[0],
       });
     } catch (error) {
-      console.error("REJECT PROPERTY ERROR:", error);
+      console.error(
+        "REJECT PROPERTY ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to reject property.",
+        message:
+          error.message ||
+          "Failed to reject property.",
       });
     }
   }
 );
 
-
 /* =========================================================
    DELETE PROPERTY
-   DELETE /api/admin/properties/:id
 ========================================================= */
 
 router.delete(
   "/properties/:id",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -305,7 +323,7 @@ router.delete(
         [id]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Property not found.",
@@ -314,79 +332,78 @@ router.delete(
 
       res.json({
         success: true,
-        message: "Property deleted successfully.",
+        message:
+          "Property deleted successfully.",
       });
     } catch (error) {
-      console.error("DELETE PROPERTY ERROR:", error);
+      console.error(
+        "DELETE PROPERTY ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to delete property.",
+        message:
+          error.message ||
+          "Failed to delete property.",
       });
     }
   }
 );
-
 
 /* =========================================================
    GET ALL PROJECTS
-   GET /api/admin/projects
 ========================================================= */
 
-router.get(
-  "/projects",
-  authenticateToken,
-  authorizeRoles("Admin"),
-  async (req, res) => {
-    try {
-      const { status } = req.query;
+router.get("/projects", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        p.*,
 
-      let query = `
-        SELECT
-          p.*,
-          u.username AS developer_username,
-          u.email AS developer_email
-        FROM projects p
-        LEFT JOIN users u
-          ON p.developer_id = u.id
-      `;
+        u.username AS developer_username,
+        u.email AS developer_email
 
-      const values = [];
+      FROM projects p
 
-      if (status) {
-        query += ` WHERE p.status = $1`;
-        values.push(status);
-      }
+      LEFT JOIN users u
+        ON p.developer_id = u.id
 
-      query += ` ORDER BY p.created_at DESC`;
+      ORDER BY
+        CASE
+          WHEN p.status = 'pending' THEN 0
+          WHEN p.status = 'approved' THEN 1
+          ELSE 2
+        END,
 
-      const result = await pool.query(query, values);
+        p.id DESC
+    `);
 
-      res.json({
-        success: true,
-        projects: result.rows,
-      });
-    } catch (error) {
-      console.error("ADMIN PROJECTS ERROR:", error);
+    res.json({
+      success: true,
+      projects: result.rows,
+    });
+  } catch (error) {
+    console.error(
+      "ADMIN PROJECTS ERROR:",
+      error
+    );
 
-      res.status(500).json({
-        success: false,
-        message: "Failed to load projects.",
-      });
-    }
+    res.status(500).json({
+      success: false,
+      message:
+        error.message ||
+        "Failed to load projects.",
+    });
   }
-);
-
+});
 
 /* =========================================================
    GET SINGLE PROJECT
-   GET /api/admin/projects/:id
 ========================================================= */
 
 router.get(
   "/projects/:id",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -395,17 +412,21 @@ router.get(
         `
         SELECT
           p.*,
+
           u.username AS developer_username,
           u.email AS developer_email
+
         FROM projects p
+
         LEFT JOIN users u
           ON p.developer_id = u.id
+
         WHERE p.id = $1
         `,
         [id]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Project not found.",
@@ -417,26 +438,27 @@ router.get(
         project: result.rows[0],
       });
     } catch (error) {
-      console.error("ADMIN PROJECT DETAILS ERROR:", error);
+      console.error(
+        "ADMIN PROJECT DETAILS ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to load project.",
+        message:
+          error.message ||
+          "Failed to load project.",
       });
     }
   }
 );
 
-
 /* =========================================================
    APPROVE PROJECT
-   PUT /api/admin/projects/:id/approve
 ========================================================= */
 
 router.put(
   "/projects/:id/approve",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -444,19 +466,24 @@ router.put(
       const result = await pool.query(
         `
         UPDATE projects
+
         SET
           status = 'approved',
           reviewed_by = $1,
           reviewed_at = CURRENT_TIMESTAMP,
-          rejection_reason = NULL,
-          updated_at = CURRENT_TIMESTAMP
+          rejection_reason = NULL
+
         WHERE id = $2
+
         RETURNING *
         `,
-        [req.user.id, id]
+        [
+          req.user.id,
+          id,
+        ]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Project not found.",
@@ -465,51 +492,63 @@ router.put(
 
       res.json({
         success: true,
-        message: "Project approved successfully.",
+        message:
+          "Project approved successfully.",
         project: result.rows[0],
       });
     } catch (error) {
-      console.error("APPROVE PROJECT ERROR:", error);
+      console.error(
+        "APPROVE PROJECT ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to approve project.",
+        message:
+          error.message ||
+          "Failed to approve project.",
       });
     }
   }
 );
 
-
 /* =========================================================
    REJECT PROJECT
-   PUT /api/admin/projects/:id/reject
 ========================================================= */
 
 router.put(
   "/projects/:id/reject",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
-      const { reason } = req.body;
+
+      const {
+        rejection_reason,
+      } = req.body;
 
       const result = await pool.query(
         `
         UPDATE projects
+
         SET
           status = 'rejected',
           reviewed_by = $1,
           reviewed_at = CURRENT_TIMESTAMP,
-          rejection_reason = $2,
-          updated_at = CURRENT_TIMESTAMP
+          rejection_reason = $2
+
         WHERE id = $3
+
         RETURNING *
         `,
-        [req.user.id, reason || null, id]
+        [
+          req.user.id,
+          rejection_reason ||
+            "Project did not meet approval requirements.",
+          id,
+        ]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Project not found.",
@@ -518,30 +557,32 @@ router.put(
 
       res.json({
         success: true,
-        message: "Project rejected successfully.",
+        message:
+          "Project rejected successfully.",
         project: result.rows[0],
       });
     } catch (error) {
-      console.error("REJECT PROJECT ERROR:", error);
+      console.error(
+        "REJECT PROJECT ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to reject project.",
+        message:
+          error.message ||
+          "Failed to reject project.",
       });
     }
   }
 );
 
-
 /* =========================================================
    DELETE PROJECT
-   DELETE /api/admin/projects/:id
 ========================================================= */
 
 router.delete(
   "/projects/:id",
-  authenticateToken,
-  authorizeRoles("Admin"),
   async (req, res) => {
     try {
       const { id } = req.params;
@@ -555,7 +596,7 @@ router.delete(
         [id]
       );
 
-      if (!result.rows.length) {
+      if (result.rows.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Project not found.",
@@ -564,18 +605,27 @@ router.delete(
 
       res.json({
         success: true,
-        message: "Project deleted successfully.",
+        message:
+          "Project deleted successfully.",
       });
     } catch (error) {
-      console.error("DELETE PROJECT ERROR:", error);
+      console.error(
+        "DELETE PROJECT ERROR:",
+        error
+      );
 
       res.status(500).json({
         success: false,
-        message: "Failed to delete project.",
+        message:
+          error.message ||
+          "Failed to delete project.",
       });
     }
   }
 );
 
+/* =========================================================
+   EXPORT
+========================================================= */
 
 module.exports = router;
