@@ -35,7 +35,12 @@ function Login() {
         data.user.name || data.user.username || ""
       );
 
-      navigate("/dashboard");
+      // Admin gets a separate admin dashboard
+      if (data.user.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError(error.message || "Unable to login");
     } finally {

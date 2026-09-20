@@ -16,14 +16,15 @@ import ProjectDetails from "./pages/ProjectDetails";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Developers from "./pages/Developers";
-
+import AdminDashboard from "./pages/AdminDashboard";
 // Protected pages
 import Dashboard from "./pages/Dashboard";
 import Favorites from "./pages/Favorites";
 import MyEnquiries from "./pages/MyEnquiries";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
-
+import AdminProperties from "./pages/AdminProperties";
+import AdminProjects from "./pages/AdminProjects";
 import ListProperty from "./pages/ListProperty";
 import MyProperties from "./pages/MyProperties";
 import EditProperty from "./pages/EditProperty";
@@ -135,7 +136,32 @@ function App() {
             </ProtectedRoute>
           }
         />
+<Route
+  path="/admin"
+  element={
+    <ProtectedRoute allowedRoles={["Admin"]}>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
 
+<Route
+  path="/admin/properties"
+  element={
+    <ProtectedRoute allowedRoles={["Admin"]}>
+      <AdminProperties />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/projects"
+  element={
+    <ProtectedRoute allowedRoles={["Admin"]}>
+      <AdminProjects />
+    </ProtectedRoute>
+  }
+/>
 
         {/* =====================================================
             BUYER ROUTES
