@@ -152,14 +152,15 @@ const createOTP = async ({
    VERIFY OTP
 ============================================================ */
 
-const verifyOTP = async ({
-  phone,
-  otp,
-  purpose,
-}) => {
+const verifyOTP = async ({ phone, otp, purpose }) => {
   const result = await pool.query(
     `
-    SELECT *
+    SELECT
+      id,
+      otp_code,
+      expires_at,
+      verified,
+      attempts
     FROM auth_otps
     WHERE phone = $1
       AND purpose = $2
@@ -170,65 +171,68 @@ const verifyOTP = async ({
     [phone, purpose]
   );
 
-  if (result.rows.length === 0) {
-    return {
-      success: false,
-      message: "OTP not found or already used",
-    };
+  if (!result.rows.length) {
+    throw new Error("OTP not found or already used");
   }
 
   const record = result.rows[0];
 
-  /* ==========================================================
-     CHECK EXPIRY
-  ========================================================== */
-
-  if (
-    new Date(record.expires_at) <
-    new Date()
-  ) {
-    return {
-      success: false,
-      message:
-        "OTP has expired. Please request a new OTP.",
-    };
+  // OTP already exceeded maximum attempts
+  if (record.attempts >= 5) {
+    throw new Error(
+      "Too many incorrect attempts. Please request a new OTP."
+    );
   }
 
-  /* ==========================================================
-     CHECK OTP ATTEMPTS
-
-     Your current auth_otps table does not have
-     an attempts column, so attempt limiting will
-     be added separately before production.
-  ========================================================== */
-
+  // OTP expired
   if (
-    String(record.otp_code) !==
-    String(otp).trim()
+    !record.expires_at ||
+    new Date(record.expires_at).getTime() <= Date.now()
   ) {
-    return {
-      success: false,
-      message: "Invalid OTP",
-    };
+    throw new Error(
+      "OTP has expired. Please request a new OTP."
+    );
   }
 
-  /* ==========================================================
-     MARK OTP VERIFIED
-  ========================================================== */
+  // Incorrect OTP
+  if (String(record.otp_code) !== String(otp).trim()) {
+    await pool.query(
+      `
+      UPDATE auth_otps
+      SET attempts = attempts + 1
+      WHERE id = $1
+      `,
+      [record.id]
+    );
 
+    const remainingAttempts =
+      4 - record.attempts;
+
+    if (remainingAttempts <= 0) {
+      throw new Error(
+        "Too many incorrect attempts. Please request a new OTP."
+      );
+    }
+
+    throw new Error(
+      `Invalid OTP. ${remainingAttempts} attempt${
+        remainingAttempts === 1 ? "" : "s"
+      } remaining.`
+    );
+  }
+
+  // Correct OTP
   await pool.query(
     `
     UPDATE auth_otps
-    SET verified = TRUE
+    SET
+      verified = TRUE
     WHERE id = $1
     `,
     [record.id]
   );
 
-  return {
-    success: true,
-    record,
-  };
+  return true;
 };
 
 /* ============================================================
