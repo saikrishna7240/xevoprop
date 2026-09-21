@@ -12,18 +12,25 @@ const {
 const router = express.Router();
 
 /* ============================================================
-   CONFIG
+   CONSTANTS
 ============================================================ */
 
 const OTP_EXPIRY_MINUTES = 5;
-const MAX_OTP_ATTEMPTS = 5;
+const OTP_RESEND_SECONDS = 30;
+const OTP_MAX_ATTEMPTS = 5;
+
+const ALLOWED_ROLES = [
+  "Buyer",
+  "Seller",
+  "Developer",
+];
 
 /* ============================================================
    JWT
 ============================================================ */
 
-const signToken = (user) =>
-  jwt.sign(
+const signToken = (user) => {
+  return jwt.sign(
     {
       id: user.id,
       email: user.email,
@@ -34,19 +41,21 @@ const signToken = (user) =>
       expiresIn: "7d",
     }
   );
-
-/* ============================================================
-   GENERATE OTP
-============================================================ */
-
-const generateOTP = () => {
-  return crypto
-    .randomInt(100000, 1000000)
-    .toString();
 };
 
 /* ============================================================
-   SAVE OTP
+   OTP HASH
+============================================================ */
+
+const hashOTP = (otp) => {
+  return crypto
+    .createHash("sha256")
+    .update(String(otp).trim())
+    .digest("hex");
+};
+
+/* ============================================================
+   CREATE OTP
 ============================================================ */
 
 const createOTP = async ({
@@ -55,12 +64,13 @@ const createOTP = async ({
   email,
   purpose,
 }) => {
-  const otp = generateOTP();
-
   /*
-    Remove previous unused OTPs for this
-    phone/purpose combination.
+    Delete previous unverified OTPs.
+
+    This means requesting a new OTP automatically
+    invalidates the previous OTP.
   */
+
   await pool.query(
     `
     DELETE FROM auth_otps
@@ -71,78 +81,76 @@ const createOTP = async ({
     [phone, purpose]
   );
 
-  /*
-    OTP expires after 5 minutes.
-  */
+  /* Generate 6-digit OTP */
+
+  const otp = crypto
+    .randomInt(100000, 1000000)
+    .toString();
+
+  /* Hash OTP before storing */
+
+  const otpHash = hashOTP(otp);
+
+  /* OTP expires after 5 minutes */
+
   const expiresAt = new Date(
     Date.now() +
       OTP_EXPIRY_MINUTES * 60 * 1000
   );
 
+  /* Resend allowed after 30 seconds */
+
+  const resendAvailableAt = new Date(
+    Date.now() +
+      OTP_RESEND_SECONDS * 1000
+  );
+
   await pool.query(
     `
-    INSERT INTO auth_otps (
+    INSERT INTO auth_otps
+    (
       email,
       phone,
-      otp_code,
+      otp_hash,
       purpose,
       expires_at,
+      resend_available_at,
       verified,
+      attempts,
       created_at
     )
-    VALUES (
+    VALUES
+    (
       $1,
       $2,
       $3,
       $4,
       $5,
+      $6,
       FALSE,
+      0,
       CURRENT_TIMESTAMP
     )
     `,
     [
       email || null,
       phone,
-      otp,
+      otpHash,
       purpose,
       expiresAt,
+      resendAvailableAt,
     ]
   );
 
   /*
-    TEMPORARY DEVELOPMENT MODE
+    DEVELOPMENT ONLY
 
-    Until an SMS provider is connected,
-    OTP is printed in the backend console.
-
-    Do NOT expose this OTP in production.
+    Remove this console.log when a real
+    SMS provider is connected.
   */
-  console.log(
-    `========================================`
-  );
 
   console.log(
-    `XEVOPROP OTP`
-  );
-
-  console.log(
-    `Purpose: ${purpose}`
-  );
-
-  console.log(
-    `Phone: ${phone}`
-  );
-
-  console.log(
-    `OTP: ${otp}`
-  );
-
-  console.log(
-    `Expires in: ${OTP_EXPIRY_MINUTES} minutes`
-  );
-
-  console.log(
-    `========================================`
+    `[${purpose} OTP] ${otp} -> ${phone}`
   );
 
   return otp;
@@ -152,12 +160,16 @@ const createOTP = async ({
    VERIFY OTP
 ============================================================ */
 
-const verifyOTP = async ({ phone, otp, purpose }) => {
+const verifyOTP = async ({
+  phone,
+  otp,
+  purpose,
+}) => {
   const result = await pool.query(
     `
     SELECT
       id,
-      otp_code,
+      otp_hash,
       expires_at,
       verified,
       attempts
@@ -168,34 +180,62 @@ const verifyOTP = async ({ phone, otp, purpose }) => {
     ORDER BY created_at DESC
     LIMIT 1
     `,
-    [phone, purpose]
+    [
+      phone,
+      purpose,
+    ]
   );
 
   if (!result.rows.length) {
-    throw new Error("OTP not found or already used");
+    throw new Error(
+      "OTP not found or already used."
+    );
   }
 
   const record = result.rows[0];
 
-  // OTP already exceeded maximum attempts
-  if (record.attempts >= 5) {
+  /* ========================================================
+     ATTEMPT LIMIT
+  ======================================================== */
+
+  if (
+    Number(record.attempts) >=
+    OTP_MAX_ATTEMPTS
+  ) {
     throw new Error(
       "Too many incorrect attempts. Please request a new OTP."
     );
   }
 
-  // OTP expired
+  /* ========================================================
+     EXPIRY
+  ======================================================== */
+
   if (
     !record.expires_at ||
-    new Date(record.expires_at).getTime() <= Date.now()
+    new Date(record.expires_at).getTime() <=
+      Date.now()
   ) {
     throw new Error(
       "OTP has expired. Please request a new OTP."
     );
   }
 
-  // Incorrect OTP
-  if (String(record.otp_code) !== String(otp).trim()) {
+  /* ========================================================
+     HASH SUBMITTED OTP
+  ======================================================== */
+
+  const submittedOtpHash =
+    hashOTP(otp);
+
+  /* ========================================================
+     COMPARE
+  ======================================================== */
+
+  if (
+    submittedOtpHash !==
+    record.otp_hash
+  ) {
     await pool.query(
       `
       UPDATE auth_otps
@@ -205,8 +245,12 @@ const verifyOTP = async ({ phone, otp, purpose }) => {
       [record.id]
     );
 
+    const currentAttempts =
+      Number(record.attempts) + 1;
+
     const remainingAttempts =
-      4 - record.attempts;
+      OTP_MAX_ATTEMPTS -
+      currentAttempts;
 
     if (remainingAttempts <= 0) {
       throw new Error(
@@ -216,17 +260,21 @@ const verifyOTP = async ({ phone, otp, purpose }) => {
 
     throw new Error(
       `Invalid OTP. ${remainingAttempts} attempt${
-        remainingAttempts === 1 ? "" : "s"
+        remainingAttempts === 1
+          ? ""
+          : "s"
       } remaining.`
     );
   }
 
-  // Correct OTP
+  /* ========================================================
+     SUCCESS
+  ======================================================== */
+
   await pool.query(
     `
     UPDATE auth_otps
-    SET
-      verified = TRUE
+    SET verified = TRUE
     WHERE id = $1
     `,
     [record.id]
@@ -237,7 +285,6 @@ const verifyOTP = async ({ phone, otp, purpose }) => {
 
 /* ============================================================
    REGISTER
-   STEP 1
 ============================================================ */
 
 router.post(
@@ -251,12 +298,6 @@ router.post(
         password,
         role,
       } = req.body;
-
-      const allowedRoles = [
-        "Buyer",
-        "Seller",
-        "Developer",
-      ];
 
       /* ======================================================
          VALIDATION
@@ -272,14 +313,16 @@ router.post(
         return res.status(400).json({
           success: false,
           message:
-            "Name, email, mobile number, password and role are required",
+            "Name, email, mobile number, password and role are required.",
         });
       }
 
-      if (!allowedRoles.includes(role)) {
+      if (
+        !ALLOWED_ROLES.includes(role)
+      ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid role",
+          message: "Invalid role.",
         });
       }
 
@@ -287,35 +330,36 @@ router.post(
         return res.status(400).json({
           success: false,
           message:
-            "Password must be at least 6 characters",
+            "Password must be at least 6 characters.",
         });
       }
 
-      const cleanEmail =
+      const normalizedEmail =
         email.trim().toLowerCase();
 
-      const cleanPhone =
+      const normalizedPhone =
         phone.trim();
 
       /* ======================================================
          CHECK EMAIL
       ====================================================== */
 
-      const existingEmail =
+      const emailExists =
         await pool.query(
           `
           SELECT id
           FROM users
           WHERE LOWER(email) = LOWER($1)
+          LIMIT 1
           `,
-          [cleanEmail]
+          [normalizedEmail]
         );
 
-      if (existingEmail.rows.length) {
+      if (emailExists.rows.length) {
         return res.status(409).json({
           success: false,
           message:
-            "An account with this email already exists",
+            "An account with this email already exists.",
         });
       }
 
@@ -323,21 +367,22 @@ router.post(
          CHECK PHONE
       ====================================================== */
 
-      const existingPhone =
+      const phoneExists =
         await pool.query(
           `
           SELECT id
           FROM users
           WHERE phone = $1
+          LIMIT 1
           `,
-          [cleanPhone]
+          [normalizedPhone]
         );
 
-      if (existingPhone.rows.length) {
+      if (phoneExists.rows.length) {
         return res.status(409).json({
           success: false,
           message:
-            "An account with this mobile number already exists",
+            "An account with this mobile number already exists.",
         });
       }
 
@@ -345,62 +390,71 @@ router.post(
          HASH PASSWORD
       ====================================================== */
 
-      const hash = await bcrypt.hash(
-        password,
-        10
-      );
+      const passwordHash =
+        await bcrypt.hash(
+          password,
+          10
+        );
 
       /* ======================================================
-         CREATE USER AS UNVERIFIED
+         CREATE USER
       ====================================================== */
 
-      const result = await pool.query(
-        `
-        INSERT INTO users (
-          username,
-          name,
-          email,
-          phone,
-          password,
-          role,
-          is_verified,
-          is_active
-        )
-        VALUES (
-          $1,
-          $2,
-          $3,
-          $4,
-          $5,
-          $6,
-          FALSE,
-          TRUE
-        )
-        RETURNING
-          id,
-          username,
-          name,
-          email,
-          phone,
-          role,
-          is_verified,
-          is_active,
-          created_at
-        `,
-        [
-          cleanEmail,
-          name.trim(),
-          cleanEmail,
-          cleanPhone,
-          hash,
-          role,
-        ]
-      );
+      const result =
+        await pool.query(
+          `
+          INSERT INTO users
+          (
+            username,
+            name,
+            email,
+            phone,
+            password,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          )
+          VALUES
+          (
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            FALSE,
+            TRUE,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+          )
+          RETURNING
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          `,
+          [
+            normalizedEmail,
+            name.trim(),
+            normalizedEmail,
+            normalizedPhone,
+            passwordHash,
+            role,
+          ]
+        );
 
       const user = result.rows[0];
 
       /* ======================================================
-         CREATE REGISTER OTP
+         GENERATE REGISTER OTP
       ====================================================== */
 
       await createOTP({
@@ -411,22 +465,17 @@ router.post(
       });
 
       /* ======================================================
-         RESPONSE
+         IMPORTANT:
+         NO JWT HERE
       ====================================================== */
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
-        requiresOtp: true,
-        purpose: "REGISTER",
         message:
           "Registration successful. OTP sent to your mobile number.",
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-        },
+        requiresOtp: true,
+        purpose: "REGISTER",
+        user,
       });
     } catch (error) {
       console.error(
@@ -434,10 +483,10 @@ router.post(
         error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message:
-          "Server error during registration",
+          "Server error during registration.",
       });
     }
   }
@@ -445,8 +494,6 @@ router.post(
 
 /* ============================================================
    LOGIN
-   STEP 1
-   MOBILE + PASSWORD
 ============================================================ */
 
 router.post(
@@ -458,82 +505,92 @@ router.post(
         password,
       } = req.body;
 
-      if (!phone || !password) {
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
+
+      if (
+        !phone?.trim() ||
+        !password
+      ) {
         return res.status(400).json({
           success: false,
           message:
-            "Mobile number and password are required",
+            "Mobile number and password are required.",
         });
       }
 
-      const cleanPhone =
+      const normalizedPhone =
         phone.trim();
 
       /* ======================================================
-         FIND USER BY MOBILE
+         FIND USER
       ====================================================== */
 
-      const result = await pool.query(
-        `
-        SELECT
-          id,
-          username,
-          name,
-          email,
-          phone,
-          password,
-          role,
-          is_verified,
-          is_active,
-          created_at
-        FROM users
-        WHERE phone = $1
-        `,
-        [cleanPhone]
-      );
+      const result =
+        await pool.query(
+          `
+          SELECT
+            id,
+            username,
+            name,
+            email,
+            phone,
+            password,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          FROM users
+          WHERE phone = $1
+          LIMIT 1
+          `,
+          [normalizedPhone]
+        );
 
-      if (result.rows.length === 0) {
+      if (!result.rows.length) {
         return res.status(401).json({
           success: false,
           message:
-            "Invalid mobile number or password",
+            "Invalid mobile number or password.",
         });
       }
 
       const user = result.rows[0];
 
       /* ======================================================
-         CHECK ACCOUNT STATUS
+         ACTIVE CHECK
       ====================================================== */
 
       if (user.is_active === false) {
         return res.status(403).json({
           success: false,
           message:
-            "Your account has been deactivated",
+            "Your account is inactive.",
         });
       }
 
       /* ======================================================
-         CHECK PASSWORD
+         PASSWORD
       ====================================================== */
 
-      const passwordValid =
+      const passwordMatches =
         await bcrypt.compare(
           password,
           user.password
         );
 
-      if (!passwordValid) {
+      if (!passwordMatches) {
         return res.status(401).json({
           success: false,
           message:
-            "Invalid mobile number or password",
+            "Invalid mobile number or password.",
         });
       }
 
       /* ======================================================
-         IF ACCOUNT IS NOT VERIFIED
+         UNVERIFIED USER
       ====================================================== */
 
       if (user.is_verified !== true) {
@@ -544,24 +601,20 @@ router.post(
           purpose: "REGISTER",
         });
 
-        return res.status(200).json({
+        delete user.password;
+
+        return res.json({
           success: true,
-          requiresOtp: true,
-          purpose: "REGISTER",
           message:
             "Your account is not verified. OTP sent to your mobile number.",
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-          },
+          requiresOtp: true,
+          purpose: "REGISTER",
+          user,
         });
       }
 
       /* ======================================================
-         CREATE LOGIN OTP
+         VERIFIED USER
       ====================================================== */
 
       await createOTP({
@@ -571,18 +624,19 @@ router.post(
         purpose: "LOGIN",
       });
 
-      /* ======================================================
-         REMOVE PASSWORD FROM RESPONSE
-      ====================================================== */
-
       delete user.password;
 
-      res.json({
+      /*
+        IMPORTANT:
+        Do NOT return JWT yet.
+      */
+
+      return res.json({
         success: true,
+        message:
+          "OTP sent to your mobile number.",
         requiresOtp: true,
         purpose: "LOGIN",
-        message:
-          "OTP sent to your mobile number",
         user,
       });
     } catch (error) {
@@ -591,10 +645,10 @@ router.post(
         error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message:
-          "Server error during login",
+          "Server error during login.",
       });
     }
   }
@@ -614,11 +668,19 @@ router.post(
         purpose,
       } = req.body;
 
-      if (!phone || !otp || !purpose) {
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
+
+      if (
+        !phone?.trim() ||
+        !otp?.trim() ||
+        !purpose
+      ) {
         return res.status(400).json({
           success: false,
           message:
-            "Mobile number, OTP and purpose are required",
+            "Mobile number, OTP and purpose are required.",
         });
       }
 
@@ -629,31 +691,31 @@ router.post(
       ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid OTP purpose",
+          message:
+            "Invalid OTP purpose.",
         });
       }
 
-      const cleanPhone =
+      if (!/^\d{6}$/.test(otp.trim())) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "OTP must contain exactly 6 digits.",
+        });
+      }
+
+      const normalizedPhone =
         phone.trim();
 
       /* ======================================================
          VERIFY OTP
       ====================================================== */
 
-      const verification =
-        await verifyOTP({
-          phone: cleanPhone,
-          otp,
-          purpose,
-        });
-
-      if (!verification.success) {
-        return res.status(400).json({
-          success: false,
-          message:
-            verification.message,
-        });
-      }
+      await verifyOTP({
+        phone: normalizedPhone,
+        otp: otp.trim(),
+        purpose,
+      });
 
       /* ======================================================
          FIND USER
@@ -671,25 +733,40 @@ router.post(
             role,
             is_verified,
             is_active,
-            created_at
+            created_at,
+            updated_at
           FROM users
           WHERE phone = $1
+          LIMIT 1
           `,
-          [cleanPhone]
+          [normalizedPhone]
         );
 
-      if (userResult.rows.length === 0) {
+      if (!userResult.rows.length) {
         return res.status(404).json({
           success: false,
-          message: "User not found",
+          message:
+            "User not found.",
         });
       }
 
-      const user =
+      let user =
         userResult.rows[0];
 
       /* ======================================================
-         ACTIVATE / VERIFY ACCOUNT
+         ACCOUNT ACTIVE CHECK
+      ====================================================== */
+
+      if (user.is_active === false) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Your account is inactive.",
+        });
+      }
+
+      /* ======================================================
+         REGISTER VERIFICATION
       ====================================================== */
 
       if (purpose === "REGISTER") {
@@ -711,33 +788,31 @@ router.post(
               role,
               is_verified,
               is_active,
-              created_at
+              created_at,
+              updated_at
             `,
             [user.id]
           );
 
-        userResult.rows[0] =
+        user =
           updateResult.rows[0];
       }
 
-      const verifiedUser =
-        userResult.rows[0];
-
       /* ======================================================
-         CREATE JWT
+         JWT
       ====================================================== */
 
       const token =
-        signToken(verifiedUser);
+        signToken(user);
 
-      res.json({
+      return res.json({
         success: true,
         message:
           purpose === "REGISTER"
-            ? "Registration verified successfully"
-            : "Login successful",
+            ? "Account verified successfully."
+            : "Login successful.",
         token,
-        user: verifiedUser,
+        user,
       });
     } catch (error) {
       console.error(
@@ -745,10 +820,11 @@ router.post(
         error
       );
 
-      res.status(500).json({
+      return res.status(400).json({
         success: false,
         message:
-          "Server error during OTP verification",
+          error.message ||
+          "OTP verification failed.",
       });
     }
   }
@@ -767,11 +843,18 @@ router.post(
         purpose,
       } = req.body;
 
-      if (!phone || !purpose) {
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
+
+      if (
+        !phone?.trim() ||
+        !purpose
+      ) {
         return res.status(400).json({
           success: false,
           message:
-            "Mobile number and purpose are required",
+            "Mobile number and purpose are required.",
         });
       }
 
@@ -782,49 +865,115 @@ router.post(
       ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid OTP purpose",
+          message:
+            "Invalid OTP purpose.",
         });
       }
 
-      const cleanPhone =
+      const normalizedPhone =
         phone.trim();
 
-      const result = await pool.query(
-        `
-        SELECT
-          id,
-          name,
-          email,
-          phone,
-          role,
-          is_verified,
-          is_active
-        FROM users
-        WHERE phone = $1
-        `,
-        [cleanPhone]
-      );
+      /* ======================================================
+         FIND USER
+      ====================================================== */
 
-      if (result.rows.length === 0) {
+      const userResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active
+          FROM users
+          WHERE phone = $1
+          LIMIT 1
+          `,
+          [normalizedPhone]
+        );
+
+      if (!userResult.rows.length) {
         return res.status(404).json({
           success: false,
           message:
-            "No account found with this mobile number",
+            "User not found.",
         });
       }
 
-      const user = result.rows[0];
+      const user =
+        userResult.rows[0];
 
-      if (
-        purpose === "REGISTER" &&
-        user.is_verified === true
-      ) {
-        return res.status(400).json({
+      /* ======================================================
+         ACTIVE CHECK
+      ====================================================== */
+
+      if (user.is_active === false) {
+        return res.status(403).json({
           success: false,
           message:
-            "This account is already verified",
+            "Your account is inactive.",
         });
       }
+
+      /* ======================================================
+         CHECK RESEND COOLDOWN
+      ====================================================== */
+
+      const latestOtp =
+        await pool.query(
+          `
+          SELECT
+            resend_available_at
+          FROM auth_otps
+          WHERE phone = $1
+            AND purpose = $2
+          ORDER BY created_at DESC
+          LIMIT 1
+          `,
+          [
+            normalizedPhone,
+            purpose,
+          ]
+        );
+
+      if (latestOtp.rows.length) {
+        const availableAt =
+          latestOtp.rows[0]
+            .resend_available_at;
+
+        if (
+          availableAt &&
+          new Date(
+            availableAt
+          ).getTime() >
+            Date.now()
+        ) {
+          const secondsRemaining =
+            Math.ceil(
+              (
+                new Date(
+                  availableAt
+                ).getTime() -
+                Date.now()
+              ) / 1000
+            );
+
+          return res.status(429).json({
+            success: false,
+            message:
+              `Please wait ${secondsRemaining} seconds before requesting another OTP.`,
+            retryAfter:
+              secondsRemaining,
+          });
+        }
+      }
+
+      /* ======================================================
+         CREATE NEW OTP
+      ====================================================== */
 
       await createOTP({
         userId: user.id,
@@ -833,10 +982,10 @@ router.post(
         purpose,
       });
 
-      res.json({
+      return res.json({
         success: true,
         message:
-          "A new OTP has been sent to your mobile number",
+          "A new OTP has been sent.",
       });
     } catch (error) {
       console.error(
@@ -844,10 +993,10 @@ router.post(
         error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message:
-          "Failed to resend OTP",
+          "Failed to resend OTP.",
       });
     }
   }
@@ -862,32 +1011,36 @@ router.get(
   authenticateToken,
   async (req, res) => {
     try {
-      const result = await pool.query(
-        `
-        SELECT
-          id,
-          username,
-          name,
-          email,
-          phone,
-          role,
-          is_verified,
-          is_active,
-          created_at
-        FROM users
-        WHERE id = $1
-        `,
-        [req.user.id]
-      );
+      const result =
+        await pool.query(
+          `
+          SELECT
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          FROM users
+          WHERE id = $1
+          LIMIT 1
+          `,
+          [req.user.id]
+        );
 
       if (!result.rows.length) {
         return res.status(404).json({
           success: false,
-          message: "User not found",
+          message:
+            "User not found.",
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         user: result.rows[0],
       });
@@ -897,10 +1050,10 @@ router.get(
         error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message:
-          "Failed to load profile",
+          "Failed to load profile.",
       });
     }
   }
@@ -923,40 +1076,60 @@ router.put(
       if (!name?.trim()) {
         return res.status(400).json({
           success: false,
-          message: "Name is required",
+          message:
+            "Name is required.",
         });
       }
 
-      const result = await pool.query(
-        `
-        UPDATE users
-        SET
-          name = $1,
-          phone = $2,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = $3
+      /*
+        Phone changes are intentionally not
+        automatically verified here.
 
-        RETURNING
-          id,
-          username,
-          name,
-          email,
-          phone,
-          role,
-          is_verified,
-          is_active,
-          created_at
-        `,
-        [
-          name.trim(),
-          phone?.trim() || null,
-          req.user.id,
-        ]
-      );
+        If we later allow changing a mobile
+        number, that change should require
+        a separate OTP verification flow.
+      */
 
-      res.json({
+      const result =
+        await pool.query(
+          `
+          UPDATE users
+          SET
+            name = $1,
+            phone = $2,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = $3
+          RETURNING
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          `,
+          [
+            name.trim(),
+            phone?.trim() || null,
+            req.user.id,
+          ]
+        );
+
+      if (!result.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "User not found.",
+        });
+      }
+
+      return res.json({
         success: true,
-        message: "Profile updated",
+        message:
+          "Profile updated successfully.",
         user: result.rows[0],
       });
     } catch (error) {
@@ -965,13 +1138,17 @@ router.put(
         error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message:
-          "Failed to update profile",
+          "Failed to update profile.",
       });
     }
   }
 );
+
+/* ============================================================
+   EXPORT
+============================================================ */
 
 module.exports = router;
