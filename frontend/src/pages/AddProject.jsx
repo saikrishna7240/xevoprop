@@ -27,8 +27,7 @@ function AddProject() {
     units: "",
     price: "",
     description: "",
-    status: "Available",
-  });
+    });
 
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -175,7 +174,7 @@ function AddProject() {
             price: formData.price.trim() || null,
             description:
               formData.description.trim() || null,
-            status: formData.status,
+            
           }),
         }
       );
@@ -328,31 +327,7 @@ function AddProject() {
                 </select>
               </div>
 
-              <div className="project-form-group">
-                <label>Status</label>
-
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                >
-                  <option value="Available">
-                    Available
-                  </option>
-                  <option value="Upcoming">
-                    Upcoming
-                  </option>
-                  <option value="Sold Out">
-                    Sold Out
-                  </option>
-                  <option value="Completed">
-                    Completed
-                  </option>
-                  <option value="Draft">
-                    Draft
-                  </option>
-                </select>
-              </div>
+              
 
             </div>
           </section>

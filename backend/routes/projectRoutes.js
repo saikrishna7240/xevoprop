@@ -1,133 +1,62 @@
 const express = require("express");
+const router = express.Router();
 
 const { pool } = require("../config/db");
-
 const {
   authenticateToken,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
 
-const router = express.Router();
+/*
+====================================================
+PUBLIC PROJECT ROUTES
+====================================================
+*/
 
-
-/* =========================
-   GET ALL PUBLIC PROPERTIES
-   APPROVED ONLY
-========================= */
-
-router.get("/", async (req, res) => {
+/*
+GET /api/projects/public
+Get all approved projects
+*/
+router.get("/public", async (req, res) => {
   try {
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       SELECT
-        id,
-        owner_id,
-        title,
-        type,
-        location,
-        city,
-        price,
-        price_value,
-        bedrooms,
-        bathrooms,
-        area,
-        image,
-        description,
-        verified,
-        ready_to_move,
-        zero_brokerage,
-        status,
-        created_at
-      FROM properties
-      WHERE status = 'approved'
-      ORDER BY created_at DESC
-    `);
-
-    res.json({
-      success: true,
-      properties: result.rows,
-    });
-
-  } catch (error) {
-    console.error(
-      "Get properties error:",
-      error.message
+        p.id,
+        p.developer_id,
+        p.name,
+        p.type,
+        p.location,
+        p.city,
+        p.units,
+        p.price,
+        p.image,
+        p.description,
+        p.status,
+        p.created_at,
+        p.updated_at
+      FROM projects p
+      WHERE p.status = 'approved'
+      ORDER BY p.created_at DESC
+      `
     );
 
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Get public projects error:", error);
+
     res.status(500).json({
-      success: false,
-      message: "Failed to fetch properties",
+      message: "Failed to fetch projects",
     });
   }
 });
 
 
-/* =========================
-   GET MY PROPERTIES
-   SELLER / DEVELOPER
-   ALL STATUSES
-========================= */
-
-router.get(
-  "/my-properties",
-  authenticateToken,
-  authorizeRoles("Seller", "Developer"),
-  async (req, res) => {
-    try {
-      const result = await pool.query(
-        `
-        SELECT
-          id,
-          owner_id,
-          title,
-          type,
-          location,
-          city,
-          price,
-          price_value,
-          bedrooms,
-          bathrooms,
-          area,
-          image,
-          description,
-          verified,
-          ready_to_move,
-          zero_brokerage,
-          status,
-          created_at
-        FROM properties
-        WHERE owner_id = $1
-        ORDER BY created_at DESC
-        `,
-        [req.user.id]
-      );
-
-      res.json({
-        success: true,
-        properties: result.rows,
-      });
-
-    } catch (error) {
-      console.error(
-        "Get my properties error:",
-        error.message
-      );
-
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch your properties",
-      });
-    }
-  }
-);
-
-
-/* =========================
-   GET SINGLE PUBLIC PROPERTY
-   APPROVED ONLY
-   WITH ALL IMAGES
-========================= */
-
-router.get("/:id", async (req, res) => {
+/*
+GET /api/projects/public/:id
+Get one approved project
+*/
+router.get("/public/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -135,352 +64,405 @@ router.get("/:id", async (req, res) => {
       `
       SELECT
         p.id,
-        p.owner_id,
-        p.title,
+        p.developer_id,
+        p.name,
         p.type,
         p.location,
         p.city,
+        p.units,
         p.price,
-        p.price_value,
-        p.bedrooms,
-        p.bathrooms,
-        p.area,
         p.image,
         p.description,
-        p.verified,
-        p.ready_to_move,
-        p.zero_brokerage,
         p.status,
         p.created_at,
-
-        COALESCE(
-          json_agg(
-            json_build_object(
-              'id', pi.id,
-              'image_url', pi.image_url,
-              'sort_order', pi.sort_order
-            )
-            ORDER BY pi.sort_order, pi.id
-          ) FILTER (WHERE pi.id IS NOT NULL),
-          '[]'
-        ) AS images
-
-      FROM properties p
-
-      LEFT JOIN property_images pi
-        ON pi.property_id = p.id
-
+        p.updated_at
+      FROM projects p
       WHERE p.id = $1
         AND p.status = 'approved'
-
-      GROUP BY p.id
       `,
       [id]
     );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
-        success: false,
-        message: "Property not found",
+        message: "Project not found",
       });
     }
 
-    res.json({
-      success: true,
-      property: result.rows[0],
-    });
-
+    res.json(result.rows[0]);
   } catch (error) {
-    console.error(
-      "Get property error:",
-      error.message
-    );
+    console.error("Get public project error:", error);
 
     res.status(500).json({
-      success: false,
-      message: "Failed to fetch property",
+      message: "Failed to fetch project",
     });
   }
 });
 
 
-/* =========================
-   CREATE PROPERTY
-   SELLER / DEVELOPER
+/*
+====================================================
+DEVELOPER ROUTES
+====================================================
+*/
 
-   ALWAYS STARTS AS PENDING
-========================= */
+/*
+GET /api/projects
+Get projects created by logged-in developer
+*/
+router.get(
+  "/",
+  authenticateToken,
+  authorizeRoles("Developer"),
+  async (req, res) => {
+    try {
+      const developerId = req.user.id;
 
+      const result = await pool.query(
+        `
+        SELECT
+          p.id,
+          p.developer_id,
+          p.name,
+          p.type,
+          p.location,
+          p.city,
+          p.units,
+          p.price,
+          p.image,
+          p.description,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          p.reviewed_by,
+          p.reviewed_at,
+          p.rejection_reason
+        FROM projects p
+        WHERE p.developer_id = $1
+        ORDER BY p.created_at DESC
+        `,
+        [developerId]
+      );
+
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Get developer projects error:", error);
+
+      res.status(500).json({
+        message: "Failed to fetch projects",
+      });
+    }
+  }
+);
+
+
+/*
+GET /api/projects/:id
+Get developer's own project
+*/
+router.get(
+  "/:id",
+  authenticateToken,
+  authorizeRoles("Developer"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const developerId = req.user.id;
+
+      const result = await pool.query(
+        `
+        SELECT
+          p.id,
+          p.developer_id,
+          p.name,
+          p.type,
+          p.location,
+          p.city,
+          p.units,
+          p.price,
+          p.image,
+          p.description,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          p.reviewed_by,
+          p.reviewed_at,
+          p.rejection_reason
+        FROM projects p
+        WHERE p.id = $1
+          AND p.developer_id = $2
+        `,
+        [id, developerId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          message: "Project not found",
+        });
+      }
+
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Get project error:", error);
+
+      res.status(500).json({
+        message: "Failed to fetch project",
+      });
+    }
+  }
+);
+
+
+/*
+POST /api/projects
+Create a new project
+
+New projects ALWAYS start as pending.
+Developer cannot directly publish/approve.
+*/
 router.post(
   "/",
   authenticateToken,
-  authorizeRoles("Seller", "Developer"),
+  authorizeRoles("Developer"),
   async (req, res) => {
     try {
+      const developerId = req.user.id;
+
       const {
-        title,
+        name,
         type,
         location,
         city,
+        units,
         price,
-        price_value,
-        bedrooms,
-        bathrooms,
-        area,
         image,
         description,
-        verified,
-        ready_to_move,
-        zero_brokerage,
       } = req.body;
 
-      if (
-        !title ||
-        !type ||
-        !location
-      ) {
+      if (!name || !type || !location || !city) {
         return res.status(400).json({
-          success: false,
-          message:
-            "Title, type and location are required",
+          message: "Name, type, location and city are required",
         });
       }
 
       const result = await pool.query(
         `
-        INSERT INTO properties (
-          owner_id,
-          title,
+        INSERT INTO projects (
+          developer_id,
+          name,
           type,
           location,
           city,
+          units,
           price,
-          price_value,
-          bedrooms,
-          bathrooms,
-          area,
           image,
           description,
-          verified,
-          ready_to_move,
-          zero_brokerage,
           status
         )
         VALUES (
-          $1, $2, $3, $4, $5,
-          $6, $7, $8, $9, $10,
-          $11, $12, $13, $14, $15,
-          $16
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          $6,
+          $7,
+          $8,
+          $9,
+          'pending'
         )
-        RETURNING *
+        RETURNING
+          id,
+          developer_id,
+          name,
+          type,
+          location,
+          city,
+          units,
+          price,
+          image,
+          description,
+          status,
+          created_at,
+          updated_at,
+          reviewed_by,
+          reviewed_at,
+          rejection_reason
         `,
         [
-          req.user.id,
-          title.trim(),
+          developerId,
+          name,
           type,
-          location.trim(),
-          city || null,
+          location,
+          city,
+          units || null,
           price || null,
-          price_value || null,
-          bedrooms || null,
-          bathrooms || null,
-          area || null,
           image || null,
           description || null,
-          verified || false,
-          ready_to_move || false,
-          zero_brokerage || false,
-
-          // Admin approval
-          "pending",
         ]
       );
 
       res.status(201).json({
-        success: true,
-        message:
-          "Property submitted successfully for admin approval",
-        property: result.rows[0],
+        message: "Project submitted for admin approval",
+        project: result.rows[0],
       });
-
     } catch (error) {
-      console.error(
-        "Create property error:",
-        error.message
-      );
+      console.error("Create project error:", error);
 
       res.status(500).json({
-        success: false,
-        message: "Failed to create property",
+        message: "Failed to create project",
       });
     }
   }
 );
 
 
-/* =========================
-   UPDATE PROPERTY
-   OWNER ONLY
+/*
+PUT /api/projects/:id
+Update developer's project
 
-   IMPORTANT:
-   OWNER CANNOT CHANGE STATUS
-
-   Any property edit sends it
-   back to Admin for review.
-========================= */
-
+Whenever developer edits a project,
+it goes back to pending review.
+*/
 router.put(
   "/:id",
   authenticateToken,
-  authorizeRoles("Seller", "Developer"),
+  authorizeRoles("Developer"),
   async (req, res) => {
     try {
       const { id } = req.params;
+      const developerId = req.user.id;
 
       const {
-        title,
+        name,
         type,
         location,
         city,
+        units,
         price,
-        price_value,
-        bedrooms,
-        bathrooms,
-        area,
         image,
         description,
-        verified,
-        ready_to_move,
-        zero_brokerage,
       } = req.body;
 
-      const result = await pool.query(
+      const existingProject = await pool.query(
         `
-        UPDATE properties
-        SET
-          title = COALESCE($1, title),
-          type = COALESCE($2, type),
-          location = COALESCE($3, location),
-          city = COALESCE($4, city),
-          price = COALESCE($5, price),
-          price_value = COALESCE($6, price_value),
-          bedrooms = COALESCE($7, bedrooms),
-          bathrooms = COALESCE($8, bathrooms),
-          area = COALESCE($9, area),
-          image = COALESCE($10, image),
-          description = COALESCE($11, description),
-          verified = COALESCE($12, verified),
-          ready_to_move = COALESCE($13, ready_to_move),
-          zero_brokerage = COALESCE($14, zero_brokerage),
-
-          -- Every owner edit requires Admin review
-          status = 'pending',
-
-          -- Clear previous review information
-          reviewed_by = NULL,
-          reviewed_at = NULL,
-          rejection_reason = NULL
-
-        WHERE id = $15
-          AND owner_id = $16
-
-        RETURNING *
+        SELECT id
+        FROM projects
+        WHERE id = $1
+          AND developer_id = $2
         `,
-        [
-          title || null,
-          type || null,
-          location || null,
-          city || null,
-          price || null,
-          price_value || null,
-          bedrooms ?? null,
-          bathrooms ?? null,
-          area ?? null,
-          image || null,
-          description || null,
-          verified ?? null,
-          ready_to_move ?? null,
-          zero_brokerage ?? null,
-          id,
-          req.user.id,
-        ]
+        [id, developerId]
       );
 
-      if (result.rows.length === 0) {
+      if (existingProject.rows.length === 0) {
         return res.status(404).json({
-          success: false,
-          message:
-            "Property not found or you are not the owner",
+          message: "Project not found",
         });
       }
 
-      res.json({
-        success: true,
-        message:
-          "Property updated and submitted for admin approval",
-        property: result.rows[0],
-      });
-
-    } catch (error) {
-      console.error(
-        "Update property error:",
-        error.message
+      const result = await pool.query(
+        `
+        UPDATE projects
+        SET
+          name = $1,
+          type = $2,
+          location = $3,
+          city = $4,
+          units = $5,
+          price = $6,
+          image = $7,
+          description = $8,
+          status = 'pending',
+          reviewed_by = NULL,
+          reviewed_at = NULL,
+          rejection_reason = NULL,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = $9
+          AND developer_id = $10
+        RETURNING
+          id,
+          developer_id,
+          name,
+          type,
+          location,
+          city,
+          units,
+          price,
+          image,
+          description,
+          status,
+          created_at,
+          updated_at,
+          reviewed_by,
+          reviewed_at,
+          rejection_reason
+        `,
+        [
+          name,
+          type,
+          location,
+          city,
+          units || null,
+          price || null,
+          image || null,
+          description || null,
+          id,
+          developerId,
+        ]
       );
 
+      res.json({
+        message: "Project updated and submitted for admin approval",
+        project: result.rows[0],
+      });
+    } catch (error) {
+      console.error("Update project error:", error);
+
       res.status(500).json({
-        success: false,
-        message: "Failed to update property",
+        message: "Failed to update project",
       });
     }
   }
 );
 
 
-/* =========================
-   DELETE PROPERTY
-   OWNER ONLY
-========================= */
-
+/*
+DELETE /api/projects/:id
+Developer deletes their own project
+*/
 router.delete(
   "/:id",
   authenticateToken,
-  authorizeRoles("Seller", "Developer"),
+  authorizeRoles("Developer"),
   async (req, res) => {
     try {
       const { id } = req.params;
+      const developerId = req.user.id;
 
       const result = await pool.query(
         `
-        DELETE FROM properties
+        DELETE FROM projects
         WHERE id = $1
-          AND owner_id = $2
+          AND developer_id = $2
         RETURNING id
         `,
-        [id, req.user.id]
+        [id, developerId]
       );
 
       if (result.rows.length === 0) {
         return res.status(404).json({
-          success: false,
-          message:
-            "Property not found or you are not the owner",
+          message: "Project not found",
         });
       }
 
       res.json({
-        success: true,
-        message: "Property deleted successfully",
+        message: "Project deleted successfully",
       });
-
     } catch (error) {
-      console.error(
-        "Delete property error:",
-        error.message
-      );
+      console.error("Delete project error:", error);
 
       res.status(500).json({
-        success: false,
-        message: "Failed to delete property",
+        message: "Failed to delete project",
       });
     }
   }
