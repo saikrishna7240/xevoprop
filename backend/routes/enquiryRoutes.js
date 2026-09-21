@@ -569,6 +569,216 @@ router.put(
 );
 
 /* ============================================================
+   PROJECT ENQUIRY MESSAGE ACCESS
+============================================================ */
+
+const getProjectEnquiryAccess = async (enquiryId, userId) => {
+  const result = await pool.query(
+    `
+    SELECT
+      e.id,
+      e.project_id,
+      e.buyer_id,
+      p.developer_id,
+      p.name AS project_name
+    FROM project_enquiries e
+    JOIN projects p
+      ON p.id = e.project_id
+    WHERE e.id = $1
+    `,
+    [enquiryId]
+  );
+
+  if (!result.rows.length) {
+    return {
+      enquiry: null,
+      allowed: false,
+    };
+  }
+
+  const enquiry = result.rows[0];
+
+  const allowed =
+    Number(enquiry.buyer_id) === Number(userId) ||
+    Number(enquiry.developer_id) === Number(userId);
+
+  return {
+    enquiry,
+    allowed,
+  };
+};
+
+/* ============================================================
+   GET PROJECT ENQUIRY MESSAGES
+   GET /api/enquiries/project/:id/messages
+============================================================ */
+
+router.get(
+  "/project/:id/messages",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const {
+        enquiry,
+        allowed,
+      } = await getProjectEnquiryAccess(
+        id,
+        req.user.id
+      );
+
+      if (!enquiry) {
+        return res.status(404).json({
+          success: false,
+          message: "Project enquiry not found.",
+        });
+      }
+
+      if (!allowed) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You cannot access this project enquiry.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        SELECT
+          pem.id,
+          pem.enquiry_id,
+          pem.sender_id,
+          pem.message,
+          pem.created_at,
+
+          u.name AS sender_name,
+          u.role AS sender_role
+
+        FROM project_enquiry_messages pem
+
+        LEFT JOIN users u
+          ON u.id = pem.sender_id
+
+        WHERE pem.enquiry_id = $1
+
+        ORDER BY pem.created_at ASC
+        `,
+        [id]
+      );
+
+      return res.json({
+        success: true,
+        enquiry,
+        messages: result.rows,
+      });
+    } catch (error) {
+      console.error(
+        "Get project enquiry messages error:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Failed to load project enquiry messages.",
+      });
+    }
+  }
+);
+
+/* ============================================================
+   SEND PROJECT ENQUIRY MESSAGE
+   POST /api/enquiries/project/:id/messages
+============================================================ */
+
+router.post(
+  "/project/:id/messages",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const message =
+        req.body.message?.trim();
+
+      if (!message) {
+        return res.status(400).json({
+          success: false,
+          message: "Message is required.",
+        });
+      }
+
+      const {
+        enquiry,
+        allowed,
+      } = await getProjectEnquiryAccess(
+        id,
+        req.user.id
+      );
+
+      if (!enquiry) {
+        return res.status(404).json({
+          success: false,
+          message: "Project enquiry not found.",
+        });
+      }
+
+      if (!allowed) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You cannot access this project enquiry.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO project_enquiry_messages
+        (
+          enquiry_id,
+          sender_id,
+          message
+        )
+        VALUES
+        ($1, $2, $3)
+
+        RETURNING
+          id,
+          enquiry_id,
+          sender_id,
+          message,
+          created_at
+        `,
+        [
+          id,
+          req.user.id,
+          message,
+        ]
+      );
+
+      return res.status(201).json({
+        success: true,
+        message:
+          "Message sent successfully.",
+        chatMessage: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "Send project enquiry message error:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Failed to send project enquiry message.",
+      });
+    }
+  }
+);
+
+/* ============================================================
    ============================================================
    PROPERTY ENQUIRY STATUS / MESSAGES
    Dynamic routes MUST come AFTER /project routes

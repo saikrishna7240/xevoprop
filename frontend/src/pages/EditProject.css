@@ -1,278 +1,577 @@
-/* =========================================================
-   XEVOPROP — EDIT PROJECT
-========================================================= */
-
-@import "./AddProject.css";
-
-
-/* =========================================================
-   PAGE
-========================================================= */
-
 .edit-project-page {
-  min-height: calc(100vh - 72px);
-
-  padding: 48px 24px 80px;
-
-  background: var(--bg, #f7faff);
+  min-height: 100vh;
+  background: #f7faff;
+  padding: 42px 0 80px;
 }
 
-
-/* =========================================================
-   CONTAINER
-========================================================= */
-
 .edit-project-container {
-  width: min(100%, 1100px);
-
+  width: min(980px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-
-/* =========================================================
-   BACK BUTTON
-========================================================= */
+/* =========================================
+   BACK
+========================================= */
 
 .edit-project-back {
   display: inline-flex;
   align-items: center;
-
-  gap: 8px;
-
-  margin-bottom: 30px;
+  gap: 7px;
+  margin-bottom: 28px;
   padding: 0;
-
   border: 0;
-
   background: transparent;
-
-  color: var(--text-secondary, #526078);
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-
+  color: #526078;
+  font-size: 13px;
+  font-weight: 650;
   cursor: pointer;
-
   transition:
     color 0.2s ease,
     transform 0.2s ease;
 }
 
 .edit-project-back:hover {
-  color: var(--primary, #1264ff);
-
+  color: #1264ff;
   transform: translateX(-2px);
 }
 
-
-/* =========================================================
+/* =========================================
    HEADER
-========================================================= */
+========================================= */
 
 .edit-project-header {
   display: flex;
   align-items: center;
-
-  gap: 16px;
-
-  margin-bottom: 30px;
+  gap: 15px;
+  margin-bottom: 28px;
 }
 
 .edit-project-icon {
   width: 52px;
   height: 52px;
-
-  flex-shrink: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
+  flex: 0 0 52px;
   border-radius: 14px;
-
-  background: var(--primary-light, #eaf2ff);
-  color: var(--primary, #1264ff);
+  background: #eaf2ff;
+  color: #1264ff;
 }
 
 .edit-project-header > div:last-child > span {
   display: block;
-
-  margin-bottom: 6px;
-
-  color: var(--primary, #1264ff);
-
-  font-size: 11px;
+  margin-bottom: 5px;
+  color: #1264ff;
+  font-size: 10px;
   font-weight: 800;
-
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
 }
 
 .edit-project-header h1 {
   margin: 0;
-
-  color: var(--text-primary, #0b1736);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(28px, 4vw, 42px);
-
-  line-height: 1.1;
-
+  color: #0b1736;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
   letter-spacing: -0.03em;
 }
 
 .edit-project-header p {
-  margin: 8px 0 0;
-
-  color: var(--text-secondary, #526078);
-
-  font-size: 15px;
+  margin: 7px 0 0;
+  color: #65738a;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
+/* =========================================
+   REVIEW STATUS
+========================================= */
 
-/* =========================================================
+.edit-project-review-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 22px;
+  padding: 16px;
+  border: 1px solid;
+  border-radius: 14px;
+}
+
+.edit-project-review-status.pending {
+  border-color: #f0dfac;
+  background: #fffbeb;
+  color: #8a6100;
+}
+
+.edit-project-review-status.approved {
+  border-color: #c7ead9;
+  background: #effaf5;
+  color: #087443;
+}
+
+.edit-project-review-status.rejected {
+  border-color: #f1caca;
+  background: #fff5f5;
+  color: #b42318;
+}
+
+.edit-project-status-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.edit-project-status-content {
+  min-width: 0;
+}
+
+.edit-project-status-content > strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.edit-project-status-content > p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   REJECTION REASON
+========================================= */
+
+.edit-project-rejection-reason {
+  margin-top: 11px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(180, 35, 24, 0.15);
+}
+
+.edit-project-rejection-reason > span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.edit-project-rejection-reason p {
+  margin: 0;
+  color: #7a2e2e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================================
    ERROR
-========================================================= */
+========================================= */
 
 .edit-project-error {
   margin-bottom: 22px;
-
-  padding: 13px 16px;
-
-  border: 1px solid #fecaca;
-
+  padding: 13px 15px;
+  border: 1px solid #f1caca;
   border-radius: 10px;
-
   background: #fff5f5;
-
   color: #b42318;
-
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-
-/* =========================================================
+/* =========================================
    FORM
-========================================================= */
+========================================= */
 
 .edit-project-form {
   display: flex;
   flex-direction: column;
-
-  gap: 18px;
+  gap: 20px;
 }
 
+.project-form-section {
+  padding: 28px;
+  border: 1px solid #e3eaf4;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 28px rgba(11, 23, 54, 0.04);
+}
 
-/* =========================================================
-   ACTIONS
-========================================================= */
-
-.edit-project-actions {
+.project-form-heading {
   display: flex;
-
-  justify-content: flex-end;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-top: 4px;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 25px;
 }
 
+.project-form-heading > span {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  border-radius: 9px;
+  background: #edf5ff;
+  color: #1264ff;
+  font-size: 11px;
+  font-weight: 800;
+}
 
-/* =========================================================
-   UPDATE BUTTON
-========================================================= */
+.project-form-heading h2 {
+  margin: 0;
+  color: #0b1736;
+  font-size: 17px;
+  font-weight: 750;
+}
 
-.project-update-btn {
-  min-height: 46px;
+.project-form-heading p {
+  margin: 5px 0 0;
+  color: #7a879a;
+  font-size: 12px;
+  line-height: 1.5;
+}
 
+/* =========================================
+   GRID
+========================================= */
+
+.project-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.project-form-group {
+  min-width: 0;
+}
+
+.project-form-group.full {
+  grid-column: 1 / -1;
+}
+
+.project-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #24324b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.project-form-group label span {
+  margin-left: 3px;
+  color: #1264ff;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.project-form-group input,
+.project-form-group select,
+.project-form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dbe4ef;
+  border-radius: 10px;
+  outline: none;
+  background: #ffffff;
+  color: #0b1736;
+  font-family: inherit;
+  font-size: 13px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.project-form-group input,
+.project-form-group select {
+  height: 46px;
+  padding: 0 13px;
+}
+
+.project-form-group textarea {
+  min-height: 145px;
+  padding: 13px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.project-form-group input::placeholder,
+.project-form-group textarea::placeholder {
+  color: #9aa6b7;
+}
+
+.project-form-group input:focus,
+.project-form-group select:focus,
+.project-form-group textarea:focus {
+  border-color: #78a7ff;
+  box-shadow: 0 0 0 3px rgba(18, 100, 255, 0.08);
+}
+
+/* =========================================
+   STATUS FIELD
+========================================= */
+
+.edit-project-status-field {
+  width: 100%;
+  height: 46px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.edit-project-status-field.pending {
+  border-color: #f0dfac;
+  background: #fffbeb;
+  color: #8a6100;
+}
+
+.edit-project-status-field.approved {
+  border-color: #c7ead9;
+  background: #effaf5;
+  color: #087443;
+}
+
+.edit-project-status-field.rejected {
+  border-color: #f1caca;
+  background: #fff5f5;
+  color: #b42318;
+}
+
+/* =========================================
+   IMAGE UPLOAD
+========================================= */
+
+.project-image-upload {
+  width: 100%;
+  min-height: 185px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 25px;
+  border: 1.5px dashed #cbd8e8;
+  border-radius: 14px;
+  background: #f9fbff;
+  color: #1264ff;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.project-image-upload:hover {
+  border-color: #1264ff;
+  background: #f3f7ff;
+  transform: translateY(-1px);
+}
+
+.project-image-upload strong {
+  color: #24324b;
+  font-size: 14px;
+}
+
+.project-image-upload span {
+  color: #7a879a;
+  font-size: 11px;
+}
+
+.project-image-upload em {
+  margin-top: 4px;
+  padding: 7px 12px;
+  border-radius: 7px;
+  background: #eaf2ff;
+  color: #1264ff;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+/* =========================================
+   IMAGE PREVIEW
+========================================= */
+
+.project-image-preview {
+  position: relative;
+  height: 270px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #edf3fa;
+}
+
+.project-image-preview img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.project-image-overlay {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.project-image-overlay button {
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  gap: 8px;
-
-  padding: 0 20px;
-
-  border: 1px solid var(--primary, #1264ff);
-
-  border-radius: 10px;
-
-  background: var(--primary, #1264ff);
+  gap: 7px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(7, 21, 47, 0.84);
   color: #ffffff;
-
-  font-family: inherit;
-
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
-
   cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
 
+.project-image-overlay button:hover {
+  background: #1264ff;
+  transform: translateY(-1px);
+}
+
+.project-image-overlay button:last-child {
+  width: 36px;
+  padding: 0;
+}
+
+/* =========================================
+   SAVE NOTICE
+========================================= */
+
+.edit-project-save-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid #cdddf7;
+  border-radius: 12px;
+  background: #edf5ff;
+  color: #28528d;
+}
+
+.edit-project-save-notice svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #1264ff;
+}
+
+.edit-project-save-notice p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.edit-project-save-notice strong {
+  color: #1264ff;
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.edit-project-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.project-cancel-btn,
+.project-update-btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 18px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.2s ease;
+}
+
+.project-cancel-btn {
+  border: 1px solid #d9e2ed;
+  background: #ffffff;
+  color: #526078;
+}
+
+.project-cancel-btn:hover:not(:disabled) {
+  background: #f3f7ff;
+  border-color: #cbd8e8;
+}
+
+.project-update-btn {
+  border: 1px solid #1264ff;
+  background: #1264ff;
+  color: #ffffff;
 }
 
 .project-update-btn:hover:not(:disabled) {
-  background: var(--primary-dark, #084dcc);
-
-  border-color: var(--primary-dark, #084dcc);
-
+  background: #084dcc;
+  border-color: #084dcc;
   transform: translateY(-1px);
-
-  box-shadow:
-    0 8px 20px rgba(18, 100, 255, 0.18);
 }
 
+.project-cancel-btn:disabled,
 .project-update-btn:disabled {
-  opacity: 0.65;
-
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-
-/* =========================================================
+/* =========================================
    LOADING
-========================================================= */
+========================================= */
 
 .edit-project-loading {
-  min-height: 55vh;
-
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
-
   gap: 12px;
-
-  color: var(--text-secondary, #526078);
+  color: #526078;
 }
 
 .edit-project-loading p {
   margin: 0;
-
   font-size: 14px;
-  font-weight: 600;
 }
 
-.edit-project-loading-icon {
-  color: var(--primary, #1264ff);
-
-  animation:
-    editProjectSpin 0.9s linear infinite;
-}
-
+.edit-project-loading-icon,
 .project-loading {
-  animation:
-    editProjectSpin 0.9s linear infinite;
+  animation: editProjectSpin 1s linear infinite;
 }
 
 @keyframes editProjectSpin {
@@ -281,210 +580,49 @@
   }
 }
 
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-/* =========================================================
-   EDIT PROJECT IMAGE OVERLAY
-========================================================= */
-
-.edit-project-page .project-image-overlay {
-  position: absolute;
-  inset: 0;
-
-  display: flex;
-
-  align-items: flex-end;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  padding: 18px;
-
-  background:
-    linear-gradient(
-      to top,
-      rgba(7, 21, 47, 0.78),
-      rgba(7, 21, 47, 0.08) 65%,
-      transparent
-    );
-}
-
-
-/* =========================================================
-   EXISTING IMAGE
-   ONLY ONE BUTTON = CHANGE IMAGE
-========================================================= */
-
-.edit-project-page
-.project-image-overlay > button:only-child {
-  min-width: 145px !important;
-  width: auto !important;
-
-  height: 42px !important;
-
-  display: inline-flex !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-
-  gap: 8px !important;
-
-  padding: 0 17px !important;
-
-  border: 0 !important;
-  border-radius: 10px !important;
-
-  background: #1264ff !important;
-  color: #ffffff !important;
-
-  font-family: inherit !important;
-
-  font-size: 13px !important;
-  font-weight: 700 !important;
-
-  cursor: pointer !important;
-
-  box-shadow:
-    0 8px 20px rgba(18, 100, 255, 0.28) !important;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease !important;
-}
-
-.edit-project-page
-.project-image-overlay > button:only-child:hover {
-  background: #084dcc !important;
-
-  transform: translateY(-2px) !important;
-
-  box-shadow:
-    0 10px 25px rgba(18, 100, 255, 0.36) !important;
-}
-
-.edit-project-page
-.project-image-overlay > button:only-child svg {
-  width: 17px !important;
-  height: 17px !important;
-
-  flex-shrink: 0 !important;
-}
-
-
-/* =========================================================
-   NEW IMAGE
-   CHANGE IMAGE BUTTON
-========================================================= */
-
-.edit-project-page
-.project-image-overlay > button:not(:only-child):first-child {
-  min-width: 145px !important;
-  width: auto !important;
-
-  height: 42px !important;
-
-  display: inline-flex !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-
-  gap: 8px !important;
-
-  padding: 0 17px !important;
-
-  border: 0 !important;
-  border-radius: 10px !important;
-
-  background: #1264ff !important;
-  color: #ffffff !important;
-
-  font-family: inherit !important;
-
-  font-size: 13px !important;
-  font-weight: 700 !important;
-
-  cursor: pointer !important;
-
-  box-shadow:
-    0 8px 20px rgba(18, 100, 255, 0.28) !important;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease !important;
-}
-
-.edit-project-page
-.project-image-overlay > button:not(:only-child):first-child:hover {
-  background: #084dcc !important;
-
-  transform: translateY(-2px) !important;
-
-  box-shadow:
-    0 10px 25px rgba(18, 100, 255, 0.36) !important;
-}
-
-
-/* =========================================================
-   REMOVE IMAGE BUTTON
-========================================================= */
-
-.edit-project-page
-.project-image-overlay > button:not(:only-child):last-child {
-  width: 42px !important;
-  min-width: 42px !important;
-  height: 42px !important;
-
-  display: inline-flex !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-
-  padding: 0 !important;
-
-  border: 0 !important;
-  border-radius: 10px !important;
-
-  background: rgba(255, 255, 255, 0.96) !important;
-
-  color: #d92d20 !important;
-
-  cursor: pointer !important;
-
-  box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.16) !important;
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease !important;
-}
-
-.edit-project-page
-.project-image-overlay > button:not(:only-child):last-child:hover {
-  background: #fff1f1 !important;
-
-  transform: translateY(-2px) !important;
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .edit-project-page {
-    padding: 40px 20px 70px;
+    padding: 30px 0 60px;
+  }
+
+  .edit-project-container {
+    width: min(100% - 32px, 620px);
+  }
+
+  .project-form-section {
+    padding: 21px;
+  }
+
+  .project-form-grid {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+
+  .project-form-group.full {
+    grid-column: auto;
+  }
+
+  .edit-project-header h1 {
+    font-size: 28px;
+  }
+
+  .edit-project-actions {
+    flex-direction: column-reverse;
+  }
+
+  .project-cancel-btn,
+  .project-update-btn {
+    width: 100%;
   }
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-  .edit-project-page {
-    padding: 32px 16px 60px;
+@media (max-width: 480px) {
+  .edit-project-container {
+    width: min(100% - 24px, 620px);
   }
 
   .edit-project-header {
@@ -494,126 +632,37 @@
   .edit-project-icon {
     width: 46px;
     height: 46px;
-  }
-
-  .edit-project-actions {
-    flex-direction: column-reverse;
-
-    align-items: stretch;
-  }
-
-  .edit-project-actions button {
-    width: 100%;
-  }
-
-  .edit-project-page .project-image-preview {
-    height: 240px;
-  }
-
-  .edit-project-page .project-image-overlay {
-    padding: 14px;
-  }
-
-  .edit-project-page
-  .project-image-overlay > button:only-child {
-
-    min-width: 130px !important;
-    height: 40px !important;
-
-    padding: 0 13px !important;
-
-    font-size: 12px !important;
-  }
-
-  .edit-project-page
-  .project-image-overlay > button:not(:only-child):first-child {
-
-    min-width: 130px !important;
-    height: 40px !important;
-
-    padding: 0 13px !important;
-
-    font-size: 12px !important;
-  }
-
-  .edit-project-page
-  .project-image-overlay > button:not(:only-child):last-child {
-
-    width: 40px !important;
-    min-width: 40px !important;
-    height: 40px !important;
-  }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 420px) {
-  .edit-project-page {
-    padding: 26px 12px 50px;
-  }
-
-  .edit-project-header {
-    gap: 12px;
-
-    margin-bottom: 25px;
-  }
-
-  .edit-project-icon {
-    width: 44px;
-    height: 44px;
+    flex-basis: 46px;
   }
 
   .edit-project-header h1 {
-    font-size: 27px;
+    font-size: 25px;
   }
 
-  .edit-project-header p {
-    font-size: 13px;
+  .project-form-section {
+    padding: 18px;
+    border-radius: 14px;
   }
 
-  .edit-project-page .project-image-preview {
-    height: 210px;
+  .project-form-heading {
+    margin-bottom: 20px;
   }
 
-  .edit-project-page .project-image-overlay {
-    padding: 12px;
+  .project-image-preview {
+    height: 220px;
   }
 
-  .edit-project-page
-  .project-image-overlay > button:only-child,
-  .edit-project-page
-  .project-image-overlay > button:not(:only-child):first-child {
-
-    min-width: 125px !important;
-    height: 38px !important;
-
-    padding: 0 12px !important;
-
-    font-size: 12px !important;
-  }
-
-  .edit-project-page
-  .project-image-overlay > button:not(:only-child):last-child {
-
-    width: 38px !important;
-    min-width: 38px !important;
-    height: 38px !important;
+  .edit-project-review-status {
+    padding: 13px;
   }
 }
 
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
 @media (prefers-reduced-motion: reduce) {
   .edit-project-back,
-  .project-update-btn,
-  .project-image-overlay button {
-    transition: none !important;
+  .project-image-upload,
+  .project-image-overlay button,
+  .project-update-btn {
+    transition: none;
   }
 
   .edit-project-loading-icon,

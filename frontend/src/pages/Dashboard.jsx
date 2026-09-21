@@ -278,13 +278,13 @@ function Dashboard() {
           icon: BarChart3,
 
           title:
-            "Project Leads",
+            "Project Enquiries",
 
           description:
             "Track enquiries and potential buyers.",
 
           link:
-            "/leads",
+            "/project-enquiries",
         },
 
         {

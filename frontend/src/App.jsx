@@ -28,7 +28,7 @@ import AdminProjects from "./pages/AdminProjects";
 import ListProperty from "./pages/ListProperty";
 import MyProperties from "./pages/MyProperties";
 import EditProperty from "./pages/EditProperty";
-
+import ProjectEnquiries from "./pages/ProjectEnquiries";
 import SellerEnquiries from "./pages/SellerEnquiries";
 import SellerVisits from "./pages/SellerVisits";
 import MyVisits from "./pages/MyVisits";
@@ -159,6 +159,14 @@ function App() {
   element={
     <ProtectedRoute allowedRoles={["Admin"]}>
       <AdminProjects />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/project-enquiries"
+  element={
+    <ProtectedRoute allowedRoles={["Developer"]}>
+      <ProjectEnquiries />
     </ProtectedRoute>
   }
 />
