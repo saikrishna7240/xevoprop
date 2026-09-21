@@ -585,3 +585,126 @@
     padding-right: 42px;
   }
 }
+
+
+/* ============================================================
+   OTP LOGIN
+============================================================ */
+
+.otp-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.otp-back-button:hover {
+  color: #1264ff;
+}
+
+.otp-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  background: #eaf2ff;
+  color: #1264ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-subtitle strong {
+  color: #17324d;
+  font-weight: 700;
+}
+
+.otp-input {
+  text-align: center;
+  letter-spacing: 8px;
+  font-size: 22px !important;
+  font-weight: 700;
+  padding-left: 18px !important;
+}
+
+.otp-input::placeholder {
+  letter-spacing: 2px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.otp-resend {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  color: #718096;
+  font-size: 13px;
+}
+
+.otp-resend button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #1264ff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.otp-resend button:hover {
+  color: #084dcc;
+}
+
+.otp-resend button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.otp-timer {
+  color: #64748b;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .otp-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+
+  .otp-input {
+    letter-spacing: 6px;
+    font-size: 20px !important;
+  }
+
+  .otp-resend {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .otp-back-button,
+  .otp-resend button {
+    transition: none;
+  }
+}
+.otp-purpose-message {
+  margin: -8px 0 18px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: #eaf2ff;
+  color: #2457a6;
+  font-size: 13px;
+  line-height: 1.5;
+}

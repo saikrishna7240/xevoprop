@@ -1,18 +1,251 @@
-const express=require("express");
-const {pool}=require("../config/db");
-const { authenticateToken } = require("../middleware/authMiddleware");const router=express.Router();
-router.get("/",authenticateToken,async(req,res)=>{try{const explicit=await pool.query("SELECT * FROM notifications WHERE user_id=$1 ORDER BY created_at DESC",[req.user.id]);const generated=await pool.query(`
-SELECT 'enquiry' AS type, e.id AS reference_id, 'New buyer enquiry' AS title,
-       CONCAT(e.name,' enquired about ',p.title) AS message,e.created_at
-FROM property_enquiries e JOIN properties p ON p.id=e.property_id WHERE p.owner_id=$1
-UNION ALL
-SELECT 'visit',v.id,'Property visit request',CONCAT(v.name,' requested a visit for ',p.title),v.created_at
-FROM property_visits v JOIN properties p ON p.id=v.property_id WHERE p.owner_id=$1
-UNION ALL
-SELECT 'chat',em.enquiry_id,'New enquiry message',CONCAT(COALESCE(u.name,'A user'),' sent a message about ',p.title),em.created_at
-FROM enquiry_messages em JOIN property_enquiries e ON e.id=em.enquiry_id JOIN properties p ON p.id=e.property_id LEFT JOIN users u ON u.id=em.sender_id
-WHERE (p.owner_id=$1 OR e.buyer_id=$1) AND em.sender_id<>$1
-ORDER BY created_at DESC LIMIT 100`,[req.user.id]);res.json({success:true,notifications:[...explicit.rows,...generated.rows].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))});}catch(e){console.error(e);res.status(500).json({success:false,message:"Failed to load notifications"});}});
-router.post("/",authenticateToken,async(req,res)=>{try{const {user_id,type,title,message,reference_id}=req.body;if(Number(user_id)!==Number(req.user.id))return res.status(403).json({success:false,message:"Forbidden"});const r=await pool.query("INSERT INTO notifications(user_id,type,title,message,reference_id) VALUES($1,$2,$3,$4,$5) RETURNING *",[req.user.id,type,title,message,reference_id||null]);res.status(201).json({success:true,notification:r.rows[0]});}catch(e){res.status(500).json({success:false,message:"Failed to create notification"});}});
-router.patch("/:id/read",authenticateToken,async(req,res)=>{try{const r=await pool.query("UPDATE notifications SET read_at=CURRENT_TIMESTAMP WHERE id=$1 AND user_id=$2 RETURNING *",[req.params.id,req.user.id]);if(!r.rows.length)return res.status(404).json({success:false,message:"Notification not found"});res.json({success:true,notification:r.rows[0]});}catch(e){res.status(500).json({success:false,message:"Failed to update notification"});}});
-module.exports=router;
+const express = require("express");
+const { pool } = require("../config/db");
+const { authenticateToken } = require("../middleware/authMiddleware");
+
+const router = express.Router();
+
+/* ============================================================
+   GET ALL NOTIFICATIONS
+============================================================ */
+
+router.get(
+  "/",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const explicit = await pool.query(
+        `
+        SELECT
+          id,
+          type,
+          title,
+          message,
+          reference_id,
+          reference_type,
+          is_read,
+          created_at
+        FROM notifications
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        notifications: explicit.rows,
+      });
+    } catch (error) {
+      console.error(
+        "Get notifications error:",
+        error.message
+      );
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to load notifications",
+      });
+    }
+  }
+);
+
+/* ============================================================
+   GET UNREAD COUNT
+============================================================ */
+
+router.get(
+  "/unread-count",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `
+        SELECT COUNT(*) AS count
+        FROM notifications
+        WHERE user_id = $1
+          AND is_read = FALSE
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        count: Number(result.rows[0].count),
+      });
+    } catch (error) {
+      console.error(
+        "Unread count error:",
+        error.message
+      );
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to load unread count",
+      });
+    }
+  }
+);
+
+/* ============================================================
+   CREATE NOTIFICATION
+   USER CAN ONLY CREATE FOR THEMSELVES
+============================================================ */
+
+router.post(
+  "/",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const {
+        user_id,
+        type,
+        title,
+        message,
+        reference_id,
+        reference_type,
+      } = req.body;
+
+      if (
+        Number(user_id) !== Number(req.user.id)
+      ) {
+        return res.status(403).json({
+          success: false,
+          message: "Forbidden",
+        });
+      }
+
+      if (!type || !title) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Notification type and title are required",
+        });
+      }
+
+      const result = await pool.query(
+        `
+        INSERT INTO notifications (
+          user_id,
+          type,
+          title,
+          message,
+          reference_id,
+          reference_type
+        )
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+        `,
+        [
+          req.user.id,
+          type,
+          title,
+          message || null,
+          reference_id || null,
+          reference_type || null,
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        notification: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "Create notification error:",
+        error.message
+      );
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to create notification",
+      });
+    }
+  }
+);
+
+/* ============================================================
+   MARK SINGLE NOTIFICATION AS READ
+============================================================ */
+
+router.put(
+  "/:id/read",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `
+        UPDATE notifications
+        SET is_read = TRUE
+        WHERE id = $1
+          AND user_id = $2
+        RETURNING *
+        `,
+        [req.params.id, req.user.id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Notification not found",
+        });
+      }
+
+      res.json({
+        success: true,
+        notification: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "Mark notification read error:",
+        error.message
+      );
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to update notification",
+      });
+    }
+  }
+);
+
+/* ============================================================
+   MARK ALL NOTIFICATIONS AS READ
+============================================================ */
+
+router.put(
+  "/read-all",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `
+        UPDATE notifications
+        SET is_read = TRUE
+        WHERE user_id = $1
+          AND is_read = FALSE
+        RETURNING id
+        `,
+        [req.user.id]
+      );
+
+      res.json({
+        success: true,
+        message: "All notifications marked as read",
+        updated: result.rows.length,
+      });
+    } catch (error) {
+      console.error(
+        "Mark all notifications read error:",
+        error.message
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          "Failed to update notifications",
+      });
+    }
+  }
+);
+
+module.exports = router;
