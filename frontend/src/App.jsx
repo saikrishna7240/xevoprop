@@ -34,7 +34,8 @@ import SellerVisits from "./pages/SellerVisits";
 import MyVisits from "./pages/MyVisits";
 import EnquiryChat from "./pages/EnquiryChat";
 import Leads from "./pages/Leads";
-
+import ProjectEnquiriesBuyer from "./pages/ProjectEnquiriesBuyer";
+import ProjectEnquiryChat from "./pages/ProjectEnquiryChat";
 import MyProjects from "./pages/MyProjects";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
@@ -167,6 +168,24 @@ function App() {
   element={
     <ProtectedRoute allowedRoles={["Developer"]}>
       <ProjectEnquiries />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/buyer/project-enquiries"
+  element={
+    <ProtectedRoute allowedRoles={["Buyer"]}>
+      <ProjectEnquiriesBuyer />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/project-enquiries/:id/chat"
+  element={
+    <ProtectedRoute allowedRoles={["Buyer", "Developer"]}>
+      <ProjectEnquiryChat />
     </ProtectedRoute>
   }
 />

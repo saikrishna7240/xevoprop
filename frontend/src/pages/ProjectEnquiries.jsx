@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Mail,
   Phone,
@@ -21,7 +22,7 @@ export default function ProjectEnquiries() {
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [error, setError] = useState("");
-
+const navigate = useNavigate();
   const loadEnquiries = async () => {
     try {
       setLoading(true);
@@ -407,6 +408,18 @@ export default function ProjectEnquiries() {
                     >
                       View
                     </button>
+
+                    <button
+  type="button"
+  className="project-enquiry-view"
+  onClick={() =>
+    navigate(
+      `/project-enquiries/${enquiry.id}/chat`
+    )
+  }
+>
+  Chat
+</button>
 
                   </div>
                 </div>

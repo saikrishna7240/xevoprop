@@ -108,13 +108,26 @@ function Dashboard() {
           icon: MessageCircle,
 
           title:
-            "My Enquiries",
+            "Property Enquiries",
 
           description:
             "Track your property enquiries and conversations.",
 
           link:
             "/my-enquiries",
+        },
+
+        {
+          icon: MessageCircle,
+
+          title:
+            "Project Enquiries",
+
+          description:
+            "View your project enquiries and chat with developers.",
+
+          link:
+            "/buyer/project-enquiries",
         },
 
         {
