@@ -56,40 +56,78 @@ router.get("/test", (req, res) => {
    UPLOAD PROPERTY IMAGE
 ========================================================= */
 
+/* =========================================================
+   UPLOAD PROPERTY MEDIA
+   Supports:
+   - Images
+   - Videos
+========================================================= */
+
+const propertyMediaUpload = multer({
+  storage: multer.memoryStorage(),
+
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100 MB
+  },
+
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype.startsWith("video/")
+    ) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "Only image and video files are allowed"
+        )
+      );
+    }
+  },
+});
+
 router.post(
   "/property/:propertyId",
   authenticateToken,
   authorizeRoles("Seller"),
-  upload.single("image"),
+  propertyMediaUpload.single("media"),
 
   async (req, res) => {
     try {
       const { propertyId } = req.params;
 
       console.log("================================");
-      console.log("PROPERTY IMAGE UPLOAD REQUEST");
+      console.log("PROPERTY MEDIA UPLOAD REQUEST");
       console.log("Property ID:", propertyId);
       console.log("User:", req.user);
       console.log(
         "File:",
         req.file ? req.file.originalname : "NO FILE"
       );
+      console.log(
+        "MIME:",
+        req.file ? req.file.mimetype : "NO FILE"
+      );
       console.log("================================");
 
-      /* CHECK FILE */
+      /* -----------------------------------------------------
+         CHECK FILE
+      ----------------------------------------------------- */
 
       if (!req.file) {
         return res.status(400).json({
           success: false,
-          message: "Please select an image.",
+          message: "Please select an image or video.",
         });
       }
 
-      /* CHECK PROPERTY OWNER */
+      /* -----------------------------------------------------
+         CHECK PROPERTY OWNER
+      ----------------------------------------------------- */
 
       const propertyResult = await pool.query(
         `
-        SELECT id
+        SELECT id, image
         FROM properties
         WHERE id = $1
           AND owner_id = $2
@@ -105,7 +143,18 @@ router.post(
         });
       }
 
-      /* CLOUDINARY UPLOAD */
+      /* -----------------------------------------------------
+         DETERMINE MEDIA TYPE
+      ----------------------------------------------------- */
+
+      const isVideo =
+        req.file.mimetype.startsWith("video/");
+
+      const mediaType = isVideo ? "video" : "image";
+
+      /* -----------------------------------------------------
+         CLOUDINARY UPLOAD
+      ----------------------------------------------------- */
 
       const uploadResult = await new Promise(
         (resolve, reject) => {
@@ -113,8 +162,12 @@ router.post(
             cloudinary.uploader.upload_stream(
               {
                 folder: "xevoprop/properties",
-                resource_type: "image",
+
+                // Cloudinary automatically handles
+                // images and videos when using auto.
+                resource_type: "auto",
               },
+
               (error, result) => {
                 if (error) {
                   reject(error);
@@ -129,44 +182,112 @@ router.post(
       );
 
       console.log(
-        "Property image uploaded:",
+        "Property media uploaded:",
         uploadResult.secure_url
       );
 
-      /* SAVE IMAGE URL */
+      /* -----------------------------------------------------
+         GET NEXT SORT ORDER
+      ----------------------------------------------------- */
 
-      const result = await pool.query(
+      const sortResult = await pool.query(
         `
-        UPDATE properties
-        SET image = $1
-        WHERE id = $2
-          AND owner_id = $3
-        RETURNING id, image
+        SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_sort_order
+        FROM property_images
+        WHERE property_id = $1
+        `,
+        [propertyId]
+      );
+
+      const sortOrder =
+        sortResult.rows[0].next_sort_order;
+
+      /* -----------------------------------------------------
+         SAVE MEDIA
+         
+         IMPORTANT:
+         This assumes property_images currently has:
+         
+         id
+         property_id
+         image_url
+         sort_order
+         
+         We will add media_type in the next database step.
+         Until then, use image_url for both images/videos.
+         ----------------------------------------------------- */
+
+      const mediaResult = await pool.query(
+        `
+        INSERT INTO property_images
+        (
+          property_id,
+          image_url,
+          sort_order,
+          media_type
+        )
+        VALUES ($1, $2, $3)
+        RETURNING *
         `,
         [
-          uploadResult.secure_url,
           propertyId,
-          req.user.id,
+          uploadResult.secure_url,
+          sortOrder,
+          mediaType,
         ]
       );
 
-      if (result.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Property not found.",
-        });
+      /* -----------------------------------------------------
+         SET FIRST IMAGE AS PROPERTY COVER
+         
+         Only images should become the property cover.
+         ----------------------------------------------------- */
+
+      if (
+        mediaType === "image" &&
+        !propertyResult.rows[0].image
+      ) {
+        await pool.query(
+          `
+          UPDATE properties
+          SET image = $1
+          WHERE id = $2
+            AND owner_id = $3
+          `,
+          [
+            uploadResult.secure_url,
+            propertyId,
+            req.user.id,
+          ]
+        );
       }
+
+      /* -----------------------------------------------------
+         RESPONSE
+      ----------------------------------------------------- */
 
       return res.status(201).json({
         success: true,
+
         message:
-          "Property image uploaded successfully.",
-        image: result.rows[0].image,
-        property: result.rows[0],
+          mediaType === "video"
+            ? "Property video uploaded successfully."
+            : "Property image uploaded successfully.",
+
+        media: {
+          id: mediaResult.rows[0].id,
+          url: uploadResult.secure_url,
+          type: mediaType,
+          sort_order: sortOrder,
+        },
+
+        property: {
+          id: propertyId,
+        },
       });
     } catch (error) {
       console.error(
-        "PROPERTY IMAGE UPLOAD ERROR:",
+        "PROPERTY MEDIA UPLOAD ERROR:",
         error
       );
 
@@ -174,7 +295,7 @@ router.post(
         success: false,
         message:
           error.message ||
-          "Failed to upload property image.",
+          "Failed to upload property media.",
       });
     }
   }

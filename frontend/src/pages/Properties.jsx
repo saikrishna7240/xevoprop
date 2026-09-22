@@ -1,990 +1,1357 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import {
-  Search,
-  MapPin,
+  ArrowDownUp,
+  Bath,
   BedDouble,
-  Maximize,
+  Building2,
+  CalendarDays,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Filter,
   Heart,
-  SlidersHorizontal,
-  X,
-  CheckCircle2,
-  ArrowUpDown,
   Home,
+  MapPin,
+  Maximize2,
+  Phone,
+  RotateCcw,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+  X,
 } from "lucide-react";
 
 import "./Properties.css";
 
-const API_BASE =
+const API_URL =
   import.meta.env.VITE_API_URL ||
   "https://xevoprop.onrender.com/api";
 
-function Properties() {
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
+];
+
+const PROPERTY_TYPES = [
+  "Apartment",
+  "Villa",
+  "Independent House",
+  "Plot",
+  "Commercial",
+  "Builder Floor",
+  "Penthouse",
+];
+
+const BHK_OPTIONS = [
+  "1 BHK",
+  "2 BHK",
+  "3 BHK",
+  "4 BHK",
+  "5+ BHK",
+];
+
+const AMENITIES = [
+  "Parking",
+  "Swimming Pool",
+  "Gym",
+  "Security",
+  "Power Backup",
+  "Lift",
+  "Club House",
+  "Garden",
+];
+
+const SORT_OPTIONS = [
+  {
+    value: "newest",
+    label: "Newest Listed",
+  },
+  {
+    value: "price-low",
+    label: "Price: Low to High",
+  },
+  {
+    value: "price-high",
+    label: "Price: High to Low",
+  },
+  {
+    value: "area-high",
+    label: "Area: High to Low",
+  },
+];
+
+const getImage = (property) => {
+  const fallback =
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85";
+
+  if (!property) return fallback;
+
+  /* -------------------------------------------------------
+     PROPERTY MEDIA ARRAY
+  ------------------------------------------------------- */
+
+  const media =
+    property.property_images ||
+    property.images ||
+    property.media ||
+    property.gallery ||
+    [];
+
+  if (Array.isArray(media)) {
+    /* Prefer an actual image */
+    const imageMedia = media.find((item) => {
+      if (!item) return false;
+
+      if (typeof item === "string") {
+        return !/\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(
+          item
+        );
+      }
+
+      return (
+        item.media_type !== "video" &&
+        item.type !== "video" &&
+        item.resource_type !== "video"
+      );
+    });
+
+    if (imageMedia) {
+      if (
+        typeof imageMedia === "string" &&
+        imageMedia.trim()
+      ) {
+        return imageMedia;
+      }
+
+      const imageUrl =
+        imageMedia.image_url ||
+        imageMedia.url ||
+        imageMedia.secure_url ||
+        imageMedia.image ||
+        imageMedia.src;
+
+      if (imageUrl) return imageUrl;
+    }
+  }
+
+  /* -------------------------------------------------------
+     FALLBACK TO PROPERTY COVER IMAGE
+  ------------------------------------------------------- */
+
+  const directImage =
+    property.image ||
+    property.image_url ||
+    property.cover_image ||
+    property.photo ||
+    property.property_image;
+
+  if (
+    typeof directImage === "string" &&
+    directImage.trim()
+  ) {
+    return directImage;
+  }
+
+  return fallback;
+};
+
+function getTitle(property) {
+  return (
+    property?.title ||
+    property?.name ||
+    property?.property_name ||
+    "Premium Property"
+  );
+}
+
+function getLocation(property) {
+  return (
+    property?.location ||
+    property?.address ||
+    property?.locality ||
+    property?.city ||
+    "Prime Location"
+  );
+}
+
+function getCity(property) {
+  return (
+    property?.city ||
+    property?.location ||
+    property?.address ||
+    ""
+  );
+}
+
+function getType(property) {
+  return (
+    property?.property_type ||
+    property?.propertyType ||
+    property?.type ||
+    "Apartment"
+  );
+}
+
+function getPrice(property) {
+  return property?.price || property?.price_range || "Price on Request";
+}
+
+function getNumericPrice(property) {
+  const price = property?.price;
+
+  if (typeof price === "number") {
+    return price;
+  }
+
+  if (!price) return 0;
+
+  const text = String(price)
+    .toLowerCase()
+    .replace(/,/g, "");
+
+  const number = parseFloat(text);
+
+  if (Number.isNaN(number)) {
+    return 0;
+  }
+
+  if (text.includes("cr")) {
+    return number * 10000000;
+  }
+
+  if (text.includes("lakh") || text.includes("lac")) {
+    return number * 100000;
+  }
+
+  return number;
+}
+
+function getArea(property) {
+  return (
+    property?.area ||
+    property?.carpet_area ||
+    property?.built_up_area ||
+    property?.size ||
+    "—"
+  );
+}
+
+function getBedrooms(property) {
+  return (
+    property?.bedrooms ||
+    property?.bhk ||
+    property?.bedroom_count ||
+    ""
+  );
+}
+
+function getBathrooms(property) {
+  return (
+    property?.bathrooms ||
+    property?.bathroom_count ||
+    ""
+  );
+}
+
+function getPossession(property) {
+  return (
+    property?.possession ||
+    property?.possession_date ||
+    property?.availability ||
+    "Ready to Move"
+  );
+}
+
+function getPropertyId(property, index) {
+  return property?.id || property?._id || `property-${index}`;
+}
+
+function getPropertyText(property) {
+  return [
+    property?.title,
+    property?.name,
+    property?.description,
+    property?.location,
+    property?.address,
+    property?.city,
+    property?.locality,
+    property?.property_type,
+    property?.type,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function getBhkNumber(property) {
+  const value = getBedrooms(property);
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  const match = String(value).match(/\d+/);
+
+  return match ? Number(match[0]) : 0;
+}
+
+export default function Properties() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [search, setSearch] = useState("");
-  const [propertyType, setPropertyType] = useState("all");
-  const [bedrooms, setBedrooms] = useState("all");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [minArea, setMinArea] = useState("");
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [readyOnly, setReadyOnly] = useState(false);
+  const [activeMode, setActiveMode] = useState(
+    searchParams.get("intent") || "buy"
+  );
+
+  const [search, setSearch] = useState(
+    searchParams.get("location") || ""
+  );
+
+  const [selectedType, setSelectedType] = useState(
+    searchParams.get("type") ||
+      searchParams.get("propertyType") ||
+      ""
+  );
+
+  const [selectedBhk, setSelectedBhk] = useState([]);
+
+  const [budget, setBudget] = useState("");
+
+  const [selectedAmenities, setSelectedAmenities] =
+    useState([]);
 
   const [sortBy, setSortBy] = useState("newest");
-  const [showFilters, setShowFilters] = useState(false);
 
-  const [favorites, setFavorites] = useState(() => {
-    try {
-      return JSON.parse(
-        localStorage.getItem("xevoprop_favorites") || "[]"
-      );
-    } catch {
-      return [];
-    }
-  });
+  const [showMobileFilters, setShowMobileFilters] =
+    useState(false);
 
-  /* =====================================================
-     LOAD PROPERTIES
-  ===================================================== */
+  const [savedProperties, setSavedProperties] =
+    useState([]);
+
+  const [showAdvanced, setShowAdvanced] =
+    useState(false);
 
   useEffect(() => {
-    loadProperties();
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `${API_URL}/properties`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Unable to load properties"
+          );
+        }
+
+        const data = await response.json();
+
+        const list = Array.isArray(data)
+          ? data
+          : data?.properties ||
+            data?.data ||
+            [];
+
+        setProperties(list);
+      } catch (err) {
+        console.error(
+          "Properties API error:",
+          err
+        );
+
+        setError(
+          "We couldn't load properties right now."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
   }, []);
 
-  const loadProperties = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `${API_BASE}/properties`
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to load properties."
-        );
-      }
-
-      setProperties(data.properties || []);
-    } catch (error) {
-      console.error(
-        "Load properties error:",
-        error
-      );
-
-      setError(
-        error.message ||
-          "Unable to load properties."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /* =====================================================
-     FAVORITES
-  ===================================================== */
-
-  const toggleFavorite = async (event, propertyId) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const id = Number(propertyId);
-
-    setFavorites((previous) => {
-      const exists = previous.includes(id);
-
-      const updated = exists
-        ? previous.filter(
-            (favoriteId) =>
-              favoriteId !== id
-          )
-        : [...previous, id];
-
-      localStorage.setItem(
-        "xevoprop_favorites",
-        JSON.stringify(updated)
-      );
-
-      return updated;
-    });
-
-    const token =
-      localStorage.getItem("token");
-
-    if (!token) return;
-
-    try {
-      const isFavorite =
-        favorites.includes(id);
-
-      await fetch(
-        `${API_BASE}/favorites`,
-        {
-          method: isFavorite
-            ? "DELETE"
-            : "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-            Authorization:
-              `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            property_id: id,
-          }),
-        }
-      );
-    } catch (error) {
-      console.error(
-        "Favorite error:",
-        error
-      );
-    }
-  };
-
-  /* =====================================================
-     PRICE FORMAT
-  ===================================================== */
-
-  const formatPrice = (property) => {
-    if (property.price) {
-      return property.price;
-    }
-
-    const value =
-      Number(property.price_value) || 0;
-
-    if (!value) {
-      return "Price on request";
-    }
-
-    if (value >= 10000000) {
-      return `₹${(
-        value / 10000000
-      ).toFixed(2)} Cr`;
-    }
-
-    if (value >= 100000) {
-      return `₹${(
-        value / 100000
-      ).toFixed(1)} L`;
-    }
-
-    return `₹${value.toLocaleString(
-      "en-IN"
-    )}`;
-  };
-
-  /* =====================================================
-     FILTER + SORT
-  ===================================================== */
-
   const filteredProperties = useMemo(() => {
-    const query =
-      search.trim().toLowerCase();
+    let result = [...properties];
 
-    let result = properties.filter(
-      (property) => {
-        /* SEARCH */
+    /*
+     * SEARCH
+     */
+    if (search.trim()) {
+      const query = search
+        .trim()
+        .toLowerCase();
 
-        if (query) {
-          const searchableText = [
-            property.title,
-            property.type,
-            property.location,
-            property.city,
-            property.state,
-            property.description,
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
+      result = result.filter((property) =>
+        getPropertyText(property).includes(query)
+      );
+    }
 
-          if (
-            !searchableText.includes(query)
-          ) {
-            return false;
-          }
-        }
+    /*
+     * PROPERTY TYPE
+     */
+    if (selectedType) {
+      const type = selectedType.toLowerCase();
 
-        /* PROPERTY TYPE */
+      result = result.filter((property) => {
+        const propertyType =
+          getType(property).toLowerCase();
 
-        if (
-          propertyType !== "all" &&
-          String(property.type)
-            .toLowerCase() !==
-            propertyType.toLowerCase()
-        ) {
-          return false;
-        }
+        return (
+          propertyType.includes(type) ||
+          type.includes(propertyType)
+        );
+      });
+    }
 
-        /* BEDROOMS */
+    /*
+     * BHK
+     */
+    if (selectedBhk.length > 0) {
+      result = result.filter((property) => {
+        const bhk = getBhkNumber(property);
 
-        if (bedrooms !== "all") {
-          const propertyBedrooms =
-            Number(property.bedrooms) || 0;
-
-          if (
-            bedrooms === "4+" &&
-            propertyBedrooms < 4
-          ) {
-            return false;
+        return selectedBhk.some((item) => {
+          if (item === "5+ BHK") {
+            return bhk >= 5;
           }
 
-          if (
-            bedrooms !== "4+" &&
-            propertyBedrooms !==
-              Number(bedrooms)
-          ) {
-            return false;
-          }
+          const required =
+            Number(item.match(/\d+/)?.[0]) || 0;
+
+          return bhk === required;
+        });
+      });
+    }
+
+    /*
+     * BUDGET
+     */
+    if (budget) {
+      result = result.filter((property) => {
+        const price = getNumericPrice(property);
+
+        if (!price) {
+          return true;
         }
 
-        /* PRICE */
-
-        const price =
-          Number(property.price_value);
-
-        if (
-          minPrice &&
-          (!price ||
-            price <
-              Number(minPrice))
-        ) {
-          return false;
+        if (budget === "under-50") {
+          return price < 5000000;
         }
 
-        if (
-          maxPrice &&
-          (!price ||
-            price >
-              Number(maxPrice))
-        ) {
-          return false;
+        if (budget === "50-100") {
+          return (
+            price >= 5000000 &&
+            price <= 10000000
+          );
         }
 
-        /* AREA */
-
-        const area =
-          Number(property.area);
-
-        if (
-          minArea &&
-          (!area ||
-            area <
-              Number(minArea))
-        ) {
-          return false;
+        if (budget === "100-150") {
+          return (
+            price > 10000000 &&
+            price <= 15000000
+          );
         }
 
-        /* VERIFIED */
-
-        if (
-          verifiedOnly &&
-          !property.verified
-        ) {
-          return false;
+        if (budget === "150-300") {
+          return (
+            price > 15000000 &&
+            price <= 30000000
+          );
         }
 
-        /* READY TO MOVE */
-
-        if (
-          readyOnly &&
-          !property.ready_to_move
-        ) {
-          return false;
+        if (budget === "300-plus") {
+          return price > 30000000;
         }
 
         return true;
-      }
-    );
+      });
+    }
 
-    /* SORT */
+    /*
+     * SORT
+     */
+    if (sortBy === "price-low") {
+      result.sort(
+        (a, b) =>
+          getNumericPrice(a) -
+          getNumericPrice(b)
+      );
+    }
 
-    result = [...result].sort(
-      (a, b) => {
-        if (sortBy === "price-low") {
-          return (
-            Number(a.price_value || 0) -
-            Number(b.price_value || 0)
-          );
-        }
+    if (sortBy === "price-high") {
+      result.sort(
+        (a, b) =>
+          getNumericPrice(b) -
+          getNumericPrice(a)
+      );
+    }
 
-        if (sortBy === "price-high") {
-          return (
-            Number(b.price_value || 0) -
-            Number(a.price_value || 0)
-          );
-        }
+    if (sortBy === "area-high") {
+      result.sort((a, b) => {
+        const areaA =
+          parseFloat(
+            String(getArea(a)).replace(
+              /,/g,
+              ""
+            )
+          ) || 0;
 
-        if (sortBy === "area") {
-          return (
-            Number(b.area || 0) -
-            Number(a.area || 0)
-          );
-        }
+        const areaB =
+          parseFloat(
+            String(getArea(b)).replace(
+              /,/g,
+              ""
+            )
+          ) || 0;
 
-        /* NEWEST */
-
-        const dateA = new Date(
-          a.created_at || 0
-        ).getTime();
-
-        const dateB = new Date(
-          b.created_at || 0
-        ).getTime();
-
-        return dateB - dateA;
-      }
-    );
+        return areaB - areaA;
+      });
+    }
 
     return result;
   }, [
     properties,
     search,
-    propertyType,
-    bedrooms,
-    minPrice,
-    maxPrice,
-    minArea,
-    verifiedOnly,
-    readyOnly,
+    selectedType,
+    selectedBhk,
+    budget,
     sortBy,
   ]);
 
-  /* =====================================================
-     RESET FILTERS
-  ===================================================== */
+  const toggleBhk = (bhk) => {
+    setSelectedBhk((current) =>
+      current.includes(bhk)
+        ? current.filter(
+            (item) => item !== bhk
+          )
+        : [...current, bhk]
+    );
+  };
 
-  const resetFilters = () => {
+  const toggleAmenity = (amenity) => {
+    setSelectedAmenities((current) =>
+      current.includes(amenity)
+        ? current.filter(
+            (item) => item !== amenity
+          )
+        : [...current, amenity]
+    );
+  };
+
+  const toggleSave = (id) => {
+    setSavedProperties((current) =>
+      current.includes(id)
+        ? current.filter(
+            (item) => item !== id
+          )
+        : [...current, id]
+    );
+  };
+
+  const clearFilters = () => {
     setSearch("");
-    setPropertyType("all");
-    setBedrooms("all");
-    setMinPrice("");
-    setMaxPrice("");
-    setMinArea("");
-    setVerifiedOnly(false);
-    setReadyOnly(false);
+    setSelectedType("");
+    setSelectedBhk([]);
+    setBudget("");
+    setSelectedAmenities([]);
     setSortBy("newest");
   };
 
-  const activeFilterCount = [
-    propertyType !== "all",
-    bedrooms !== "all",
-    minPrice !== "",
-    maxPrice !== "",
-    minArea !== "",
-    verifiedOnly,
-    readyOnly,
-  ].filter(Boolean).length;
+  const activeFilterCount =
+    (selectedType ? 1 : 0) +
+    selectedBhk.length +
+    (budget ? 1 : 0) +
+    selectedAmenities.length;
 
-  /* =====================================================
-     LOADING
-  ===================================================== */
+  const handleSearch = () => {
+    const params = new URLSearchParams();
 
-  if (loading) {
-    return (
-      <main className="properties-page">
-        <section className="properties-loading">
-          <div className="properties-loading-mark">
-            <Home size={22} />
-          </div>
+    if (activeMode) {
+      params.set("intent", activeMode);
+    }
 
-          <p>Finding properties...</p>
-        </section>
-      </main>
+    if (search.trim()) {
+      params.set(
+        "location",
+        search.trim()
+      );
+    }
+
+    if (selectedType) {
+      params.set(
+        "type",
+        selectedType
+      );
+    }
+
+    navigate(
+      `/properties?${params.toString()}`
     );
-  }
-
-  /* =====================================================
-     ERROR
-  ===================================================== */
-
-  if (error) {
-    return (
-      <main className="properties-page">
-        <section className="properties-error">
-          <div className="properties-error-icon">
-            <Home size={24} />
-          </div>
-
-          <h1>
-            We couldn't load the properties.
-          </h1>
-
-          <p>{error}</p>
-
-          <button
-            type="button"
-            onClick={loadProperties}
-            className="properties-retry"
-          >
-            Try again
-          </button>
-        </section>
-      </main>
-    );
-  }
+  };
 
   return (
     <main className="properties-page">
 
-      {/* =================================================
-          HERO
-      ================================================= */}
+      {/* =====================================================
+          PAGE HEADER
+      ===================================================== */}
 
-      <section className="properties-hero">
-        <div className="properties-hero-inner">
+      <section className="properties-header">
 
-          <div className="properties-hero-copy">
-            <span className="properties-eyebrow">
-              THE COLLECTION
-            </span>
+        <div className="properties-container">
 
-            <h1>
-              Find a place
-              <br />
-              <em>worth coming home to.</em>
-            </h1>
+          <div className="properties-breadcrumb">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </button>
 
-            <p>
-              Explore thoughtfully selected properties
-              across locations, budgets and lifestyles.
-            </p>
+            <ChevronRight size={13} />
+
+            <span>Properties</span>
           </div>
 
-          <div className="properties-hero-count">
-            <strong>
-              {filteredProperties.length}
-            </strong>
+          <div className="properties-heading-row">
 
-            <span>
-              properties
-              <br />
-              available
-            </span>
+            <div>
+              <span className="properties-kicker">
+                <span></span>
+                XEVOPROP PROPERTY MARKETPLACE
+              </span>
+
+              <h1>
+                Find a property that
+                <br />
+                fits your life.
+              </h1>
+
+              <p>
+                Explore verified residential and
+                commercial properties across
+                India's leading markets.
+              </p>
+            </div>
+
+            <div className="properties-header-stat">
+              <Building2 size={18} />
+
+              <div>
+                <strong>
+                  {properties.length || "45,000+"}
+                </strong>
+
+                <span>
+                  Properties available
+                </span>
+              </div>
+            </div>
+
           </div>
 
         </div>
+
       </section>
 
-      {/* =================================================
-          SEARCH
-      ================================================= */}
+      {/* =====================================================
+          SEARCH BAR
+      ===================================================== */}
 
-      <section className="properties-discovery">
-        <div className="properties-discovery-inner">
+      <section className="properties-search-section">
 
-          <div className="properties-search-row">
+        <div className="properties-container">
 
-            <div className="properties-search">
-              <Search size={19} />
+          <div className="properties-search-card">
 
-              <input
-                type="text"
-                placeholder="Search by location, city, property type..."
-                value={search}
-                onChange={(event) =>
-                  setSearch(
-                    event.target.value
-                  )
-                }
-              />
+            <div className="properties-search-tabs">
 
-              {search && (
+              {[
+                ["buy", "Buy"],
+                ["rent", "Rent"],
+                ["commercial", "Commercial"],
+              ].map(([value, label]) => (
                 <button
                   type="button"
-                  className="search-clear"
+                  key={value}
+                  className={
+                    activeMode === value
+                      ? "active"
+                      : ""
+                  }
                   onClick={() =>
-                    setSearch("")
+                    setActiveMode(value)
                   }
                 >
-                  <X size={17} />
+                  {label}
                 </button>
-              )}
+              ))}
+
             </div>
 
-            <button
-              type="button"
-              className="filter-toggle"
-              onClick={() =>
-                setShowFilters(
-                  (previous) =>
-                    !previous
-                )
-              }
-            >
-              <SlidersHorizontal
-                size={17}
-              />
+            <div className="properties-search-row">
 
-              Filters
+              <div className="properties-search-input">
 
-              {activeFilterCount > 0 && (
-                <span>
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
+                <MapPin size={18} />
 
-          </div>
+                <div>
+                  <label>
+                    LOCATION OR LOCALITY
+                  </label>
 
-          {/* =================================================
-              FILTER PANEL
-          ================================================= */}
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(event) =>
+                      setSearch(
+                        event.target.value
+                      )
+                    }
+                    onKeyDown={(event) => {
+                      if (
+                        event.key ===
+                        "Enter"
+                      ) {
+                        handleSearch();
+                      }
+                    }}
+                    placeholder="Search city, locality or landmark"
+                  />
+                </div>
 
-          <div
-            className={`properties-filter-panel ${
-              showFilters
-                ? "open"
-                : ""
-            }`}
-          >
+              </div>
 
-            <div className="filter-group">
-              <label>
-                PROPERTY TYPE
-              </label>
+              <div className="properties-search-select">
 
-              <select
-                value={propertyType}
-                onChange={(event) =>
-                  setPropertyType(
-                    event.target.value
-                  )
-                }
-              >
-                <option value="all">
-                  All types
-                </option>
+                <Building2 size={17} />
 
-                <option value="Apartment">
-                  Apartment
-                </option>
+                <div>
+                  <label>
+                    PROPERTY TYPE
+                  </label>
 
-                <option value="Villa">
-                  Villa
-                </option>
+                  <select
+                    value={selectedType}
+                    onChange={(event) =>
+                      setSelectedType(
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="">
+                      Any property
+                    </option>
 
-                <option value="House">
-                  House
-                </option>
+                    {PROPERTY_TYPES.map(
+                      (type) => (
+                        <option
+                          value={type}
+                          key={type}
+                        >
+                          {type}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
 
-                <option value="Plot">
-                  Plot
-                </option>
+              </div>
 
-                <option value="Commercial">
-                  Commercial
-                </option>
-              </select>
-            </div>
+              <div className="properties-search-select">
 
-            <div className="filter-group">
-              <label>
-                BEDROOMS
-              </label>
+                <WalletIcon />
 
-              <select
-                value={bedrooms}
-                onChange={(event) =>
-                  setBedrooms(
-                    event.target.value
-                  )
-                }
-              >
-                <option value="all">
-                  Any
-                </option>
+                <div>
+                  <label>
+                    BUDGET
+                  </label>
 
-                <option value="1">
-                  1 BHK
-                </option>
+                  <select
+                    value={budget}
+                    onChange={(event) =>
+                      setBudget(
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="">
+                      Any budget
+                    </option>
 
-                <option value="2">
-                  2 BHK
-                </option>
+                    <option value="under-50">
+                      Under ₹50 Lakhs
+                    </option>
 
-                <option value="3">
-                  3 BHK
-                </option>
+                    <option value="50-100">
+                      ₹50L – ₹1 Cr
+                    </option>
 
-                <option value="4+">
-                  4+ BHK
-                </option>
-              </select>
-            </div>
+                    <option value="100-150">
+                      ₹1 Cr – ₹1.5 Cr
+                    </option>
 
-            <div className="filter-group">
-              <label>
-                MIN PRICE
-              </label>
+                    <option value="150-300">
+                      ₹1.5 Cr – ₹3 Cr
+                    </option>
 
-              <input
-                type="number"
-                placeholder="₹ Minimum"
-                value={minPrice}
-                onChange={(event) =>
-                  setMinPrice(
-                    event.target.value
-                  )
-                }
-              />
-            </div>
+                    <option value="300-plus">
+                      ₹3 Cr+
+                    </option>
+                  </select>
+                </div>
 
-            <div className="filter-group">
-              <label>
-                MAX PRICE
-              </label>
-
-              <input
-                type="number"
-                placeholder="₹ Maximum"
-                value={maxPrice}
-                onChange={(event) =>
-                  setMaxPrice(
-                    event.target.value
-                  )
-                }
-              />
-            </div>
-
-            <div className="filter-group">
-              <label>
-                MIN AREA
-              </label>
-
-              <input
-                type="number"
-                placeholder="Sq. Ft."
-                value={minArea}
-                onChange={(event) =>
-                  setMinArea(
-                    event.target.value
-                  )
-                }
-              />
-            </div>
-
-            <div className="filter-checks">
+              </div>
 
               <button
                 type="button"
-                className={
-                  verifiedOnly
-                    ? "filter-check active"
-                    : "filter-check"
-                }
-                onClick={() =>
-                  setVerifiedOnly(
-                    (previous) =>
-                      !previous
-                  )
-                }
+                className="properties-search-button"
+                onClick={handleSearch}
               >
-                <span>
-                  {verifiedOnly && (
-                    <CheckCircle2
-                      size={14}
-                    />
-                  )}
-                </span>
-
-                Verified
-              </button>
-
-              <button
-                type="button"
-                className={
-                  readyOnly
-                    ? "filter-check active"
-                    : "filter-check"
-                }
-                onClick={() =>
-                  setReadyOnly(
-                    (previous) =>
-                      !previous
-                  )
-                }
-              >
-                <span>
-                  {readyOnly && (
-                    <CheckCircle2
-                      size={14}
-                    />
-                  )}
-                </span>
-
-                Ready to Move
+                <Search size={16} />
+                Search
               </button>
 
             </div>
-
-            {activeFilterCount > 0 && (
-              <button
-                type="button"
-                className="clear-filters"
-                onClick={resetFilters}
-              >
-                Clear all filters
-              </button>
-            )}
 
           </div>
 
         </div>
+
       </section>
 
-      {/* =================================================
-          RESULTS HEADER
-      ================================================= */}
+      {/* =====================================================
+          MAIN MARKETPLACE
+      ===================================================== */}
 
-      <section className="properties-results">
+      <section className="properties-marketplace">
 
-        <div className="properties-results-header">
+        <div className="properties-container">
 
-          <div>
-            <span className="results-label">
-              DISCOVER
-            </span>
+          {/* Mobile filter button */}
 
-            <h2>
-              Properties for you
-            </h2>
-          </div>
+          <button
+            type="button"
+            className="mobile-filter-button"
+            onClick={() =>
+              setShowMobileFilters(true)
+            }
+          >
+            <SlidersHorizontal size={16} />
+            Filters
 
-          <div className="properties-sort">
-            <ArrowUpDown size={16} />
+            {activeFilterCount > 0 && (
+              <span>
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
 
-            <select
-              value={sortBy}
-              onChange={(event) =>
-                setSortBy(
-                  event.target.value
-                )
-              }
+          <div className="properties-layout">
+
+            {/* =================================================
+                SIDEBAR
+            ================================================= */}
+
+            <aside
+              className={`properties-sidebar ${
+                showMobileFilters
+                  ? "mobile-open"
+                  : ""
+              }`}
             >
-              <option value="newest">
-                Newest first
-              </option>
 
-              <option value="price-low">
-                Price: Low to High
-              </option>
+              <div className="mobile-filter-header">
 
-              <option value="price-high">
-                Price: High to Low
-              </option>
+                <strong>Filters</strong>
 
-              <option value="area">
-                Largest area
-              </option>
-            </select>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowMobileFilters(
+                      false
+                    )
+                  }
+                >
+                  <X size={18} />
+                </button>
+
+              </div>
+
+              <div className="filter-header">
+
+                <div>
+                  <strong>Filters</strong>
+
+                  {activeFilterCount > 0 && (
+                    <span>
+                      {activeFilterCount} selected
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                >
+                  <RotateCcw size={12} />
+                  Reset
+                </button>
+
+              </div>
+
+              {/* Property Type */}
+
+              <div className="filter-group">
+
+                <div className="filter-group-title">
+                  <span>Property Type</span>
+                  <ChevronDown size={14} />
+                </div>
+
+                <div className="filter-options">
+
+                  {PROPERTY_TYPES.map(
+                    (type) => (
+                      <label
+                        className="filter-checkbox"
+                        key={type}
+                      >
+                        <input
+                          type="radio"
+                          name="propertyType"
+                          checked={
+                            selectedType ===
+                            type
+                          }
+                          onChange={() =>
+                            setSelectedType(
+                              type
+                            )
+                          }
+                        />
+
+                        <span className="custom-checkbox">
+                          <Check size={10} />
+                        </span>
+
+                        <span>{type}</span>
+                      </label>
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              {/* BHK */}
+
+              <div className="filter-group">
+
+                <div className="filter-group-title">
+                  <span>BHK</span>
+                  <ChevronDown size={14} />
+                </div>
+
+                <div className="bhk-filter-grid">
+
+                  {BHK_OPTIONS.map(
+                    (bhk) => (
+                      <button
+                        type="button"
+                        key={bhk}
+                        className={
+                          selectedBhk.includes(
+                            bhk
+                          )
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() =>
+                          toggleBhk(bhk)
+                        }
+                      >
+                        {bhk.replace(
+                          " BHK",
+                          ""
+                        )}
+                      </button>
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              {/* Budget */}
+
+              <div className="filter-group">
+
+                <div className="filter-group-title">
+                  <span>Budget</span>
+                  <ChevronDown size={14} />
+                </div>
+
+                <select
+                  className="sidebar-select"
+                  value={budget}
+                  onChange={(event) =>
+                    setBudget(
+                      event.target.value
+                    )
+                  }
+                >
+                  <option value="">
+                    Any budget
+                  </option>
+
+                  <option value="under-50">
+                    Under ₹50 Lakhs
+                  </option>
+
+                  <option value="50-100">
+                    ₹50L – ₹1 Cr
+                  </option>
+
+                  <option value="100-150">
+                    ₹1 Cr – ₹1.5 Cr
+                  </option>
+
+                  <option value="150-300">
+                    ₹1.5 Cr – ₹3 Cr
+                  </option>
+
+                  <option value="300-plus">
+                    ₹3 Cr+
+                  </option>
+                </select>
+
+              </div>
+
+              {/* Amenities */}
+
+              <div className="filter-group">
+
+                <button
+                  type="button"
+                  className="filter-group-title filter-expand-button"
+                  onClick={() =>
+                    setShowAdvanced(
+                      !showAdvanced
+                    )
+                  }
+                >
+                  <span>Amenities</span>
+
+                  <ChevronDown
+                    size={14}
+                    className={
+                      showAdvanced
+                        ? "rotated"
+                        : ""
+                    }
+                  />
+                </button>
+
+                {showAdvanced && (
+                  <div className="filter-options">
+
+                    {AMENITIES.map(
+                      (amenity) => (
+                        <label
+                          className="filter-checkbox"
+                          key={amenity}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedAmenities.includes(
+                              amenity
+                            )}
+                            onChange={() =>
+                              toggleAmenity(
+                                amenity
+                              )
+                            }
+                          />
+
+                          <span className="custom-checkbox">
+                            <Check size={10} />
+                          </span>
+
+                          <span>
+                            {amenity}
+                          </span>
+                        </label>
+                      )
+                    )}
+
+                  </div>
+                )}
+
+              </div>
+
+              <button
+                type="button"
+                className="sidebar-apply-button"
+                onClick={() =>
+                  setShowMobileFilters(
+                    false
+                  )
+                }
+              >
+                Show{" "}
+                {filteredProperties.length}{" "}
+                Properties
+              </button>
+
+            </aside>
+
+            {/* =================================================
+                RESULTS
+            ================================================= */}
+
+            <div className="properties-results">
+
+              <div className="results-toolbar">
+
+                <div>
+                  <span className="results-kicker">
+                    PROPERTY LISTINGS
+                  </span>
+
+                  <h2>
+                    {search
+                      ? `Properties in ${search}`
+                      : "Properties for you"}
+                  </h2>
+
+                  <p>
+                    {filteredProperties.length}{" "}
+                    properties matching your
+                    requirements
+                  </p>
+                </div>
+
+                <div className="sort-wrapper">
+
+                  <ArrowDownUp size={14} />
+
+                  <select
+                    value={sortBy}
+                    onChange={(event) =>
+                      setSortBy(
+                        event.target.value
+                      )
+                    }
+                  >
+                    {SORT_OPTIONS.map(
+                      (option) => (
+                        <option
+                          value={option.value}
+                          key={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+
+                </div>
+
+              </div>
+
+              {/* Active filters */}
+
+              {(search ||
+                selectedType ||
+                selectedBhk.length > 0 ||
+                budget ||
+                selectedAmenities.length >
+                  0) && (
+                <div className="active-filters">
+
+                  <span>
+                    Active filters:
+                  </span>
+
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSearch("")
+                      }
+                    >
+                      {search}
+                      <X size={11} />
+                    </button>
+                  )}
+
+                  {selectedType && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSelectedType("")
+                      }
+                    >
+                      {selectedType}
+                      <X size={11} />
+                    </button>
+                  )}
+
+                  {selectedBhk.map(
+                    (bhk) => (
+                      <button
+                        type="button"
+                        key={bhk}
+                        onClick={() =>
+                          toggleBhk(bhk)
+                        }
+                      >
+                        {bhk}
+                        <X size={11} />
+                      </button>
+                    )
+                  )}
+
+                  {budget && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setBudget("")
+                      }
+                    >
+                      Budget
+                      <X size={11} />
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="clear-all"
+                    onClick={clearFilters}
+                  >
+                    Clear all
+                  </button>
+
+                </div>
+              )}
+
+              {/* Property Grid */}
+
+              {loading ? (
+                <div className="properties-grid">
+
+                  {[1, 2, 3, 4, 5, 6].map(
+                    (item) => (
+                      <PropertySkeleton
+                        key={item}
+                      />
+                    )
+                  )}
+
+                </div>
+              ) : error ? (
+                <div className="properties-empty">
+
+                  <Building2 size={35} />
+
+                  <h3>
+                    Unable to load properties
+                  </h3>
+
+                  <p>
+                    Please try refreshing the
+                    page or check your connection.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.location.reload()
+                    }
+                  >
+                    Try Again
+                  </button>
+
+                </div>
+              ) : filteredProperties.length ===
+                0 ? (
+                <div className="properties-empty">
+
+                  <Search size={35} />
+
+                  <h3>
+                    No properties found
+                  </h3>
+
+                  <p>
+                    Try changing your location,
+                    property type, budget or
+                    filters.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                  >
+                    Clear Filters
+                  </button>
+
+                </div>
+              ) : (
+                <div className="properties-grid">
+
+                  {filteredProperties.map(
+                    (property, index) => {
+                      const id =
+                        getPropertyId(
+                          property,
+                          index
+                        );
+
+                      const saved =
+                        savedProperties.includes(
+                          id
+                        );
+
+                      return (
+                        <PropertyCard
+                          key={id}
+                          property={property}
+                          index={index}
+                          saved={saved}
+                          onSave={() =>
+                            toggleSave(id)
+                          }
+                          onView={() =>
+                            navigate(
+                              `/properties/${id}`
+                            )
+                          }
+                        />
+                      );
+                    }
+                  )}
+
+                </div>
+              )}
+
+            </div>
+
           </div>
 
         </div>
-
-        {/* =================================================
-            PROPERTY GRID
-        ================================================= */}
-
-        {filteredProperties.length === 0 ? (
-          <div className="properties-empty">
-
-            <div className="properties-empty-icon">
-              <Search size={23} />
-            </div>
-
-            <h3>
-              No properties found
-            </h3>
-
-            <p>
-              Try adjusting your search or
-              removing some filters.
-            </p>
-
-            <button
-              type="button"
-              onClick={resetFilters}
-            >
-              Reset filters
-            </button>
-
-          </div>
-        ) : (
-          <div className="properties-grid">
-
-            {filteredProperties.map(
-              (property) => {
-
-                const propertyId =
-                  Number(property.id);
-
-                const isFavorite =
-                  favorites.includes(
-                    propertyId
-                  );
-
-                return (
-                  <Link
-                    key={property.id}
-                    to={`/properties/${property.id}`}
-                    className="property-card"
-                  >
-
-                    {/* IMAGE */}
-
-                    <div className="property-card-image">
-
-                      <img
-                        src={
-                          property.image ||
-                          "/property-placeholder.jpg"
-                        }
-                        alt={
-                          property.title ||
-                          "Property"
-                        }
-                        loading="lazy"
-                      />
-
-                      <div className="property-card-image-overlay" />
-
-                      {property.verified && (
-                        <span className="property-verified">
-                          <CheckCircle2
-                            size={13}
-                          />
-
-                          Verified
-                        </span>
-                      )}
-
-                      <button
-                        type="button"
-                        className={
-                          isFavorite
-                            ? "property-favorite active"
-                            : "property-favorite"
-                        }
-                        onClick={(event) =>
-                          toggleFavorite(
-                            event,
-                            property.id
-                          )
-                        }
-                        aria-label={
-                          isFavorite
-                            ? "Remove from favorites"
-                            : "Add to favorites"
-                        }
-                      >
-                        <Heart
-                          size={18}
-                          fill={
-                            isFavorite
-                              ? "currentColor"
-                              : "none"
-                          }
-                        />
-                      </button>
-
-                      {property.ready_to_move && (
-                        <span className="property-ready">
-                          Ready to move
-                        </span>
-                      )}
-
-                    </div>
-
-                    {/* CONTENT */}
-
-                    <div className="property-card-content">
-
-                      <div className="property-card-top">
-
-                        <span className="property-type">
-                          {property.type ||
-                            "Property"}
-                        </span>
-
-                        <span className="property-price">
-                          {formatPrice(
-                            property
-                          )}
-                        </span>
-
-                      </div>
-
-                      <h3>
-                        {property.title ||
-                          "Untitled Property"}
-                      </h3>
-
-                      <div className="property-location">
-                        <MapPin
-                          size={14}
-                        />
-
-                        <span>
-                          {property.location ||
-                            property.city ||
-                            "Location unavailable"}
-                        </span>
-                      </div>
-
-                      <div className="property-meta">
-
-                        {property.bedrooms !=
-                          null && (
-                          <span>
-                            <BedDouble
-                              size={15}
-                            />
-
-                            {property.bedrooms}
-                            {" "}
-                            Beds
-                          </span>
-                        )}
-
-                        {property.area !=
-                          null && (
-                          <span>
-                            <Maximize
-                              size={14}
-                            />
-
-                            {Number(
-                              property.area
-                            ).toLocaleString(
-                              "en-IN"
-                            )}
-                            {" "}
-                            sq.ft.
-                          </span>
-                        )}
-
-                      </div>
-
-                    </div>
-
-                  </Link>
-                );
-              }
-            )}
-
-          </div>
-        )}
 
       </section>
 
@@ -992,4 +1359,187 @@ function Properties() {
   );
 }
 
-export default Properties;
+/* =========================================================
+   PROPERTY CARD
+   ========================================================= */
+
+function PropertyCard({
+  property,
+  index,
+  saved,
+  onSave,
+  onView,
+}) {
+  const type = getType(property);
+
+  const bedrooms = getBedrooms(property);
+  const bathrooms = getBathrooms(property);
+
+  return (
+    <article className="market-property-card">
+
+      <div className="market-property-image">
+
+        <img
+          src={getImage(property, index)}
+          alt={getTitle(property)}
+          onError={(event) => {
+            event.currentTarget.src =
+              FALLBACK_IMAGES[
+                index %
+                  FALLBACK_IMAGES.length
+              ];
+          }}
+        />
+
+        <div className="market-property-badges">
+
+          <span className="verified-badge">
+            <Check size={10} />
+            RERA Approved
+          </span>
+
+          <span className="type-badge">
+            {type}
+          </span>
+
+        </div>
+
+        <button
+          type="button"
+          className={`market-save-button ${
+            saved ? "saved" : ""
+          }`}
+          onClick={onSave}
+          aria-label="Save property"
+        >
+          <Heart
+            size={17}
+            fill={saved ? "currentColor" : "none"}
+          />
+        </button>
+
+        <div className="market-property-location">
+          <MapPin size={11} />
+          {getLocation(property)}
+        </div>
+
+      </div>
+
+      <div className="market-property-body">
+
+        <div className="market-property-price-row">
+
+          <strong>
+            {getPrice(property)}
+          </strong>
+
+          <span>
+            {getPossession(property)}
+          </span>
+
+        </div>
+
+        <h3>
+          {getTitle(property)}
+        </h3>
+
+        <p className="market-property-city">
+          {getCity(property)}
+        </p>
+
+        <div className="market-property-specs">
+
+          {bedrooms && (
+            <div>
+              <BedDouble size={13} />
+              <span>
+                {bedrooms}
+              </span>
+            </div>
+          )}
+
+          {bathrooms && (
+            <div>
+              <Bath size={13} />
+              <span>
+                {bathrooms} Bath
+              </span>
+            </div>
+          )}
+
+          <div>
+            <Maximize2 size={12} />
+            <span>
+              {getArea(property)}
+            </span>
+          </div>
+
+        </div>
+
+        <div className="market-property-footer">
+
+          <button
+            type="button"
+            className="market-view-button"
+            onClick={onView}
+          >
+            View Details
+          </button>
+
+          <button
+            type="button"
+            className="market-enquire-button"
+            onClick={onView}
+          >
+            <Phone size={12} />
+            Enquire
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  );
+}
+
+/* =========================================================
+   SKELETON
+   ========================================================= */
+
+function PropertySkeleton() {
+  return (
+    <div className="market-skeleton-card">
+
+      <div className="market-skeleton-image"></div>
+
+      <div className="market-skeleton-body">
+
+        <div className="market-skeleton-line large"></div>
+
+        <div className="market-skeleton-line"></div>
+
+        <div className="market-skeleton-line short"></div>
+
+        <div className="market-skeleton-specs"></div>
+
+        <div className="market-skeleton-actions"></div>
+
+      </div>
+
+    </div>
+  );
+}
+
+/* =========================================================
+   WALLET ICON
+   ========================================================= */
+
+function WalletIcon() {
+  return (
+    <span className="wallet-icon">
+      ₹
+    </span>
+  );
+}

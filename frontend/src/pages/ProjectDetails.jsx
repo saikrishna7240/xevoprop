@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   Building2,
   CalendarDays,
   CheckCircle2,
@@ -16,6 +17,9 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { apiFetch } from "../lib/api";
 import "./ProjectDetails.css";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85";
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -61,8 +65,10 @@ const ProjectDetails = () => {
       setProject(projectData);
     } catch (err) {
       console.error("Project details error:", err);
+
       setError(
-        err?.message || "Unable to load project details."
+        err?.message ||
+          "Unable to load project details."
       );
     } finally {
       setLoading(false);
@@ -166,18 +172,23 @@ const ProjectDetails = () => {
     if (!date) return "Recently added";
 
     try {
-      return new Date(date).toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      });
+      return new Date(date).toLocaleDateString(
+        "en-IN",
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }
+      );
     } catch {
       return "Recently added";
     }
   };
 
   const getStatusLabel = () => {
-    const status = String(project?.status || "").toLowerCase();
+    const status = String(
+      project?.status || ""
+    ).toLowerCase();
 
     if (status === "approved") return "Approved";
     if (status === "pending") return "Under Review";
@@ -187,83 +198,143 @@ const ProjectDetails = () => {
   };
 
   const getStatusIcon = () => {
-    const status = String(project?.status || "").toLowerCase();
+    const status = String(
+      project?.status || ""
+    ).toLowerCase();
 
     if (status === "pending") {
-      return <Clock3 size={15} />;
+      return <Clock3 size={14} />;
     }
 
     if (status === "rejected") {
-      return <X size={15} />;
+      return <X size={14} />;
     }
 
-    return <CheckCircle2 size={15} />;
+    return <CheckCircle2 size={14} />;
   };
 
   if (loading) {
     return (
-      <div className="project-details-loading">
-        <Loader2 className="project-loading-spinner" size={32} />
-        <p>Loading project details...</p>
+      <div className="project-details-page">
+        <div className="project-details-loading">
+
+          <div className="project-loading-image" />
+
+          <div className="project-loading-content">
+            <div className="project-loading-line large" />
+            <div className="project-loading-line medium" />
+            <div className="project-loading-line small" />
+          </div>
+
+          <div className="project-loading-message">
+            <Loader2
+              size={18}
+              className="project-loading-spinner"
+            />
+            Loading project details...
+          </div>
+
+        </div>
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="project-details-error-page">
-        <div className="project-error-card">
-          <Building2 size={42} />
-          <h2>Project Not Found</h2>
-          <p>
-            {error ||
-              "The project you're looking for is unavailable."}
-          </p>
+      <div className="project-details-page">
 
-          <button
-            type="button"
-            onClick={() => navigate("/projects")}
-          >
-            <ArrowLeft size={17} />
-            Back to Projects
-          </button>
+        <div className="project-details-error-page">
+
+          <div className="project-error-card">
+
+            <div className="project-error-icon">
+              <Building2 size={28} />
+            </div>
+
+            <h2>
+              Project Not Found
+            </h2>
+
+            <p>
+              {error ||
+                "The project you're looking for is unavailable."}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => navigate("/projects")}
+            >
+              <ArrowLeft size={17} />
+              Back to Projects
+            </button>
+
+          </div>
+
         </div>
+
       </div>
     );
   }
 
   const image =
     project.image ||
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85";
+    project.image_url ||
+    project.cover_image ||
+    FALLBACK_IMAGE;
 
-  const projectType = project.type || "Residential Project";
-  const location = project.location || project.city || "Location unavailable";
+  const projectType =
+    project.type ||
+    "Residential Project";
+
+  const location =
+    project.location ||
+    project.city ||
+    "Location unavailable";
 
   return (
     <div className="project-details-page">
-      {/* =====================================================
-          TOP NAVIGATION
-      ===================================================== */}
 
-      <div className="project-details-container">
-        <button
-          type="button"
-          className="project-back-button"
-          onClick={() => navigate("/projects")}
-        >
-          <ArrowLeft size={17} />
-          Back to Projects
-        </button>
+      {/* =========================
+          TOP BAR
+      ========================= */}
+
+      <div className="project-details-topbar">
+        <div className="project-details-container">
+
+          <button
+            type="button"
+            className="project-back-button"
+            onClick={() => navigate("/projects")}
+          >
+            <ArrowLeft size={17} />
+            Back to Projects
+          </button>
+
+          <div className="project-details-breadcrumb">
+            Projects
+            <span>/</span>
+            {projectType}
+            <span>/</span>
+            {project.name}
+          </div>
+
+        </div>
       </div>
 
-      {/* =====================================================
-          HERO / IMAGE
-      ===================================================== */}
+      {/* =========================
+          HERO
+      ========================= */}
 
       <section className="project-details-hero">
+
         <div className="project-details-container">
+
           <div className="project-hero-grid">
+
+            {/* IMAGE */}
+
             <div className="project-main-image-wrapper">
+
               <img
                 src={image}
                 alt={project.name}
@@ -272,38 +343,68 @@ const ProjectDetails = () => {
 
               <div className="project-image-overlay" />
 
-              <div className="project-image-status">
+              <div className="project-image-top">
+
+                <span className="project-verified-badge">
+                  <CheckCircle2 size={14} />
+                  Verified Project
+                </span>
+
                 <span className="project-status-badge">
                   {getStatusIcon()}
                   {getStatusLabel()}
                 </span>
+
               </div>
+
+              <div className="project-image-bottom">
+
+                <span>
+                  <Building2 size={14} />
+                  {projectType}
+                </span>
+
+              </div>
+
             </div>
 
+            {/* HERO INFO */}
+
             <div className="project-hero-info">
+
               <span className="project-hero-eyebrow">
                 XEVOPROP PROJECT
               </span>
 
-              <h1>{project.name}</h1>
+              <h1>
+                {project.name}
+              </h1>
 
               <div className="project-hero-location">
-                <MapPin size={18} />
+                <MapPin size={17} />
                 <span>{location}</span>
               </div>
 
-              <p className="project-hero-type">
-                {projectType}
+              <p className="project-hero-description">
+                {project.description ||
+                  "Discover project details, availability and developer information on Xevoprop."}
               </p>
 
-              <div className="project-hero-price">
-                <span>Starting Price</span>
+              <div className="project-price-box">
+
+                <span>
+                  STARTING PRICE
+                </span>
+
                 <strong>
-                  {project.price || "Price on request"}
+                  {project.price ||
+                    "Price on request"}
                 </strong>
+
               </div>
 
               <div className="project-hero-actions">
+
                 <button
                   type="button"
                   className="project-primary-action"
@@ -319,133 +420,248 @@ const ProjectDetails = () => {
                   onClick={openEnquiry}
                 >
                   Contact Developer
+                  <ArrowRight size={15} />
                 </button>
+
               </div>
 
               <div className="project-added-date">
                 <CalendarDays size={15} />
                 Listed on {formatDate(project.created_at)}
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </section>
 
-      {/* =====================================================
-          MAIN CONTENT
-      ===================================================== */}
+      {/* =========================
+          MAIN
+      ========================= */}
 
       <main className="project-details-container project-content">
+
         <div className="project-content-grid">
-          {/* LEFT CONTENT */}
+
+          {/* LEFT */}
+
           <div className="project-content-main">
-            {/* Highlights */}
+
+            {/* OVERVIEW */}
+
             <section className="project-section">
+
               <div className="project-section-heading">
-                <span>PROJECT OVERVIEW</span>
-                <h2>Everything you need to know</h2>
+
+                <span>
+                  PROJECT OVERVIEW
+                </span>
+
+                <h2>
+                  Everything you need to know
+                </h2>
+
               </div>
 
               <div className="project-highlights">
+
                 <div className="project-highlight-card">
+
                   <div className="project-highlight-icon">
                     <Building2 size={19} />
                   </div>
 
-                  <span>Project Type</span>
-                  <strong>{projectType}</strong>
+                  <span>
+                    Project Type
+                  </span>
+
+                  <strong>
+                    {projectType}
+                  </strong>
+
                 </div>
 
                 <div className="project-highlight-card">
+
                   <div className="project-highlight-icon">
                     <Users size={19} />
                   </div>
 
-                  <span>Total Units</span>
+                  <span>
+                    Total Units
+                  </span>
+
                   <strong>
-                    {project.units || "Not specified"}
+                    {project.units ||
+                      "Not specified"}
                   </strong>
+
                 </div>
 
                 <div className="project-highlight-card">
+
                   <div className="project-highlight-icon">
-                    <Home size={19} />
+                    <MapPin size={19} />
                   </div>
 
-                  <span>Location</span>
+                  <span>
+                    Location
+                  </span>
+
                   <strong>
-                    {project.city || location}
+                    {project.city ||
+                      location}
                   </strong>
+
                 </div>
 
                 <div className="project-highlight-card">
+
                   <div className="project-highlight-icon">
                     <CheckCircle2 size={19} />
                   </div>
 
-                  <span>Status</span>
-                  <strong>{getStatusLabel()}</strong>
+                  <span>
+                    Status
+                  </span>
+
+                  <strong>
+                    {getStatusLabel()}
+                  </strong>
+
                 </div>
+
               </div>
+
             </section>
 
-            {/* Description */}
-            <section className="project-description-section">
+            {/* DESCRIPTION */}
+
+            <section className="project-section">
+
               <div className="project-section-heading">
-                <span>ABOUT THE PROJECT</span>
-                <h2>Project Description</h2>
+
+                <span>
+                  ABOUT THE PROJECT
+                </span>
+
+                <h2>
+                  Project Description
+                </h2>
+
               </div>
 
-              <p>
+              <p className="project-description">
                 {project.description ||
                   "Detailed information about this project will be available soon."}
               </p>
+
             </section>
 
-            {/* Location */}
-            <section className="project-developer-card">
-              <div className="project-developer-heading">
-                <div className="project-developer-avatar">
-                  <MapPin size={21} />
+            {/* LOCATION */}
+
+            <section className="project-section">
+
+              <div className="project-section-heading">
+
+                <span>
+                  PROJECT LOCATION
+                </span>
+
+                <h2>
+                  Explore the location
+                </h2>
+
+              </div>
+
+              <div className="project-location-card">
+
+                <div className="project-location-icon">
+                  <MapPin size={24} />
                 </div>
 
                 <div>
-                  <h3>Project Location</h3>
-                  <span>{location}</span>
+                  <h3>
+                    {location}
+                  </h3>
+
+                  <p>
+                    Project location provided by
+                    the developer.
+                  </p>
                 </div>
+
               </div>
+
             </section>
 
-            {/* Developer */}
-            <section className="project-developer-card">
-              <div className="project-developer-heading">
+            {/* DEVELOPER */}
+
+            <section className="project-section">
+
+              <div className="project-section-heading">
+
+                <span>
+                  DEVELOPER
+                </span>
+
+                <h2>
+                  Project developer
+                </h2>
+
+              </div>
+
+              <div className="project-developer-card">
+
                 <div className="project-developer-avatar">
-                  <Building2 size={21} />
+                  <Building2 size={22} />
                 </div>
 
-                <div>
-                  <h3>Project Developer</h3>
-                  <span>
-                    Verified developer on Xevoprop
-                  </span>
+                <div className="project-developer-info">
+
+                  <h3>
+                    Verified Developer
+                  </h3>
+
+                  <p>
+                    This project is listed by a
+                    developer on Xevoprop.
+                  </p>
+
                 </div>
+
+                <CheckCircle2
+                  size={22}
+                  className="project-developer-check"
+                />
+
               </div>
+
             </section>
+
           </div>
 
-          {/* RIGHT SIDEBAR */}
+          {/* SIDEBAR */}
+
           <aside className="project-content-sidebar">
+
             <div className="project-enquiry-sidebar">
+
               <span className="project-enquiry-sidebar-label">
                 INTERESTED IN THIS PROJECT?
               </span>
 
-              <h3>Talk to the Developer</h3>
+              <h3>
+                Talk to the Developer
+              </h3>
 
               <p>
-                Send your enquiry and get more information
-                about pricing, availability and project
-                details.
+                Get information about pricing,
+                availability and project details
+                directly through Xevoprop.
               </p>
 
               <button
@@ -459,33 +675,45 @@ const ProjectDetails = () => {
               <div className="project-sidebar-divider" />
 
               <div className="project-sidebar-info">
-                <div>
-                  <span>Project</span>
-                  <strong>{project.name}</strong>
-                </div>
 
                 <div>
-                  <span>Location</span>
-                  <strong>{location}</strong>
-                </div>
-
-                <div>
-                  <span>Price</span>
+                  <span>PROJECT</span>
                   <strong>
-                    {project.price || "On Request"}
+                    {project.name}
                   </strong>
                 </div>
+
+                <div>
+                  <span>LOCATION</span>
+                  <strong>
+                    {location}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>PRICE</span>
+                  <strong>
+                    {project.price ||
+                      "On Request"}
+                  </strong>
+                </div>
+
               </div>
+
             </div>
+
           </aside>
+
         </div>
+
       </main>
 
-      {/* =====================================================
-          MOBILE BOTTOM ENQUIRY BAR
-      ===================================================== */}
+      {/* =========================
+          MOBILE BAR
+      ========================= */}
 
       <div className="project-mobile-enquiry-bar">
+
         <button
           type="button"
           className="secondary"
@@ -502,11 +730,12 @@ const ProjectDetails = () => {
           <MessageSquare size={16} />
           Enquire Now
         </button>
+
       </div>
 
-      {/* =====================================================
+      {/* =========================
           ENQUIRY MODAL
-      ===================================================== */}
+      ========================= */}
 
       {showEnquiry && (
         <div
@@ -517,11 +746,19 @@ const ProjectDetails = () => {
             }
           }}
         >
+
           <div className="project-enquiry-modal">
+
             <div className="project-enquiry-header">
+
               <div>
-                <span>PROJECT ENQUIRY</span>
-                <h2>Contact Developer</h2>
+                <span>
+                  PROJECT ENQUIRY
+                </span>
+
+                <h2>
+                  Contact Developer
+                </h2>
               </div>
 
               <button
@@ -529,35 +766,48 @@ const ProjectDetails = () => {
                 className="project-enquiry-close"
                 onClick={closeEnquiry}
                 disabled={enquiryLoading}
-                aria-label="Close"
               >
                 <X size={19} />
               </button>
+
             </div>
 
             {enquiryMessage ? (
+
               <div className="project-enquiry-success">
-                <CheckCircle2 size={38} />
 
-                <h3>Enquiry Sent</h3>
+                <div className="project-success-icon">
+                  <CheckCircle2 size={30} />
+                </div>
 
-                <p>{enquiryMessage}</p>
+                <h3>
+                  Enquiry Sent
+                </h3>
+
+                <p>
+                  {enquiryMessage}
+                </p>
 
                 <button
                   type="button"
-                  className="project-enquiry-done"
                   onClick={closeEnquiry}
                 >
                   Done
                 </button>
+
               </div>
+
             ) : (
+
               <form
                 onSubmit={submitEnquiry}
                 className="project-enquiry-form"
               >
+
                 <div className="project-enquiry-grid">
+
                   <div className="project-enquiry-field">
+
                     <label htmlFor="project-name">
                       Name
                     </label>
@@ -571,9 +821,11 @@ const ProjectDetails = () => {
                       placeholder="Enter your name"
                       required
                     />
+
                   </div>
 
                   <div className="project-enquiry-field">
+
                     <label htmlFor="project-email">
                       Email
                     </label>
@@ -587,9 +839,11 @@ const ProjectDetails = () => {
                       placeholder="Enter your email"
                       required
                     />
+
                   </div>
 
                   <div className="project-enquiry-field">
+
                     <label htmlFor="project-phone">
                       Phone
                     </label>
@@ -602,9 +856,11 @@ const ProjectDetails = () => {
                       onChange={handleEnquiryChange}
                       placeholder="Enter your phone number"
                     />
+
                   </div>
 
                   <div className="project-enquiry-field project-enquiry-full">
+
                     <label htmlFor="project-message">
                       Message
                     </label>
@@ -617,7 +873,9 @@ const ProjectDetails = () => {
                       placeholder="What would you like to know about this project?"
                       rows={4}
                     />
+
                   </div>
+
                 </div>
 
                 {enquiryError && (
@@ -631,6 +889,7 @@ const ProjectDetails = () => {
                   className="project-enquiry-submit"
                   disabled={enquiryLoading}
                 >
+
                   {enquiryLoading ? (
                     <>
                       <Loader2
@@ -645,12 +904,18 @@ const ProjectDetails = () => {
                       Send Enquiry
                     </>
                   )}
+
                 </button>
+
               </form>
+
             )}
+
           </div>
+
         </div>
       )}
+
     </div>
   );
 };

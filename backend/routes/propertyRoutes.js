@@ -133,6 +133,13 @@ router.get(
    so /my-properties is not treated as an ID.
 ============================================================ */
 
+/* ============================================================
+   GET SINGLE PUBLIC PROPERTY
+   PUBLIC
+   APPROVED ONLY
+   WITH ALL MEDIA
+============================================================ */
+
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -171,12 +178,15 @@ router.get("/:id", async (req, res) => {
             json_build_object(
               'id', pi.id,
               'image_url', pi.image_url,
-              'sort_order', pi.sort_order
+              'media_type', pi.media_type,
+              'sort_order', pi.sort_order,
+              'created_at', pi.created_at
             )
             ORDER BY pi.sort_order, pi.id
-          ) FILTER (WHERE pi.id IS NOT NULL),
+          )
+          FILTER (WHERE pi.id IS NOT NULL),
           '[]'
-        ) AS images
+        ) AS property_images
 
       FROM properties p
 

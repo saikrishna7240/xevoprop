@@ -6,32 +6,29 @@ import {
   ArrowRight,
   Check,
   Home,
-  MapPin,
-  IndianRupee,
   Image as ImageIcon,
+  IndianRupee,
+  MapPin,
   X,
 } from "lucide-react";
 
 import "./ListProperty.css";
 
-/* =========================================================
-   API
-========================================================= */
-
-const API_URL = "https://xevoprop.onrender.com/api";
-
-/* =========================================================
-   COMPONENT
-========================================================= */
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://xevoprop.onrender.com/api";
 
 function ListProperty() {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const [step, setStep] = useState(1);
 
-  const fileInputRef = useRef(null);
+  const [selectedMedia, setSelectedMedia] = useState([]);
 
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
 
   const [form, setForm] = useState({
     title: "",
@@ -50,15 +47,9 @@ function ListProperty() {
     zero_brokerage: false,
   });
 
-  const [submitting, setSubmitting] = useState(false);
-
-  const [submitError, setSubmitError] = useState("");
-
-  const [submitSuccess, setSubmitSuccess] = useState("");
-
   /* =========================================================
      INPUT CHANGE
-  ========================================================= */
+     ========================================================= */
 
   const handleChange = (e) => {
     const {
@@ -78,24 +69,24 @@ function ListProperty() {
   };
 
   /* =========================================================
-     IMAGE SELECT
-  ========================================================= */
+     MEDIA SELECT
+     ========================================================= */
 
-  const handleImageSelect = (e) => {
+  const handleMediaSelect = (e) => {
     const files = Array.from(
       e.target.files || []
     );
 
-    if (files.length === 0) {
+    if (!files.length) {
       return;
     }
 
     const remainingSlots =
-      10 - selectedImages.length;
+      10 - selectedMedia.length;
 
     if (remainingSlots <= 0) {
       setSubmitError(
-        "You can upload a maximum of 10 photos."
+        "You can upload a maximum of 10 media files."
       );
 
       e.target.value = "";
@@ -108,34 +99,51 @@ function ListProperty() {
     );
 
     const invalidFile = filesToAdd.find(
-      (file) =>
-        !file.type.startsWith("image/") ||
-        file.size > 10 * 1024 * 1024
+      (file) => {
+        const isImage =
+          file.type.startsWith("image/");
+
+        const isVideo =
+          file.type.startsWith("video/");
+
+        const maxSize = isVideo
+          ? 100 * 1024 * 1024
+          : 10 * 1024 * 1024;
+
+        return (
+          (!isImage && !isVideo) ||
+          file.size > maxSize
+        );
+      }
     );
 
     if (invalidFile) {
       setSubmitError(
-        "Only images up to 10MB each are allowed."
+        "Images must be under 10MB and videos under 100MB."
       );
 
       e.target.value = "";
       return;
     }
 
-    const newImages = filesToAdd.map(
-      (file) => ({
+    const newMedia =
+      filesToAdd.map((file) => ({
         file,
 
         preview:
           URL.createObjectURL(file),
 
-        id: `${file.name}-${file.lastModified}-${Math.random()}`,
-      })
-    );
+        type:
+          file.type.startsWith("video/")
+            ? "video"
+            : "image",
 
-    setSelectedImages((previous) => [
+        id: `${file.name}-${file.lastModified}-${Math.random()}`,
+      }));
+
+    setSelectedMedia((previous) => [
       ...previous,
-      ...newImages,
+      ...newMedia,
     ]);
 
     setSubmitError("");
@@ -144,18 +152,18 @@ function ListProperty() {
   };
 
   /* =========================================================
-     REMOVE IMAGE
-  ========================================================= */
+     REMOVE MEDIA
+     ========================================================= */
 
-  const removeImage = (id) => {
-    setSelectedImages((previous) => {
-      const image = previous.find(
+  const removeMedia = (id) => {
+    setSelectedMedia((previous) => {
+      const media = previous.find(
         (item) => item.id === id
       );
 
-      if (image) {
+      if (media) {
         URL.revokeObjectURL(
-          image.preview
+          media.preview
         );
       }
 
@@ -166,32 +174,8 @@ function ListProperty() {
   };
 
   /* =========================================================
-     NEXT
-  ========================================================= */
-
-  const nextStep = () => {
-    if (step < 4) {
-      setStep(
-        (previous) => previous + 1
-      );
-    }
-  };
-
-  /* =========================================================
-     PREVIOUS
-  ========================================================= */
-
-  const previousStep = () => {
-    if (step > 1) {
-      setStep(
-        (previous) => previous - 1
-      );
-    }
-  };
-
-  /* =========================================================
-     VALIDATION
-  ========================================================= */
+     STEP VALIDATION
+     ========================================================= */
 
   const validateStep = () => {
     if (step === 1) {
@@ -219,11 +203,9 @@ function ListProperty() {
     }
 
     if (step === 3) {
-      if (
-        selectedImages.length === 0
-      ) {
+      if (!selectedMedia.length) {
         setSubmitError(
-          "Please upload at least one property image."
+          "Please upload at least one property image or video."
         );
 
         return false;
@@ -233,6 +215,10 @@ function ListProperty() {
     return true;
   };
 
+  /* =========================================================
+     NEXT STEP
+     ========================================================= */
+
   const handleNext = () => {
     setSubmitError("");
 
@@ -240,12 +226,41 @@ function ListProperty() {
       return;
     }
 
-    nextStep();
+    if (step < 4) {
+      setStep(
+        (previous) => previous + 1
+      );
+    }
+  };
+
+  /* =========================================================
+     PREVIOUS STEP
+     ========================================================= */
+
+  const previousStep = () => {
+    setSubmitError("");
+
+    if (step > 1) {
+      setStep(
+        (previous) => previous - 1
+      );
+    }
+  };
+
+  /* =========================================================
+     TOGGLE FEATURE
+     ========================================================= */
+
+  const toggleFeature = (field) => {
+    setForm((previous) => ({
+      ...previous,
+      [field]: !previous[field],
+    }));
   };
 
   /* =========================================================
      SUBMIT PROPERTY
-  ========================================================= */
+     ========================================================= */
 
   const submitProperty = async () => {
     setSubmitError("");
@@ -262,11 +277,9 @@ function ListProperty() {
       return;
     }
 
-    if (
-      selectedImages.length === 0
-    ) {
+    if (!selectedMedia.length) {
       setSubmitError(
-        "Please upload at least one property image."
+        "Please upload at least one property image or video."
       );
 
       setStep(3);
@@ -295,9 +308,11 @@ function ListProperty() {
           },
 
           body: JSON.stringify({
-            title: form.title.trim(),
+            title:
+              form.title.trim(),
 
-            type: form.type,
+            type:
+              form.type,
 
             location:
               form.location.trim(),
@@ -331,7 +346,9 @@ function ListProperty() {
 
             area:
               form.area
-                ? Number(form.area)
+                ? Number(
+                    form.area
+                  )
                 : null,
 
             description:
@@ -349,14 +366,11 @@ function ListProperty() {
         }
       );
 
-      /* =====================================================
-         HANDLE NETWORK RESPONSE
-      ===================================================== */
-
       let data = {};
 
       try {
-        data = await response.json();
+        data =
+          await response.json();
       } catch {
         throw new Error(
           `Server returned an invalid response (${response.status}).`
@@ -385,18 +399,18 @@ function ListProperty() {
       );
 
       /* =====================================================
-         UPLOAD IMAGES
+         UPLOAD IMAGES / VIDEOS
       ===================================================== */
 
       for (
-        const image of selectedImages
+        const media of selectedMedia
       ) {
-        const imageFormData =
+        const mediaFormData =
           new FormData();
 
-        imageFormData.append(
-          "image",
-          image.file
+        mediaFormData.append(
+          "media",
+          media.file
         );
 
         const uploadResponse =
@@ -411,7 +425,7 @@ function ListProperty() {
               },
 
               body:
-                imageFormData,
+                mediaFormData,
             }
           );
 
@@ -419,12 +433,12 @@ function ListProperty() {
           await uploadResponse.text();
 
         console.log(
-          "UPLOAD STATUS:",
+          "MEDIA UPLOAD STATUS:",
           uploadResponse.status
         );
 
         console.log(
-          "UPLOAD RESPONSE:",
+          "MEDIA UPLOAD RESPONSE:",
           responseText
         );
 
@@ -446,7 +460,7 @@ function ListProperty() {
         ) {
           throw new Error(
             uploadData.message ||
-              "Failed to upload property image."
+              "Failed to upload property media."
           );
         }
       }
@@ -471,7 +485,8 @@ function ListProperty() {
 
       if (
         error instanceof TypeError &&
-        error.message === "Failed to fetch"
+        error.message ===
+          "Failed to fetch"
       ) {
         setSubmitError(
           "Unable to connect to the Xevoprop server. Please check your internet connection or try again."
@@ -490,7 +505,7 @@ function ListProperty() {
 
   /* =========================================================
      STEP 1
-  ========================================================= */
+     ========================================================= */
 
   const renderStepOne = () => (
     <div className="listing-card">
@@ -498,16 +513,21 @@ function ListProperty() {
       <div className="listing-section-heading">
 
         <div className="section-icon">
-          <Home size={19} />
+          <Home size={20} />
         </div>
 
         <div>
+          <span className="section-eyebrow">
+            STEP 01
+          </span>
+
           <h2>
             Property Information
           </h2>
 
           <p>
-            Tell buyers about your property.
+            Start with the essential information about
+            your property.
           </p>
         </div>
 
@@ -573,7 +593,7 @@ function ListProperty() {
 
           <div className="input-with-icon">
 
-            <MapPin size={15} />
+            <MapPin size={17} />
 
             <input
               type="text"
@@ -595,7 +615,7 @@ function ListProperty() {
 
           <div className="input-with-icon">
 
-            <MapPin size={15} />
+            <MapPin size={17} />
 
             <input
               type="text"
@@ -616,7 +636,7 @@ function ListProperty() {
 
   /* =========================================================
      STEP 2
-  ========================================================= */
+     ========================================================= */
 
   const renderStepTwo = () => (
     <div className="listing-card">
@@ -624,19 +644,21 @@ function ListProperty() {
       <div className="listing-section-heading">
 
         <div className="section-icon">
-          <IndianRupee size={19} />
+          <IndianRupee size={20} />
         </div>
 
         <div>
+          <span className="section-eyebrow">
+            STEP 02
+          </span>
 
           <h2>
-            Price & Details
+            Price & Property Details
           </h2>
 
           <p>
-            Add pricing and property specifications.
+            Add pricing and specifications buyers need.
           </p>
-
         </div>
 
       </div>
@@ -651,7 +673,7 @@ function ListProperty() {
 
           <div className="input-with-icon">
 
-            <IndianRupee size={15} />
+            <IndianRupee size={17} />
 
             <input
               type="text"
@@ -739,7 +761,7 @@ function ListProperty() {
 
   /* =========================================================
      STEP 3
-  ========================================================= */
+     ========================================================= */
 
   const renderStepThree = () => (
     <div className="listing-card">
@@ -747,19 +769,21 @@ function ListProperty() {
       <div className="listing-section-heading">
 
         <div className="section-icon">
-          <ImageIcon size={19} />
+          <ImageIcon size={20} />
         </div>
 
         <div>
+          <span className="section-eyebrow">
+            STEP 03
+          </span>
 
           <h2>
-            Images & Description
+            Property Media
           </h2>
 
           <p>
-            Give buyers a better view of your property.
+            Showcase your property with photos and videos.
           </p>
-
         </div>
 
       </div>
@@ -768,9 +792,17 @@ function ListProperty() {
 
         <div className="listing-field full">
 
-          <label>
-            PROPERTY PHOTOS
-          </label>
+          <div className="upload-heading">
+
+            <label>
+              PHOTOS & VIDEOS
+            </label>
+
+            <span>
+              {selectedMedia.length}/10 selected
+            </span>
+
+          </div>
 
           <div
             className="upload-area"
@@ -779,28 +811,30 @@ function ListProperty() {
             }
           >
 
-            <ImageIcon size={30} />
+            <div className="upload-icon">
+              <ImageIcon size={27} />
+            </div>
 
             <strong>
-              Click to upload property photos
+              Add property photos & videos
             </strong>
 
             <span>
-              JPG, PNG or WEBP • Up to 10MB each
+              Click to browse your device
             </span>
 
-            <span>
-              Select up to 10 photos
-            </span>
+            <small>
+              Images: JPG, PNG, WEBP · Max 10MB
+              <br />
+              Videos: MP4, WEBM, MOV · Max 100MB
+            </small>
 
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               multiple
-              onChange={
-                handleImageSelect
-              }
+              onChange={handleMediaSelect}
               onClick={(e) =>
                 e.stopPropagation()
               }
@@ -810,32 +844,61 @@ function ListProperty() {
 
         </div>
 
-        {selectedImages.length > 0 && (
-          <div className="uploaded-images">
+        {selectedMedia.length > 0 && (
+          <div className="uploaded-media">
 
-            {selectedImages.map(
-              (image) => (
+            {selectedMedia.map(
+              (media, index) => (
                 <div
-                  className="uploaded-image"
-                  key={image.id}
+                  className={`uploaded-media-item ${
+                    index === 0 &&
+                    media.type === "image"
+                      ? "featured-media"
+                      : ""
+                  }`}
+                  key={media.id}
                 >
 
-                  <img
-                    src={image.preview}
-                    alt="Property preview"
-                  />
+                  {media.type === "image" ? (
+                    <img
+                      src={media.preview}
+                      alt={`Property ${
+                        index + 1
+                      }`}
+                    />
+                  ) : (
+                    <video
+                      src={media.preview}
+                      controls
+                      preload="metadata"
+                    />
+                  )}
+
+                  {index === 0 &&
+                    media.type === "image" && (
+                      <span className="featured-label">
+                        COVER
+                      </span>
+                    )}
+
+                  {media.type === "video" && (
+                    <span className="media-type-label">
+                      VIDEO
+                    </span>
+                  )}
 
                   <button
                     type="button"
+                    aria-label="Remove media"
                     onClick={(e) => {
                       e.stopPropagation();
 
-                      removeImage(
-                        image.id
+                      removeMedia(
+                        media.id
                       );
                     }}
                   >
-                    <X size={14} />
+                    <X size={15} />
                   </button>
 
                 </div>
@@ -845,19 +908,40 @@ function ListProperty() {
           </div>
         )}
 
+        <div className="media-guidelines">
+
+          <div>
+            <strong>
+              💡 Listing tip
+            </strong>
+
+            <p>
+              Add clear exterior, interior and amenity
+              photos. A short property walkthrough video
+              can help buyers understand the space better.
+            </p>
+          </div>
+
+        </div>
+
         <div className="listing-field full">
 
           <label>
-            DESCRIPTION
+            PROPERTY DESCRIPTION
           </label>
 
           <textarea
             rows="8"
             name="description"
-            placeholder="Describe the property..."
+            placeholder="Describe the property, its location, nearby landmarks, amenities, condition and other details buyers should know..."
             value={form.description}
             onChange={handleChange}
           />
+
+          <div className="field-helper">
+            A detailed description helps buyers understand
+            the property better.
+          </div>
 
         </div>
 
@@ -868,7 +952,7 @@ function ListProperty() {
 
   /* =========================================================
      STEP 4
-  ========================================================= */
+     ========================================================= */
 
   const renderStepFour = () => (
     <div className="listing-card preview-card">
@@ -876,50 +960,93 @@ function ListProperty() {
       <div className="listing-section-heading">
 
         <div className="section-icon">
-          <Check size={19} />
+          <Check size={20} />
         </div>
 
         <div>
+          <span className="section-eyebrow">
+            STEP 04
+          </span>
 
           <h2>
             Review & Publish
           </h2>
 
           <p>
-            Check your property before publishing.
+            Review your listing before submitting it for
+            approval.
           </p>
-
         </div>
 
       </div>
 
       <div className="preview-content">
 
-        {selectedImages.length > 0 && (
-          <div className="uploaded-images">
+        {selectedMedia.length > 0 && (
+          <div className="preview-gallery">
 
-            {selectedImages.map(
-              (image) => (
-                <div
-                  className="uploaded-image"
-                  key={image.id}
-                >
+            <div className="preview-cover">
 
-                  <img
-                    src={image.preview}
-                    alt="Property preview"
-                  />
+              {selectedMedia[0].type ===
+              "image" ? (
+                <img
+                  src={
+                    selectedMedia[0].preview
+                  }
+                  alt="Property cover"
+                />
+              ) : (
+                <video
+                  src={
+                    selectedMedia[0].preview
+                  }
+                  controls
+                />
+              )}
 
+            </div>
+
+            <div className="preview-thumbnails">
+
+              {selectedMedia
+                .slice(1, 5)
+                .map((media) => (
+                  <div
+                    className="preview-thumbnail"
+                    key={media.id}
+                  >
+
+                    {media.type ===
+                    "image" ? (
+                      <img
+                        src={media.preview}
+                        alt="Property"
+                      />
+                    ) : (
+                      <video
+                        src={media.preview}
+                        muted
+                        preload="metadata"
+                      />
+                    )}
+
+                  </div>
+                ))}
+
+              {selectedMedia.length > 5 && (
+                <div className="preview-more">
+                  +{selectedMedia.length - 5}
                 </div>
-              )
-            )}
+              )}
+
+            </div>
 
           </div>
         )}
 
         <div className="preview-top">
 
-          <div>
+          <div className="preview-main-info">
 
             <span className="preview-type">
               {form.type}
@@ -932,34 +1059,54 @@ function ListProperty() {
 
             <div className="preview-location">
 
-              <MapPin size={14} />
+              <MapPin size={16} />
 
-              {form.location ||
-                "Property location"}
+              <span>
+                {form.location ||
+                  "Property location"}
+              </span>
 
             </div>
 
           </div>
 
-          <strong className="preview-price">
+          <div className="preview-price">
             {form.price ||
               "Price on request"}
-          </strong>
+          </div>
 
         </div>
 
         <div className="preview-stats">
 
-          <div>
-            🛏️ {form.bedrooms || "-"} Beds
+          <div className="preview-stat">
+            <strong>
+              {form.bedrooms || "—"}
+            </strong>
+
+            <span>
+              Bedrooms
+            </span>
           </div>
 
-          <div>
-            🛁 {form.bathrooms || "-"} Baths
+          <div className="preview-stat">
+            <strong>
+              {form.bathrooms || "—"}
+            </strong>
+
+            <span>
+              Bathrooms
+            </span>
           </div>
 
-          <div>
-            📐 {form.area || "-"} sq.ft
+          <div className="preview-stat">
+            <strong>
+              {form.area || "—"}
+            </strong>
+
+            <span>
+              Sq. Ft.
+            </span>
           </div>
 
         </div>
@@ -967,7 +1114,7 @@ function ListProperty() {
         <div className="preview-description">
 
           <h3>
-            Description
+            About this property
           </h3>
 
           <p>
@@ -979,9 +1126,19 @@ function ListProperty() {
 
         <div className="amenities-section">
 
-          <label>
-            PROPERTY FEATURES
-          </label>
+          <div className="feature-heading">
+
+            <div>
+              <label>
+                PROPERTY FEATURES
+              </label>
+
+              <p>
+                Highlight the important selling points.
+              </p>
+            </div>
+
+          </div>
 
           <div className="listing-amenities">
 
@@ -993,22 +1150,20 @@ function ListProperty() {
                   : "amenity-option"
               }
               onClick={() =>
-                setForm(
-                  (previous) => ({
-                    ...previous,
-                    verified:
-                      !previous.verified,
-                  })
+                toggleFeature(
+                  "verified"
                 )
               }
             >
+
               <span>
                 {form.verified && (
-                  <Check size={12} />
+                  <Check size={13} />
                 )}
               </span>
 
               Verified Property
+
             </button>
 
             <button
@@ -1019,22 +1174,20 @@ function ListProperty() {
                   : "amenity-option"
               }
               onClick={() =>
-                setForm(
-                  (previous) => ({
-                    ...previous,
-                    ready_to_move:
-                      !previous.ready_to_move,
-                  })
+                toggleFeature(
+                  "ready_to_move"
                 )
               }
             >
+
               <span>
                 {form.ready_to_move && (
-                  <Check size={12} />
+                  <Check size={13} />
                 )}
               </span>
 
               Ready to Move
+
             </button>
 
             <button
@@ -1045,22 +1198,20 @@ function ListProperty() {
                   : "amenity-option"
               }
               onClick={() =>
-                setForm(
-                  (previous) => ({
-                    ...previous,
-                    zero_brokerage:
-                      !previous.zero_brokerage,
-                  })
+                toggleFeature(
+                  "zero_brokerage"
                 )
               }
             >
+
               <span>
                 {form.zero_brokerage && (
-                  <Check size={12} />
+                  <Check size={13} />
                 )}
               </span>
 
               Zero Brokerage
+
             </button>
 
           </div>
@@ -1070,29 +1221,25 @@ function ListProperty() {
       </div>
 
       {submitError && (
-        <p
-          style={{
-            marginTop: "18px",
-            color: "#ff6b6b",
-            fontSize: "10px",
-            textAlign: "center",
-          }}
-        >
+        <div className="listing-message error">
+
+          <span>!</span>
+
           {submitError}
-        </p>
+
+        </div>
       )}
 
       {submitSuccess && (
-        <p
-          style={{
-            marginTop: "18px",
-            color: "#00d9ff",
-            fontSize: "10px",
-            textAlign: "center",
-          }}
-        >
+        <div className="listing-message success">
+
+          <span>
+            <Check size={14} />
+          </span>
+
           {submitSuccess}
-        </p>
+
+        </div>
       )}
 
     </div>
@@ -1100,80 +1247,114 @@ function ListProperty() {
 
   /* =========================================================
      MAIN
-  ========================================================= */
+     ========================================================= */
+
+  const steps = [
+    "Property",
+    "Details",
+    "Media",
+    "Publish",
+  ];
 
   return (
     <div className="list-property-page">
 
       <div className="list-property-container">
 
-        <div className="listing-header">
+        {/* HEADER */}
+
+        <header className="listing-header">
 
           <button
             className="listing-back"
+            type="button"
             onClick={() =>
               navigate("/properties")
             }
           >
-            <ArrowLeft size={13} />
+            <ArrowLeft size={16} />
             Back to properties
           </button>
 
-          <span>
+          <div className="listing-kicker">
+            <span />
             SELL / LIST PROPERTY
-          </span>
+          </div>
 
           <h1>
             List your property
           </h1>
 
           <p>
-            Connect your property with
-            verified buyers.
+            Reach verified buyers and showcase your
+            property on Xevoprop.
           </p>
 
-        </div>
+        </header>
+
+        {/* PROGRESS */}
 
         <div className="listing-progress">
 
-          {[
-            "Property",
-            "Details",
-            "Media",
-            "Publish",
-          ].map((label, index) => {
+          {steps.map(
+            (label, index) => {
+              const number =
+                index + 1;
 
-            const number = index + 1;
+              const isCompleted =
+                number < step;
 
-            return (
-              <div
-                key={label}
-                className={
-                  number <= step
-                    ? "progress-item active"
-                    : "progress-item"
-                }
-              >
+              const isActive =
+                number === step;
 
-                <div className="progress-number">
+              return (
+                <div
+                  key={label}
+                  className={`progress-item ${
+                    isActive
+                      ? "active"
+                      : ""
+                  } ${
+                    isCompleted
+                      ? "completed"
+                      : ""
+                  }`}
+                >
 
-                  {number < step ? (
-                    <Check size={13} />
-                  ) : (
-                    number
-                  )}
+                  <div className="progress-number">
+
+                    {isCompleted ? (
+                      <Check size={14} />
+                    ) : (
+                      number
+                    )}
+
+                  </div>
+
+                  <div className="progress-copy">
+
+                    <span>
+                      {label}
+                    </span>
+
+                    <small>
+                      {isCompleted
+                        ? "Completed"
+                        : isActive
+                        ? "Current step"
+                        : `Step ${number}`}
+                    </small>
+
+                  </div>
 
                 </div>
-
-                <span>
-                  {label}
-                </span>
-
-              </div>
-            );
-          })}
+              );
+            }
+          )}
 
         </div>
+
+        {/* CURRENT STEP */}
 
         {step === 1 &&
           renderStepOne()}
@@ -1187,22 +1368,24 @@ function ListProperty() {
         {step === 4 &&
           renderStepFour()}
 
+        {/* NAVIGATION */}
+
         <div className="listing-navigation">
 
           {step > 1 ? (
             <button
               type="button"
               className="listing-prev"
-              onClick={() => {
-                setSubmitError("");
-                previousStep();
-              }}
+              onClick={
+                previousStep
+              }
             >
-              <ArrowLeft size={13} />
+              <ArrowLeft size={16} />
+
               Previous
             </button>
           ) : (
-            <span />
+            <div />
           )}
 
           {step < 4 ? (
@@ -1212,13 +1395,16 @@ function ListProperty() {
               onClick={handleNext}
             >
               Continue
-              <ArrowRight size={13} />
+
+              <ArrowRight size={16} />
             </button>
           ) : (
             <button
               type="button"
               className="listing-next"
-              onClick={submitProperty}
+              onClick={
+                submitProperty
+              }
               disabled={submitting}
             >
               {submitting
@@ -1226,11 +1412,18 @@ function ListProperty() {
                 : "Submit Property"}
 
               {!submitting && (
-                <Check size={13} />
+                <Check size={16} />
               )}
             </button>
           )}
 
+        </div>
+
+        <div className="listing-footer-note">
+          <span>🔒</span>
+
+          Your property information is securely
+          submitted for Xevoprop admin verification.
         </div>
 
       </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Building2,
   MapPin,
@@ -6,45 +6,42 @@ import {
   Search,
   ArrowRight,
   Loader2,
+  SlidersHorizontal,
+  X,
+  CheckCircle2,
+  ChevronDown,
+  CalendarDays,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./Projects.css";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "https://xevoprop.onrender.com/api";
+  import.meta.env.VITE_API_URL ||
+  "https://xevoprop.onrender.com/api";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  useEffect(() => {
-    filterProjects();
-  }, [search, type, projects]);
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `${API_URL}/projects/public`
-      );
-
+      const response = await fetch(`${API_URL}/projects/public`);
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to load projects."
+          data.message || "Failed to load projects."
         );
       }
 
@@ -54,26 +51,21 @@ function Projects() {
 
       setProjects(projectList);
     } catch (err) {
-      console.error(
-        "PUBLIC PROJECTS ERROR:",
-        err
-      );
+      console.error("PUBLIC PROJECTS ERROR:", err);
 
       setError(
-        err.message ||
-          "Unable to load projects."
+        err.message || "Unable to load projects."
       );
     } finally {
       setLoading(false);
     }
   };
 
-  const filterProjects = () => {
+  const filteredProjects = useMemo(() => {
     let result = [...projects];
 
     if (search.trim()) {
-      const keyword =
-        search.toLowerCase();
+      const keyword = search.toLowerCase().trim();
 
       result = result.filter((project) =>
         [
@@ -82,6 +74,7 @@ function Projects() {
           project.city,
           project.state,
           project.type,
+          project.description,
         ]
           .filter(Boolean)
           .some((value) =>
@@ -96,319 +89,566 @@ function Projects() {
       result = result.filter(
         (project) =>
           String(project.type || "")
-            .toLowerCase() ===
-          type.toLowerCase()
+            .toLowerCase() === type.toLowerCase()
       );
     }
 
-    setFilteredProjects(result);
+    return result;
+  }, [projects, search, type]);
+
+  const projectTypes = [
+    "All",
+    "Apartment",
+    "Villa",
+    "Plot",
+    "Commercial",
+  ];
+
+  const getProjectImage = (project) => {
+    return (
+      project.image ||
+      project.image_url ||
+      project.cover_image ||
+      ""
+    );
+  };
+
+  const getProjectLocation = (project) => {
+    return (
+      project.location ||
+      project.city ||
+      project.state ||
+      "Location unavailable"
+    );
+  };
+
+  const getProjectType = (project) => {
+    return project.type || "Residential";
+  };
+
+  const clearFilters = () => {
+    setSearch("");
+    setType("All");
   };
 
   return (
     <div className="projects-page">
 
-      {/* HERO */}
-      <section className="projects-hero">
-        <div className="projects-hero-content">
+      {/* HEADER */}
+      <header className="projects-header">
+        <div className="projects-container">
 
-          <span className="projects-label">
-            XEVOPROP PROJECTS
-          </span>
-
-          <h1>
-            Discover
-            <span> exceptional projects.</span>
-          </h1>
-
-          <p>
-            Explore residential and commercial
-            projects created by verified
-            developers on Xevoprop.
-          </p>
-
-        </div>
-      </section>
-
-
-      {/* MAIN */}
-      <main className="projects-main">
-
-        {/* TOOLBAR */}
-        <div className="projects-toolbar">
-
-          <div className="projects-search">
-            <Search size={18} />
-
-            <input
-              type="text"
-              placeholder="Search projects, locations..."
-              value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
-            />
+          <div className="projects-breadcrumb">
+            Home
+            <span>/</span>
+            Projects
           </div>
 
-          <div className="projects-filter">
-            <button
-              className={
-                type === "All"
-                  ? "active"
-                  : ""
-              }
-              onClick={() => setType("All")}
-            >
-              All
-            </button>
+          <div className="projects-heading-row">
 
-            <button
-              className={
-                type === "Apartment"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setType("Apartment")
-              }
-            >
-              Apartments
-            </button>
+            <div>
+              <span className="projects-kicker">
+                XEVOPROP PROJECTS
+              </span>
 
-            <button
-              className={
-                type === "Villa"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setType("Villa")
-              }
-            >
-              Villas
-            </button>
-
-            <button
-              className={
-                type === "Plot"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setType("Plot")
-              }
-            >
-              Plots
-            </button>
-
-            <button
-              className={
-                type === "Commercial"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setType("Commercial")
-              }
-            >
-              Commercial
-            </button>
-          </div>
-
-        </div>
-
-
-        {/* RESULT COUNT */}
-        {!loading && !error && (
-          <div className="projects-result-count">
-            <span>
-              {filteredProjects.length}
-            </span>{" "}
-            project
-            {filteredProjects.length !== 1
-              ? "s"
-              : ""}{" "}
-            found
-          </div>
-        )}
-
-
-        {/* LOADING */}
-        {loading && (
-          <div className="projects-loading">
-            <Loader2
-              size={32}
-              className="projects-spinner"
-            />
-
-            <p>
-              Discovering projects...
-            </p>
-          </div>
-        )}
-
-
-        {/* ERROR */}
-        {!loading && error && (
-          <div className="projects-error">
-            <Building2 size={30} />
-
-            <h2>
-              Unable to load projects
-            </h2>
-
-            <p>{error}</p>
-
-            <button
-              onClick={fetchProjects}
-            >
-              Try Again
-            </button>
-          </div>
-        )}
-
-
-        {/* EMPTY */}
-        {!loading &&
-          !error &&
-          filteredProjects.length === 0 && (
-            <div className="projects-empty">
-              <Building2 size={38} />
-
-              <h2>
-                No projects found
-              </h2>
+              <h1>
+                Discover exceptional
+                <span> projects.</span>
+              </h1>
 
               <p>
-                Try another search or
-                property type.
+                Explore residential and commercial
+                developments from verified developers
+                across growing locations.
               </p>
             </div>
-          )}
 
+            <div className="projects-header-stat">
+              <strong>{projects.length}</strong>
+              <span>Projects Listed</span>
+            </div>
 
-        {/* PROJECT GRID */}
-        {!loading &&
-          !error &&
-          filteredProjects.length > 0 && (
-            <div className="projects-grid">
+          </div>
 
-              {filteredProjects.map(
-                (project) => (
-                  <article
-                    className="project-card"
-                    key={project.id}
-                  >
+        </div>
+      </header>
 
-                    {/* IMAGE */}
-                    <div className="project-card-image">
+      <main className="projects-container">
 
-                      {project.image ? (
-                        <img
-                          src={project.image}
-                          alt={project.name}
-                        />
-                      ) : (
-                        <div className="project-placeholder">
-                          <Building2
-                            size={45}
-                          />
-                        </div>
-                      )}
+        {/* SEARCH */}
+        <section className="projects-search-section">
 
-                      <span className="project-card-status">
-                        {project.status ||
-                          "Available"}
-                      </span>
+          <div className="projects-search-card">
 
-                    </div>
+            <div className="projects-search-main">
 
+              <Search size={19} />
 
-                    {/* CONTENT */}
-                    <div className="project-card-content">
+              <div className="projects-search-field">
 
-                      <h2>
-                        {project.name}
-                      </h2>
+                <label>SEARCH PROJECTS</label>
 
-                      <div className="project-card-location">
-                        <MapPin
-                          size={15}
-                        />
+                <input
+                  type="text"
+                  placeholder="Search by project, location or developer"
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                />
 
-                        <span>
-                          {project.location ||
-                            project.city ||
-                            "Location unavailable"}
-                        </span>
-                      </div>
-
-
-                      <div className="project-card-info">
-
-                        {project.type && (
-                          <div>
-                            <Building2
-                              size={15}
-                            />
-
-                            <span>
-                              {project.type}
-                            </span>
-                          </div>
-                        )}
-
-                        {project.units !==
-                          null &&
-                          project.units !==
-                            undefined && (
-                            <div>
-                              <Layers
-                                size={15}
-                              />
-
-                              <span>
-                                {project.units}{" "}
-                                units
-                              </span>
-                            </div>
-                          )}
-
-                      </div>
-
-
-                      {project.price && (
-                        <div className="project-card-price">
-                          {project.price}
-                        </div>
-                      )}
-
-
-                      {project.description && (
-                        <p className="project-card-description">
-                          {project.description}
-                        </p>
-                      )}
-
-
-                      <Link
-                        to={`/projects/${project.id}`}
-                        className="project-view-btn"
-                      >
-                        View Project
-
-                        <ArrowRight
-                          size={16}
-                        />
-                      </Link>
-
-                    </div>
-
-                  </article>
-                )
-              )}
+              </div>
 
             </div>
-          )}
+
+            <div className="projects-search-divider" />
+
+            <div className="projects-search-type">
+
+              <label>PROJECT TYPE</label>
+
+              <div className="projects-type-select">
+
+                <Building2 size={16} />
+
+                <select
+                  value={type}
+                  onChange={(e) =>
+                    setType(e.target.value)
+                  }
+                >
+                  {projectTypes.map((projectType) => (
+                    <option
+                      key={projectType}
+                      value={projectType}
+                    >
+                      {projectType === "All"
+                        ? "All Project Types"
+                        : projectType}
+                    </option>
+                  ))}
+                </select>
+
+                <ChevronDown size={15} />
+
+              </div>
+
+            </div>
+
+            <button
+              className="projects-search-button"
+              onClick={() => setShowMobileFilters(false)}
+            >
+              <Search size={17} />
+              Search
+            </button>
+
+          </div>
+
+        </section>
+
+        {/* MARKETPLACE */}
+        <section className="projects-marketplace">
+
+          <div className="projects-layout">
+
+            {/* SIDEBAR */}
+            <aside
+              className={`projects-sidebar ${
+                showMobileFilters ? "mobile-open" : ""
+              }`}
+            >
+
+              <div className="projects-sidebar-header">
+
+                <div>
+                  <span>FILTER PROJECTS</span>
+                  <h3>Refine your search</h3>
+                </div>
+
+                <button
+                  className="projects-mobile-close"
+                  onClick={() =>
+                    setShowMobileFilters(false)
+                  }
+                >
+                  <X size={19} />
+                </button>
+
+              </div>
+
+              <div className="project-filter-group">
+
+                <div className="project-filter-title">
+                  Project Type
+                </div>
+
+                <div className="project-filter-options">
+
+                  {projectTypes.map((projectType) => (
+                    <button
+                      key={projectType}
+                      className={
+                        type === projectType
+                          ? "active"
+                          : ""
+                      }
+                      onClick={() => {
+                        setType(projectType);
+                        setShowMobileFilters(false);
+                      }}
+                    >
+                      <span className="filter-radio">
+                        {type === projectType && (
+                          <span />
+                        )}
+                      </span>
+
+                      {projectType === "All"
+                        ? "All Projects"
+                        : `${projectType}s`}
+                    </button>
+                  ))}
+
+                </div>
+
+              </div>
+
+              <div className="project-filter-group">
+
+                <div className="project-filter-title">
+                  Project Status
+                </div>
+
+                <div className="project-filter-note">
+                  <CheckCircle2 size={15} />
+                  Verified projects only
+                </div>
+
+              </div>
+
+              <div className="project-filter-group">
+
+                <div className="project-filter-title">
+                  Location
+                </div>
+
+                <div className="project-location-note">
+                  <MapPin size={15} />
+                  Search using the location field
+                </div>
+
+              </div>
+
+              {(search || type !== "All") && (
+                <button
+                  className="clear-project-filters"
+                  onClick={clearFilters}
+                >
+                  Clear all filters
+                </button>
+              )}
+
+            </aside>
+
+            {/* RESULTS */}
+            <div className="projects-results">
+
+              <div className="projects-results-toolbar">
+
+                <div>
+                  <span className="results-kicker">
+                    PROJECT DIRECTORY
+                  </span>
+
+                  <h2>
+                    {loading
+                      ? "Discover projects"
+                      : `${filteredProjects.length} ${
+                          filteredProjects.length === 1
+                            ? "Project"
+                            : "Projects"
+                        }`}
+                  </h2>
+                </div>
+
+                <button
+                  className="projects-mobile-filter-button"
+                  onClick={() =>
+                    setShowMobileFilters(true)
+                  }
+                >
+                  <SlidersHorizontal size={16} />
+                  Filters
+                </button>
+
+              </div>
+
+              {/* ACTIVE FILTERS */}
+              {(search || type !== "All") && (
+                <div className="projects-active-filters">
+
+                  <span>Active filters:</span>
+
+                  {search && (
+                    <button
+                      onClick={() => setSearch("")}
+                    >
+                      Search: {search}
+                      <X size={13} />
+                    </button>
+                  )}
+
+                  {type !== "All" && (
+                    <button
+                      onClick={() => setType("All")}
+                    >
+                      {type}
+                      <X size={13} />
+                    </button>
+                  )}
+
+                </div>
+              )}
+
+              {/* LOADING */}
+              {loading && (
+                <div className="projects-loading">
+
+                  <div className="projects-loading-grid">
+                    {[1, 2, 3, 4, 5, 6].map(
+                      (item) => (
+                        <div
+                          className="project-skeleton"
+                          key={item}
+                        >
+                          <div className="skeleton-image" />
+                          <div className="skeleton-content">
+                            <div className="skeleton-line large" />
+                            <div className="skeleton-line medium" />
+                            <div className="skeleton-line small" />
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="projects-loading-message">
+                    <Loader2
+                      size={18}
+                      className="projects-spinner"
+                    />
+                    Discovering projects...
+                  </div>
+
+                </div>
+              )}
+
+              {/* ERROR */}
+              {!loading && error && (
+                <div className="projects-error">
+
+                  <div className="projects-error-icon">
+                    <Building2 size={28} />
+                  </div>
+
+                  <h2>
+                    Unable to load projects
+                  </h2>
+
+                  <p>{error}</p>
+
+                  <button onClick={fetchProjects}>
+                    Try Again
+                  </button>
+
+                </div>
+              )}
+
+              {/* EMPTY */}
+              {!loading &&
+                !error &&
+                filteredProjects.length === 0 && (
+                  <div className="projects-empty">
+
+                    <div className="projects-empty-icon">
+                      <Building2 size={30} />
+                    </div>
+
+                    <h2>
+                      No projects found
+                    </h2>
+
+                    <p>
+                      Try another search or project
+                      type.
+                    </p>
+
+                    <button
+                      onClick={clearFilters}
+                    >
+                      Clear Filters
+                    </button>
+
+                  </div>
+                )}
+
+              {/* GRID */}
+              {!loading &&
+                !error &&
+                filteredProjects.length > 0 && (
+                  <div className="projects-grid">
+
+                    {filteredProjects.map(
+                      (project) => {
+
+                        const image =
+                          getProjectImage(project);
+
+                        return (
+                          <article
+                            className="project-card"
+                            key={project.id}
+                          >
+
+                            {/* IMAGE */}
+                            <div className="project-card-image">
+
+                              {image ? (
+                                <img
+                                  src={image}
+                                  alt={project.name}
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="project-placeholder">
+                                  <Building2
+                                    size={42}
+                                  />
+                                </div>
+                              )}
+
+                              <div className="project-card-top">
+
+                                <span className="project-verified">
+                                  <CheckCircle2
+                                    size={13}
+                                  />
+                                  Verified
+                                </span>
+
+                                <span className="project-status">
+                                  {project.status ||
+                                    "Available"}
+                                </span>
+
+                              </div>
+
+                            </div>
+
+                            {/* CONTENT */}
+                            <div className="project-card-content">
+
+                              <div className="project-card-location">
+                                <MapPin size={15} />
+
+                                <span>
+                                  {getProjectLocation(
+                                    project
+                                  )}
+                                </span>
+                              </div>
+
+                              <h2>
+                                {project.name ||
+                                  "Untitled Project"}
+                              </h2>
+
+                              <div className="project-card-info">
+
+                                {project.type && (
+                                  <div>
+                                    <Building2
+                                      size={15}
+                                    />
+
+                                    <span>
+                                      {getProjectType(
+                                        project
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+
+                                {project.units !==
+                                  null &&
+                                  project.units !==
+                                    undefined && (
+                                    <div>
+                                      <Layers
+                                        size={15}
+                                      />
+
+                                      <span>
+                                        {project.units}{" "}
+                                        Units
+                                      </span>
+                                    </div>
+                                  )}
+
+                              </div>
+
+                              {project.price && (
+                                <div className="project-card-price">
+                                  {project.price}
+                                </div>
+                              )}
+
+                              {project.description && (
+                                <p className="project-card-description">
+                                  {project.description}
+                                </p>
+                              )}
+
+                              <div className="project-card-footer">
+
+                                <div className="project-card-developer">
+                                  <CalendarDays
+                                    size={14}
+                                  />
+
+                                  <span>
+                                    Project
+                                  </span>
+                                </div>
+
+                                <Link
+                                  to={`/projects/${project.id}`}
+                                  className="project-view-btn"
+                                >
+                                  View Project
+                                  <ArrowRight
+                                    size={16}
+                                  />
+                                </Link>
+
+                              </div>
+
+                            </div>
+
+                          </article>
+                        );
+                      }
+                    )}
+
+                  </div>
+                )}
+
+            </div>
+
+          </div>
+
+        </section>
 
       </main>
     </div>

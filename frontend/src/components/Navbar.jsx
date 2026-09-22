@@ -1,21 +1,22 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
-  Search,
-  Heart,
-  MessageCircle,
-  Home,
-  Plus,
   Bell,
-  Building2,
-  BarChart3,
-  UserRound,
-  LogIn,
+  ChevronDown,
   Menu,
   X,
+  UserRound,
+  LogIn,
+  Plus,
+  Building2,
+  Heart,
+  MessageCircle,
   CalendarDays,
-  ChevronDown,
+  Home,
+  BarChart3,
   Info,
   Phone,
+  UsersRound,
+  LayoutDashboard,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -28,143 +29,60 @@ function Navbar() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  /* ================================
-     PUBLIC NAVIGATION
-  ================================= */
+  const closeMenus = () => {
+    setMobileOpen(false);
+    setMoreOpen(false);
+    setWorkspaceOpen(false);
+  };
 
-  const publicLinks = [
+  const isActivePath = (paths) => {
+    return paths.some((path) =>
+      location.pathname === path ||
+      location.pathname.startsWith(`${path}/`)
+    );
+  };
+
+  /*
+   * =========================================================
+   * PRIMARY MARKETPLACE NAVIGATION
+   * =========================================================
+   *
+   * These remain the main navigation for everyone.
+   */
+
+  const primaryLinks = [
     {
-      label: "Properties",
+      label: "Buy",
       path: "/properties",
-      icon: Search,
+    },
+    {
+      label: "Rent",
+      path: "/properties?listingType=rent",
     },
     {
       label: "Projects",
       path: "/projects",
-      icon: Building2,
     },
+    {
+      label: "Commercial",
+      path: "/properties?type=commercial",
+    },
+  ];
+
+  /*
+   * =========================================================
+   * MORE MENU
+   * =========================================================
+   */
+
+  const moreLinks = [
     {
       label: "Developers",
       path: "/developers",
-      icon: Building2,
+      icon: UsersRound,
     },
-  ];
-
-  /* ================================
-     BUYER NAVIGATION
-  ================================= */
-
-  const buyerLinks = [
-    {
-      label: "Properties",
-      path: "/properties",
-      icon: Search,
-    },
-    {
-      label: "Projects",
-      path: "/projects",
-      icon: Building2,
-    },
-    {
-      label: "Saved",
-      path: "/favorites",
-      icon: Heart,
-    },
-    {
-      label: "Enquiries",
-      path: "/my-enquiries",
-      icon: MessageCircle,
-    },
-    {
-      label: "Visits",
-      path: "/my-visits",
-      icon: CalendarDays,
-    },
-  ];
-
-  /* ================================
-     SELLER NAVIGATION
-  ================================= */
-
-  const sellerLinks = [
-    {
-      label: "Properties",
-      path: "/properties",
-      icon: Search,
-    },
-    {
-      label: "My Properties",
-      path: "/my-properties",
-      icon: Home,
-    },
-    {
-      label: "List Property",
-      path: "/list-property",
-      icon: Plus,
-    },
-    {
-      label: "Leads",
-      path: "/leads",
-      icon: BarChart3,
-    },
-  ];
-
-  /* ================================
-     DEVELOPER NAVIGATION
-  ================================= */
-
-  const developerLinks = [
-    {
-      label: "Properties",
-      path: "/properties",
-      icon: Search,
-    },
-    {
-      label: "Projects",
-      path: "/projects",
-      icon: Building2,
-    },
-    {
-      label: "My Projects",
-      path: "/my-projects",
-      icon: Building2,
-    },
-    {
-      label: "Add Project",
-      path: "/add-project",
-      icon: Plus,
-    },
-    {
-      label: "Leads",
-      path: "/leads",
-      icon: BarChart3,
-    },
-  ];
-
-  /* ================================
-     SELECT NAVIGATION
-  ================================= */
-
-  let navLinks = publicLinks;
-
-  if (user) {
-    const role = user.role || "Buyer";
-
-    if (role === "Seller") {
-      navLinks = sellerLinks;
-    } else if (role === "Developer") {
-      navLinks = developerLinks;
-    } else {
-      navLinks = buyerLinks;
-    }
-  }
-
-  /* ================================
-     MORE MENU
-  ================================= */
-
-  const moreLinks = [
     {
       label: "About Xevoprop",
       path: "/about",
@@ -177,35 +95,157 @@ function Navbar() {
     },
   ];
 
-  /* ================================
-     CLOSE MENU
-  ================================= */
+  /*
+   * =========================================================
+   * ROLE WORKSPACE
+   * =========================================================
+   */
 
-  const closeMenu = () => {
-    setMobileOpen(false);
-    setMoreOpen(false);
+  const getWorkspaceLinks = () => {
+    if (!user) {
+      return [];
+    }
+
+    const role = user.role || "Buyer";
+
+    if (role === "Seller") {
+      return [
+        {
+          label: "Dashboard",
+          path: "/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          label: "My Properties",
+          path: "/my-properties",
+          icon: Home,
+        },
+        {
+          label: "List Property",
+          path: "/list-property",
+          icon: Plus,
+        },
+        {
+          label: "Leads",
+          path: "/leads",
+          icon: BarChart3,
+        },
+        {
+          label: "Enquiries",
+          path: "/seller-enquiries",
+          icon: MessageCircle,
+        },
+        {
+          label: "Visits",
+          path: "/seller-visits",
+          icon: CalendarDays,
+        },
+      ];
+    }
+
+    if (role === "Developer") {
+      return [
+        {
+          label: "Dashboard",
+          path: "/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          label: "My Projects",
+          path: "/my-projects",
+          icon: Building2,
+        },
+        {
+          label: "Add Project",
+          path: "/add-project",
+          icon: Plus,
+        },
+        {
+          label: "My Properties",
+          path: "/my-properties",
+          icon: Home,
+        },
+        {
+          label: "Leads",
+          path: "/leads",
+          icon: BarChart3,
+        },
+        {
+          label: "Project Enquiries",
+          path: "/project-enquiries",
+          icon: MessageCircle,
+        },
+      ];
+    }
+
+    if (role === "Admin") {
+      return [
+        {
+          label: "Admin Dashboard",
+          path: "/admin",
+          icon: LayoutDashboard,
+        },
+        {
+          label: "Properties",
+          path: "/admin/properties",
+          icon: Home,
+        },
+        {
+          label: "Projects",
+          path: "/admin/projects",
+          icon: Building2,
+        },
+      ];
+    }
+
+    return [
+      {
+        label: "Dashboard",
+        path: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "Saved Properties",
+        path: "/favorites",
+        icon: Heart,
+      },
+      {
+        label: "My Enquiries",
+        path: "/my-enquiries",
+        icon: MessageCircle,
+      },
+      {
+        label: "My Visits",
+        path: "/my-visits",
+        icon: CalendarDays,
+      },
+    ];
   };
 
-  /* ================================
-     MORE ACTIVE
-  ================================= */
+  const workspaceLinks = getWorkspaceLinks();
 
-  const isMoreActive = moreLinks.some(
-    (link) => location.pathname === link.path
+  const workspaceIsActive = workspaceLinks.some((link) =>
+    location.pathname === link.path ||
+    location.pathname.startsWith(`${link.path}/`)
+  );
+
+  const moreIsActive = moreLinks.some((link) =>
+    location.pathname === link.path ||
+    location.pathname.startsWith(`${link.path}/`)
   );
 
   return (
     <header className="xevoprop-navbar">
       <div className="navbar-container">
 
-        {/* ============================
+        {/* =====================================================
             LOGO
-        ============================ */}
+        ===================================================== */}
 
         <Link
           to="/"
           className="navbar-logo"
-          onClick={closeMenu}
+          onClick={closeMenus}
           aria-label="Xevoprop Home"
         >
           <img
@@ -214,44 +254,70 @@ function Navbar() {
           />
         </Link>
 
-        {/* ============================
-            DESKTOP NAVIGATION
-        ============================ */}
+        {/* =====================================================
+            DESKTOP PRIMARY NAVIGATION
+        ===================================================== */}
 
-        <nav className="navbar-links">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
+        <nav
+          className="navbar-primary"
+          aria-label="Main navigation"
+        >
+          {primaryLinks.map((link) => {
+            const isRent =
+              link.label === "Rent";
+
+            const isCommercial =
+              link.label === "Commercial";
+
+            const active =
+              isRent
+                ? location.pathname === "/properties" &&
+                  new URLSearchParams(
+                    location.search
+                  ).get("listingType") === "rent"
+                : isCommercial
+                ? location.pathname === "/properties" &&
+                  new URLSearchParams(
+                    location.search
+                  ).get("type") === "commercial"
+                : link.path === "/properties"
+                ? location.pathname === "/properties" &&
+                  !location.search
+                : location.pathname.startsWith(
+                    link.path
+                  );
 
             return (
               <NavLink
-                key={link.path}
+                key={link.label}
                 to={link.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? "navbar-link active"
-                    : "navbar-link"
+                className={
+                  active
+                    ? "navbar-primary-link active"
+                    : "navbar-primary-link"
                 }
+                onClick={closeMenus}
               >
-                {Icon && <Icon size={15} />}
-
-                <span>{link.label}</span>
+                {link.label}
               </NavLink>
             );
           })}
 
-          {/* MORE */}
+          {/* More */}
 
-          <div className="navbar-more">
+          <div className="navbar-menu-wrapper">
+
             <button
               type="button"
               className={
-                isMoreActive
-                  ? "navbar-link navbar-more-button active"
-                  : "navbar-link navbar-more-button"
+                moreIsActive
+                  ? "navbar-primary-link navbar-menu-button active"
+                  : "navbar-primary-link navbar-menu-button"
               }
-              onClick={() => setMoreOpen((prev) => !prev)}
+              onClick={() =>
+                setMoreOpen((current) => !current)
+              }
               aria-expanded={moreOpen}
-              aria-haspopup="true"
             >
               <span>More</span>
 
@@ -259,14 +325,19 @@ function Navbar() {
                 size={14}
                 className={
                   moreOpen
-                    ? "more-chevron rotated"
-                    : "more-chevron"
+                    ? "navbar-chevron open"
+                    : "navbar-chevron"
                 }
               />
             </button>
 
             {moreOpen && (
               <div className="navbar-dropdown">
+
+                <div className="navbar-dropdown-heading">
+                  Explore Xevoprop
+                </div>
+
                 {moreLinks.map((link) => {
                   const Icon = link.icon;
 
@@ -274,16 +345,20 @@ function Navbar() {
                     <NavLink
                       key={link.path}
                       to={link.path}
-                      onClick={closeMenu}
+                      onClick={closeMenus}
                       className={({ isActive }) =>
                         isActive
                           ? "navbar-dropdown-link active"
                           : "navbar-dropdown-link"
                       }
                     >
-                      <Icon size={15} />
+                      <span className="navbar-dropdown-icon">
+                        <Icon size={16} />
+                      </span>
 
-                      <span>{link.label}</span>
+                      <span>
+                        {link.label}
+                      </span>
                     </NavLink>
                   );
                 })}
@@ -292,14 +367,22 @@ function Navbar() {
           </div>
         </nav>
 
-        {/* ============================
-            RIGHT SIDE ACTIONS
-        ============================ */}
+        {/* =====================================================
+            RIGHT SIDE
+        ===================================================== */}
 
         <div className="navbar-actions">
 
           {!user ? (
             <>
+              <Link
+                to="/list-property"
+                className="navbar-list-property"
+              >
+                <Plus size={15} />
+                <span>List Property</span>
+              </Link>
+
               <Link
                 to="/login"
                 className="navbar-login"
@@ -310,94 +393,170 @@ function Navbar() {
 
               <Link
                 to="/register"
-                className="navbar-start"
+                className="navbar-register"
               >
-                Get Started
+                Register
               </Link>
             </>
           ) : (
             <>
-              {/* Notifications */}
+              {/* Workspace */}
+
+              <div className="navbar-menu-wrapper">
+
+                <button
+                  type="button"
+                  className={
+                    workspaceIsActive
+                      ? "navbar-workspace-button active"
+                      : "navbar-workspace-button"
+                  }
+                  onClick={() =>
+                    setWorkspaceOpen(
+                      (current) => !current
+                    )
+                  }
+                  aria-expanded={workspaceOpen}
+                >
+                  <span>Workspace</span>
+
+                  <ChevronDown
+                    size={14}
+                    className={
+                      workspaceOpen
+                        ? "navbar-chevron open"
+                        : "navbar-chevron"
+                    }
+                  />
+                </button>
+
+                {workspaceOpen && (
+                  <div className="navbar-dropdown navbar-workspace-dropdown">
+
+                    <div className="navbar-dropdown-heading">
+                      {user.role || "Buyer"} workspace
+                    </div>
+
+                    {workspaceLinks.map((link) => {
+                      const Icon = link.icon;
+
+                      return (
+                        <NavLink
+                          key={link.path}
+                          to={link.path}
+                          onClick={closeMenus}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "navbar-dropdown-link active"
+                              : "navbar-dropdown-link"
+                          }
+                        >
+                          <span className="navbar-dropdown-icon">
+                            <Icon size={16} />
+                          </span>
+
+                          <span>
+                            {link.label}
+                          </span>
+                        </NavLink>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Notification */}
 
               <Link
                 to="/notifications"
-                className="navbar-notification"
+                className="navbar-icon-button"
                 aria-label="Notifications"
               >
                 <Bell size={18} />
-              </Link>
 
-              {/* Dashboard */}
-
-              <Link
-                to="/dashboard"
-                className="navbar-dashboard"
-              >
-                Dashboard
+                <span className="navbar-notification-dot"></span>
               </Link>
 
               {/* Profile */}
 
               <Link
                 to="/profile"
-                className="navbar-avatar"
+                className="navbar-profile"
                 aria-label="Profile"
               >
-                {user.name?.charAt(0).toUpperCase() || "U"}
+                <span className="navbar-profile-avatar">
+                  {user.name
+                    ?.charAt(0)
+                    .toUpperCase() || "U"}
+                </span>
+
+                <span className="navbar-profile-name">
+                  {user.name || "Account"}
+                </span>
               </Link>
             </>
           )}
         </div>
 
-        {/* ============================
+        {/* =====================================================
             MOBILE BUTTON
-        ============================ */}
+        ===================================================== */}
 
         <button
           type="button"
           className="navbar-mobile-button"
-          onClick={() => setMobileOpen((prev) => !prev)}
+          onClick={() =>
+            setMobileOpen((current) => !current)
+          }
           aria-label="Toggle navigation"
           aria-expanded={mobileOpen}
         >
           {mobileOpen ? (
-            <X size={21} />
+            <X size={22} />
           ) : (
-            <Menu size={21} />
+            <Menu size={22} />
           )}
         </button>
       </div>
 
-      {/* ================================
+      {/* =====================================================
           MOBILE NAVIGATION
-      ================================= */}
+      ===================================================== */}
 
       {mobileOpen && (
         <div className="mobile-navbar">
-          <nav>
-            {navLinks.map((link) => {
-              const Icon = link.icon;
 
-              return (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "mobile-nav-link active"
-                      : "mobile-nav-link"
-                  }
-                >
-                  {Icon && <Icon size={17} />}
+          <div className="mobile-navbar-search">
+            <span>Explore Xevoprop</span>
+          </div>
 
-                  <span>{link.label}</span>
-                </NavLink>
-              );
-            })}
+          {/* Primary */}
 
-            <div className="mobile-more-title">
-              More
+          <div className="mobile-section">
+
+            <div className="mobile-section-title">
+              Marketplace
+            </div>
+
+            {primaryLinks.map((link) => (
+              <NavLink
+                key={link.label}
+                to={link.path}
+                onClick={closeMenus}
+                className="mobile-nav-link"
+              >
+                <span>{link.label}</span>
+              </NavLink>
+            ))}
+
+          </div>
+
+          {/* More */}
+
+          <div className="mobile-section">
+
+            <div className="mobile-section-title">
+              Discover
             </div>
 
             {moreLinks.map((link) => {
@@ -407,84 +566,109 @@ function Navbar() {
                 <NavLink
                   key={link.path}
                   to={link.path}
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "mobile-nav-link active"
-                      : "mobile-nav-link"
-                  }
+                  onClick={closeMenus}
+                  className="mobile-nav-link"
                 >
-                  <Icon size={17} />
+                  <span className="mobile-nav-icon">
+                    <Icon size={16} />
+                  </span>
 
                   <span>{link.label}</span>
                 </NavLink>
               );
             })}
-          </nav>
 
-          {/* MOBILE ACTIONS */}
+          </div>
+
+          {/* Workspace */}
+
+          {user && workspaceLinks.length > 0 && (
+            <div className="mobile-section">
+
+              <div className="mobile-section-title">
+                {user.role || "Buyer"} workspace
+              </div>
+
+              {workspaceLinks.map((link) => {
+                const Icon = link.icon;
+
+                return (
+                  <NavLink
+                    key={link.path}
+                    to={link.path}
+                    onClick={closeMenus}
+                    className="mobile-nav-link"
+                  >
+                    <span className="mobile-nav-icon">
+                      <Icon size={16} />
+                    </span>
+
+                    <span>{link.label}</span>
+                  </NavLink>
+                );
+              })}
+
+            </div>
+          )}
+
+          {/* Account */}
 
           <div className="mobile-actions">
+
             {!user ? (
               <>
                 <Link
                   to="/login"
-                  onClick={closeMenu}
+                  onClick={closeMenus}
+                  className="mobile-login"
                 >
                   <LogIn size={16} />
-                  <span>Login</span>
+                  Login
                 </Link>
 
                 <Link
                   to="/register"
-                  onClick={closeMenu}
+                  onClick={closeMenus}
+                  className="mobile-register"
                 >
-                  <span>Get Started</span>
-                  <ArrowRightIcon />
+                  Create account
+                </Link>
+
+                <Link
+                  to="/list-property"
+                  onClick={closeMenus}
+                  className="mobile-list-property"
+                >
+                  <Plus size={16} />
+                  List your property
                 </Link>
               </>
             ) : (
               <>
                 <Link
                   to="/notifications"
-                  onClick={closeMenu}
+                  onClick={closeMenus}
+                  className="mobile-login"
                 >
                   <Bell size={16} />
-                  <span>Notifications</span>
-                </Link>
-
-                <Link
-                  to="/dashboard"
-                  onClick={closeMenu}
-                >
-                  <UserRound size={16} />
-                  <span>Dashboard</span>
+                  Notifications
                 </Link>
 
                 <Link
                   to="/profile"
-                  onClick={closeMenu}
+                  onClick={closeMenus}
+                  className="mobile-login"
                 >
                   <UserRound size={16} />
-                  <span>Profile</span>
+                  Profile
                 </Link>
               </>
             )}
+
           </div>
         </div>
       )}
     </header>
-  );
-}
-
-function ArrowRightIcon() {
-  return (
-    <span
-      className="mobile-arrow"
-      aria-hidden="true"
-    >
-      →
-    </span>
   );
 }
 

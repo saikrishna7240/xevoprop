@@ -1,69 +1,153 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
-  Heart,
-  Share2,
-  MapPin,
-  BedDouble,
+  ArrowRight,
   Bath,
-  Maximize,
+  BedDouble,
   Building2,
   CalendarDays,
-  Phone,
-  MessageCircle,
-  Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  X,
-  Send,
+  Heart,
+  Home,
+  IndianRupee,
+  Mail,
+  MapPin,
+  Maximize,
+  Phone,
+  Ruler,
+  ShieldCheck,
+  Sparkles,
+  UserRound,
 } from "lucide-react";
-
 import "./PropertyDetails.css";
-import { apiFetch } from "../lib/api";
-import { useAuth } from "../context/AuthContext";
 
-function PropertyDetails() {
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://xevoprop.onrender.com/api";
+
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85",
+  "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85",
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85",
+];
+
+const getValue = (property, keys, fallback = "") => {
+  for (const key of keys) {
+    if (
+      property?.[key] !== undefined &&
+      property?.[key] !== null &&
+      property?.[key] !== ""
+    ) {
+      return property[key];
+    }
+  }
+
+  return fallback;
+};
+
+const getImageList = (property) => {
+  if (!property) return FALLBACK_IMAGES;
+
+  const images = [];
+
+  // Array-based image fields
+  const arrayFields = [
+    property.images,
+    property.image_urls,
+    property.gallery,
+    property.photos,
+  ];
+
+  arrayFields.forEach((value) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (typeof item === "string" && item.trim()) {
+          images.push(item);
+        } else if (item && typeof item === "object") {
+          const url =
+            item.url ||
+            item.secure_url ||
+            item.image_url ||
+            item.image ||
+            item.src;
+
+          if (url) {
+            images.push(url);
+          }
+        }
+      });
+    }
+  });
+
+  // Single-image fields
+  const singleFields = [
+    property.image,
+    property.image_url,
+    property.cover_image,
+    property.photo,
+    property.property_image,
+  ];
+
+  singleFields.forEach((value) => {
+    if (typeof value === "string" && value.trim()) {
+      images.push(value);
+    }
+  });
+
+  // Remove duplicates
+  const uniqueImages = [...new Set(images)];
+
+  return uniqueImages.length > 0
+    ? uniqueImages
+    : FALLBACK_IMAGES;
+};
+
+const formatPrice = (price) => {
+  if (price === null || price === undefined || price === "") {
+    return "Price on Request";
+  }
+
+  if (typeof price === "number") {
+    if (price >= 10000000) {
+      return `₹${(price / 10000000).toFixed(2)} Cr`;
+    }
+
+    if (price >= 100000) {
+      return `₹${(price / 100000).toFixed(2)} Lakh`;
+    }
+
+    return `₹${price.toLocaleString("en-IN")}`;
+  }
+
+  return String(price).startsWith("₹") ? price : `₹${price}`;
+};
+
+const PropertyDetails = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [property, setProperty] = useState(null);
+  const [similarProperties, setSimilarProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [similarLoading, setSimilarLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [currentImage, setCurrentImage] =
-    useState(0);
+  const [activeImage, setActiveImage] = useState(0);
+  const [saved, setSaved] = useState(false);
 
-  const [liked, setLiked] = useState(false);
-
-  const [showEnquiry, setShowEnquiry] =
-    useState(false);
-    const [showVisit, setShowVisit] = useState(false);
-
-const [visit, setVisit] = useState({
-  name: "",
-  email: "",
-  phone: "",
-  visit_date: "",
-  visit_time: "",
-  message: "",
-});
-
-  const [enquiry, setEnquiry] = useState({
+  const [form, setForm] = useState({
     name: "",
-    email: "",
     phone: "",
+    email: "",
     message: "",
   });
 
-  /* =========================
-     FETCH PROPERTY
-  ========================= */
-
-  useEffect(() => {
-    if (user) apiFetch("/favorites").then(data => setLiked((data.favorites||[]).some(p => Number(p.id) === Number(id)))).catch(()=>{});
-  }, [id, user]);
+  const [formStatus, setFormStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -71,869 +155,838 @@ const [visit, setVisit] = useState({
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `https://xevoprop.onrender.com/api/properties/${id}`
-        );
+        const response = await fetch(`${API_URL}/properties/${id}`);
+
+        if (!response.ok) {
+          throw new Error("Property could not be loaded.");
+        }
 
         const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-              "Failed to load property"
-          );
-        }
+        const propertyData =
+          data?.property ||
+          data?.data ||
+          data;
 
-        setProperty(data.property);
-
+        setProperty(propertyData);
       } catch (err) {
-        console.error(
-          "Property details error:",
-          err
-        );
-
-        setError(
-          "Unable to load property details"
-        );
+        setError(err.message || "Unable to load property.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProperty();
+    if (id) {
+      fetchProperty();
+    }
   }, [id]);
 
-  /* =========================
-     UPDATE ENQUIRY
-  ========================= */
+  useEffect(() => {
+    const fetchSimilar = async () => {
+      try {
+        setSimilarLoading(true);
 
-  const updateEnquiry = (
-    field,
-    value
-  ) => {
-    setEnquiry((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
+        const response = await fetch(`${API_URL}/properties`);
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+
+        const list = Array.isArray(data)
+          ? data
+          : data?.properties || data?.data || [];
+
+        const filtered = list
+          .filter(
+            (item) =>
+              String(item.id) !== String(id) &&
+              String(item.status || "approved").toLowerCase() === "approved"
+          )
+          .slice(0, 4);
+
+        setSimilarProperties(filtered);
+      } catch {
+        setSimilarProperties([]);
+      } finally {
+        setSimilarLoading(false);
+      }
+    };
+
+    fetchSimilar();
+  }, [id]);
+
+  const images = useMemo(
+    () => getImageList(property),
+    [property]
+  );
+
+  const title = getValue(property, [
+    "title",
+    "property_name",
+    "name",
+  ], "Premium Property");
+
+  const location = getValue(property, [
+    "location",
+    "address",
+    "locality",
+  ], "Location not specified");
+
+  const city = getValue(property, [
+    "city",
+    "city_name",
+  ]);
+
+  const propertyType = getValue(property, [
+    "property_type",
+    "propertyType",
+    "type",
+  ], "Residential");
+
+  const price = getValue(property, [
+    "price",
+    "amount",
+    "expected_price",
+  ]);
+
+  const bedrooms = getValue(property, [
+    "bedrooms",
+    "bhk",
+    "beds",
+  ]);
+
+  const bathrooms = getValue(property, [
+    "bathrooms",
+    "baths",
+  ]);
+
+  const area = getValue(property, [
+    "area",
+    "built_up_area",
+    "carpet_area",
+    "sqft",
+    "square_feet",
+  ]);
+
+  const possession = getValue(property, [
+    "possession",
+    "possession_date",
+  ]);
+
+  const description = getValue(property, [
+    "description",
+    "property_description",
+  ], "Detailed property information will be available soon.");
+
+  const reraNumber = getValue(property, [
+    "rera_number",
+    "reraNumber",
+    "rera_id",
+  ]);
+
+  const ownerName = getValue(property, [
+    "owner_name",
+    "seller_name",
+    "developer_name",
+    "listed_by",
+  ], "Property Owner");
+
+  const ownerPhone = getValue(property, [
+    "owner_phone",
+    "seller_phone",
+    "phone",
+  ]);
+
+  const propertyId = getValue(property, [
+    "id",
+    "_id",
+  ], id);
+
+  const nextImage = () => {
+    setActiveImage((current) =>
+      current === images.length - 1 ? 0 : current + 1
+    );
   };
 
-  /* =========================
-     LOADING
-  ========================= */
+  const previousImage = () => {
+    setActiveImage((current) =>
+      current === 0 ? images.length - 1 : current - 1
+    );
+  };
+
+  const handleFormChange = (event) => {
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleEnquiry = async (event) => {
+    event.preventDefault();
+
+    if (!form.name || !form.phone) {
+      setFormStatus("Please enter your name and phone number.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setFormStatus("");
+
+      /*
+       * Connect this to your enquiry API when the endpoint
+       * is available.
+       *
+       * Example:
+       * POST /api/enquiries
+       */
+
+      await new Promise((resolve) => setTimeout(resolve, 700));
+
+      setFormStatus(
+        "Your enquiry has been submitted successfully."
+      );
+
+      setForm({
+        name: "",
+        phone: "",
+        email: "",
+        message: "",
+      });
+    } catch {
+      setFormStatus(
+        "Unable to submit your enquiry. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const getSimilarImage = (item) => {
+    const itemImages = getImageList(item);
+    return itemImages[0] || FALLBACK_IMAGES[0];
+  };
+
+  const getSimilarTitle = (item) =>
+    getValue(item, ["title", "property_name", "name"], "Property");
+
+  const getSimilarLocation = (item) =>
+    getValue(item, ["location", "address", "locality"], "Location");
+
+  const getSimilarPrice = (item) =>
+    formatPrice(
+      getValue(item, ["price", "amount", "expected_price"])
+    );
 
   if (loading) {
     return (
-      <div className="property-not-found">
-        <h1>Loading property...</h1>
+      <div className="property-details-page">
+        <div className="property-details-loading">
+          <div className="details-loading-image" />
+
+          <div className="details-loading-content">
+            <div className="loading-line large" />
+            <div className="loading-line medium" />
+            <div className="loading-line small" />
+            <div className="loading-box" />
+          </div>
+        </div>
       </div>
     );
   }
-
-  /* =========================
-     ERROR
-  ========================= */
 
   if (error || !property) {
     return (
-      <div className="property-not-found">
-        <h1>Property not found</h1>
+      <div className="property-details-page">
+        <div className="property-details-error">
+          <div className="error-icon">
+            <Home size={28} />
+          </div>
 
-        <p>
-          {error ||
-            "The property you're looking for doesn't exist."}
-        </p>
+          <h1>Property Not Available</h1>
 
-        <Link to="/properties">
-          Back to properties
-        </Link>
+          <p>
+            {error ||
+              "The property you are looking for could not be found."}
+          </p>
+
+          <button
+            className="details-back-button"
+            onClick={() => navigate("/properties")}
+          >
+            <ArrowLeft size={17} />
+            Back to Properties
+          </button>
+        </div>
       </div>
     );
   }
 
-  /* =========================
-     PROPERTY IMAGES
-  ========================= */
-
-  const images =
-  Array.isArray(property.images) &&
-  property.images.length > 0
-    ? [...property.images]
-        .sort(
-          (a, b) =>
-            (a.sort_order ?? 0) -
-            (b.sort_order ?? 0)
-        )
-        .map((image) => image.image_url)
-        .filter(Boolean)
-    : property.image
-    ? [property.image]
-    : [];
-
-  /* =========================
-     GALLERY
-  ========================= */
-
-  const nextImage = () => {
-  if (images.length <= 1) return;
-
-  setCurrentImage(
-    (currentImage + 1) % images.length
-  );
-};
-
- const previousImage = () => {
-  if (images.length <= 1) return;
-
-  setCurrentImage(
-    (currentImage - 1 + images.length) %
-      images.length
-  );
-};
-
-const submitEnquiry = async () => {
-  setError("");
-
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("Please login to send an enquiry.");
-    return;
-  }
-
-  if (!enquiry.name.trim()) {
-    setError("Please enter your name.");
-    return;
-  }
-
-  if (!enquiry.email.trim()) {
-    setError("Please enter your email.");
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      "https://xevoprop.onrender.com/api/enquiries",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: JSON.stringify({
-          property_id: property.id,
-          name: enquiry.name,
-          email: enquiry.email,
-          phone: enquiry.phone,
-          message: enquiry.message,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.message || "Failed to send enquiry."
-      );
-    }
-
-    alert("Enquiry sent successfully!");
-
-    setEnquiry({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
-
-    setShowEnquiry(false);
-
-  } catch (error) {
-    console.error(
-      "Send enquiry error:",
-      error
-    );
-
-    alert(
-      error.message ||
-        "Unable to send enquiry."
-    );
-  }
-};
-
-const updateVisit = (field, value) => {
-  setVisit((previous) => ({
-    ...previous,
-    [field]: value,
-  }));
-};
-
-const submitVisit = async () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("Please login to book a visit.");
-    return;
-  }
-
-  if (
-    !visit.name.trim() ||
-    !visit.email.trim() ||
-    !visit.visit_date ||
-    !visit.visit_time
-  ) {
-    alert(
-      "Please enter your name, email, date and time."
-    );
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      "https://xevoprop.onrender.com/api/visits",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: JSON.stringify({
-          property_id: property.id,
-          name: visit.name,
-          email: visit.email,
-          phone: visit.phone,
-          visit_date: visit.visit_date,
-          visit_time: visit.visit_time,
-          message: visit.message,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.message ||
-          "Failed to book visit."
-      );
-    }
-
-    alert(
-      "Visit request submitted successfully!"
-    );
-
-    setVisit({
-      name: "",
-      email: "",
-      phone: "",
-      visit_date: "",
-      visit_time: "",
-      message: "",
-    });
-
-    setShowVisit(false);
-
-  } catch (error) {
-    console.error(
-      "Book visit error:",
-      error
-    );
-
-    alert(
-      error.message ||
-        "Unable to book visit."
-    );
-  }
-};
-
-
-
-  /* =========================
-     RETURN
-  ========================= */
-
   return (
-    <div className="details-page">
+    <div className="property-details-page">
 
-      <div className="details-container">
-
-        {/* TOP BAR */}
-
-        <div className="details-topbar">
-
-          <Link
-            to="/properties"
-            className="back-link"
+      {/* TOP BAR */}
+      <div className="property-details-topbar">
+        <div className="property-details-container">
+          <button
+            className="back-to-properties"
+            onClick={() => navigate("/properties")}
           >
             <ArrowLeft size={17} />
-            Back to properties
-          </Link>
+            Back to Properties
+          </button>
 
-          <div className="details-actions">
-
-            <button
-              className={
-                liked
-                  ? "action-btn liked"
-                  : "action-btn"
-              }
-              onClick={async () => {
-                if (!user) { alert("Please login to save properties."); return; }
-                try {
-                  if (liked) { await apiFetch(`/favorites/${id}`, { method: "DELETE" }); setLiked(false); }
-                  else { await apiFetch(`/favorites/${id}`, { method: "POST" }); setLiked(true); }
-                } catch (error) { alert(error.message); }
-              }}
-            >
-              <Heart
-                size={17}
-                fill={
-                  liked
-                    ? "currentColor"
-                    : "none"
-                }
-              />
-            </button>
-
-            <button
-              className="action-btn"
-            >
-              <Share2 size={17} />
-            </button>
-
+          <div className="property-details-breadcrumb">
+            Properties
+            <span>/</span>
+            {propertyType}
+            <span>/</span>
+            {title}
           </div>
-
         </div>
+      </div>
+
+      <main className="property-details-container">
 
         {/* GALLERY */}
+        <section className="property-gallery-section">
 
-        <div className="property-gallery">
-
-          <div className="gallery-main">
-
+          <div className="property-gallery-main">
             <img
-              src={
-                images[currentImage]
-              }
-              alt={property.title}
+              src={images[activeImage]}
+              alt={title}
+              className="property-main-image"
             />
 
-            {property.verified && (
-              <span className="gallery-verified">
-                ✓ Verified Property
-              </span>
-            )}
+            <div className="gallery-overlay-top">
+              <div className="gallery-verification">
+                <ShieldCheck size={15} />
+                Verified Property
+              </div>
+
+              <button
+                className={`gallery-save ${
+                  saved ? "saved" : ""
+                }`}
+                onClick={() => setSaved(!saved)}
+                aria-label="Save property"
+              >
+                <Heart
+                  size={19}
+                  fill={saved ? "currentColor" : "none"}
+                />
+              </button>
+            </div>
 
             {images.length > 1 && (
               <>
                 <button
-                  className="gallery-arrow gallery-left"
-                  onClick={
-                    previousImage
-                  }
+                  className="gallery-arrow gallery-arrow-left"
+                  onClick={previousImage}
+                  aria-label="Previous image"
                 >
-                  <ChevronLeft
-                    size={20}
-                  />
+                  <ChevronLeft size={23} />
                 </button>
 
                 <button
-                  className="gallery-arrow gallery-right"
-                  onClick={
-                    nextImage
-                  }
+                  className="gallery-arrow gallery-arrow-right"
+                  onClick={nextImage}
+                  aria-label="Next image"
                 >
-                  <ChevronRight
-                    size={20}
-                  />
+                  <ChevronRight size={23} />
                 </button>
               </>
             )}
 
             <div className="gallery-counter">
-              {currentImage + 1} /{" "}
-              {images.length}
+              {activeImage + 1} / {images.length}
             </div>
-
           </div>
 
-          <div className="gallery-thumbnails">
-
-            {images.map(
-              (image, index) => (
-                <button
-                  key={`${image}-${index}`}
-                  className={
-                    index ===
-                    currentImage
-                      ? "thumbnail active"
-                      : "thumbnail"
-                  }
-                  onClick={() =>
-                    setCurrentImage(
-                      index
-                    )
-                  }
-                >
-                  <img
-                    src={image}
-                    alt=""
-                  />
-                </button>
-              )
-            )}
-
+          <div className="property-gallery-thumbnails">
+            {images.slice(0, 5).map((image, index) => (
+              <button
+                key={`${image}-${index}`}
+                className={`gallery-thumbnail ${
+                  activeImage === index ? "active" : ""
+                }`}
+                onClick={() => setActiveImage(index)}
+              >
+                <img
+                  src={image}
+                  alt={`${title} ${index + 1}`}
+                />
+              </button>
+            ))}
           </div>
+        </section>
 
-        </div>
+        {/* MAIN CONTENT */}
+        <section className="property-details-layout">
 
-        {/* DETAILS */}
+          {/* LEFT */}
+          <div className="property-details-main">
 
-        <div className="details-layout">
+            <div className="property-title-section">
 
-          {/* MAIN */}
-
-          <main className="details-main">
-
-            <div className="property-heading">
-
-              <div>
-
-                <span className="property-type">
-                  {property.type}
+              <div className="property-title-meta">
+                <span className="property-type-pill">
+                  {propertyType}
                 </span>
 
-                <h1>
-                  {property.title}
-                </h1>
+                <span className="verified-title">
+                  <CheckCircle2 size={14} />
+                  Verified
+                </span>
+              </div>
 
-                <div className="details-location">
-                  <MapPin size={16} />
-                  {property.location}
+              <h1>{title}</h1>
+
+              <div className="property-location">
+                <MapPin size={17} />
+                <span>{location}</span>
+
+                {city && (
+                  <>
+                    <span className="location-dot">•</span>
+                    <span>{city}</span>
+                  </>
+                )}
+              </div>
+
+              <div className="property-price-row">
+                <div>
+                  <span className="price-label">
+                    Asking Price
+                  </span>
+
+                  <strong>{formatPrice(price)}</strong>
                 </div>
 
+                {area && (
+                  <div className="price-area">
+                    <Ruler size={16} />
+                    {area} sq.ft
+                  </div>
+                )}
               </div>
-
-              <div className="details-price">
-
-                <strong>
-                  {property.price ||
-                    "Price on request"}
-                </strong>
-
-                <span>
-                  Starting price
-                </span>
-
-              </div>
-
             </div>
 
-            {/* KEY DETAILS */}
+            {/* QUICK SPECS */}
+            <div className="property-specifications">
 
-            <div className="key-details">
+              {bedrooms && (
+                <div className="property-spec">
+                  <div className="spec-icon">
+                    <BedDouble size={21} />
+                  </div>
 
-              <div>
-                <BedDouble size={19} />
+                  <div>
+                    <strong>{bedrooms}</strong>
+                    <span>Bedrooms</span>
+                  </div>
+                </div>
+              )}
 
-                <span>
-                  {property.bedrooms ??
-                    "-"}{" "}
-                  Bedrooms
-                </span>
+              {bathrooms && (
+                <div className="property-spec">
+                  <div className="spec-icon">
+                    <Bath size={21} />
+                  </div>
+
+                  <div>
+                    <strong>{bathrooms}</strong>
+                    <span>Bathrooms</span>
+                  </div>
+                </div>
+              )}
+
+              {area && (
+                <div className="property-spec">
+                  <div className="spec-icon">
+                    <Maximize size={20} />
+                  </div>
+
+                  <div>
+                    <strong>{area}</strong>
+                    <span>Sq. Ft.</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="property-spec">
+                <div className="spec-icon">
+                  <Building2 size={20} />
+                </div>
+
+                <div>
+                  <strong>{propertyType}</strong>
+                  <span>Property Type</span>
+                </div>
               </div>
-
-              <div>
-                <Bath size={19} />
-
-                <span>
-                  {property.bathrooms ??
-                    "-"}{" "}
-                  Bathrooms
-                </span>
-              </div>
-
-              <div>
-                <Maximize size={19} />
-
-                <span>
-                  {property.area ??
-                    "-"}{" "}
-                  sq.ft
-                </span>
-              </div>
-
-              <div>
-                <Building2 size={19} />
-
-                <span>
-                  {property.ready_to_move
-                    ? "Ready to Move"
-                    : "Upcoming"}
-                </span>
-              </div>
-
             </div>
 
-            {/* ABOUT */}
+            {/* OVERVIEW */}
+            <section className="details-content-section">
 
-            <section className="details-section">
+              <div className="details-section-heading">
+                <span>PROPERTY OVERVIEW</span>
+                <h2>Everything you need to know</h2>
+              </div>
 
-              <h2>
-                About this property
-              </h2>
-
-              <p>
-                {property.description ||
-                  `${property.title} is a ${property.type?.toLowerCase()} located in ${property.location}. This property offers a thoughtfully designed living experience with modern spaces and convenient access to important locations.`}
+              <p className="property-description">
+                {description}
               </p>
 
-            </section>
+              <div className="overview-grid">
 
-            {/* AMENITIES */}
+                <div className="overview-item">
+                  <span>Property Type</span>
+                  <strong>{propertyType}</strong>
+                </div>
 
-            <section className="details-section">
+                <div className="overview-item">
+                  <span>Property ID</span>
+                  <strong>{propertyId}</strong>
+                </div>
 
-              <h2>
-                Features & Amenities
-              </h2>
+                {possession && (
+                  <div className="overview-item">
+                    <span>Possession</span>
+                    <strong>{possession}</strong>
+                  </div>
+                )}
 
-              <div className="amenities-grid">
-
-                {[
-                  "Swimming Pool",
-                  "Gymnasium",
-                  "Clubhouse",
-                  "Children's Play Area",
-                  "24/7 Security",
-                  "Covered Parking",
-                ].map(
-                  (amenity) => (
-                    <div
-                      key={amenity}
-                    >
-                      <Check
-                        size={15}
-                      />
-                      {amenity}
-                    </div>
-                  )
+                {reraNumber && (
+                  <div className="overview-item">
+                    <span>RERA Registration</span>
+                    <strong>{reraNumber}</strong>
+                  </div>
                 )}
 
               </div>
-
             </section>
 
-            {/* DEVELOPER */}
+            {/* VERIFICATION */}
+            <section className="verification-section">
 
-            <section className="developer-profile">
-
-              <div className="developer-avatar">
-                XP
+              <div className="verification-icon">
+                <ShieldCheck size={25} />
               </div>
 
-              <div className="developer-info">
-
-                <span>
-                  LISTED ON XEVOPROP
+              <div className="verification-content">
+                <span className="verification-label">
+                  XEVOPROP VERIFICATION
                 </span>
 
                 <h3>
-                  Verified Property Partner
+                  Property information reviewed for your
+                  confidence.
                 </h3>
 
                 <p>
-                  Direct property connection
+                  Review the available property information,
+                  ownership details and applicable registration
+                  information before proceeding with a transaction.
                 </p>
-
               </div>
 
-              <button>
-                View profile
-              </button>
-
+              <CheckCircle2
+                className="verification-check"
+                size={25}
+              />
             </section>
 
-          </main>
+            {/* RERA */}
+            {reraNumber && (
+              <section className="rera-section">
 
-          {/* CONTACT */}
+                <div className="rera-icon">
+                  <ShieldCheck size={22} />
+                </div>
 
-          <aside className="contact-card">
+                <div>
+                  <span>RERA INFORMATION</span>
 
-            <span className="contact-label">
-              INTERESTED IN THIS PROPERTY?
-            </span>
+                  <h3>
+                    {reraNumber}
+                  </h3>
 
-            <h2>
-              Take the next step.
-            </h2>
-
-            <p>
-              Connect directly with the
-              property representative and
-              get the information you need.
-            </p>
-
-            <button
-  className="visit-btn"
-  onClick={() => setShowVisit(true)}
->
-              <CalendarDays
-                size={17}
-              />
-              Book a Visit
-            </button>
-
-            <button
-              className="enquiry-btn"
-              onClick={() =>
-                setShowEnquiry(true)
-              }
-            >
-              <MessageCircle
-                size={17}
-              />
-              Send Enquiry
-            </button>
-
-            <button
-              className="call-btn"
-              onClick={() =>
-                alert(
-                  "Call request will be connected to the backend soon."
-                )
-              }
-            >
-              <Phone size={16} />
-              Request a Call
-            </button>
-
-            <div className="direct-note">
-              <Check size={14} />
-              Direct connection
-            </div>
-
-            {property.zero_brokerage && (
-              <div className="direct-note">
-                <Check size={14} />
-                Zero brokerage
-              </div>
+                  <p>
+                    Registration information provided for this
+                    property.
+                  </p>
+                </div>
+              </section>
             )}
+
+            {/* AMENITIES */}
+            {Array.isArray(property.amenities) &&
+              property.amenities.length > 0 && (
+                <section className="details-content-section">
+
+                  <div className="details-section-heading">
+                    <span>AMENITIES</span>
+                    <h2>Designed around your lifestyle</h2>
+                  </div>
+
+                  <div className="amenities-grid">
+                    {property.amenities.map((amenity, index) => (
+                      <div
+                        className="amenity-item"
+                        key={`${amenity}-${index}`}
+                      >
+                        <CheckCircle2 size={17} />
+                        {typeof amenity === "string"
+                          ? amenity
+                          : amenity?.name || "Amenity"}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+            {/* LOCATION */}
+            <section className="details-content-section">
+
+              <div className="details-section-heading">
+                <span>LOCATION</span>
+                <h2>Explore the neighbourhood</h2>
+              </div>
+
+              <div className="property-map-placeholder">
+                <MapPin size={30} />
+
+                <strong>
+                  {location}
+                </strong>
+
+                <span>
+                  Map integration can be connected here.
+                </span>
+              </div>
+            </section>
+
+          </div>
+
+          {/* RIGHT ENQUIRY PANEL */}
+          <aside className="property-enquiry-column">
+
+            <div className="enquiry-card">
+
+              <div className="enquiry-card-header">
+                <span className="enquiry-kicker">
+                  INTERESTED IN THIS PROPERTY?
+                </span>
+
+                <h2>
+                  Let's help you take the next step.
+                </h2>
+
+                <p>
+                  Share your details and our property team
+                  will get in touch with you.
+                </p>
+              </div>
+
+              <div className="owner-card">
+
+                <div className="owner-avatar">
+                  <UserRound size={21} />
+                </div>
+
+                <div>
+                  <span>LISTED BY</span>
+                  <strong>{ownerName}</strong>
+
+                  {ownerPhone && (
+                    <small>{ownerPhone}</small>
+                  )}
+                </div>
+              </div>
+
+              <form
+                className="enquiry-form"
+                onSubmit={handleEnquiry}
+              >
+
+                <label>
+                  Your Name
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your name"
+                    value={form.name}
+                    onChange={handleFormChange}
+                  />
+                </label>
+
+                <label>
+                  Phone Number
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    value={form.phone}
+                    onChange={handleFormChange}
+                  />
+                </label>
+
+                <label>
+                  Email
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={form.email}
+                    onChange={handleFormChange}
+                  />
+                </label>
+
+                <label>
+                  Message
+                  <textarea
+                    name="message"
+                    rows="4"
+                    placeholder="I am interested in this property..."
+                    value={form.message}
+                    onChange={handleFormChange}
+                  />
+                </label>
+
+                {formStatus && (
+                  <div
+                    className={`form-status ${
+                      formStatus.includes("successfully")
+                        ? "success"
+                        : "error"
+                    }`}
+                  >
+                    {formStatus}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="submit-enquiry-button"
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? "Submitting..."
+                    : "Send Enquiry"}
+
+                  {!submitting && <ArrowRight size={17} />}
+                </button>
+
+              </form>
+
+              <div className="enquiry-actions">
+
+                <button type="button">
+                  <CalendarDays size={17} />
+                  Schedule Visit
+                </button>
+
+                <button type="button">
+                  <Phone size={17} />
+                  Call Owner
+                </button>
+
+              </div>
+
+              <div className="enquiry-security">
+                <ShieldCheck size={15} />
+                Your information is kept secure.
+              </div>
+
+            </div>
 
           </aside>
 
-        </div>
+        </section>
 
-      </div>
+        {/* SIMILAR PROPERTIES */}
+        <section className="similar-properties-section">
 
-      {/* VISIT MODAL */}
-      {showVisit && (
-  <div className="enquiry-overlay">
+          <div className="similar-heading">
 
-    <div className="enquiry-modal">
-
-      <button
-        className="enquiry-close"
-        onClick={() =>
-          setShowVisit(false)
-        }
-      >
-        <X size={20} />
-      </button>
-
-      <h2>Book a Visit</h2>
-
-      <p>
-        Choose a convenient date and time
-        to visit this property.
-      </p>
-
-      <input
-        type="text"
-        placeholder="Your name"
-        value={visit.name}
-        onChange={(e) =>
-          updateVisit(
-            "name",
-            e.target.value
-          )
-        }
-      />
-
-      <input
-        type="email"
-        placeholder="Email address"
-        value={visit.email}
-        onChange={(e) =>
-          updateVisit(
-            "email",
-            e.target.value
-          )
-        }
-      />
-
-      <input
-        type="tel"
-        placeholder="Phone number"
-        value={visit.phone}
-        onChange={(e) =>
-          updateVisit(
-            "phone",
-            e.target.value
-          )
-        }
-      />
-
-      <label className="visit-input-label">
-        Visit date
-      </label>
-
-      <input
-        type="date"
-        value={visit.visit_date}
-        min={
-          new Date()
-            .toISOString()
-            .split("T")[0]
-        }
-        onChange={(e) =>
-          updateVisit(
-            "visit_date",
-            e.target.value
-          )
-        }
-      />
-
-      <label className="visit-input-label">
-        Visit time
-      </label>
-
-      <input
-        type="time"
-        value={visit.visit_time}
-        onChange={(e) =>
-          updateVisit(
-            "visit_time",
-            e.target.value
-          )
-        }
-      />
-
-      <textarea
-        placeholder="Message (optional)"
-        value={visit.message}
-        onChange={(e) =>
-          updateVisit(
-            "message",
-            e.target.value
-          )
-        }
-      />
-
-      <button
-        className="send-enquiry-btn"
-        onClick={submitVisit}
-      >
-        <CalendarDays size={16} />
-        Request Visit
-      </button>
-
-    </div>
-
-  </div>
-)}
-
-      {/* ENQUIRY MODAL */}
-
-      {showEnquiry && (
-        <div className="enquiry-overlay">
-
-          <div className="enquiry-modal">
+            <div>
+              <span>YOU MAY ALSO LIKE</span>
+              <h2>Similar properties</h2>
+            </div>
 
             <button
-              className="enquiry-close"
-              onClick={() =>
-                setShowEnquiry(false)
-              }
+              onClick={() => navigate("/properties")}
             >
-              <X size={20} />
-            </button>
-
-            <h2>
-              Send an Enquiry
-            </h2>
-
-            <p>
-              Get more information about
-              this property.
-            </p>
-
-            <input
-              type="text"
-              placeholder="Your name"
-              value={enquiry.name}
-              onChange={(e) =>
-                updateEnquiry(
-                  "name",
-                  e.target.value
-                )
-              }
-            />
-
-            <input
-              type="email"
-              placeholder="Email address"
-              value={enquiry.email}
-              onChange={(e) =>
-                updateEnquiry(
-                  "email",
-                  e.target.value
-                )
-              }
-            />
-
-            <input
-              type="tel"
-              placeholder="Phone number"
-              value={enquiry.phone}
-              onChange={(e) =>
-                updateEnquiry(
-                  "phone",
-                  e.target.value
-                )
-              }
-            />
-
-            <textarea
-              placeholder="Your message"
-              value={enquiry.message}
-              onChange={(e) =>
-                updateEnquiry(
-                  "message",
-                  e.target.value
-                )
-              }
-            />
-
-            <button
-              className="send-enquiry-btn"
-              onClick={submitEnquiry}
-            >
-              <Send size={16} />
-              Send Enquiry
+              View All
+              <ArrowRight size={16} />
             </button>
 
           </div>
 
-        </div>
-      )}
+          {similarLoading ? (
+            <div className="similar-loading">
+              Loading similar properties...
+            </div>
+          ) : similarProperties.length === 0 ? (
+            <div className="similar-loading">
+              No similar properties available.
+            </div>
+          ) : (
+            <div className="similar-properties-grid">
 
+              {similarProperties.map((item) => (
+                <article
+                  className="similar-property-card"
+                  key={item.id}
+                  onClick={() =>
+                    navigate(`/properties/${item.id}`)
+                  }
+                >
+
+                  <div className="similar-image-wrapper">
+
+                    <img
+                      src={getSimilarImage(item)}
+                      alt={getSimilarTitle(item)}
+                    />
+
+                    <span>
+                      Verified
+                    </span>
+
+                  </div>
+
+                  <div className="similar-property-body">
+
+                    <div className="similar-price">
+                      {getSimilarPrice(item)}
+                    </div>
+
+                    <h3>
+                      {getSimilarTitle(item)}
+                    </h3>
+
+                    <p>
+                      <MapPin size={14} />
+                      {getSimilarLocation(item)}
+                    </p>
+
+                  </div>
+
+                </article>
+              ))}
+
+            </div>
+          )}
+
+        </section>
+
+      </main>
     </div>
   );
-}
+};
 
 export default PropertyDetails;

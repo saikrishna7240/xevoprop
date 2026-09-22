@@ -1,71 +1,70 @@
 /* =========================================================
    XEVOPROP — GLOBAL DESIGN SYSTEM
-   Professional PropTech UI
-========================================================= */
+   ========================================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 /* =========================================================
-   ROOT VARIABLES
-========================================================= */
+   ROOT
+   ========================================================= */
 
 :root {
   /* Brand */
-  --primary: #155eef;
-  --primary-hover: #0f4fd1;
-  --primary-soft: #eef4ff;
+  --xevoprop-blue: #155eef;
+  --xevoprop-blue-dark: #0f4fd1;
+  --xevoprop-blue-light: #eef4ff;
+  --xevoprop-cyan: #16b8c8;
 
   /* Text */
-  --text: #172033;
-  --text-secondary: #526071;
-  --text-muted: #7a8494;
-  --text-light: #98a1af;
+  --text-primary: #111827;
+  --text-secondary: #475467;
+  --text-muted: #667085;
+  --text-light: #98a2b3;
+  --text-white: #ffffff;
 
-  /* Surfaces */
-  --background: #ffffff;
-  --surface: #ffffff;
-  --surface-soft: #f7f9fc;
-  --surface-blue: #f5f8ff;
+  /* Background */
+  --bg-white: #ffffff;
+  --bg-page: #f8fafc;
+  --bg-soft: #f3f6fa;
+  --bg-dark: #101828;
 
   /* Borders */
-  --border: #e5e9f0;
-  --border-dark: #d7dce5;
+  --border-light: #eaecf0;
+  --border-medium: #d0d5dd;
 
   /* Status */
-  --success: #16803c;
-  --success-soft: #edf9f1;
-
-  --warning: #a15c00;
-  --warning-soft: #fff7e8;
-
-  --danger: #c62828;
-  --danger-soft: #fff0f0;
-
-  /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  --success: #12b76a;
+  --warning: #f79009;
+  --danger: #f04438;
 
   /* Shadows */
-  --shadow-sm:
-    0 1px 3px rgba(16, 24, 40, 0.06);
+  --shadow-small:
+    0 2px 8px rgba(16, 24, 40, 0.06);
 
-  --shadow-md:
-    0 6px 20px rgba(16, 24, 40, 0.08);
+  --shadow-medium:
+    0 10px 30px rgba(16, 24, 40, 0.08);
+
+  --shadow-large:
+    0 20px 60px rgba(16, 24, 40, 0.12);
+
+  /* Radius */
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 16px;
+  --radius-xl: 24px;
 
   /* Layout */
-  --container: 1280px;
+  --container-width: 1320px;
   --page-padding: 32px;
 
-  /* Motion */
-  --transition-fast: 150ms ease;
-  --transition: 220ms ease;
+  /* Typography */
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Manrope", sans-serif;
 }
 
 /* =========================================================
    RESET
-========================================================= */
+   ========================================================= */
 
 *,
 *::before,
@@ -79,29 +78,29 @@ html {
 
 body {
   margin: 0;
-  padding: 0;
 
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  background: var(--bg-page);
 
-  background: var(--background);
-  color: var(--text);
+  color: var(--text-primary);
 
-  font-size: 15px;
-  line-height: 1.6;
+  font-family: var(--font-body);
 
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
 }
 
 button,
 input,
-textarea,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -110,8 +109,8 @@ button {
 }
 
 img {
-  display: block;
   max-width: 100%;
+  display: block;
 }
 
 a {
@@ -119,107 +118,47 @@ a {
   text-decoration: none;
 }
 
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
 /* =========================================================
-   ROOT
-========================================================= */
+   APP
+   ========================================================= */
 
 #root {
   min-height: 100vh;
 }
 
 /* =========================================================
-   GLOBAL CONTAINER
-========================================================= */
+   COMMON CONTAINER
+   ========================================================= */
 
-.container {
+.xevoprop-container {
   width: min(
-    calc(100% - (var(--page-padding) * 2)),
-    var(--container)
+    var(--container-width),
+    calc(100% - (var(--page-padding) * 2))
   );
 
   margin: 0 auto;
 }
 
 /* =========================================================
-   PAGE
-========================================================= */
-
-.page {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/* =========================================================
-   SECTION
-========================================================= */
-
-.section {
-  padding: 72px 0;
-}
-
-.section--soft {
-  background: var(--surface-soft);
-}
-
-/* =========================================================
-   SECTION HEADER
-========================================================= */
-
-.section-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-
-  margin-bottom: 32px;
-}
-
-.section-header-content {
-  max-width: 700px;
-}
-
-.section-eyebrow {
-  display: block;
-
-  margin-bottom: 8px;
-
-  color: var(--primary);
-
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.section-title {
-  margin: 0;
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  color: var(--text);
-
-  font-size: clamp(26px, 3vw, 36px);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-}
-
-.section-description {
-  max-width: 620px;
-
-  margin: 10px 0 0;
-
-  color: var(--text-secondary);
-
-  font-size: 15px;
-}
-
-/* =========================================================
-   HEADINGS
-========================================================= */
+   TYPOGRAPHY
+   ========================================================= */
 
 h1,
 h2,
@@ -227,409 +166,347 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 0;
+  font-family: var(--font-heading);
 
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
+  color: var(--text-primary);
 
-  color: var(--text);
+  font-weight: 700;
+
+  letter-spacing: -0.025em;
 }
 
-h1 {
-  font-size: clamp(34px, 4vw, 52px);
-  line-height: 1.12;
-  letter-spacing: -0.035em;
+p {
+  color: var(--text-secondary);
+
+  line-height: 1.65;
 }
 
-h2 {
-  font-size: clamp(28px, 3vw, 38px);
-  line-height: 1.2;
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.xevoprop-section {
+  width: 100%;
+
+  padding: 80px 0;
 }
 
-h3 {
-  font-size: 21px;
-  line-height: 1.3;
+.xevoprop-section-white {
+  background: var(--bg-white);
+}
+
+.xevoprop-section-soft {
+  background: var(--bg-soft);
+}
+
+/* =========================================================
+   SECTION LABEL
+   ========================================================= */
+
+.xevoprop-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--xevoprop-blue);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.xevoprop-section-label::before {
+  content: "";
+
+  width: 24px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: var(--xevoprop-blue);
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.xevoprop-link {
+  color: var(--xevoprop-blue);
+
+  font-weight: 600;
+
+  transition: color 180ms ease;
+}
+
+.xevoprop-link:hover {
+  color: var(--xevoprop-blue-dark);
 }
 
 /* =========================================================
    BUTTONS
-========================================================= */
+   ========================================================= */
 
-.btn {
+.xevoprop-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 
-  min-height: 42px;
-  padding: 0 17px;
+  min-height: 44px;
+
+  padding: 0 18px;
 
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-medium);
 
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
 
   transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    color var(--transition-fast),
-    box-shadow var(--transition-fast);
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: #ffffff;
+.xevoprop-button:active {
+  transform: scale(0.98);
 }
 
-.btn-primary:hover {
-  background: var(--primary-hover);
+.xevoprop-button-primary {
+  background: var(--xevoprop-blue);
+
+  color: var(--text-white);
 }
 
-.btn-secondary {
-  background: #ffffff;
-  border-color: var(--border-dark);
-  color: var(--text);
+.xevoprop-button-primary:hover {
+  background: var(--xevoprop-blue-dark);
+
+  box-shadow: var(--shadow-small);
 }
 
-.btn-secondary:hover {
-  background: var(--surface-soft);
+.xevoprop-button-secondary {
+  background: var(--bg-white);
+
+  border-color: var(--border-medium);
+
+  color: var(--text-primary);
 }
 
-.btn-ghost {
-  background: transparent;
-  color: var(--text-secondary);
-}
+.xevoprop-button-secondary:hover {
+  border-color: var(--xevoprop-blue);
 
-.btn-ghost:hover {
-  background: var(--surface-soft);
-  color: var(--text);
+  color: var(--xevoprop-blue);
+
+  background: var(--xevoprop-blue-light);
 }
 
 /* =========================================================
-   FORMS
-========================================================= */
+   FORM ELEMENTS
+   ========================================================= */
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.form-label {
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.form-input,
-.form-select,
-.form-textarea {
-  width: 100%;
-
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius-md);
-
-  background: #ffffff;
-  color: var(--text);
+input,
+select,
+textarea {
+  color: var(--text-primary);
 
   outline: none;
-
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
 }
 
-.form-input,
-.form-select {
-  height: 44px;
-  padding: 0 13px;
-}
-
-.form-textarea {
-  min-height: 110px;
-  padding: 12px 13px;
-  resize: vertical;
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--text-light);
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  border-color: var(--primary);
-
-  box-shadow:
-    0 0 0 3px rgba(21, 94, 239, 0.1);
-}
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-.card {
-  background: var(--surface);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-
-  box-shadow: var(--shadow-sm);
 }
 
 /* =========================================================
    PROPERTY CARD FOUNDATION
-========================================================= */
+   ========================================================= */
 
-.property-card {
+.xevoprop-property-card {
   overflow: hidden;
 
-  background: #ffffff;
+  background: var(--bg-white);
 
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+
+  border-radius: var(--radius-large);
 
   transition:
-    transform var(--transition),
-    box-shadow var(--transition),
-    border-color var(--transition);
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
 }
 
-.property-card:hover {
-  transform: translateY(-2px);
+.xevoprop-property-card:hover {
+  transform: translateY(-4px);
 
-  border-color: #d8dee8;
+  border-color: #d9e1ec;
 
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-medium);
 }
 
-.property-card-image {
+.xevoprop-property-image {
   position: relative;
-
-  width: 100%;
-  height: 240px;
 
   overflow: hidden;
 
-  background: #eef1f5;
+  aspect-ratio: 16 / 10;
+
+  background: #e9edf3;
 }
 
-.property-card-image img {
+.xevoprop-property-image img {
   width: 100%;
   height: 100%;
 
   object-fit: cover;
 
-  transition:
-    transform 350ms ease;
+  transition: transform 450ms ease;
 }
 
-.property-card:hover
-.property-card-image img {
-  transform: scale(1.025);
-}
-
-.property-card-content {
-  padding: 17px;
+.xevoprop-property-card:hover
+  .xevoprop-property-image img {
+  transform: scale(1.035);
 }
 
 /* =========================================================
    BADGES
-========================================================= */
+   ========================================================= */
 
-.badge {
+.xevoprop-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
 
-  min-height: 25px;
+  min-height: 26px;
+
   padding: 0 9px;
 
-  border-radius: 999px;
+  border-radius: 6px;
 
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
 }
 
-.badge-primary {
-  background: var(--primary-soft);
-  color: var(--primary);
+.xevoprop-badge-blue {
+  background: var(--xevoprop-blue-light);
+
+  color: var(--xevoprop-blue);
 }
 
-.badge-success {
-  background: var(--success-soft);
-  color: var(--success);
-}
+.xevoprop-badge-success {
+  background: #ecfdf3;
 
-.badge-warning {
-  background: var(--warning-soft);
-  color: var(--warning);
-}
-
-.badge-danger {
-  background: var(--danger-soft);
-  color: var(--danger);
+  color: #027a48;
 }
 
 /* =========================================================
-   LINKS
-========================================================= */
+   IMAGE FALLBACK
+   ========================================================= */
 
-.text-link {
-  color: var(--primary);
-  font-weight: 600;
-
-  transition: color var(--transition-fast);
-}
-
-.text-link:hover {
-  color: var(--primary-hover);
-}
-
-/* =========================================================
-   DIVIDER
-========================================================= */
-
-.divider {
+.xevoprop-image-placeholder {
   width: 100%;
-  height: 1px;
+  height: 100%;
 
-  background: var(--border);
-}
+  display: grid;
+  place-items: center;
 
-/* =========================================================
-   LOADING
-========================================================= */
+  background:
+    linear-gradient(
+      135deg,
+      #eef2f7,
+      #e2e8f0
+    );
 
-.loading-spinner {
-  width: 22px;
-  height: 22px;
-
-  border: 2px solid #dce4f2;
-  border-top-color: var(--primary);
-
-  border-radius: 50%;
-
-  animation: spin 700ms linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* =========================================================
-   EMPTY STATE
-========================================================= */
-
-.empty-state {
-  padding: 56px 24px;
-
-  text-align: center;
-
-  border: 1px dashed var(--border-dark);
-  border-radius: var(--radius-lg);
-
-  background: var(--surface-soft);
-}
-
-.empty-state h3 {
-  margin-bottom: 6px;
-}
-
-.empty-state p {
-  margin: 0;
-
-  color: var(--text-secondary);
-}
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f4f6f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c8ced8;
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #aeb6c3;
+  color: #98a2b3;
 }
 
 /* =========================================================
    FOCUS
-========================================================= */
+   ========================================================= */
 
-:focus-visible {
-  outline: 2px solid var(--primary);
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(21, 94, 239, 0.22);
+
   outline-offset: 2px;
 }
 
 /* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(21, 94, 239, 0.18);
+
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f3f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c6ccd5;
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aeb6c2;
+}
+
+/* =========================================================
    RESPONSIVE
-========================================================= */
+   ========================================================= */
 
 @media (max-width: 768px) {
   :root {
     --page-padding: 20px;
   }
 
-  .section {
-    padding: 52px 0;
-  }
-
-  .section-header {
-    align-items: flex-start;
-    flex-direction: column;
-
-    margin-bottom: 24px;
-  }
-
-  .property-card-image {
-    height: 220px;
+  .xevoprop-section {
+    padding: 60px 0;
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --page-padding: 16px;
+    --page-padding: 12px;
   }
 
-  body {
-    font-size: 14px;
-  }
-
-  .section {
-    padding: 44px 0;
-  }
-
-  .property-card-image {
-    height: 205px;
+  .xevoprop-section {
+    padding: 48px 0;
   }
 }
 
 /* =========================================================
    REDUCED MOTION
-========================================================= */
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
