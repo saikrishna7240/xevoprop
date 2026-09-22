@@ -1,396 +1,270 @@
-/* =========================================================
-   FINAL CTA
-   XEVOPROP — Bright PropTech Theme
-   ========================================================= */
+/* =========================================
+   FINAL CTA - LIGHT PREMIUM VERSION
+========================================= */
 
 .final-cta-section {
-  position: relative;
-  overflow: hidden;
-
-  padding: 105px 0 38px;
-
-  background:
-    radial-gradient(
-      circle at 15% 35%,
-      rgba(0, 198, 255, 0.16),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 85% 65%,
-      rgba(105, 87, 255, 0.14),
-      transparent 30%
-    ),
-    linear-gradient(
-      135deg,
-      #eef6ff 0%,
-      #f8fbff 48%,
-      #f1efff 100%
-    );
-
-  border-top: 1px solid #e2ebf7;
+  width: 100%;
+  background: #f5f8fc;
+  border-top: 1px solid #e4e9f0;
 }
-
-
-/* =========================================================
-   BACKGROUND GLOW
-   ========================================================= */
-
-.final-cta-glow {
-  position: absolute;
-  top: -180px;
-  left: 50%;
-
-  width: 620px;
-  height: 420px;
-
-  transform: translateX(-50%);
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(18, 100, 255, 0.12) 0%,
-      rgba(0, 198, 255, 0.06) 35%,
-      transparent 72%
-    );
-
-  filter: blur(25px);
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   CONTAINER
-   ========================================================= */
 
 .final-cta-container {
-  position: relative;
-  z-index: 1;
-
-  width: min(1180px, calc(100% - 80px));
+  width: min(1280px, calc(100% - 64px));
   margin: 0 auto;
+  padding: 64px 0;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+  align-items: center;
+  gap: 72px;
 }
 
-
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
+/* =========================================
+   LEFT CONTENT
+========================================= */
 
 .final-cta-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  max-width: 850px;
-  margin: 0 auto;
-
-  text-align: center;
+  max-width: 650px;
 }
-
-
-/* =========================================================
-   LABEL
-   ========================================================= */
 
 .final-cta-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
 
-  min-height: 34px;
-  padding: 0 13px;
+  margin-bottom: 11px;
+  padding: 5px 9px;
 
-  border: 1px solid #cfe0ff;
-  border-radius: 999px;
+  border: 1px solid #d9e4f7;
+  border-radius: 5px;
 
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--primary);
+  background: #eef4ff;
+  color: #155eef;
 
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1.4px;
-
-  box-shadow:
-    0 6px 20px rgba(18, 100, 255, 0.06);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
-
-.final-cta-label svg {
-  color: var(--violet);
-}
-
-
-/* =========================================================
-   HEADING
-   ========================================================= */
 
 .final-cta-content h2 {
-  margin: 22px 0 0;
+  margin: 0;
 
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(42px, 6vw, 76px);
-  line-height: 1.05;
-  font-weight: 850;
-
-  letter-spacing: -3px;
+  color: #172033;
+  font-size: 34px;
+  line-height: 1.16;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .final-cta-content h2 span {
-  background: var(--gradient-primary);
-
-  -webkit-background-clip: text;
-  background-clip: text;
-
-  -webkit-text-fill-color: transparent;
+  display: block;
+  color: #667085;
 }
-
-
-/* =========================================================
-   DESCRIPTION
-   ========================================================= */
 
 .final-cta-content > p {
-  max-width: 650px;
+  max-width: 570px;
+  margin: 15px 0 0;
 
-  margin: 24px auto 0;
-
-  color: var(--text-secondary);
-
-  font-size: 16px;
-  line-height: 1.75;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.7;
 }
 
-
-/* =========================================================
+/* =========================================
    ACTIONS
-   ========================================================= */
+========================================= */
 
 .final-cta-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  gap: 9px;
 
-  margin-top: 32px;
+  margin-top: 25px;
 }
-
-
-/* =========================================================
-   PRIMARY BUTTON
-   ========================================================= */
 
 .final-cta-primary,
 .final-cta-secondary {
+  min-height: 40px;
+  padding: 0 14px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 7px;
 
-  min-height: 52px;
-  padding: 0 20px;
+  border-radius: 7px;
 
-  border-radius: var(--radius-md);
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 12px;
+  font-weight: 600;
 
   cursor: pointer;
 
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease,
-    color 0.25s ease;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .final-cta-primary {
-  border: 1px solid transparent;
-
-  background: var(--gradient-primary);
+  border: 1px solid #155eef;
+  background: #155eef;
   color: #ffffff;
-
-  box-shadow:
-    0 10px 28px rgba(18, 100, 255, 0.22);
 }
 
 .final-cta-primary:hover {
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 15px 34px rgba(18, 100, 255, 0.3);
+  border-color: #0f4fd1;
+  background: #0f4fd1;
+  transform: translateY(-1px);
 }
-
-.final-cta-primary svg:last-child {
-  transition: transform 0.25s ease;
-}
-
-.final-cta-primary:hover svg:last-child {
-  transform: translate(2px, -2px);
-}
-
-
-/* =========================================================
-   SECONDARY BUTTON
-   ========================================================= */
 
 .final-cta-secondary {
-  border: 1px solid #cfe0ff;
-
-  background: rgba(255, 255, 255, 0.82);
-  color: var(--text-primary);
-
-  box-shadow:
-    0 7px 20px rgba(11, 23, 54, 0.05);
+  border: 1px solid #d5dbe5;
+  background: #ffffff;
+  color: #344054;
 }
 
 .final-cta-secondary:hover {
-  transform: translateY(-3px);
+  border-color: #b9c7dc;
+  background: #f8faff;
+  color: #155eef;
+  transform: translateY(-1px);
+}
 
-  border-color: var(--primary);
+/* =========================================
+   RIGHT SUMMARY
+========================================= */
+
+.final-cta-summary {
+  overflow: hidden;
+
+  border: 1px solid #dfe5ed;
+  border-radius: 10px;
 
   background: #ffffff;
-  color: var(--primary);
 
   box-shadow:
-    0 10px 26px rgba(18, 100, 255, 0.1);
+    0 3px 10px rgba(16, 24, 40, 0.035),
+    0 12px 30px rgba(16, 24, 40, 0.035);
 }
 
-.final-cta-secondary svg {
-  transition: transform 0.25s ease;
+/* =========================================
+   SUMMARY HEADER
+========================================= */
+
+.cta-summary-header {
+  min-height: 45px;
+  padding: 0 17px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid #edf0f4;
+  background: #fafbfc;
 }
 
-.final-cta-secondary:hover svg {
-  transform: translate(2px, -2px);
+.cta-summary-header span {
+  color: #667085;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
 }
 
+/* =========================================
+   SUMMARY ITEMS
+========================================= */
 
-/* =========================================================
-   BOTTOM WORDS
-   ========================================================= */
+.cta-summary-item {
+  min-height: 70px;
+  padding: 12px 17px;
 
-.final-cta-bottom {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.cta-summary-item:last-child {
+  border-bottom: 0;
+}
+
+.cta-summary-number {
+  width: 27px;
+  height: 27px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
 
-  margin-top: 90px;
-  padding-top: 24px;
+  border: 1px solid #dbe5f5;
+  border-radius: 6px;
 
-  border-top: 1px solid rgba(151, 174, 207, 0.35);
+  background: #f5f8ff;
+  color: #155eef;
+
+  font-size: 9px;
+  font-weight: 700;
 }
 
-.final-cta-bottom span {
-  position: relative;
+.cta-summary-item strong {
+  display: block;
 
-  padding: 0 32px;
+  color: #273449;
+  font-size: 12px;
+  font-weight: 650;
+}
 
-  color: #8291a9;
+.cta-summary-item p {
+  margin: 3px 0 0;
 
+  color: #7a8494;
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
+  line-height: 1.45;
 }
 
-.final-cta-bottom span:not(:last-child)::after {
-  content: "";
-
-  position: absolute;
-  top: 50%;
-  right: 0;
-
-  width: 4px;
-  height: 4px;
-
-  border-radius: 50%;
-
-  background: #b9c6d8;
-
-  transform: translateY(-50%);
-}
-
-
-/* =========================================================
-   HOVER / ACTIVE
-   ========================================================= */
-
-.final-cta-primary:active,
-.final-cta-secondary:active {
-  transform: translateY(0);
-}
-
-.final-cta-primary:focus-visible,
-.final-cta-secondary:focus-visible {
-  outline: 3px solid rgba(18, 100, 255, 0.2);
-  outline-offset: 3px;
-}
-
-
-/* =========================================================
+/* =========================================
    TABLET
-   ========================================================= */
+========================================= */
 
 @media (max-width: 900px) {
-  .final-cta-section {
-    padding: 90px 0 32px;
-  }
-
   .final-cta-container {
-    width: min(100% - 48px, 1180px);
+    grid-template-columns: 1fr;
+    gap: 35px;
   }
 
-  .final-cta-content h2 {
-    letter-spacing: -2.2px;
+  .final-cta-content {
+    max-width: 700px;
   }
 
-  .final-cta-bottom {
-    margin-top: 70px;
+  .final-cta-summary {
+    max-width: 700px;
   }
 }
 
-
-/* =========================================================
+/* =========================================
    MOBILE
-   ========================================================= */
+========================================= */
 
 @media (max-width: 640px) {
-  .final-cta-section {
-    padding: 75px 0 25px;
-  }
-
   .final-cta-container {
-    width: calc(100% - 32px);
+    width: min(100% - 32px, 520px);
+    padding: 50px 0;
+
+    gap: 28px;
   }
 
   .final-cta-content h2 {
-    margin-top: 18px;
-
-    font-size: 42px;
-    line-height: 1.08;
-    letter-spacing: -1.8px;
+    font-size: 28px;
   }
 
   .final-cta-content > p {
-    margin-top: 18px;
-
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 13px;
   }
 
   .final-cta-actions {
     flex-direction: column;
-
-    width: 100%;
-    margin-top: 27px;
+    align-items: stretch;
   }
 
   .final-cta-primary,
@@ -398,59 +272,46 @@
     width: 100%;
   }
 
-  .final-cta-bottom {
-    margin-top: 60px;
-  }
-
-  .final-cta-bottom span {
-    padding: 0 15px;
-
-    font-size: 8px;
-    letter-spacing: 1.4px;
+  .final-cta-summary {
+    width: 100%;
   }
 }
 
-
-/* =========================================================
+/* =========================================
    SMALL MOBILE
-   ========================================================= */
+========================================= */
 
 @media (max-width: 400px) {
-  .final-cta-section {
-    padding-top: 62px;
+  .final-cta-container {
+    width: calc(100% - 24px);
+    padding: 43px 0;
   }
 
   .final-cta-content h2 {
-    font-size: 36px;
-    letter-spacing: -1.4px;
+    font-size: 25px;
   }
 
-  .final-cta-label {
+  .final-cta-content > p {
+    font-size: 12px;
+  }
+
+  .cta-summary-item {
+    min-height: 64px;
+    padding: 11px 14px;
+  }
+
+  .cta-summary-item p {
     font-size: 9px;
-    letter-spacing: 1.1px;
-  }
-
-  .final-cta-bottom span {
-    padding: 0 10px;
-    font-size: 7px;
-  }
-
-  .final-cta-bottom span:not(:last-child)::after {
-    width: 3px;
-    height: 3px;
   }
 }
 
-
-/* =========================================================
+/* =========================================
    REDUCED MOTION
-   ========================================================= */
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .final-cta-primary,
-  .final-cta-secondary,
-  .final-cta-primary svg,
-  .final-cta-secondary svg {
+  .final-cta-secondary {
     transition: none;
   }
 }

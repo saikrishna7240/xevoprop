@@ -589,3 +589,196 @@
     font-size: 9px;
   }
 }
+
+/* =========================================
+   NEWSLETTER FORM
+========================================= */
+
+.footer-newsletter-form {
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+}
+
+.footer-email-wrapper {
+  min-width: 0;
+  flex: 1;
+
+  min-height: 38px;
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #d9dee7;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.footer-email-wrapper:focus-within {
+  border-color: #155eef;
+  box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.08);
+}
+
+.footer-email-wrapper svg {
+  flex-shrink: 0;
+  color: #7a8494;
+}
+
+.footer-email-wrapper input {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #172033;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.footer-email-wrapper input::placeholder {
+  color: #98a1af;
+}
+
+.footer-email-wrapper input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* =========================================
+   FORM VALIDATION STATES
+========================================= */
+
+.footer-email-wrapper.has-error {
+  border-color: #dc3545;
+}
+
+.footer-email-wrapper.has-error:focus-within {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.08);
+}
+
+.footer-email-wrapper.has-error svg {
+  color: #dc3545;
+}
+
+.footer-email-wrapper.has-success {
+  border-color: #198754;
+}
+
+.footer-email-wrapper.has-success svg {
+  color: #198754;
+}
+
+/* =========================================
+   SUBSCRIBE BUTTON
+========================================= */
+
+.footer-newsletter-form button {
+  min-height: 38px;
+  flex-shrink: 0;
+
+  padding: 0 13px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: #155eef;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.footer-newsletter-form button:hover:not(:disabled) {
+  background: #0f4fd1;
+}
+
+.footer-newsletter-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.footer-subscribe-spinner {
+  animation: footer-spin 0.8s linear infinite;
+}
+
+@keyframes footer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   STATUS MESSAGE
+========================================= */
+
+.footer-subscribe-message {
+  margin-top: 8px;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.footer-subscribe-message.success {
+  color: #198754;
+}
+
+.footer-subscribe-message.error {
+  color: #dc3545;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 640px) {
+  .footer-newsletter-form {
+    flex-direction: column;
+  }
+
+  .footer-email-wrapper {
+    width: 100%;
+  }
+
+  .footer-newsletter-form button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-subscribe-spinner {
+    animation: none;
+  }
+}

@@ -1,18 +1,16 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   MapPin,
   ChevronDown,
+  ShieldCheck,
   Building2,
   Home,
-  LandPlot,
-  KeyRound,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 
-function Hero() {
+const Hero = () => {
   const navigate = useNavigate();
 
   const [searchType, setSearchType] = useState("buy");
@@ -23,241 +21,184 @@ function Hero() {
   const handleSearch = () => {
     const params = new URLSearchParams();
 
-    if (searchType) params.set("type", searchType);
-    if (location.trim()) params.set("location", location.trim());
-    if (propertyType) params.set("propertyType", propertyType);
-    if (budget) params.set("budget", budget);
+    if (searchType) params.append("type", searchType);
+    if (location.trim()) params.append("location", location.trim());
+    if (propertyType) params.append("propertyType", propertyType);
+    if (budget) params.append("budget", budget);
 
     navigate(`/search?${params.toString()}`);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+  const handleLocationKeyDown = (event) => {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
 
-  const propertyOptions = [
-    { value: "", label: "Any Property" },
-    { value: "apartment", label: "Apartment" },
-    { value: "villa", label: "Villa" },
-    { value: "house", label: "Independent House" },
-    { value: "office", label: "Office" },
-    { value: "shop", label: "Shop" },
-    { value: "plot", label: "Plot" },
-  ];
-
-  const budgetOptions = [
-    { value: "", label: "Any Budget" },
-    { value: "0-2500000", label: "Under ₹25 Lakh" },
-    { value: "2500000-5000000", label: "₹25L – ₹50L" },
-    { value: "5000000-10000000", label: "₹50L – ₹1 Cr" },
-    { value: "10000000-20000000", label: "₹1 Cr – ₹2 Cr" },
-    { value: "20000000+", label: "Above ₹2 Cr" },
-  ];
-
   return (
     <section className="hero">
-
-      {/* Background */}
-      <div className="hero-grid"></div>
-      <div className="hero-glow hero-glow-left"></div>
-      <div className="hero-glow hero-glow-right"></div>
-
       <div className="hero-container">
 
-        {/* Badge */}
-        <motion.div
-          className="hero-badge"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span></span>
-          India's smarter property platform
-        </motion.div>
+        {/* LEFT CONTENT */}
+        <div className="hero-content">
 
-        {/* Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-        >
-          Discover.
-          <br />
-          <span>Connect. Decide.</span>
-        </motion.h1>
-
-        {/* Description */}
-        <motion.p
-          className="hero-description"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.25 }}
-        >
-          Discover verified properties, connect directly with
-          the right people, and make confident property
-          decisions — without unnecessary hassle.
-        </motion.p>
-
-        {/* Search */}
-        <motion.div
-          className="hero-search-wrapper"
-          initial={{ opacity: 0, y: 35 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.35 }}
-        >
-
-          {/* Search Type */}
-          <div className="search-types">
-
-            <button
-              type="button"
-              className={`search-type ${
-                searchType === "buy" ? "active" : ""
-              }`}
-              onClick={() => setSearchType("buy")}
-            >
-              <Home size={16} />
-              Buy
-            </button>
-
-            
-
-            <button
-              type="button"
-              className={`search-type ${
-                searchType === "commercial" ? "active" : ""
-              }`}
-              onClick={() => setSearchType("commercial")}
-            >
-              <Building2 size={16} />
-              Commercial
-            </button>
-
-            <button
-              type="button"
-              className={`search-type ${
-                searchType === "plot" ? "active" : ""
-              }`}
-              onClick={() => setSearchType("plot")}
-            >
-              <LandPlot size={16} />
-              Plots
-            </button>
-
+          <div className="hero-eyebrow">
+            <ShieldCheck size={15} />
+            <span>Trusted property discovery</span>
           </div>
 
-          {/* Search Fields */}
-          <div className="search-main">
+          <h1>
+            Find a property
+            <span> that feels right.</span>
+          </h1>
 
-            {/* Location */}
-            <div className="search-input location-input">
+          <p className="hero-description">
+            Discover verified properties, residential projects and
+            commercial spaces in locations that matter to you.
+          </p>
 
-              <MapPin size={20} />
+          {/* SEARCH PANEL */}
+          <div className="hero-search">
 
-              <div>
-                <label>LOCATION</label>
+            <div className="hero-search-tabs">
+              <button
+                type="button"
+                className={searchType === "buy" ? "active" : ""}
+                onClick={() => setSearchType("buy")}
+              >
+                <Home size={16} />
+                Buy
+              </button>
 
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Search city, locality..."
-                />
-              </div>
+              <button
+                type="button"
+                className={searchType === "rent" ? "active" : ""}
+                onClick={() => setSearchType("rent")}
+              >
+                Rent
+              </button>
 
+              <button
+                type="button"
+                className={searchType === "commercial" ? "active" : ""}
+                onClick={() => setSearchType("commercial")}
+              >
+                <Building2 size={16} />
+                Commercial
+              </button>
             </div>
 
-            {/* Property Type */}
-            <div className="search-input">
+            <div className="hero-search-fields">
 
-              <div>
-                <label>PROPERTY TYPE</label>
+              {/* LOCATION */}
+              <div className="hero-field hero-location-field">
+                <MapPin size={18} />
 
-                <div className="select-wrapper">
+                <div className="hero-field-content">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    placeholder="City, locality or area"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    onKeyDown={handleLocationKeyDown}
+                  />
+                </div>
+              </div>
+
+              {/* PROPERTY TYPE */}
+              <div className="hero-field">
+                <div className="hero-field-content">
+                  <label>Property type</label>
+
                   <select
                     value={propertyType}
-                    onChange={(e) =>
-                      setPropertyType(e.target.value)
-                    }
+                    onChange={(e) => setPropertyType(e.target.value)}
                   >
-                    {propertyOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </option>
-                    ))}
+                    <option value="">Any property</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="villa">Villa</option>
+                    <option value="house">Independent House</option>
+                    <option value="office">Office</option>
+                    <option value="shop">Shop</option>
+                    <option value="plot">Plot</option>
                   </select>
-
-                  <ChevronDown size={16} />
                 </div>
+
+                <ChevronDown size={16} />
               </div>
 
-            </div>
+              {/* BUDGET */}
+              <div className="hero-field">
+                <div className="hero-field-content">
+                  <label>Budget</label>
 
-            {/* Budget */}
-            <div className="search-input">
-
-              <div>
-                <label>BUDGET</label>
-
-                <div className="select-wrapper">
                   <select
                     value={budget}
-                    onChange={(e) =>
-                      setBudget(e.target.value)
-                    }
+                    onChange={(e) => setBudget(e.target.value)}
                   >
-                    {budgetOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </option>
-                    ))}
+                    <option value="">Any budget</option>
+                    <option value="0-2500000">Under ₹25 Lakh</option>
+                    <option value="2500000-5000000">
+                      ₹25 Lakh – ₹50 Lakh
+                    </option>
+                    <option value="5000000-10000000">
+                      ₹50 Lakh – ₹1 Cr
+                    </option>
+                    <option value="10000000-20000000">
+                      ₹1 Cr – ₹2 Cr
+                    </option>
+                    <option value="20000000+">₹2 Cr+</option>
                   </select>
-
-                  <ChevronDown size={16} />
                 </div>
+
+                <ChevronDown size={16} />
               </div>
 
+              <button
+                type="button"
+                className="hero-search-button"
+                onClick={handleSearch}
+                aria-label="Search properties"
+              >
+                <Search size={19} />
+                <span>Search</span>
+              </button>
+
             </div>
-
-            {/* Search Button */}
-            <button
-              type="button"
-              className="hero-search-button"
-              onClick={handleSearch}
-            >
-              <Search size={20} />
-              <span>Search</span>
-            </button>
-
           </div>
 
-        </motion.div>
+          {/* TRUST POINTS */}
+          <div className="hero-trust">
 
-        {/* Trust */}
-        <motion.div
-          className="hero-trust"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
-        >
-          <span>✓ Verified Properties</span>
-          <span>✓ Direct Connections</span>
-          <span>✓ Zero Brokerage*</span>
-        </motion.div>
+            <div className="hero-trust-item">
+              <ShieldCheck size={17} />
+              <span>Verified listings</span>
+            </div>
+
+            <div className="hero-trust-divider"></div>
+
+            <div className="hero-trust-item">
+              <Building2 size={17} />
+              <span>Projects & properties</span>
+            </div>
+
+            <div className="hero-trust-divider"></div>
+
+            <div className="hero-trust-item">
+              <Home size={17} />
+              <span>Direct enquiries</span>
+            </div>
+
+          </div>
+        </div>
+
+        {/* RIGHT PROPERTY VISUAL */}
+        
 
       </div>
-
     </section>
   );
-}
+};
 
 export default Hero;

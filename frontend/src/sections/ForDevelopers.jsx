@@ -4,6 +4,7 @@ import {
   BarChart3,
   Users,
   ArrowUpRight,
+  CheckCircle2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./ForDevelopers.css";
@@ -11,21 +12,24 @@ import "./ForDevelopers.css";
 const features = [
   {
     icon: Building2,
-    title: "Showcase Projects",
+    number: "01",
+    title: "Showcase projects",
     description:
-      "Present your residential and commercial projects with rich property information.",
+      "Present residential and commercial projects with structured information, pricing and location details.",
   },
   {
     icon: Users,
-    title: "Reach Buyers",
+    number: "02",
+    title: "Reach active buyers",
     description:
-      "Connect directly with people actively searching for properties and projects.",
+      "Connect with people actively exploring properties and projects on Xevoprop.",
   },
   {
     icon: BarChart3,
-    title: "Manage Leads",
+    number: "03",
+    title: "Manage leads",
     description:
-      "Track enquiries, visits and buyer interest from one connected platform.",
+      "Keep track of enquiries, buyer interest and scheduled visits from one place.",
   },
 ];
 
@@ -35,30 +39,45 @@ function ForDevelopers() {
   return (
     <section className="developers-section" id="developers">
       <div className="developers-container">
-
         {/* LEFT CONTENT */}
         <motion.div
           className="developers-content"
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.45 }}
         >
           <span className="developers-label">
             FOR DEVELOPERS
           </span>
 
           <h2>
-            Build visibility.
-            <br />
-            <span>Grow smarter.</span>
+            Everything you need to
+            <span> showcase and manage projects.</span>
           </h2>
 
-          <p>
-            Xevoprop gives developers a connected platform
-            to showcase projects, reach genuine buyers and
-            manage property enquiries more efficiently.
+          <p className="developers-description">
+            Xevoprop helps developers present their projects,
+            connect with potential buyers and manage property
+            enquiries through one connected platform.
           </p>
+
+          <div className="developers-checks">
+            <div>
+              <CheckCircle2 size={15} />
+              Project visibility
+            </div>
+
+            <div>
+              <CheckCircle2 size={15} />
+              Direct buyer enquiries
+            </div>
+
+            <div>
+              <CheckCircle2 size={15} />
+              Lead and visit management
+            </div>
+          </div>
 
           <button
             type="button"
@@ -66,7 +85,7 @@ function ForDevelopers() {
             onClick={() => navigate("/projects")}
           >
             Explore developer projects
-            <ArrowUpRight size={18} />
+            <ArrowUpRight size={16} />
           </button>
         </motion.div>
 
@@ -76,31 +95,41 @@ function ForDevelopers() {
             const Icon = feature.icon;
 
             return (
-              <motion.div
+              <motion.button
+                type="button"
                 className="developer-feature"
                 key={feature.title}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                onClick={() => navigate("/projects")}
+                initial={{ opacity: 0, x: 18 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
+                  duration: 0.4,
+                  delay: index * 0.08,
                 }}
               >
-                <div className="developer-feature-icon">
-                  <Icon size={21} />
+                <div className="developer-feature-number">
+                  {feature.number}
                 </div>
 
-                <div>
+                <div className="developer-feature-icon">
+                  <Icon size={19} />
+                </div>
+
+                <div className="developer-feature-content">
                   <h3>{feature.title}</h3>
 
                   <p>{feature.description}</p>
                 </div>
-              </motion.div>
+
+                <ArrowUpRight
+                  className="developer-feature-arrow"
+                  size={17}
+                />
+              </motion.button>
             );
           })}
         </div>
-
       </div>
     </section>
   );

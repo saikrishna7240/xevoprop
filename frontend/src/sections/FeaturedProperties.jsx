@@ -5,6 +5,8 @@ import {
   Heart,
   MapPin,
   Loader2,
+  BedDouble,
+  Maximize2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./FeaturedProperties.css";
@@ -34,7 +36,6 @@ function FeaturedProperties() {
           ? data
           : data.properties || [];
 
-        // Show only the first 3 properties on homepage
         setProperties(propertyList.slice(0, 3));
       } catch (error) {
         console.error("Featured properties error:", error);
@@ -96,9 +97,7 @@ function FeaturedProperties() {
   const getLocation = (property) => {
     return (
       property.location ||
-      [property.city, property.state]
-        .filter(Boolean)
-        .join(", ") ||
+      [property.city, property.state].filter(Boolean).join(", ") ||
       "Location unavailable"
     );
   };
@@ -109,7 +108,7 @@ function FeaturedProperties() {
       property.area_sqft ||
       property.built_up_area ||
       property.size ||
-      "Area unavailable"
+      null
     );
   };
 
@@ -118,8 +117,8 @@ function FeaturedProperties() {
       <section className="featured-section" id="properties">
         <div className="featured-container">
           <div className="featured-loading">
-            <Loader2 className="loading-spinner" size={30} />
-            <p>Finding properties for you...</p>
+            <Loader2 className="loading-spinner" size={24} />
+            <span>Loading properties...</span>
           </div>
         </div>
       </section>
@@ -129,49 +128,50 @@ function FeaturedProperties() {
   return (
     <section className="featured-section" id="properties">
       <div className="featured-container">
-
-        {/* Heading */}
+        {/* Section header */}
         <motion.div
           className="featured-heading"
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.45 }}
         >
-          <div>
-            <span className="section-label">
-              CURATED FOR YOU
-            </span>
+          <div className="featured-heading-content">
+            <span className="section-label">FEATURED PROPERTIES</span>
 
-            <h2>
-              Properties worth
-              <span> discovering.</span>
-            </h2>
+            <h2>Properties worth exploring</h2>
 
             <p>
-              Explore properties selected to help you
-              find the right place with less searching.
+              Browse a selection of properties currently available on
+              Xevoprop.
             </p>
           </div>
 
           <button
             type="button"
-            className="view-all-btn"
+            className="featured-view-all"
             onClick={() => navigate("/properties")}
           >
-            View all properties
-            <ArrowUpRight size={17} />
+            <span>View all properties</span>
+            <ArrowUpRight size={16} />
           </button>
         </motion.div>
 
         {/* Empty state */}
         {properties.length === 0 ? (
           <div className="featured-empty">
-            <h3>No properties available yet</h3>
-            <p>
-              New properties will appear here once they are
-              listed on Xevoprop.
-            </p>
+            <div className="featured-empty-icon">
+              <MapPin size={22} />
+            </div>
+
+            <div>
+              <h3>No properties available yet</h3>
+
+              <p>
+                New properties will appear here once they are listed
+                on Xevoprop.
+              </p>
+            </div>
 
             <button
               type="button"
@@ -182,39 +182,29 @@ function FeaturedProperties() {
             </button>
           </div>
         ) : (
-          <div className="property-grid">
-
+          <div className="featured-property-grid">
             {properties.map((property, index) => {
               const propertyId = property.id;
 
-              const isFavorite =
-                favorites.includes(propertyId);
+              const isFavorite = favorites.includes(propertyId);
 
               return (
                 <motion.article
-                  className="property-card"
+                  className="featured-property-card"
                   key={propertyId}
-                  initial={{
-                    opacity: 0,
-                    y: 30,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{
-                    duration: 0.6,
-                    delay: index * 0.12,
+                    duration: 0.4,
+                    delay: index * 0.08,
                   }}
                   onClick={() =>
                     navigate(`/properties/${propertyId}`)
                   }
                 >
-
-                  {/* Image */}
-                  <div className="property-image">
-
+                  {/* Property image */}
+                  <div className="featured-property-image">
                     <img
                       src={getImage(property)}
                       alt={
@@ -228,51 +218,46 @@ function FeaturedProperties() {
                       }}
                     />
 
-                    <div className="image-overlay"></div>
+                    <div className="featured-image-top">
+                      <span className="featured-verified">
+                        Verified
+                      </span>
 
-                    <span className="verified-badge">
-                      ✓ Verified
-                    </span>
-
-                    {/* Favorite */}
-                    <button
-                      type="button"
-                      className={`heart-btn ${
-                        isFavorite ? "active" : ""
-                      }`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleFavorite(propertyId);
-                      }}
-                      aria-label={
-                        isFavorite
-                          ? "Remove from favorites"
-                          : "Add to favorites"
-                      }
-                    >
-                      <Heart
-                        size={18}
-                        fill={
+                      <button
+                        type="button"
+                        className={`featured-favorite ${
+                          isFavorite ? "active" : ""
+                        }`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleFavorite(propertyId);
+                        }}
+                        aria-label={
                           isFavorite
-                            ? "currentColor"
-                            : "none"
+                            ? "Remove from favorites"
+                            : "Add to favorites"
                         }
-                      />
-                    </button>
+                      >
+                        <Heart
+                          size={17}
+                          fill={
+                            isFavorite
+                              ? "currentColor"
+                              : "none"
+                          }
+                        />
+                      </button>
+                    </div>
 
+                    <span className="featured-property-type">
+                      {getType(property)}
+                    </span>
                   </div>
 
-                  {/* Details */}
-                  <div className="property-details">
-
-                    <div className="property-price-row">
-                      <h3>
-                        {getPrice(property)}
-                      </h3>
-
-                      <span>
-                        {getType(property)}
-                      </span>
+                  {/* Property information */}
+                  <div className="featured-property-content">
+                    <div className="featured-price-row">
+                      <h3>{getPrice(property)}</h3>
                     </div>
 
                     <h4>
@@ -281,32 +266,46 @@ function FeaturedProperties() {
                         "Property"}
                     </h4>
 
-                    <div className="property-location">
-                      <MapPin size={15} />
-                      {getLocation(property)}
+                    <div className="featured-location">
+                      <MapPin size={14} />
+                      <span>{getLocation(property)}</span>
                     </div>
 
-                    <div className="property-meta">
-                      <span>{getArea(property)}</span>
+                    <div className="featured-property-divider" />
 
-                      <span>•</span>
+                    <div className="featured-property-meta">
+                      {property.bedrooms ? (
+                        <span>
+                          <BedDouble size={15} />
+                          {property.bedrooms} BHK
+                        </span>
+                      ) : null}
 
-                      <span>
-                        {property.bedrooms
-                          ? `${property.bedrooms} BHK`
-                          : getType(property)}
+                      {getArea(property) ? (
+                        <span>
+                          <Maximize2 size={14} />
+                          {getArea(property)}
+                        </span>
+                      ) : null}
+
+                      {!property.bedrooms &&
+                        !getArea(property) && (
+                          <span className="meta-property-type">
+                            {getType(property)}
+                          </span>
+                        )}
+
+                      <span className="property-details-link">
+                        View details
+                        <ArrowUpRight size={14} />
                       </span>
                     </div>
-
                   </div>
-
                 </motion.article>
               );
             })}
-
           </div>
         )}
-
       </div>
     </section>
   );

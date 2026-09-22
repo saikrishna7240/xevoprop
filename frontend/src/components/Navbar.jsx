@@ -29,9 +29,9 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
 
-  /*
-   * PUBLIC NAVIGATION
-   */
+  /* ================================
+     PUBLIC NAVIGATION
+  ================================= */
 
   const publicLinks = [
     {
@@ -51,9 +51,9 @@ function Navbar() {
     },
   ];
 
-  /*
-   * BUYER NAVIGATION
-   */
+  /* ================================
+     BUYER NAVIGATION
+  ================================= */
 
   const buyerLinks = [
     {
@@ -83,9 +83,9 @@ function Navbar() {
     },
   ];
 
-  /*
-   * SELLER NAVIGATION
-   */
+  /* ================================
+     SELLER NAVIGATION
+  ================================= */
 
   const sellerLinks = [
     {
@@ -110,9 +110,9 @@ function Navbar() {
     },
   ];
 
-  /*
-   * DEVELOPER NAVIGATION
-   */
+  /* ================================
+     DEVELOPER NAVIGATION
+  ================================= */
 
   const developerLinks = [
     {
@@ -142,9 +142,9 @@ function Navbar() {
     },
   ];
 
-  /*
-   * SELECT NAVIGATION
-   */
+  /* ================================
+     SELECT NAVIGATION
+  ================================= */
 
   let navLinks = publicLinks;
 
@@ -160,9 +160,9 @@ function Navbar() {
     }
   }
 
-  /*
-   * MORE MENU
-   */
+  /* ================================
+     MORE MENU
+  ================================= */
 
   const moreLinks = [
     {
@@ -177,18 +177,18 @@ function Navbar() {
     },
   ];
 
-  /*
-   * MOBILE MENU CLOSE
-   */
+  /* ================================
+     CLOSE MENU
+  ================================= */
 
   const closeMenu = () => {
     setMobileOpen(false);
     setMoreOpen(false);
   };
 
-  /*
-   * CHECK MORE ACTIVE
-   */
+  /* ================================
+     MORE ACTIVE
+  ================================= */
 
   const isMoreActive = moreLinks.some(
     (link) => location.pathname === link.path
@@ -198,14 +198,15 @@ function Navbar() {
     <header className="xevoprop-navbar">
       <div className="navbar-container">
 
-        {/* =====================================================
+        {/* ============================
             LOGO
-            ===================================================== */}
+        ============================ */}
 
         <Link
           to="/"
           className="navbar-logo"
           onClick={closeMenu}
+          aria-label="Xevoprop Home"
         >
           <img
             src="/logo.png"
@@ -213,12 +214,11 @@ function Navbar() {
           />
         </Link>
 
-        {/* =====================================================
+        {/* ============================
             DESKTOP NAVIGATION
-            ===================================================== */}
+        ============================ */}
 
         <nav className="navbar-links">
-
           {navLinks.map((link) => {
             const Icon = link.icon;
 
@@ -232,7 +232,7 @@ function Navbar() {
                     : "navbar-link"
                 }
               >
-                {Icon && <Icon size={14} />}
+                {Icon && <Icon size={15} />}
 
                 <span>{link.label}</span>
               </NavLink>
@@ -242,7 +242,6 @@ function Navbar() {
           {/* MORE */}
 
           <div className="navbar-more">
-
             <button
               type="button"
               className={
@@ -250,11 +249,14 @@ function Navbar() {
                   ? "navbar-link navbar-more-button active"
                   : "navbar-link navbar-more-button"
               }
-              onClick={() => setMoreOpen(!moreOpen)}
+              onClick={() => setMoreOpen((prev) => !prev)}
+              aria-expanded={moreOpen}
+              aria-haspopup="true"
             >
               <span>More</span>
+
               <ChevronDown
-                size={13}
+                size={14}
                 className={
                   moreOpen
                     ? "more-chevron rotated"
@@ -265,7 +267,6 @@ function Navbar() {
 
             {moreOpen && (
               <div className="navbar-dropdown">
-
                 {moreLinks.map((link) => {
                   const Icon = link.icon;
 
@@ -286,17 +287,14 @@ function Navbar() {
                     </NavLink>
                   );
                 })}
-
               </div>
             )}
-
           </div>
-
         </nav>
 
-        {/* =====================================================
-            RIGHT SIDE
-            ===================================================== */}
+        {/* ============================
+            RIGHT SIDE ACTIONS
+        ============================ */}
 
         <div className="navbar-actions">
 
@@ -306,8 +304,8 @@ function Navbar() {
                 to="/login"
                 className="navbar-login"
               >
-                <LogIn size={14} />
-                Login
+                <LogIn size={15} />
+                <span>Login</span>
               </Link>
 
               <Link
@@ -319,17 +317,17 @@ function Navbar() {
             </>
           ) : (
             <>
-              {/* NOTIFICATIONS */}
+              {/* Notifications */}
 
               <Link
                 to="/notifications"
                 className="navbar-notification"
                 aria-label="Notifications"
               >
-                <Bell size={17} />
+                <Bell size={18} />
               </Link>
 
-              {/* DASHBOARD */}
+              {/* Dashboard */}
 
               <Link
                 to="/dashboard"
@@ -338,33 +336,29 @@ function Navbar() {
                 Dashboard
               </Link>
 
-              {/* PROFILE */}
+              {/* Profile */}
 
               <Link
                 to="/profile"
                 className="navbar-avatar"
                 aria-label="Profile"
               >
-                {user.name
-                  ?.charAt(0)
-                  .toUpperCase() || "U"}
+                {user.name?.charAt(0).toUpperCase() || "U"}
               </Link>
             </>
           )}
-
         </div>
 
-        {/* =====================================================
+        {/* ============================
             MOBILE BUTTON
-            ===================================================== */}
+        ============================ */}
 
         <button
           type="button"
           className="navbar-mobile-button"
-          onClick={() =>
-            setMobileOpen(!mobileOpen)
-          }
+          onClick={() => setMobileOpen((prev) => !prev)}
           aria-label="Toggle navigation"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? (
             <X size={21} />
@@ -372,18 +366,15 @@ function Navbar() {
             <Menu size={21} />
           )}
         </button>
-
       </div>
 
-      {/* =====================================================
+      {/* ================================
           MOBILE NAVIGATION
-          ===================================================== */}
+      ================================= */}
 
       {mobileOpen && (
         <div className="mobile-navbar">
-
           <nav>
-
             {navLinks.map((link) => {
               const Icon = link.icon;
 
@@ -398,14 +389,12 @@ function Navbar() {
                       : "mobile-nav-link"
                   }
                 >
-                  {Icon && <Icon size={16} />}
+                  {Icon && <Icon size={17} />}
 
                   <span>{link.label}</span>
                 </NavLink>
               );
             })}
-
-            {/* MOBILE MORE LINKS */}
 
             <div className="mobile-more-title">
               More
@@ -425,34 +414,32 @@ function Navbar() {
                       : "mobile-nav-link"
                   }
                 >
-                  <Icon size={16} />
+                  <Icon size={17} />
 
                   <span>{link.label}</span>
                 </NavLink>
               );
             })}
-
           </nav>
 
           {/* MOBILE ACTIONS */}
 
           <div className="mobile-actions">
-
             {!user ? (
               <>
                 <Link
                   to="/login"
                   onClick={closeMenu}
                 >
-                  <LogIn size={15} />
-                  Login
+                  <LogIn size={16} />
+                  <span>Login</span>
                 </Link>
 
                 <Link
                   to="/register"
                   onClick={closeMenu}
                 >
-                  Get Started
+                  <span>Get Started</span>
                   <ArrowRightIcon />
                 </Link>
               </>
@@ -462,44 +449,43 @@ function Navbar() {
                   to="/notifications"
                   onClick={closeMenu}
                 >
-                  <Bell size={15} />
-                  Notifications
+                  <Bell size={16} />
+                  <span>Notifications</span>
                 </Link>
 
                 <Link
                   to="/dashboard"
                   onClick={closeMenu}
                 >
-                  <UserRound size={15} />
-                  Dashboard
+                  <UserRound size={16} />
+                  <span>Dashboard</span>
                 </Link>
 
                 <Link
                   to="/profile"
                   onClick={closeMenu}
                 >
-                  <UserRound size={15} />
-                  Profile
+                  <UserRound size={16} />
+                  <span>Profile</span>
                 </Link>
               </>
             )}
-
           </div>
-
         </div>
       )}
-
     </header>
   );
 }
 
-/*
- * Small arrow component used only
- * inside the mobile Get Started button.
- */
-
 function ArrowRightIcon() {
-  return <span aria-hidden="true">→</span>;
+  return (
+    <span
+      className="mobile-arrow"
+      aria-hidden="true"
+    >
+      →
+    </span>
+  );
 }
 
 export default Navbar;

@@ -1,517 +1,394 @@
-/* =========================================================
+/* =========================================
    FEATURED PROPERTIES
-   XEVOPROP — Bright PropTech Theme
-   ========================================================= */
+========================================= */
 
 .featured-section {
-  position: relative;
-  padding: 100px 0 110px;
-  background:
-    radial-gradient(
-      circle at 8% 20%,
-      rgba(0, 198, 255, 0.06),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 92% 80%,
-      rgba(105, 87, 255, 0.05),
-      transparent 30%
-    ),
-    #f7faff;
-  overflow: hidden;
+  width: 100%;
+  background: #f7f9fc;
+  border-top: 1px solid #edf0f4;
 }
 
 .featured-container {
-  width: min(1380px, calc(100% - 80px));
+  width: min(1280px, calc(100% - 64px));
   margin: 0 auto;
+  padding: 68px 0;
 }
 
-
-/* =========================================================
-   SECTION HEADING
-   ========================================================= */
+/* =========================================
+   SECTION HEADER
+========================================= */
 
 .featured-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 46px;
+  gap: 32px;
+  margin-bottom: 28px;
 }
 
-.featured-heading > div {
-  max-width: 680px;
+.featured-heading-content {
+  max-width: 620px;
 }
 
 .featured-heading .section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 15px;
-
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.6px;
+  display: block;
+  margin-bottom: 8px;
+  color: #155eef;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-}
-
-.featured-heading .section-label::before {
-  content: "";
-  width: 24px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--gradient-primary);
 }
 
 .featured-heading h2 {
   margin: 0;
-  color: var(--text-primary);
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: clamp(32px, 4vw, 50px);
-  line-height: 1.1;
-  font-weight: 800;
-  letter-spacing: -1.8px;
-}
-
-.featured-heading h2 span {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #172033;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .featured-heading p {
-  max-width: 590px;
-  margin: 18px 0 0;
-
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.75;
+  margin: 9px 0 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
+/* =========================================
+   VIEW ALL
+========================================= */
 
-/* =========================================================
-   VIEW ALL BUTTON
-   ========================================================= */
+.featured-view-all {
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 0 14px;
 
-.view-all-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 7px;
 
-  flex-shrink: 0;
-
-  min-height: 48px;
-  padding: 0 18px;
-
-  border: 1px solid var(--border-blue);
-  border-radius: var(--radius-md);
-
+  border: 1px solid #d9dee7;
+  border-radius: 7px;
   background: #ffffff;
-  color: var(--primary);
 
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
+  color: #273449;
+  font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
-
-  box-shadow: var(--shadow-sm);
-
   transition:
-    transform 0.25s ease,
-    background 0.25s ease,
-    color 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-.view-all-btn svg {
-  transition: transform 0.25s ease;
+.featured-view-all:hover {
+  border-color: #155eef;
+  background: #eef4ff;
+  color: #155eef;
 }
 
-.view-all-btn:hover {
-  color: #ffffff;
-  border-color: transparent;
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+.featured-view-all svg {
+  transition: transform 0.2s ease;
 }
 
-.view-all-btn:hover svg {
+.featured-view-all:hover svg {
   transform: translate(2px, -2px);
 }
 
-.view-all-btn:active {
-  transform: translateY(0);
-}
-
-
-/* =========================================================
+/* =========================================
    PROPERTY GRID
-   ========================================================= */
+========================================= */
 
-.property-grid {
+.featured-property-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px;
+  gap: 16px;
 }
 
-
-/* =========================================================
+/* =========================================
    PROPERTY CARD
-   ========================================================= */
+========================================= */
 
-.property-card {
-  position: relative;
+.featured-property-card {
   min-width: 0;
-
   overflow: hidden;
 
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-
   background: #ffffff;
-
-  box-shadow: var(--shadow-card);
+  border: 1px solid #e1e6ed;
+  border-radius: 10px;
 
   cursor: pointer;
 
+  box-shadow: 0 2px 7px rgba(16, 24, 40, 0.035);
+
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
-.property-card:hover {
-  transform: translateY(-7px);
-  border-color: #cfe0ff;
-  box-shadow: var(--shadow-lg);
+.featured-property-card:hover {
+  transform: translateY(-3px);
+  border-color: #ccd4df;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
 }
 
+/* =========================================
+   IMAGE
+========================================= */
 
-/* =========================================================
-   PROPERTY IMAGE
-   ========================================================= */
-
-.property-image {
+.featured-property-image {
   position: relative;
-
-  height: 270px;
+  height: 238px;
   overflow: hidden;
-
-  background:
-    linear-gradient(
-      135deg,
-      #edf5ff,
-      #e9faff
-    );
+  background: #eef1f5;
 }
 
-.property-image img {
+.featured-property-image img {
   display: block;
-
   width: 100%;
   height: 100%;
 
   object-fit: cover;
 
-  transition:
-    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-    filter 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
-.property-card:hover .property-image img {
-  transform: scale(1.055);
+.featured-property-card:hover
+  .featured-property-image img {
+  transform: scale(1.025);
 }
 
+/* =========================================
+   IMAGE CONTROLS
+========================================= */
 
-/* =========================================================
-   IMAGE OVERLAY
-   ========================================================= */
-
-.image-overlay {
+.featured-image-top {
   position: absolute;
-  inset: 0;
+  top: 12px;
+  left: 12px;
+  right: 12px;
 
-  background:
-    linear-gradient(
-      180deg,
-      rgba(7, 20, 48, 0.08) 0%,
-      transparent 42%,
-      rgba(7, 20, 48, 0.28) 100%
-    );
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   VERIFIED BADGE
-   ========================================================= */
-
-.verified-badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-
-  min-height: 30px;
-  padding: 0 11px;
-
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: var(--radius-pill);
-
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--primary);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-
-  box-shadow:
-    0 5px 18px rgba(11, 23, 54, 0.1);
-}
-
-
-/* =========================================================
-   FAVORITE BUTTON
-   ========================================================= */
-
-.heart-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 40px;
-  height: 40px;
-
-  padding: 0;
-
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--text-secondary);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  cursor: pointer;
-
-  box-shadow:
-    0 6px 20px rgba(11, 23, 54, 0.1);
-
-  transition:
-    transform 0.25s ease,
-    color 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.heart-btn:hover {
-  transform: scale(1.08);
-  color: var(--primary);
-  background: #ffffff;
-  border-color: #cfe0ff;
-}
-
-.heart-btn.active {
-  color: #ffffff;
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.heart-btn.active:hover {
-  color: #ffffff;
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
-}
-
-
-/* =========================================================
-   PROPERTY DETAILS
-   ========================================================= */
-
-.property-details {
-  padding: 23px 23px 25px;
-}
-
-
-/* =========================================================
-   PRICE + TYPE
-   ========================================================= */
-
-.property-price-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 11px;
 }
 
-.property-price-row h3 {
-  min-width: 0;
+.featured-verified {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 25px;
+  padding: 0 9px;
+
+  border-radius: 5px;
+
+  background: rgba(255, 255, 255, 0.94);
+  color: #18794e;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.featured-favorite {
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.94);
+  color: #344054;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.featured-favorite:hover {
+  background: #ffffff;
+  color: #155eef;
+  transform: scale(1.05);
+}
+
+.featured-favorite.active {
+  background: #155eef;
+  color: #ffffff;
+}
+
+/* =========================================
+   PROPERTY TYPE
+========================================= */
+
+.featured-property-type {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 25px;
+  padding: 0 9px;
+
+  border-radius: 5px;
+
+  background: rgba(23, 32, 51, 0.86);
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+/* =========================================
+   PROPERTY CONTENT
+========================================= */
+
+.featured-property-content {
+  padding: 17px 18px 16px;
+}
+
+.featured-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.featured-price-row h3 {
   margin: 0;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  color: var(--primary);
-
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 21px;
-  line-height: 1.2;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  color: #172033;
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
-.property-price-row span {
-  flex-shrink: 0;
-
-  max-width: 130px;
+.featured-property-content h4 {
+  margin: 7px 0 0;
 
   overflow: hidden;
-  text-overflow: ellipsis;
+
+  color: #344054;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 600;
+
   white-space: nowrap;
-
-  padding: 6px 9px;
-
-  border: 1px solid #dce8fb;
-  border-radius: var(--radius-sm);
-
-  background: var(--primary-light);
-  color: var(--primary);
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-
-/* =========================================================
-   PROPERTY TITLE
-   ========================================================= */
-
-.property-details h4 {
-  margin: 0;
-
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-
-  color: var(--text-primary);
-
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 17px;
-  line-height: 1.4;
-  font-weight: 750;
-  letter-spacing: -0.3px;
-
-  transition: color 0.25s ease;
 }
 
-.property-card:hover .property-details h4 {
-  color: var(--primary);
-}
-
-
-/* =========================================================
+/* =========================================
    LOCATION
-   ========================================================= */
+========================================= */
 
-.property-location {
+.featured-location {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 
-  margin-top: 12px;
+  margin-top: 9px;
 
-  color: var(--text-secondary);
-
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.property-location svg {
-  flex-shrink: 0;
-  color: var(--primary);
-}
-
-
-/* =========================================================
-   PROPERTY META
-   ========================================================= */
-
-.property-meta {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-
-  margin-top: 16px;
-  padding-top: 15px;
-
-  border-top: 1px solid var(--border-light);
-
-  color: var(--text-muted);
-
+  color: #667085;
   font-size: 12px;
-  font-weight: 650;
+  line-height: 1.4;
 }
 
-.property-meta span:nth-child(2) {
-  color: #c4cedc;
+.featured-location svg {
+  flex-shrink: 0;
+  color: #7a8494;
 }
 
+/* =========================================
+   DIVIDER
+========================================= */
 
-/* =========================================================
-   LOADING STATE
-   ========================================================= */
+.featured-property-divider {
+  height: 1px;
+  margin: 14px 0 12px;
+
+  background: #edf0f4;
+}
+
+/* =========================================
+   PROPERTY META
+========================================= */
+
+.featured-property-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 20px;
+
+  color: #667085;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.featured-property-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.featured-property-meta svg {
+  color: #7a8494;
+}
+
+.meta-property-type {
+  text-transform: capitalize;
+}
+
+.property-details-link {
+  margin-left: auto;
+
+  color: #155eef;
+  font-weight: 600;
+
+  transition: color 0.2s ease;
+}
+
+.featured-property-card:hover
+  .property-details-link {
+  color: #0f4fd1;
+}
+
+/* =========================================
+   LOADING
+========================================= */
 
 .featured-loading {
+  min-height: 240px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 
-  min-height: 330px;
-  padding: 50px;
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-
-  background: #ffffff;
-  box-shadow: var(--shadow-card);
-
-  color: var(--text-secondary);
-
-  text-align: center;
-}
-
-.featured-loading p {
-  margin: 15px 0 0;
-
-  font-size: 14px;
-  font-weight: 600;
+  color: #667085;
+  font-size: 13px;
 }
 
 .loading-spinner {
-  color: var(--primary);
-  animation: featured-spin 1s linear infinite;
+  color: #155eef;
+  animation: featured-spin 0.9s linear infinite;
 }
 
 @keyframes featured-spin {
@@ -520,261 +397,206 @@
   }
 }
 
-
-/* =========================================================
+/* =========================================
    EMPTY STATE
-   ========================================================= */
+========================================= */
 
 .featured-empty {
+  min-height: 190px;
+  padding: 28px;
+
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  border: 1px solid #e1e6ed;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.featured-empty-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+
+  display: flex;
   align-items: center;
   justify-content: center;
 
-  min-height: 320px;
-  padding: 50px 30px;
-
-  border: 1px dashed #cbdcf5;
-  border-radius: var(--radius-xl);
-
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f5f9ff 100%
-    );
-
-  text-align: center;
+  border-radius: 8px;
+  background: #eef4ff;
+  color: #155eef;
 }
 
 .featured-empty h3 {
   margin: 0;
 
-  color: var(--text-primary);
-
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 22px;
-  font-weight: 800;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 650;
 }
 
 .featured-empty p {
-  max-width: 500px;
+  margin: 5px 0 0;
 
-  margin: 10px 0 22px;
-
-  color: var(--text-secondary);
-
-  font-size: 14px;
-  line-height: 1.7;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .featured-empty button {
+  margin-left: auto;
+  flex-shrink: 0;
+
+  min-height: 38px;
+  padding: 0 13px;
+
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-
-  min-height: 44px;
-  padding: 0 17px;
+  gap: 6px;
 
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: 7px;
 
-  background: var(--gradient-primary);
+  background: #155eef;
   color: #ffffff;
 
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 750;
+  font-size: 12px;
+  font-weight: 600;
 
   cursor: pointer;
 
-  box-shadow:
-    0 8px 22px rgba(18, 100, 255, 0.2);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: background 0.2s ease;
 }
 
 .featured-empty button:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 28px rgba(18, 100, 255, 0.28);
+  background: #0f4fd1;
 }
 
-
-/* =========================================================
+/* =========================================
    TABLET
-   ========================================================= */
-
-@media (max-width: 1100px) {
-  .featured-section {
-    padding: 85px 0 90px;
-  }
-
-  .featured-container {
-    width: min(100% - 48px, 1380px);
-  }
-
-  .property-grid {
-    gap: 20px;
-  }
-
-  .property-image {
-    height: 240px;
-  }
-
-  .property-details {
-    padding: 20px;
-  }
-
-  .property-price-row h3 {
-    font-size: 19px;
-  }
-}
-
-
-/* =========================================================
-   TABLET / SMALL LAPTOP
-   ========================================================= */
+========================================= */
 
 @media (max-width: 900px) {
-  .featured-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 24px;
+  .featured-container {
+    width: min(100% - 40px, 760px);
+    padding: 56px 0;
   }
 
-  .view-all-btn {
-    align-self: flex-start;
-  }
-
-  .property-grid {
+  .featured-property-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .property-image {
-    height: 250px;
+  .featured-property-card:last-child {
+    display: none;
+  }
+
+  .featured-property-image {
+    height: 230px;
   }
 }
 
-
-/* =========================================================
+/* =========================================
    MOBILE
-   ========================================================= */
+========================================= */
 
 @media (max-width: 640px) {
-  .featured-section {
-    padding: 70px 0 75px;
-  }
-
   .featured-container {
-    width: min(100% - 32px, 1380px);
+    width: min(100% - 32px, 520px);
+    padding: 48px 0;
   }
 
   .featured-heading {
-    margin-bottom: 32px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 22px;
   }
 
   .featured-heading h2 {
-    font-size: 32px;
-    letter-spacing: -1.1px;
+    font-size: 25px;
   }
 
   .featured-heading p {
-    margin-top: 13px;
-    font-size: 14px;
-    line-height: 1.65;
+    max-width: 480px;
+    font-size: 13px;
   }
 
-  .view-all-btn {
+  .featured-view-all {
     width: 100%;
   }
 
-  .property-grid {
+  .featured-property-grid {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 12px;
   }
 
-  .property-image {
-    height: 250px;
+  .featured-property-card:last-child {
+    display: block;
   }
 
-  .property-details {
-    padding: 20px;
-  }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 420px) {
-  .featured-section {
-    padding: 58px 0 65px;
-  }
-
-  .featured-container {
-    width: calc(100% - 24px);
-  }
-
-  .featured-heading h2 {
-    font-size: 29px;
-  }
-
-  .featured-heading .section-label {
-    font-size: 10px;
-    letter-spacing: 1.3px;
-  }
-
-  .property-image {
+  .featured-property-image {
     height: 225px;
   }
 
-  .property-details {
-    padding: 18px;
+  .featured-property-content {
+    padding: 16px;
   }
 
-  .property-price-row {
+  .featured-price-row h3 {
+    font-size: 18px;
+  }
+
+  .featured-empty {
     align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+    flex-wrap: wrap;
+    padding: 22px;
   }
 
-  .property-price-row h3 {
-    font-size: 20px;
-  }
-
-  .property-price-row span {
-    max-width: 100%;
-  }
-
-  .property-details h4 {
-    font-size: 16px;
-  }
-
-  .property-location {
-    font-size: 12px;
-  }
-
-  .property-meta {
-    font-size: 11px;
+  .featured-empty button {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
   }
 }
 
+/* =========================================
+   SMALL MOBILE
+========================================= */
 
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
+@media (max-width: 400px) {
+  .featured-container {
+    width: calc(100% - 24px);
+    padding: 40px 0;
+  }
+
+  .featured-heading h2 {
+    font-size: 23px;
+  }
+
+  .featured-property-image {
+    height: 205px;
+  }
+
+  .featured-property-meta {
+    gap: 8px;
+  }
+
+  .property-details-link {
+    display: none !important;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .property-card,
-  .property-image img,
-  .heart-btn,
-  .view-all-btn,
-  .view-all-btn svg,
-  .featured-empty button {
+  .featured-property-card,
+  .featured-property-image img,
+  .featured-favorite,
+  .featured-view-all,
+  .featured-view-all svg {
     transition: none;
   }
 

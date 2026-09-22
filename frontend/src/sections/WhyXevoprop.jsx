@@ -13,30 +13,30 @@ const benefits = [
   {
     icon: ShieldCheck,
     number: "01",
-    title: "Verified Properties",
+    title: "Verified properties",
     description:
-      "Discover property listings with greater confidence through verified information and transparent details.",
+      "Review property information and listing details with greater confidence.",
   },
   {
     icon: MessageCircle,
     number: "02",
-    title: "Direct Connections",
+    title: "Direct connections",
     description:
-      "Connect with sellers, developers and property stakeholders without unnecessary layers in between.",
+      "Connect directly with sellers, developers and other property professionals.",
   },
   {
     icon: Sparkles,
     number: "03",
-    title: "Intelligent Discovery",
+    title: "Smarter discovery",
     description:
-      "Find relevant properties faster with smarter discovery based on your preferences and requirements.",
+      "Narrow your search using preferences such as location, property type and budget.",
   },
   {
     icon: GitCompare,
     number: "04",
-    title: "Confident Decisions",
+    title: "Better decisions",
     description:
-      "Understand, compare and evaluate properties before taking the next step.",
+      "Compare relevant information before deciding which property to explore further.",
   },
 ];
 
@@ -46,94 +46,79 @@ function WhyXevoprop() {
   return (
     <section className="why-section" id="about">
       <div className="why-container">
-
         {/* HEADER */}
         <motion.div
           className="why-header"
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.45 }}
         >
-          <div>
-            <span className="why-label">
-              WHY XEVOPROP
-            </span>
+          <div className="why-header-content">
+            <span className="why-label">WHY XEVOPROP</span>
 
             <h2>
-              Property decisions
-              <br />
-              <span>made simpler.</span>
+              Built around the way
+              <span> people search for property.</span>
             </h2>
           </div>
 
           <p>
-            Xevoprop brings discovery, connection and
-            decision-making together in one connected
-            property experience.
+            Xevoprop brings property discovery, communication and
+            decision-making into one connected experience.
           </p>
         </motion.div>
 
         {/* BENEFITS */}
         <div className="why-grid">
-
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
 
             return (
-              <motion.div
+              <motion.article
                 className="why-card"
                 key={benefit.number}
-                initial={{
-                  opacity: 0,
-                  y: 30,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
+                  duration: 0.4,
+                  delay: index * 0.07,
                 }}
               >
                 <div className="why-card-top">
-                  <span>{benefit.number}</span>
+                  <span className="why-number">
+                    {benefit.number}
+                  </span>
 
                   <div className="why-icon">
-                    <Icon size={21} />
+                    <Icon size={19} />
                   </div>
                 </div>
 
-                <h3>
-                  {benefit.title}
-                </h3>
+                <div className="why-card-content">
+                  <h3>{benefit.title}</h3>
 
-                <p>
-                  {benefit.description}
-                </p>
-              </motion.div>
+                  <p>{benefit.description}</p>
+                </div>
+              </motion.article>
             );
           })}
-
         </div>
 
         {/* CTA */}
         <motion.div
           className="why-cta"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
         >
-          <div>
-            <span>
-              READY TO EXPLORE?
-            </span>
+          <div className="why-cta-content">
+            <span>START EXPLORING</span>
 
             <strong>
-              Find a property that feels right.
+              Find properties that match your requirements.
             </strong>
           </div>
 
@@ -142,10 +127,9 @@ function WhyXevoprop() {
             onClick={() => navigate("/properties")}
           >
             Explore properties
-            <ArrowUpRight size={17} />
+            <ArrowUpRight size={16} />
           </button>
         </motion.div>
-
       </div>
     </section>
   );

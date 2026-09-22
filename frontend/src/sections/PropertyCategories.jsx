@@ -69,35 +69,52 @@ function PropertyCategories() {
   };
 
   return (
-    <section className="categories-section" id="explore">
+    <section
+      className="categories-section"
+      id="explore"
+    >
       <div className="categories-container">
 
-        {/* Heading */}
+        {/* ================================
+            SECTION HEADER
+        ================================= */}
+
         <motion.div
           className="categories-heading"
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4 }}
         >
-          <div>
+          <div className="categories-heading-content">
+
             <span className="section-label">
-              EXPLORE BY PROPERTY
+              EXPLORE PROPERTIES
             </span>
 
             <h2>
-              Find the space that
-              <span> fits your life.</span>
+              Search by property type
             </h2>
+
           </div>
 
-          <p>
-            From your first home to your next investment,
-            explore properties built around different needs.
-          </p>
+          <button
+            type="button"
+            className="categories-view-all"
+            onClick={() => navigate("/properties")}
+          >
+            View all properties
+            <ArrowUpRight size={16} />
+          </button>
         </motion.div>
 
-        {/* Categories */}
+        {/* ================================
+            CATEGORY GRID
+        ================================= */}
+
         <div className="categories-grid">
 
           {categories.map((category, index) => {
@@ -105,46 +122,58 @@ function PropertyCategories() {
 
             return (
               <motion.button
+                key={category.title}
                 type="button"
                 className="category-card"
-                key={category.title}
-                onClick={() => handleCategoryClick(category)}
+                onClick={() =>
+                  handleCategoryClick(category)
+                }
                 initial={{
                   opacity: 0,
-                  y: 25,
+                  y: 14,
                 }}
                 whileInView={{
                   opacity: 1,
                   y: 0,
                 }}
-                viewport={{ once: true }}
+                viewport={{
+                  once: true,
+                  margin: "-40px",
+                }}
                 transition={{
-                  duration: 0.5,
-                  delay: index * 0.08,
+                  duration: 0.35,
+                  delay: index * 0.05,
                 }}
                 whileHover={{
-                  y: -5,
+                  y: -3,
+                }}
+                whileTap={{
+                  scale: 0.99,
                 }}
               >
 
-                <div className="category-top">
+                {/* Icon */}
 
-                  <div className="category-icon">
-                    <Icon size={22} />
-                  </div>
-
-                  <ArrowUpRight
-                    className="category-arrow"
-                    size={19}
-                  />
-
+                <div className="category-icon">
+                  <Icon size={21} strokeWidth={1.8} />
                 </div>
+
+                {/* Content */}
 
                 <div className="category-content">
 
-                  <h3>
-                    {category.title}
-                  </h3>
+                  <div className="category-title-row">
+
+                    <h3>
+                      {category.title}
+                    </h3>
+
+                    <ArrowUpRight
+                      className="category-arrow"
+                      size={17}
+                    />
+
+                  </div>
 
                   <p>
                     {category.description}
@@ -152,11 +181,19 @@ function PropertyCategories() {
 
                 </div>
 
-                <span className="category-count">
-                  {category.count} properties
-                </span>
+                {/* Count */}
 
-                <div className="category-line"></div>
+                <div className="category-footer">
+
+                  <span className="category-count">
+                    {category.count}
+                  </span>
+
+                  <span className="category-properties">
+                    properties
+                  </span>
+
+                </div>
 
               </motion.button>
             );

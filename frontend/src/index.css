@@ -1,108 +1,71 @@
 /* =========================================================
-   XEVOPROP GLOBAL STYLES
-   Theme 1 — Smooth UI Foundation
-   ========================================================= */
+   XEVOPROP — GLOBAL DESIGN SYSTEM
+   Professional PropTech UI
+========================================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap");
 
 /* =========================================================
    ROOT VARIABLES
-   ========================================================= */
+========================================================= */
 
 :root {
-  /* Primary */
-  --primary: #1264ff;
-  --primary-dark: #084dcc;
-  --primary-deep: #063b9e;
-
-  --primary-light: #eaf2ff;
-  --primary-soft: #f3f7ff;
-
-  --cyan: #19bfff;
-  --cyan-light: #eafaff;
+  /* Brand */
+  --primary: #155eef;
+  --primary-hover: #0f4fd1;
+  --primary-soft: #eef4ff;
 
   /* Text */
-  --text-primary: #0b1736;
-  --text-secondary: #526078;
-  --text-muted: #7f8da4;
-  --text-light: #a4afbf;
+  --text: #172033;
+  --text-secondary: #526071;
+  --text-muted: #7a8494;
+  --text-light: #98a1af;
 
-  /* Background */
-  --bg: #f7faff;
-  --bg-white: #ffffff;
-  --bg-soft: #f2f6fc;
-  --bg-blue: #edf5ff;
-
-  --bg-dark: #07152f;
-  --bg-dark-soft: #0d2144;
+  /* Surfaces */
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f7f9fc;
+  --surface-blue: #f5f8ff;
 
   /* Borders */
-  --border: #e1e9f4;
-  --border-light: #edf2f8;
-  --border-blue: #cbdcff;
+  --border: #e5e9f0;
+  --border-dark: #d7dce5;
 
   /* Status */
-  --success: #16a56a;
-  --success-light: #eafaf3;
+  --success: #16803c;
+  --success-soft: #edf9f1;
 
-  --warning: #e79a18;
-  --warning-light: #fff7e8;
+  --warning: #a15c00;
+  --warning-soft: #fff7e8;
 
-  --danger: #e34d59;
-  --danger-light: #fff0f1;
-
-  /* Gradients */
-  --gradient-primary:
-    linear-gradient(
-      135deg,
-      #1264ff 0%,
-      #087dff 55%,
-      #19bfff 100%
-    );
-
-  --gradient-soft:
-    linear-gradient(
-      135deg,
-      #f3f7ff 0%,
-      #eafaff 100%
-    );
+  --danger: #c62828;
+  --danger-soft: #fff0f0;
 
   /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-pill: 999px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
 
   /* Shadows */
   --shadow-sm:
-    0 4px 14px rgba(11, 23, 54, 0.06);
-
-  --shadow-card:
-    0 8px 28px rgba(11, 23, 54, 0.07);
+    0 1px 3px rgba(16, 24, 40, 0.06);
 
   --shadow-md:
-    0 12px 32px rgba(11, 23, 54, 0.09);
-
-  --shadow-lg:
-    0 20px 50px rgba(11, 23, 54, 0.12);
+    0 6px 20px rgba(16, 24, 40, 0.08);
 
   /* Layout */
-  --container: 1380px;
-  --page-padding: 40px;
+  --container: 1280px;
+  --page-padding: 32px;
 
   /* Motion */
-  --transition-fast: 0.18s ease;
-  --transition-base: 0.28s ease;
-  --transition-smooth:
-    0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  --transition-fast: 150ms ease;
+  --transition: 220ms ease;
 }
-
 
 /* =========================================================
    RESET
-   ========================================================= */
+========================================================= */
 
 *,
 *::before,
@@ -112,124 +75,151 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
 }
 
 body {
   margin: 0;
+  padding: 0;
 
-  min-width: 320px;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 
-  background: var(--bg);
-  color: var(--text-primary);
+  background: var(--background);
+  color: var(--text);
 
-  font-family: "Inter", sans-serif;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
 
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
   text-rendering: optimizeLegibility;
-}
-
-
-/* =========================================================
-   ROOT
-   ========================================================= */
-
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
-
-
-/* =========================================================
-   COMMON ELEMENTS
-   ========================================================= */
-
-img {
-  max-width: 100%;
 }
 
 button,
 input,
-select,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
 button {
-  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
 }
-
-::selection {
-  background: rgba(18, 100, 255, 0.18);
-  color: var(--text-primary);
-}
-
 
 /* =========================================================
-   GLOBAL FOCUS
-   ========================================================= */
+   ROOT
+========================================================= */
 
-:focus-visible {
-  outline: 3px solid rgba(18, 100, 255, 0.2);
-  outline-offset: 3px;
+#root {
+  min-height: 100vh;
 }
 
-
 /* =========================================================
-   COMMON CONTAINER
-   ========================================================= */
+   GLOBAL CONTAINER
+========================================================= */
 
 .container {
   width: min(
-    var(--container),
-    calc(100% - (var(--page-padding) * 2))
+    calc(100% - (var(--page-padding) * 2)),
+    var(--container)
   );
 
   margin: 0 auto;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+}
 
 /* =========================================================
-   SECTION LABEL
-   ========================================================= */
+   SECTION
+========================================================= */
 
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
+.section {
+  padding: 72px 0;
+}
+
+.section--soft {
+  background: var(--surface-soft);
+}
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 32px;
+}
+
+.section-header-content {
+  max-width: 700px;
+}
+
+.section-eyebrow {
+  display: block;
+
+  margin-bottom: 8px;
 
   color: var(--primary);
 
   font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.section-label::before {
-  content: "";
+.section-title {
+  margin: 0;
 
-  width: 24px;
-  height: 2px;
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    sans-serif;
 
-  border-radius: var(--radius-pill);
+  color: var(--text);
 
-  background: var(--primary);
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
+.section-description {
+  max-width: 620px;
+
+  margin: 10px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 15px;
+}
 
 /* =========================================================
-   COMMON HEADINGS
-   ========================================================= */
+   HEADINGS
+========================================================= */
 
 h1,
 h2,
@@ -244,296 +234,376 @@ h6 {
     "Inter",
     sans-serif;
 
-  color: var(--text-primary);
+  color: var(--text);
 }
 
-h1,
+h1 {
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
 h2 {
-  letter-spacing: -1.5px;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.2;
 }
 
+h3 {
+  font-size: 21px;
+  line-height: 1.3;
+}
 
 /* =========================================================
-   BUTTON FOUNDATION
-   ========================================================= */
+   BUTTONS
+========================================================= */
 
-button {
-  border: 0;
-}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-button:not(:disabled) {
-  cursor: pointer;
-}
+  min-height: 42px;
+  padding: 0 17px;
 
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-
-/* =========================================================
-   SMOOTH INTERACTION FOUNDATION
-   ========================================================= */
-
-a,
-button,
-input,
-select,
-textarea {
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base),
-    border-color var(--transition-base),
-    box-shadow var(--transition-base),
-    opacity var(--transition-base),
-    transform var(--transition-base);
-}
-
-
-/* =========================================================
-   COMMON CARD
-   ========================================================= */
-
-.card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-
-  background: var(--bg-white);
-
-  box-shadow: var(--shadow-card);
-
-  transition:
-    transform var(--transition-smooth),
-    box-shadow var(--transition-smooth),
-    border-color var(--transition-base);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-
-  border-color: var(--border-blue);
-
-  box-shadow: var(--shadow-lg);
-}
-
-
-/* =========================================================
-   PROPERTY CARD FOUNDATION
-   ========================================================= */
-
-.property-card {
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-.property-card img {
-  backface-visibility: hidden;
-}
-
-
-/* =========================================================
-   FORM FOUNDATION
-   ========================================================= */
-
-input,
-select,
-textarea {
-  border: 1px solid var(--border);
-
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
 
-  background: var(--bg-white);
-  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
 
-  outline: none;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-input::placeholder,
-textarea::placeholder {
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: #ffffff;
+  border-color: var(--border-dark);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-soft);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-label {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+
+  background: #ffffff;
+  color: var(--text);
+
+  outline: none;
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.form-input,
+.form-select {
+  height: 44px;
+  padding: 0 13px;
+}
+
+.form-textarea {
+  min-height: 110px;
+  padding: 12px 13px;
+  resize: vertical;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
   color: var(--text-light);
 }
 
-input:hover,
-select:hover,
-textarea:hover {
-  border-color: #c8d8ef;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
   border-color: var(--primary);
 
   box-shadow:
-    0 0 0 4px rgba(18, 100, 255, 0.08);
+    0 0 0 3px rgba(21, 94, 239, 0.1);
 }
-
 
 /* =========================================================
-   LINKS
-   ========================================================= */
+   CARDS
+========================================================= */
 
-a {
-  text-decoration: none;
+.card {
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
 }
 
-a:hover {
+/* =========================================================
+   PROPERTY CARD FOUNDATION
+========================================================= */
+
+.property-card {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.property-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d8dee8;
+
+  box-shadow: var(--shadow-md);
+}
+
+.property-card-image {
+  position: relative;
+
+  width: 100%;
+  height: 240px;
+
+  overflow: hidden;
+
+  background: #eef1f5;
+}
+
+.property-card-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 350ms ease;
+}
+
+.property-card:hover
+.property-card-image img {
+  transform: scale(1.025);
+}
+
+.property-card-content {
+  padding: 17px;
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  min-height: 25px;
+  padding: 0 9px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-primary {
+  background: var(--primary-soft);
   color: var(--primary);
 }
 
-
-/* =========================================================
-   PAGE BACKGROUND
-   ========================================================= */
-
-.page {
-  min-height: 100vh;
-  background: var(--bg);
+.badge-success {
+  background: var(--success-soft);
+  color: var(--success);
 }
 
+.badge-warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.badge-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
 
 /* =========================================================
-   LOADING SPINNER
-   ========================================================= */
+   LINKS
+========================================================= */
+
+.text-link {
+  color: var(--primary);
+  font-weight: 600;
+
+  transition: color var(--transition-fast);
+}
+
+.text-link:hover {
+  color: var(--primary-hover);
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider {
+  width: 100%;
+  height: 1px;
+
+  background: var(--border);
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
 
 .loading-spinner {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 
-  border: 2px solid var(--border-blue);
+  border: 2px solid #dce4f2;
   border-top-color: var(--primary);
 
   border-radius: 50%;
 
-  animation:
-    global-spin 0.75s linear infinite;
+  animation: spin 700ms linear infinite;
 }
 
-@keyframes global-spin {
+@keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-
 /* =========================================================
-   SMOOTH PAGE CONTENT
-   ========================================================= */
+   EMPTY STATE
+========================================================= */
 
-main {
-  width: 100%;
+.empty-state {
+  padding: 56px 24px;
+
+  text-align: center;
+
+  border: 1px dashed var(--border-dark);
+  border-radius: var(--radius-lg);
+
+  background: var(--surface-soft);
 }
 
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-  width: 9px;
+.empty-state h3 {
+  margin-bottom: 6px;
 }
 
-::-webkit-scrollbar-track {
-  background: #f2f5fa;
-}
+.empty-state p {
+  margin: 0;
 
-::-webkit-scrollbar-thumb {
-  background: #c8d5e8;
-  border-radius: 999px;
-
-  transition: background 0.25s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #9eb4d2;
-}
-
-
-/* =========================================================
-   UTILITY CLASSES
-   ========================================================= */
-
-.text-primary {
-  color: var(--primary);
-}
-
-.text-muted {
-  color: var(--text-muted);
-}
-
-.text-secondary {
   color: var(--text-secondary);
 }
 
-.bg-white {
-  background: var(--bg-white);
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.hidden {
-  display: none !important;
+::-webkit-scrollbar-track {
+  background: #f4f6f9;
 }
 
+::-webkit-scrollbar-thumb {
+  background: #c8ced8;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aeb6c3;
+}
 
 /* =========================================================
-   PAGE ENTER ANIMATION
-   ========================================================= */
+   FOCUS
+========================================================= */
 
-.page-enter {
-  animation:
-    page-enter-animation 0.4s
-    cubic-bezier(0.2, 0.7, 0.2, 1)
-    both;
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
-
-@keyframes page-enter-animation {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 
 /* =========================================================
-   REDUCED MOTION
-   ========================================================= */
+   RESPONSIVE
+========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
   :root {
-    --page-padding: 24px;
+    --page-padding: 20px;
+  }
+
+  .section {
+    padding: 52px 0;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+  }
+
+  .property-card-image {
+    height: 220px;
   }
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   :root {
     --page-padding: 16px;
   }
@@ -541,15 +611,27 @@ main {
   body {
     font-size: 14px;
   }
+
+  .section {
+    padding: 44px 0;
+  }
+
+  .property-card-image {
+    height: 205px;
+  }
 }
 
-
 /* =========================================================
-   SMALL MOBILE
-   ========================================================= */
+   REDUCED MOTION
+========================================================= */
 
-@media (max-width: 420px) {
-  :root {
-    --page-padding: 12px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

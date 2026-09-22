@@ -1,543 +1,308 @@
-/* =========================================================
+/* =========================================
    WHY XEVOPROP
-   Bright PropTech / Modern SaaS Theme
-   ========================================================= */
+========================================= */
 
 .why-section {
-  position: relative;
-  overflow: hidden;
-  padding: 110px 0;
-  background:
-    radial-gradient(
-      circle at 8% 15%,
-      rgba(0, 198, 255, 0.07),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 92% 85%,
-      rgba(105, 87, 255, 0.06),
-      transparent 30%
-    ),
-    #ffffff;
+  width: 100%;
+  background: #ffffff;
+  border-top: 1px solid #edf0f4;
 }
-
-.why-section::before {
-  content: "";
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  top: -220px;
-  right: -180px;
-  border-radius: 50%;
-  background: rgba(18, 100, 255, 0.035);
-  pointer-events: none;
-}
-
-.why-section::after {
-  content: "";
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  bottom: -180px;
-  left: -130px;
-  border-radius: 50%;
-  background: rgba(0, 198, 255, 0.04);
-  pointer-events: none;
-}
-
-/* =========================================================
-   CONTAINER
-   ========================================================= */
 
 .why-container {
-  position: relative;
-  z-index: 2;
-  width: min(1380px, calc(100% - 80px));
+  width: min(1280px, calc(100% - 64px));
   margin: 0 auto;
+  padding: 68px 0;
 }
 
-/* =========================================================
+/* =========================================
    HEADER
-   ========================================================= */
+========================================= */
 
 .why-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 70px;
-  margin-bottom: 58px;
+  gap: 40px;
+
+  margin-bottom: 28px;
+}
+
+.why-header-content {
+  max-width: 650px;
 }
 
 .why-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin-bottom: 18px;
+  display: block;
+  margin-bottom: 8px;
 
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-}
-
-.why-label::before {
-  content: "";
-  width: 28px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--gradient-primary);
+  color: #155eef;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
 }
 
 .why-header h2 {
   margin: 0;
 
-  color: var(--text-primary);
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: clamp(38px, 4vw, 58px);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
+  color: #172033;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .why-header h2 span {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: block;
+  color: #667085;
 }
 
 .why-header > p {
-  max-width: 440px;
-  margin: 0 0 5px;
+  max-width: 430px;
+  margin: 0;
 
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.8;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.65;
 }
 
-/* =========================================================
+/* =========================================
    BENEFITS GRID
-   ========================================================= */
+========================================= */
 
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
 }
 
-/* =========================================================
+/* =========================================
    BENEFIT CARD
-   ========================================================= */
+========================================= */
 
 .why-card {
-  position: relative;
-  min-height: 285px;
-  padding: 27px 26px 29px;
+  min-height: 205px;
+  padding: 18px;
 
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 1px solid #e1e6ed;
+  border-radius: 9px;
 
-  box-shadow: var(--shadow-card);
+  background: #ffffff;
 
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.why-card::before {
-  content: "";
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  top: -75px;
-  right: -75px;
-
-  border-radius: 50%;
-  background: rgba(18, 100, 255, 0.045);
+  box-shadow: 0 2px 7px rgba(16, 24, 40, 0.025);
 
   transition:
-    transform 0.4s ease,
-    background 0.4s ease;
-}
-
-.why-card::after {
-  content: "";
-  position: absolute;
-  left: 26px;
-  right: 26px;
-  bottom: 0;
-
-  height: 3px;
-
-  border-radius: 10px 10px 0 0;
-  background: var(--gradient-primary);
-
-  transform: scaleX(0);
-  transform-origin: left;
-
-  transition: transform 0.35s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .why-card:hover {
-  transform: translateY(-7px);
-  border-color: var(--border-blue);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+
+  border-color: #ccd5e1;
+
+  box-shadow: 0 9px 22px rgba(16, 24, 40, 0.065);
 }
 
-.why-card:hover::before {
-  transform: scale(1.5);
-  background: rgba(0, 198, 255, 0.07);
-}
-
-.why-card:hover::after {
-  transform: scaleX(1);
-}
-
-/* =========================================================
+/* =========================================
    CARD TOP
-   ========================================================= */
+========================================= */
 
 .why-card-top {
-  position: relative;
-  z-index: 2;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  margin-bottom: 38px;
 }
 
-.why-card-top > span {
-  color: #a7b4c9;
-
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+.why-number {
+  color: #98a1af;
+  font-size: 10px;
+  font-weight: 700;
 }
-
-/* =========================================================
-   ICON
-   ========================================================= */
 
 .why-icon {
+  width: 38px;
+  height: 38px;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 48px;
-  height: 48px;
+  border: 1px solid #dbe5f5;
+  border-radius: 7px;
 
-  color: var(--primary);
-
-  background:
-    linear-gradient(
-      145deg,
-      #edf5ff 0%,
-      #e8faff 100%
-    );
-
-  border: 1px solid #d8e8ff;
-  border-radius: 14px;
-
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    color 0.3s ease;
+  background: #f5f8ff;
+  color: #155eef;
 }
 
-.why-card:hover .why-icon {
-  color: #ffffff;
-  background: var(--gradient-primary);
-  border-color: transparent;
-  transform: rotate(-4deg) scale(1.05);
-}
-
-/* =========================================================
+/* =========================================
    CARD CONTENT
-   ========================================================= */
+========================================= */
+
+.why-card-content {
+  margin-top: auto;
+}
 
 .why-card h3 {
-  position: relative;
-  z-index: 2;
+  margin: 0;
 
-  margin: 0 0 13px;
-
-  color: var(--text-primary);
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 19px;
-  font-weight: 750;
+  color: #273449;
+  font-size: 15px;
   line-height: 1.35;
-  letter-spacing: -0.02em;
+  font-weight: 650;
 }
 
 .why-card p {
-  position: relative;
-  z-index: 2;
+  margin: 8px 0 0;
 
-  margin: 0;
-
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.75;
+  color: #667085;
+  font-size: 11px;
+  line-height: 1.65;
 }
 
-/* =========================================================
+/* =========================================
    CTA
-   ========================================================= */
+========================================= */
 
 .why-cta {
-  position: relative;
+  min-height: 68px;
+  margin-top: 12px;
+  padding: 12px 16px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 20px;
 
-  margin-top: 34px;
-  padding: 25px 28px;
+  border: 1px solid #dce4ef;
+  border-radius: 8px;
 
-  overflow: hidden;
-
-  background:
-    linear-gradient(
-      105deg,
-      #f0f7ff 0%,
-      #f7fbff 52%,
-      #f2f0ff 100%
-    );
-
-  border: 1px solid #dce8f7;
-  border-radius: var(--radius-lg);
+  background: #f7f9fc;
 }
 
-.why-cta::before {
-  content: "";
-  position: absolute;
-
-  width: 240px;
-  height: 240px;
-
-  top: -170px;
-  right: 130px;
-
-  border-radius: 50%;
-
-  background: rgba(0, 198, 255, 0.08);
-}
-
-.why-cta > div {
-  position: relative;
-  z-index: 1;
-
+.why-cta-content {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.why-cta > div > span {
-  color: var(--primary);
-
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
-  white-space: nowrap;
-}
-
-.why-cta > div > strong {
-  color: var(--text-primary);
-
-  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  font-size: 17px;
+.why-cta-content span {
+  color: #155eef;
+  font-size: 9px;
   font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
-/* =========================================================
-   CTA BUTTON
-   ========================================================= */
+.why-cta-content strong {
+  color: #344054;
+  font-size: 12px;
+  font-weight: 600;
+}
 
 .why-cta button {
-  position: relative;
-  z-index: 1;
+  min-height: 37px;
+  flex-shrink: 0;
+
+  padding: 0 13px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 6px;
 
-  min-height: 46px;
-  padding: 0 20px;
+  border: 0;
+  border-radius: 7px;
 
+  background: #155eef;
   color: #ffffff;
 
-  background: var(--gradient-primary);
-
-  border: none;
-  border-radius: 11px;
-
-  box-shadow:
-    0 8px 20px rgba(18, 100, 255, 0.2);
-
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
 
   cursor: pointer;
 
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.why-cta button svg {
-  transition: transform 0.25s ease;
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .why-cta button:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 26px rgba(18, 100, 255, 0.28);
+  background: #0f4fd1;
+  transform: translateY(-1px);
 }
 
-.why-cta button:hover svg {
-  transform: translate(2px, -2px);
-}
+/* =========================================
+   TABLET
+========================================= */
 
-.why-cta button:active {
-  transform: translateY(0);
-}
-
-/* =========================================================
-   RESPONSIVE — 1150px
-   ========================================================= */
-
-@media (max-width: 1150px) {
-  .why-section {
-    padding: 90px 0;
-  }
-
-  .why-header {
-    gap: 45px;
-  }
-
-  .why-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .why-card {
-    min-height: 260px;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — 800px
-   ========================================================= */
-
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   .why-container {
-    width: min(100% - 40px, 680px);
+    width: min(100% - 40px, 760px);
+    padding: 56px 0;
   }
 
   .why-header {
-    display: block;
-    margin-bottom: 42px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .why-header > p {
     max-width: 600px;
-    margin-top: 22px;
-  }
-
-  .why-header h2 {
-    font-size: clamp(36px, 8vw, 48px);
   }
 
   .why-grid {
-    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .why-card {
-    padding: 24px;
-  }
-
-  .why-card-top {
-    margin-bottom: 30px;
-  }
-
-  .why-cta {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .why-cta > div {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+    min-height: 180px;
   }
 }
 
-/* =========================================================
-   RESPONSIVE — 560px
-   ========================================================= */
+/* =========================================
+   MOBILE
+========================================= */
 
-@media (max-width: 560px) {
-  .why-section {
-    padding: 75px 0;
-  }
-
+@media (max-width: 640px) {
   .why-container {
-    width: calc(100% - 32px);
-  }
-
-  .why-label {
-    margin-bottom: 14px;
-    font-size: 11px;
+    width: min(100% - 32px, 520px);
+    padding: 48px 0;
   }
 
   .why-header h2 {
-    font-size: 35px;
-    line-height: 1.12;
+    font-size: 25px;
   }
 
   .why-header > p {
-    margin-top: 18px;
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 12px;
   }
 
   .why-grid {
     grid-template-columns: 1fr;
-    gap: 13px;
+    gap: 9px;
   }
 
   .why-card {
-    min-height: auto;
-    padding: 23px;
+    min-height: 150px;
+    padding: 16px;
   }
 
-  .why-card-top {
-    margin-bottom: 27px;
-  }
-
-  .why-card h3 {
-    font-size: 18px;
-  }
-
-  .why-card p {
-    font-size: 13.5px;
+  .why-card-content {
+    margin-top: 22px;
   }
 
   .why-cta {
-    margin-top: 22px;
-    padding: 22px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
   }
 
-  .why-cta > div > strong {
-    font-size: 16px;
+  .why-cta-content {
+    width: 100%;
   }
 
   .why-cta button {
@@ -545,33 +310,32 @@
   }
 }
 
-/* =========================================================
-   RESPONSIVE — 380px
-   ========================================================= */
+/* =========================================
+   SMALL MOBILE
+========================================= */
 
-@media (max-width: 380px) {
-  .why-section {
-    padding: 65px 0;
-  }
-
+@media (max-width: 400px) {
   .why-container {
     width: calc(100% - 24px);
+    padding: 42px 0;
   }
 
   .why-header h2 {
-    font-size: 31px;
+    font-size: 23px;
   }
 
-  .why-card {
-    padding: 20px;
+  .why-card p {
+    font-size: 10px;
   }
+}
 
-  .why-icon {
-    width: 44px;
-    height: 44px;
-  }
+/* =========================================
+   REDUCED MOTION
+========================================= */
 
-  .why-cta {
-    padding: 19px;
+@media (prefers-reduced-motion: reduce) {
+  .why-card,
+  .why-cta button {
+    transition: none;
   }
 }

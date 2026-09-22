@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
-  Sparkles,
   Search,
+  Building2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./FinalCTA.css";
@@ -12,30 +12,27 @@ function FinalCTA() {
 
   return (
     <section className="final-cta-section">
-      <div className="final-cta-glow"></div>
-
       <div className="final-cta-container">
+        {/* LEFT CONTENT */}
         <motion.div
           className="final-cta-content"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.45 }}
         >
-          <div className="final-cta-label">
-            <Sparkles size={14} />
-            YOUR NEXT MOVE STARTS HERE
-          </div>
+          <span className="final-cta-label">
+            READY TO EXPLORE?
+          </span>
 
           <h2>
-            Find the place
-            <br />
-            <span>that feels right.</span>
+            Your next property
+            <span> could be one search away.</span>
           </h2>
 
           <p>
-            Explore properties, connect directly with the right people
-            and make your next property decision with confidence.
+            Explore verified properties and projects on Xevoprop,
+            compare your options and connect with the right people.
           </p>
 
           <div className="final-cta-actions">
@@ -44,9 +41,9 @@ function FinalCTA() {
               className="final-cta-primary"
               onClick={() => navigate("/properties")}
             >
-              <Search size={17} />
+              <Search size={16} />
               Explore properties
-              <ArrowUpRight size={17} />
+              <ArrowUpRight size={16} />
             </button>
 
             <button
@@ -54,22 +51,48 @@ function FinalCTA() {
               className="final-cta-secondary"
               onClick={() => navigate("/projects")}
             >
+              <Building2 size={16} />
               Explore projects
-              <ArrowUpRight size={17} />
+              <ArrowUpRight size={16} />
             </button>
           </div>
         </motion.div>
 
+        {/* RIGHT SUMMARY */}
         <motion.div
-          className="final-cta-bottom"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="final-cta-summary"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+          transition={{ duration: 0.45, delay: 0.1 }}
         >
-          <span>DISCOVER</span>
-          <span>CONNECT</span>
-          <span>DECIDE</span>
+          <div className="cta-summary-header">
+            <span>WHAT YOU CAN DO</span>
+          </div>
+
+          <div className="cta-summary-item">
+            <span className="cta-summary-number">01</span>
+            <div>
+              <strong>Discover</strong>
+              <p>Search properties and projects.</p>
+            </div>
+          </div>
+
+          <div className="cta-summary-item">
+            <span className="cta-summary-number">02</span>
+            <div>
+              <strong>Connect</strong>
+              <p>Enquire directly with property professionals.</p>
+            </div>
+          </div>
+
+          <div className="cta-summary-item">
+            <span className="cta-summary-number">03</span>
+            <div>
+              <strong>Move forward</strong>
+              <p>Schedule visits and take the next step.</p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
