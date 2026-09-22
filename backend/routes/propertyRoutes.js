@@ -66,12 +66,18 @@ router.get("/", async (req, res) => {
    ALL STATUSES
 ============================================================ */
 
+// ==========================================
+// GET MY PROPERTIES
+// ==========================================
+
 router.get(
   "/my-properties",
   authenticateToken,
   authorizeRoles("Seller", "Developer"),
   async (req, res) => {
     try {
+      const ownerId = req.user.id;
+
       const result = await pool.query(
         `
         SELECT
@@ -92,33 +98,43 @@ router.get(
           ready_to_move,
           zero_brokerage,
           status,
-          reviewed_by,
-          reviewed_at,
-          rejection_reason,
-          created_at,
-          updated_at
+          created_at
         FROM properties
         WHERE owner_id = $1
         ORDER BY created_at DESC
         `,
-        [req.user.id]
+        [ownerId]
       );
 
-      res.json({
+      return res.json({
         success: true,
         properties: result.rows,
       });
+
     } catch (error) {
       console.error(
         "Get my properties error:",
-        error.message
+        error
       );
 
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
-        message: "Failed to fetch your properties",
+        message: "Failed to load your properties",
       });
     }
+  }
+);
+
+
+// ==========================================
+// GET SINGLE PROPERTY
+// IMPORTANT: KEEP THIS AFTER /my
+// ==========================================
+
+router.get(
+  "/:id",
+  async (req, res) => {
+    // your existing single-property code
   }
 );
 

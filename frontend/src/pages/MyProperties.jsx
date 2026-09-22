@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Home,
@@ -11,75 +11,76 @@ import {
   Plus,
   Building2,
   Pencil,
+  Search,
+  CheckCircle2,
+  Clock3,
+  XCircle,
+  Video,
+  Image as ImageIcon,
 } from "lucide-react";
 
 import "./MyProperties.css";
+
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://xevoprop.onrender.com/api";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85";
 
 function MyProperties() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* =========================
-     LOAD MY PROPERTIES
-  ========================= */
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     loadListings();
   }, []);
+
+  /* =========================
+     LOAD MY PROPERTIES
+  ========================= */
 
   const loadListings = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const token =
-        localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       if (!token) {
-        setError(
-          "Please login as a Seller or Developer."
-        );
+        setError("Please login as a Seller or Developer.");
         return;
       }
 
       const response = await fetch(
-        "https://xevoprop.onrender.com/api/properties/my-properties",
+        `${API_URL}/properties/my`,
         {
           method: "GET",
-
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-          "Failed to load your properties"
+          data.message || "Failed to load your properties"
         );
       }
 
-      setListings(
-        data.properties || []
-      );
-
+      setListings(data.properties || []);
     } catch (error) {
-      console.error(
-        "Load properties error:",
-        error
-      );
+      console.error("Load properties error:", error);
 
       setError(
-        error.message ||
-        "Unable to load properties."
+        error.message || "Unable to load properties."
       );
-
     } finally {
       setLoading(false);
     }
@@ -90,56 +91,48 @@ function MyProperties() {
   ========================= */
 
   const deleteListing = async (id) => {
-    const confirmDelete =
-      window.confirm(
-        "Are you sure you want to delete this property?"
-      );
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this property?"
+    );
 
     if (!confirmDelete) return;
 
     try {
-      const token =
-        localStorage.getItem("token");
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Please login again.");
+      }
 
       const response = await fetch(
-        `https://xevoprop.onrender.com/api/properties/${id}`,
+        `${API_URL}/properties/${id}`,
         {
           method: "DELETE",
-
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-          "Failed to delete property"
+          data.message || "Failed to delete property"
         );
       }
 
-      setListings(
-        (previous) =>
-          previous.filter(
-            (listing) =>
-              listing.id !== id
-          )
+      setListings((previous) =>
+        previous.filter(
+          (listing) => listing.id !== id
+        )
       );
-
     } catch (error) {
-      console.error(
-        "Delete property error:",
-        error
-      );
+      console.error("Delete property error:", error);
 
       alert(
         error.message ||
-        "Unable to delete property."
+          "Unable to delete property."
       );
     }
   };
@@ -156,6 +149,10 @@ function MyProperties() {
     const price =
       Number(listing.price_value) || 0;
 
+    if (!price) {
+      return "Price on request";
+    }
+
     if (price >= 10000000) {
       return `₹${(
         price / 10000000
@@ -168,10 +165,184 @@ function MyProperties() {
       ).toFixed(1)} L`;
     }
 
-    return `₹${price.toLocaleString(
-      "en-IN"
-    )}`;
+    return `₹${price.toLocaleString("en-IN")}`;
   };
+
+  /* =========================
+     STATUS HELPERS
+  ========================= */
+
+  const getStatus = (listing) => {
+    const status =
+      String(listing.status || "")
+        .trim()
+        .toLowerCase();
+
+    if (
+      status === "approved" ||
+      status === "published"
+    ) {
+      return "approved";
+    }
+
+    if (status === "rejected") {
+      return "rejected";
+    }
+
+    return "pending";
+  };
+
+  const getStatusLabel = (listing) => {
+    const status = getStatus(listing);
+
+    if (status === "approved") {
+      return "Approved";
+    }
+
+    if (status === "rejected") {
+      return "Rejected";
+    }
+
+    return "Pending Review";
+  };
+
+  /* =========================
+     MEDIA HELPERS
+  ========================= */
+
+  const getMedia = (listing) => {
+    const media =
+      listing.property_images ||
+      listing.images ||
+      listing.media ||
+      listing.gallery ||
+      [];
+
+    if (Array.isArray(media) && media.length) {
+      return media;
+    }
+
+    if (listing.image) {
+      return [
+        {
+          image_url: listing.image,
+          media_type: "image",
+        },
+      ];
+    }
+
+    return [];
+  };
+
+  const getCoverImage = (listing) => {
+    const media = getMedia(listing);
+
+    const image = media.find((item) => {
+      if (!item) return false;
+
+      const type =
+        item.media_type ||
+        item.type ||
+        item.resource_type;
+
+      return type !== "video";
+    });
+
+    if (!image) {
+      return FALLBACK_IMAGE;
+    }
+
+    if (typeof image === "string") {
+      return image;
+    }
+
+    return (
+      image.image_url ||
+      image.url ||
+      image.secure_url ||
+      image.image ||
+      image.src ||
+      FALLBACK_IMAGE
+    );
+  };
+
+  const getMediaCount = (listing) => {
+    return getMedia(listing).length;
+  };
+
+  const hasVideo = (listing) => {
+    return getMedia(listing).some((item) => {
+      if (!item || typeof item === "string") {
+        return false;
+      }
+
+      const type =
+        item.media_type ||
+        item.type ||
+        item.resource_type;
+
+      return type === "video";
+    });
+  };
+
+  /* =========================
+     FILTER LISTINGS
+  ========================= */
+
+  const filteredListings = useMemo(() => {
+    const query = search
+      .trim()
+      .toLowerCase();
+
+    return listings.filter((listing) => {
+      const status = getStatus(listing);
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        status === statusFilter;
+
+      const searchableText = [
+        listing.title,
+        listing.type,
+        listing.location,
+        listing.city,
+        listing.description,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch =
+        !query ||
+        searchableText.includes(query);
+
+      return (
+        matchesStatus &&
+        matchesSearch
+      );
+    });
+  }, [listings, search, statusFilter]);
+
+  /* =========================
+     STATISTICS
+  ========================= */
+
+  const totalListings = listings.length;
+
+  const approvedListings = listings.filter(
+    (item) =>
+      getStatus(item) === "approved"
+  ).length;
+
+  const pendingListings = listings.filter(
+    (item) =>
+      getStatus(item) === "pending"
+  ).length;
+
+  const rejectedListings = listings.filter(
+    (item) =>
+      getStatus(item) === "rejected"
+  ).length;
 
   /* =========================
      LOADING
@@ -181,12 +352,16 @@ function MyProperties() {
     return (
       <div className="my-properties-page">
         <div className="my-properties-container">
-          <div className="my-properties-empty">
-            <Building2 size={32} />
+          <div className="my-properties-loading">
+            <div className="loading-spinner" />
 
             <h2>
               Loading your properties...
             </h2>
+
+            <p>
+              Fetching your Xevoprop listings.
+            </p>
           </div>
         </div>
       </div>
@@ -195,115 +370,121 @@ function MyProperties() {
 
   return (
     <div className="my-properties-page">
-
       <div className="my-properties-container">
 
-        {/* HEADER */}
+        {/* ================= HEADER ================= */}
 
         <div className="my-properties-header">
-
           <div>
-
             <span className="my-properties-eyebrow">
               SELLER SPACE
             </span>
 
             <h1>
-              My properties<span>.</span>
+              My Properties<span>.</span>
             </h1>
 
             <p>
               Manage the properties you've
               listed on Xevoprop.
             </p>
-
           </div>
 
           <Link
             to="/list-property"
             className="add-property-btn"
           >
-            <Plus size={16} />
+            <Plus size={17} />
             List Property
           </Link>
-
         </div>
 
-        {/* ERROR */}
+        {/* ================= ERROR ================= */}
 
         {error && (
-          <div
-            style={{
-              marginBottom: "20px",
-              padding: "14px",
-              borderRadius: "8px",
-              background:
-                "rgba(255, 107, 107, 0.08)",
-              border:
-                "1px solid rgba(255, 107, 107, 0.2)",
-              color: "#ff6b6b",
-              fontSize: "11px",
-            }}
-          >
+          <div className="my-properties-error">
             {error}
           </div>
         )}
 
-        {/* STATS */}
+        {/* ================= STATS ================= */}
 
         <div className="my-properties-stats">
 
           <div className="property-stat">
-
-            <Building2 size={18} />
+            <div className="property-stat-icon">
+              <Building2 size={19} />
+            </div>
 
             <div>
-
               <strong>
-                {listings.length}
+                {totalListings}
               </strong>
 
               <span>
                 Total Listings
               </span>
-
             </div>
-
           </div>
 
           <div className="property-stat">
-
-            <Eye size={18} />
+            <div className="property-stat-icon approved">
+              <CheckCircle2 size={19} />
+            </div>
 
             <div>
-
               <strong>
-                {
-                  listings.filter(
-                    (item) =>
-                      item.status ===
-                      "published"
-                  ).length
-                }
+                {approvedListings}
               </strong>
 
               <span>
-                Published
+                Approved
               </span>
+            </div>
+          </div>
 
+          <div className="property-stat">
+            <div className="property-stat-icon pending">
+              <Clock3 size={19} />
             </div>
 
+            <div>
+              <strong>
+                {pendingListings}
+              </strong>
+
+              <span>
+                Pending Review
+              </span>
+            </div>
+          </div>
+
+          <div className="property-stat">
+            <div className="property-stat-icon rejected">
+              <XCircle size={19} />
+            </div>
+
+            <div>
+              <strong>
+                {rejectedListings}
+              </strong>
+
+              <span>
+                Rejected
+              </span>
+            </div>
           </div>
 
         </div>
 
-        {/* EMPTY */}
+        {/* ================= EMPTY ================= */}
 
         {listings.length === 0 ? (
-
           <div className="my-properties-empty">
 
-            <Home size={32} />
+            <div className="empty-icon">
+              <Home size={30} />
+            </div>
 
             <h2>
               No properties listed yet
@@ -315,184 +496,303 @@ function MyProperties() {
             </p>
 
             <Link to="/list-property">
-              <Plus size={14} />
+              <Plus size={15} />
               List Your First Property
             </Link>
 
           </div>
-
         ) : (
+          <>
+            {/* ================= TOOLBAR ================= */}
 
-          <div className="my-properties-list">
+            <div className="my-properties-toolbar">
 
-            {listings.map(
-              (listing) => {
+              <div className="property-search">
+                <Search size={17} />
 
-                const image =
-                  listing.image || null;
+                <input
+                  type="text"
+                  placeholder="Search your properties..."
+                  value={search}
+                  onChange={(e) =>
+                    setSearch(e.target.value)
+                  }
+                />
+              </div>
 
-                return (
+              <div className="property-status-filter">
+                <button
+                  className={
+                    statusFilter === "all"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setStatusFilter("all")
+                  }
+                >
+                  All
+                </button>
 
-                  <div
-                    className="seller-property-card"
-                    key={listing.id}
-                  >
+                <button
+                  className={
+                    statusFilter === "approved"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setStatusFilter("approved")
+                  }
+                >
+                  Approved
+                </button>
 
-                    {/* IMAGE */}
+                <button
+                  className={
+                    statusFilter === "pending"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setStatusFilter("pending")
+                  }
+                >
+                  Pending
+                </button>
 
-                    <div className="seller-property-image">
+                <button
+                  className={
+                    statusFilter === "rejected"
+                      ? "active"
+                      : ""
+                  }
+                  onClick={() =>
+                    setStatusFilter("rejected")
+                  }
+                >
+                  Rejected
+                </button>
+              </div>
 
-                      {image ? (
+            </div>
 
-                        <img
-                          src={image}
-                          alt={
-                            listing.title
-                          }
-                        />
+            {/* ================= NO FILTER RESULTS ================= */}
 
-                      ) : (
+            {filteredListings.length === 0 ? (
+              <div className="no-filter-results">
+                <Search size={28} />
 
-                        <div className="no-property-image">
-                          <Home size={25} />
-                        </div>
+                <h3>
+                  No matching properties
+                </h3>
 
-                      )}
+                <p>
+                  Try changing your search or
+                  status filter.
+                </p>
+              </div>
+            ) : (
+              /* ================= PROPERTY LIST ================= */
 
-                      <span className="seller-status">
-                        {listing.status ===
-                        "published"
-                          ? "Published"
-                          : "Draft"}
-                      </span>
+              <div className="my-properties-list">
 
-                    </div>
+                {filteredListings.map(
+                  (listing) => {
 
-                    {/* CONTENT */}
+                    const status =
+                      getStatus(listing);
 
-                    <div className="seller-property-content">
+                    const image =
+                      getCoverImage(listing);
 
-                      <div className="seller-property-top">
+                    const mediaCount =
+                      getMediaCount(listing);
 
-                        <div>
+                    const videoAvailable =
+                      hasVideo(listing);
 
-                          <span className="seller-property-type">
-                            {listing.type ||
-                              "Property"}
+                    return (
+                      <div
+                        className="seller-property-card"
+                        key={listing.id}
+                      >
+
+                        {/* IMAGE */}
+
+                        <div className="seller-property-image">
+
+                          <img
+                            src={image}
+                            alt={
+                              listing.title ||
+                              "Property"
+                            }
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                FALLBACK_IMAGE;
+                            }}
+                          />
+
+                          <span
+                            className={`seller-status ${status}`}
+                          >
+                            {status ===
+                              "approved" && (
+                              <CheckCircle2
+                                size={12}
+                              />
+                            )}
+
+                            {status ===
+                              "pending" && (
+                              <Clock3
+                                size={12}
+                              />
+                            )}
+
+                            {status ===
+                              "rejected" && (
+                              <XCircle
+                                size={12}
+                              />
+                            )}
+
+                            {getStatusLabel(
+                              listing
+                            )}
                           </span>
 
-                          <h2>
-                            {listing.title ||
-                              "Untitled Property"}
-                          </h2>
+                          {mediaCount > 0 && (
+                            <div className="media-count">
+                              <ImageIcon size={13} />
+                              {mediaCount}
+                            </div>
+                          )}
+
+                          {videoAvailable && (
+                            <div className="video-indicator">
+                              <Video size={13} />
+                              Video
+                            </div>
+                          )}
 
                         </div>
 
-                        <strong className="seller-property-price">
-                          {formatPrice(
-                            listing
-                          )}
-                        </strong>
+                        {/* CONTENT */}
+
+                        <div className="seller-property-content">
+
+                          <div className="seller-property-top">
+
+                            <div className="seller-property-heading">
+
+                              <span className="seller-property-type">
+                                {listing.type ||
+                                  "Property"}
+                              </span>
+
+                              <h2>
+                                {listing.title ||
+                                  "Untitled Property"}
+                              </h2>
+
+                            </div>
+
+                            <strong className="seller-property-price">
+                              {formatPrice(
+                                listing
+                              )}
+                            </strong>
+
+                          </div>
+
+                          {/* LOCATION */}
+
+                          <div className="seller-property-location">
+                            <MapPin size={14} />
+
+                            <span>
+                              {listing.location ||
+                                listing.city ||
+                                "India"}
+                            </span>
+                          </div>
+
+                          {/* DETAILS */}
+
+                          <div className="seller-property-details">
+
+                            <span>
+                              <BedDouble size={15} />
+                              {listing.bedrooms ||
+                                0}{" "}
+                              Beds
+                            </span>
+
+                            <span>
+                              <Bath size={15} />
+                              {listing.bathrooms ||
+                                0}{" "}
+                              Baths
+                            </span>
+
+                            <span>
+                              <Maximize size={15} />
+                              {listing.area ||
+                                0}{" "}
+                              sq.ft
+                            </span>
+
+                          </div>
+
+                          {/* ACTIONS */}
+
+                          <div className="seller-property-actions">
+
+                            <Link
+                              to={`/properties/${listing.id}`}
+                              className="view-property-btn"
+                            >
+                              <Eye size={14} />
+                              View
+                            </Link>
+
+                            <Link
+                              to={`/edit-property/${listing.id}`}
+                              className="edit-property-btn"
+                            >
+                              <Pencil size={14} />
+                              Edit
+                            </Link>
+
+                            <button
+                              type="button"
+                              className="delete-property-btn"
+                              onClick={() =>
+                                deleteListing(
+                                  listing.id
+                                )
+                              }
+                            >
+                              <Trash2 size={14} />
+                              Delete
+                            </button>
+
+                          </div>
+
+                        </div>
 
                       </div>
+                    );
+                  }
+                )}
 
-                      {/* LOCATION */}
-
-                      <div className="seller-property-location">
-
-                        <MapPin size={13} />
-
-                        {listing.location ||
-                          listing.city ||
-                          "India"}
-
-                      </div>
-
-                      {/* DETAILS */}
-
-                      <div className="seller-property-details">
-
-                        <span>
-                          <BedDouble
-                            size={14}
-                          />
-
-                          {listing.bedrooms ||
-                            0}{" "}
-                          Beds
-                        </span>
-
-                        <span>
-                          <Bath size={14} />
-
-                          {listing.bathrooms ||
-                            0}{" "}
-                          Baths
-                        </span>
-
-                        <span>
-                          <Maximize
-                            size={14}
-                          />
-
-                          {listing.area ||
-                            0}{" "}
-                          sq.ft
-                        </span>
-
-                      </div>
-
-                      {/* ACTIONS */}
-
-                      <div className="seller-property-actions">
-
-                        <Link
-                          to={`/properties/${listing.id}`}
-                          className="view-property-btn"
-                        >
-                          <Eye size={14} />
-                          View
-                        </Link>
-
-                         <Link
-    to={`/edit-property/${listing.id}`}
-    className="edit-property-btn"
-  >
-    <Pencil size={12} />
-    Edit
-  </Link>
-
-                        <button
-                          type="button"
-                          className="delete-property-btn"
-                          onClick={() =>
-                            deleteListing(
-                              listing.id
-                            )
-                          }
-                        >
-                          <Trash2
-                            size={14}
-                          />
-                          Delete
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                );
-              }
+              </div>
             )}
-
-          </div>
-
+          </>
         )}
 
       </div>
-
     </div>
   );
 }
