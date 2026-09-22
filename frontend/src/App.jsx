@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 // Public pages
 import Home from "./pages/Home";
@@ -353,7 +352,7 @@ function App() {
 
       </Routes>
 
-      <Footer />
+     
     </BrowserRouter>
   );
 }

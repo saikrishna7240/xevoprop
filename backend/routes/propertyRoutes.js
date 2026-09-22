@@ -137,17 +137,7 @@ router.get(
 );
 
 
-// ==========================================
-// GET SINGLE PROPERTY
-// IMPORTANT: KEEP THIS AFTER /my
-// ==========================================
 
-router.get(
-  "/:id",
-  async (req, res) => {
-    // your existing single-property code
-  }
-);
 
 /* ============================================================
    GET SINGLE PUBLIC PROPERTY
