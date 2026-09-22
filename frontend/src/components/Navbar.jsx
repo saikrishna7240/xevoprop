@@ -249,7 +249,7 @@ function Navbar() {
           aria-label="Xevoprop Home"
         >
           <img
-            src="/logo.png"
+            src="/xevoprop-logo.png"
             alt="Xevoprop"
           />
         </Link>

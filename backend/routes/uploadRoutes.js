@@ -143,43 +143,118 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         DETERMINE MEDIA TYPE
-      ----------------------------------------------------- */
+     /* -----------------------------------------------------
+   DETERMINE MEDIA TYPE
+----------------------------------------------------- */
 
-      const isVideo =
-        req.file.mimetype.startsWith("video/");
+const isVideo =
+  req.file.mimetype.startsWith("video/");
 
-      const mediaType = isVideo ? "video" : "image";
+const mediaType = isVideo
+  ? "video"
+  : "image";
 
-      /* -----------------------------------------------------
-         CLOUDINARY UPLOAD
-      ----------------------------------------------------- */
+/* -----------------------------------------------------
+   CLOUDINARY UPLOAD
+----------------------------------------------------- */
 
-      const uploadResult = await new Promise(
-        (resolve, reject) => {
-          const stream =
-            cloudinary.uploader.upload_stream(
-              {
-                folder: "xevoprop/properties",
-
-                // Cloudinary automatically handles
-                // images and videos when using auto.
-                resource_type: "auto",
-              },
-
-              (error, result) => {
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(result);
-                }
-              }
-            );
-
-          stream.end(req.file.buffer);
+const uploadResult = await new Promise(
+  (resolve, reject) => {
+    const stream =
+      cloudinary.uploader.upload_stream(
+        {
+          folder: "xevoprop/properties",
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
       );
+
+    stream.end(req.file.buffer);
+  }
+);
+
+console.log(
+  "Cloudinary upload successful:",
+  uploadResult.secure_url
+);
+
+/* -----------------------------------------------------
+   GET NEXT SORT ORDER
+----------------------------------------------------- */
+
+const sortResult = await pool.query(
+  `
+  SELECT
+    COALESCE(MAX(sort_order), -1) + 1
+    AS next_sort_order
+  FROM property_images
+  WHERE property_id = $1
+  `,
+  [propertyId]
+);
+
+const sortOrder =
+  Number(
+    sortResult.rows[0].next_sort_order
+  );
+
+/* -----------------------------------------------------
+   SAVE MEDIA
+----------------------------------------------------- */
+
+const mediaResult = await pool.query(
+  `
+  INSERT INTO property_images
+  (
+    property_id,
+    image_url,
+    sort_order,
+    media_type
+  )
+  VALUES ($1, $2, $3, $4)
+  RETURNING *
+  `,
+  [
+    propertyId,
+    uploadResult.secure_url,
+    sortOrder,
+    mediaType,
+  ]
+);
+
+console.log(
+  "PROPERTY MEDIA SAVED:",
+  mediaResult.rows[0]
+);
+
+/* -----------------------------------------------------
+   SET FIRST IMAGE AS COVER
+----------------------------------------------------- */
+
+if (
+  mediaType === "image" &&
+  !propertyResult.rows[0].image
+) {
+  await pool.query(
+    `
+    UPDATE properties
+    SET image = $1
+    WHERE id = $2
+      AND owner_id = $3
+    `,
+    [
+      uploadResult.secure_url,
+      propertyId,
+      req.user.id,
+    ]
+  );
+}
 
       console.log(
         "Property media uploaded:",
@@ -226,7 +301,7 @@ router.post(
           sort_order,
           media_type
         )
-        VALUES ($1, $2, $3)
+        VALUES ($1, $2, $3, $4)
         RETURNING *
         `,
         [
