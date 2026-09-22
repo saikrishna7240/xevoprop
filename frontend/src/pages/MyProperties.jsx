@@ -45,46 +45,83 @@ function MyProperties() {
   ========================= */
 
   const loadListings = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  try {
+    setLoading(true);
+    setError("");
 
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      if (!token) {
-        setError("Please login as a Seller or Developer.");
-        return;
-      }
-
-      const response = await fetch(
-        `${API_URL}/properties/my`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to load your properties"
-        );
-      }
-
-      setListings(data.properties || []);
-    } catch (error) {
-      console.error("Load properties error:", error);
-
-      setError(
-        error.message || "Unable to load properties."
-      );
-    } finally {
-      setLoading(false);
+    if (!token) {
+      setError("Please login as a Seller or Developer.");
+      return;
     }
-  };
+
+    console.log("MY PROPERTIES: requesting...");
+
+    const response = await fetch(
+      `${API_URL}/properties/my`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log(
+      "MY PROPERTIES STATUS:",
+      response.status
+    );
+
+    const text = await response.text();
+
+    console.log(
+      "MY PROPERTIES RESPONSE:",
+      text
+    );
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "Server returned an invalid response."
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        `Failed to load properties (${response.status})`
+      );
+    }
+
+    setListings(
+      Array.isArray(data.properties)
+        ? data.properties
+        : []
+    );
+
+  } catch (error) {
+    console.error(
+      "Load properties error:",
+      error
+    );
+
+    setError(
+      error.message ||
+      "Unable to load properties."
+    );
+  } finally {
+    console.log(
+      "MY PROPERTIES: loading finished"
+    );
+
+    setLoading(false);
+  }
+};
 
   /* =========================
      DELETE PROPERTY

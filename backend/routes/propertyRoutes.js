@@ -71,11 +71,16 @@ router.get("/", async (req, res) => {
 // ==========================================
 
 router.get(
-  "/my-properties",
+  "/my",
   authenticateToken,
   authorizeRoles("Seller", "Developer"),
   async (req, res) => {
     try {
+      console.log(
+        "GET MY PROPERTIES USER:",
+        req.user
+      );
+
       const ownerId = req.user.id;
 
       const result = await pool.query(
@@ -106,20 +111,26 @@ router.get(
         [ownerId]
       );
 
-      return res.json({
+      console.log(
+        "MY PROPERTIES COUNT:",
+        result.rows.length
+      );
+
+      return res.status(200).json({
         success: true,
         properties: result.rows,
       });
 
     } catch (error) {
       console.error(
-        "Get my properties error:",
+        "GET MY PROPERTIES ERROR:",
         error
       );
 
       return res.status(500).json({
         success: false,
         message: "Failed to load your properties",
+        error: error.message,
       });
     }
   }
