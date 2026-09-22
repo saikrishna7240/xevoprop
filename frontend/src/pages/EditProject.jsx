@@ -5,10 +5,17 @@ import {
   Save,
   Loader2,
   ImagePlus,
+  Video,
+  Image as ImageIcon,
   X,
   Clock3,
   CheckCircle2,
   XCircle,
+  FileText,
+  Upload,
+  FileCheck2,
+  ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./EditProject.css";
@@ -17,10 +24,18 @@ const API_URL =
   import.meta.env.VITE_API_URL ||
   "https://xevoprop.onrender.com/api";
 
+const AGREEMENT_URL =
+  "/documents/Builder_Listing_Commission_Agreementfinal.docx";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85";
+
 function EditProject() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+
+  const mediaInputRef = useRef(null);
+  const agreementInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,17 +57,38 @@ function EditProject() {
   const [currentImage, setCurrentImage] =
     useState("");
 
-  const [newImage, setNewImage] =
+  const [existingMedia, setExistingMedia] =
+    useState([]);
+
+  const [newMedia, setNewMedia] =
+    useState([]);
+
+  const [signedAgreement, setSignedAgreement] =
     useState(null);
 
-  const [imagePreview, setImagePreview] =
+  const [agreementName, setAgreementName] =
     useState("");
+
+  const [existingAgreement, setExistingAgreement] =
+    useState(null);
+
+  const [agreementAccepted, setAgreementAccepted] =
+    useState(false);
+
+  const [informationConfirmed, setInformationConfirmed] =
+    useState(false);
+
+  const [authorizationConfirmed, setAuthorizationConfirmed] =
+    useState(false);
 
   const [loading, setLoading] =
     useState(true);
 
   const [saving, setSaving] =
     useState(false);
+
+  const [deletingMediaId, setDeletingMediaId] =
+    useState(null);
 
   const [error, setError] =
     useState("");
@@ -61,10 +97,13 @@ function EditProject() {
     loadProject();
 
     return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
+      newMedia.forEach((media) => {
+        if (media.preview) {
+          URL.revokeObjectURL(media.preview);
+        }
+      });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // ============================================================
@@ -95,16 +134,6 @@ function EditProject() {
 
       const data = await response.json();
 
-      console.log(
-        "PROJECT API STATUS:",
-        response.status
-      );
-
-      console.log(
-        "PROJECT API RESPONSE:",
-        data
-      );
-
       if (!response.ok) {
         throw new Error(
           data.message ||
@@ -112,43 +141,20 @@ function EditProject() {
         );
       }
 
-      /*
-       * IMPORTANT:
-       *
-       * The current backend returns the project
-       * object directly, not inside data.project.
-       *
-       * Example:
-       *
-       * {
-       *   id: 8,
-       *   developer_id: 23,
-       *   name: "example project",
-       *   ...
-       * }
-       */
-
-      const project = data;
+      const project =
+        data?.project ||
+        data?.data ||
+        data;
 
       if (!project || !project.id) {
-        console.error(
-          "INVALID PROJECT RESPONSE:",
-          data
-        );
-
         throw new Error(
           "Project data was not returned."
         );
       }
 
-      console.log(
-        "PROJECT LOADED:",
-        project
-      );
-
-      // ========================================================
-      // LOCATION PARSING
-      // ========================================================
+      // ----------------------------------------------------------
+      // LOCATION
+      // ----------------------------------------------------------
 
       const locationParts = (
         project.location || ""
@@ -165,20 +171,10 @@ function EditProject() {
 
       let state = "";
 
-      /*
-       * The projects table does not contain
-       * a separate state column.
-       *
-       * Therefore, state is extracted from
-       * the combined location string.
-       */
-
       if (!project.city) {
         if (locationParts.length >= 3) {
           location = locationParts[0];
-
           city = locationParts[1];
-
           state = locationParts
             .slice(2)
             .join(", ");
@@ -186,51 +182,34 @@ function EditProject() {
           locationParts.length === 2
         ) {
           location = locationParts[0];
-
           city = locationParts[1];
         }
       } else if (
         locationParts.length >= 3
       ) {
         location = locationParts[0];
-
         state = locationParts
           .slice(2)
           .join(", ");
       }
 
-      // ========================================================
-      // SET FORM DATA
-      // ========================================================
-
       setFormData({
         name: project.name || "",
-
         location,
-
         city,
-
         state,
-
         type:
           project.type || "Apartment",
-
         units:
           project.units !== null &&
           project.units !== undefined
             ? String(project.units)
             : "",
-
         price:
           project.price || "",
-
         description:
           project.description || "",
       });
-
-      // ========================================================
-      // APPROVAL STATUS
-      // ========================================================
 
       setProjectStatus(
         String(
@@ -238,21 +217,63 @@ function EditProject() {
         ).toLowerCase()
       );
 
-      // ========================================================
-      // REJECTION REASON
-      // ========================================================
-
       setRejectionReason(
         project.rejection_reason || ""
       );
 
-      // ========================================================
-      // CURRENT IMAGE
-      // ========================================================
-
       setCurrentImage(
         project.image || ""
       );
+
+      // ----------------------------------------------------------
+      // EXISTING MEDIA
+      // ----------------------------------------------------------
+
+      const normalizedMedia =
+        Array.isArray(project.project_media)
+          ? project.project_media
+              .map((item) => ({
+                id: item.id,
+                url:
+                  item.media_url ||
+                  item.url ||
+                  "",
+                type:
+                  item.media_type ||
+                  "image",
+                sort_order:
+                  item.sort_order ?? 0,
+              }))
+              .filter((item) => item.url)
+          : [];
+
+      setExistingMedia(
+        normalizedMedia
+      );
+
+      // ----------------------------------------------------------
+      // EXISTING AGREEMENT
+      // ----------------------------------------------------------
+
+      if (project.agreement) {
+        setExistingAgreement(
+          project.agreement
+        );
+
+        setAgreementAccepted(
+          project.agreement.accepted === true
+        );
+
+        setInformationConfirmed(
+          project.agreement
+            .information_confirmed === true
+        );
+
+        setAuthorizationConfirmed(
+          project.agreement
+            .authorization_confirmed === true
+        );
+      }
     } catch (err) {
       console.error(
         "LOAD PROJECT ERROR:",
@@ -285,97 +306,139 @@ function EditProject() {
   };
 
   // ============================================================
-  // IMAGE CHANGE
+  // NEW MEDIA
   // ============================================================
 
-  const handleImageChange = (e) => {
-    const file =
-      e.target.files?.[0];
+  const handleMediaChange = (e) => {
+    const files = Array.from(
+      e.target.files || []
+    );
 
-    if (!file) return;
-
-    if (
-      !file.type.startsWith("image/")
-    ) {
-      setError(
-        "Please select a valid image file."
-      );
-      return;
-    }
-
-    if (
-      file.size >
-      10 * 1024 * 1024
-    ) {
-      setError(
-        "Image size must be less than 10MB."
-      );
-      return;
-    }
+    if (!files.length) return;
 
     setError("");
 
-    if (imagePreview) {
-      URL.revokeObjectURL(
-        imagePreview
+    const availableSlots =
+      10 -
+      existingMedia.length -
+      newMedia.length;
+
+    if (availableSlots <= 0) {
+      setError(
+        "You can have a maximum of 10 media files."
       );
+      return;
     }
 
-    const preview =
-      URL.createObjectURL(file);
+    const selectedFiles =
+      files.slice(0, availableSlots);
 
-    setNewImage(file);
+    const validMedia = [];
 
-    setImagePreview(preview);
+    for (const file of selectedFiles) {
+      const isImage =
+        file.type.startsWith("image/");
+
+      const isVideo =
+        file.type.startsWith("video/");
+
+      if (!isImage && !isVideo) {
+        setError(
+          `${file.name} is not a supported media file.`
+        );
+        continue;
+      }
+
+      const maxSize = isVideo
+        ? 100 * 1024 * 1024
+        : 10 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        setError(
+          `${file.name} is too large. ${
+            isVideo ? "Videos" : "Images"
+          } must be below ${
+            isVideo ? "100MB" : "10MB"
+          }.`
+        );
+        continue;
+      }
+
+      validMedia.push({
+        id: `${file.name}-${file.lastModified}-${Math.random()}`,
+        file,
+        preview:
+          URL.createObjectURL(file),
+        type: isVideo
+          ? "video"
+          : "image",
+      });
+    }
+
+    setNewMedia((previous) => [
+      ...previous,
+      ...validMedia,
+    ]);
+
+    if (mediaInputRef.current) {
+      mediaInputRef.current.value = "";
+    }
   };
 
   // ============================================================
-  // REMOVE NEW IMAGE
+  // REMOVE NEW MEDIA
   // ============================================================
 
-  const removeNewImage = () => {
-    if (imagePreview) {
-      URL.revokeObjectURL(
-        imagePreview
+  const removeNewMedia = (mediaId) => {
+    setNewMedia((previous) => {
+      const target = previous.find(
+        (media) => media.id === mediaId
       );
-    }
 
-    setNewImage(null);
+      if (target?.preview) {
+        URL.revokeObjectURL(
+          target.preview
+        );
+      }
 
-    setImagePreview("");
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value =
-        "";
-    }
+      return previous.filter(
+        (media) => media.id !== mediaId
+      );
+    });
   };
 
   // ============================================================
-  // UPLOAD PROJECT IMAGE
+  // DELETE EXISTING MEDIA
   // ============================================================
 
-  const uploadProjectImage =
-    async (token) => {
-      if (!newImage) return;
+  const deleteExistingMedia = async (
+    mediaId
+  ) => {
+    const confirmed = window.confirm(
+      "Remove this project media?"
+    );
 
-      const imageFormData =
-        new FormData();
+    if (!confirmed) return;
 
-      imageFormData.append(
-        "image",
-        newImage
-      );
+    try {
+      setDeletingMediaId(mediaId);
+      setError("");
+
+      const token =
+        localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
 
       const response = await fetch(
-        `${API_URL}/upload/project/${id}`,
+        `${API_URL}/upload/project/media/${mediaId}`,
         {
-          method: "POST",
-
+          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-
-          body: imageFormData,
         }
       );
 
@@ -385,17 +448,258 @@ function EditProject() {
       if (!response.ok) {
         throw new Error(
           data.message ||
-            "Failed to upload project image."
+            "Failed to delete media."
         );
       }
 
-      setCurrentImage(
-        data.image || ""
+      setExistingMedia(
+        (previous) =>
+          previous.filter(
+            (media) =>
+              media.id !== mediaId
+          )
       );
+    } catch (err) {
+      console.error(
+        "DELETE MEDIA ERROR:",
+        err
+      );
+
+      setError(
+        err.message ||
+          "Unable to delete media."
+      );
+    } finally {
+      setDeletingMediaId(null);
+    }
+  };
+
+  // ============================================================
+  // SIGNED AGREEMENT
+  // ============================================================
+
+  const handleAgreementChange = (e) => {
+    const file =
+      e.target.files?.[0];
+
+    if (!file) return;
+
+    setError("");
+
+    const validTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    const extension =
+      file.name
+        .split(".")
+        .pop()
+        ?.toLowerCase();
+
+    const validExtension = [
+      "pdf",
+      "doc",
+      "docx",
+    ].includes(extension);
+
+    if (
+      !validTypes.includes(file.type) &&
+      !validExtension
+    ) {
+      setError(
+        "Please upload a PDF, DOC, or DOCX signed agreement."
+      );
+      return;
+    }
+
+    if (
+      file.size >
+      15 * 1024 * 1024
+    ) {
+      setError(
+        "Signed agreement must be below 15MB."
+      );
+      return;
+    }
+
+    setSignedAgreement(file);
+    setAgreementName(file.name);
+
+    if (agreementInputRef.current) {
+      agreementInputRef.current.value =
+        "";
+    }
+  };
+
+  const removeSignedAgreement = () => {
+    setSignedAgreement(null);
+    setAgreementName("");
+
+    if (agreementInputRef.current) {
+      agreementInputRef.current.value =
+        "";
+    }
+  };
+
+  // ============================================================
+  // STATUS
+  // ============================================================
+
+  const getStatusInfo = () => {
+    switch (projectStatus) {
+      case "approved":
+        return {
+          label: "Approved",
+          description:
+            "This project is currently approved and visible on Xevoprop.",
+          className: "approved",
+          icon: CheckCircle2,
+        };
+
+      case "rejected":
+        return {
+          label: "Rejected",
+          description:
+            "Update the information and save your changes to submit the project for review again.",
+          className: "rejected",
+          icon: XCircle,
+        };
+
+      default:
+        return {
+          label: "Pending Review",
+          description:
+            "This project is waiting for admin approval.",
+          className: "pending",
+          icon: Clock3,
+        };
+    }
+  };
+
+  // ============================================================
+  // UPLOAD NEW MEDIA
+  // ============================================================
+
+  const uploadNewMedia = async (
+    token
+  ) => {
+    for (
+      let index = 0;
+      index < newMedia.length;
+      index++
+    ) {
+      const media =
+        newMedia[index];
+
+      const mediaFormData =
+        new FormData();
+
+      mediaFormData.append(
+        "media",
+        media.file
+      );
+
+      mediaFormData.append(
+        "sort_order",
+        String(
+          existingMedia.length +
+            index
+        )
+      );
+
+      const response =
+        await fetch(
+          `${API_URL}/upload/project/${id}/media`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: mediaFormData,
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            `Failed to upload ${media.file.name}.`
+        );
+      }
+    }
+  };
+
+  // ============================================================
+  // UPLOAD AGREEMENT
+  // ============================================================
+
+  const uploadAgreement =
+    async (token) => {
+      if (!signedAgreement) {
+        return;
+      }
+
+      const agreementFormData =
+        new FormData();
+
+      agreementFormData.append(
+        "agreement",
+        signedAgreement
+      );
+
+      agreementFormData.append(
+        "accepted",
+        String(agreementAccepted)
+      );
+
+      agreementFormData.append(
+        "information_confirmed",
+        String(
+          informationConfirmed
+        )
+      );
+
+      agreementFormData.append(
+        "authorization_confirmed",
+        String(
+          authorizationConfirmed
+        )
+      );
+
+      agreementFormData.append(
+        "agreement_version",
+        "1.0"
+      );
+
+      const response =
+        await fetch(
+          `${API_URL}/upload/project/${id}/agreement`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: agreementFormData,
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to upload signed agreement."
+        );
+      }
     };
 
   // ============================================================
-  // SUBMIT FORM
+  // SUBMIT
   // ============================================================
 
   const handleSubmit = async (e) => {
@@ -403,15 +707,10 @@ function EditProject() {
 
     setError("");
 
-    // ----------------------------------------------------------
-    // VALIDATION
-    // ----------------------------------------------------------
-
     if (!formData.name.trim()) {
       setError(
         "Project name is required."
       );
-
       return;
     }
 
@@ -419,7 +718,6 @@ function EditProject() {
       setError(
         "Location is required."
       );
-
       return;
     }
 
@@ -427,7 +725,24 @@ function EditProject() {
       setError(
         "Project type is required."
       );
+      return;
+    }
 
+    // ----------------------------------------------------------
+    // AGREEMENT VALIDATION
+    // ----------------------------------------------------------
+
+    if (
+      signedAgreement &&
+      (
+        !agreementAccepted ||
+        !informationConfirmed ||
+        !authorizationConfirmed
+      )
+    ) {
+      setError(
+        "Please complete all agreement confirmations before uploading the new signed agreement."
+      );
       return;
     }
 
@@ -442,33 +757,17 @@ function EditProject() {
         return;
       }
 
-      // ========================================================
-      // BUILD COMPLETE LOCATION
-      // ========================================================
-
       const completeLocation = [
         formData.location.trim(),
-
         formData.city.trim(),
-
         formData.state.trim(),
       ]
         .filter(Boolean)
         .join(", ");
 
-      /*
-       * IMPORTANT:
-       *
-       * Do NOT send status here.
-       *
-       * The backend automatically changes
-       * the project to "pending" when a
-       * developer edits the project.
-       */
-
-      // ========================================================
+      // ----------------------------------------------------------
       // UPDATE PROJECT
-      // ========================================================
+      // ----------------------------------------------------------
 
       const response = await fetch(
         `${API_URL}/projects/${id}`,
@@ -478,7 +777,6 @@ function EditProject() {
           headers: {
             "Content-Type":
               "application/json",
-
             Authorization: `Bearer ${token}`,
           },
 
@@ -527,24 +825,29 @@ function EditProject() {
         );
       }
 
-      // ========================================================
-      // UPLOAD NEW IMAGE
-      // ========================================================
+      // ----------------------------------------------------------
+      // NEW MEDIA
+      // ----------------------------------------------------------
 
-      /*
-       * Upload replacement image only
-       * when a new image was selected.
-       */
-
-      if (newImage) {
-        await uploadProjectImage(
+      if (newMedia.length > 0) {
+        await uploadNewMedia(
           token
         );
       }
 
-      // ========================================================
+      // ----------------------------------------------------------
+      // NEW AGREEMENT
+      // ----------------------------------------------------------
+
+      if (signedAgreement) {
+        await uploadAgreement(
+          token
+        );
+      }
+
+      // ----------------------------------------------------------
       // SUCCESS
-      // ========================================================
+      // ----------------------------------------------------------
 
       alert(
         "Project updated and submitted for admin approval."
@@ -567,51 +870,7 @@ function EditProject() {
   };
 
   // ============================================================
-  // STATUS INFORMATION
-  // ============================================================
-
-  const getStatusInfo = () => {
-    switch (projectStatus) {
-      case "approved":
-        return {
-          label: "Approved",
-
-          description:
-            "This project is currently approved and visible on Xevoprop.",
-
-          className: "approved",
-
-          icon: CheckCircle2,
-        };
-
-      case "rejected":
-        return {
-          label: "Rejected",
-
-          description:
-            "This project was rejected by the admin. Update the information and save your changes to submit it for review again.",
-
-          className: "rejected",
-
-          icon: XCircle,
-        };
-
-      default:
-        return {
-          label: "Pending Review",
-
-          description:
-            "This project is waiting for admin approval.",
-
-          className: "pending",
-
-          icon: Clock3,
-        };
-    }
-  };
-
-  // ============================================================
-  // LOADING STATE
+  // LOADING
   // ============================================================
 
   if (loading) {
@@ -631,19 +890,15 @@ function EditProject() {
     );
   }
 
-  // ============================================================
-  // STATUS
-  // ============================================================
-
   const statusInfo =
     getStatusInfo();
 
   const StatusIcon =
     statusInfo.icon;
 
-  // ============================================================
-  // UI
-  // ============================================================
+  const totalMedia =
+    existingMedia.length +
+    newMedia.length;
 
   return (
     <div className="edit-project-page">
@@ -659,7 +914,6 @@ function EditProject() {
           }
         >
           <ArrowLeft size={16} />
-
           Back to my projects
         </button>
 
@@ -686,7 +940,7 @@ function EditProject() {
           </div>
         </div>
 
-        {/* APPROVAL STATUS */}
+        {/* STATUS */}
 
         <div
           className={`edit-project-review-status ${statusInfo.className}`}
@@ -728,22 +982,18 @@ function EditProject() {
           </div>
         )}
 
-        {/* FORM */}
-
         <form
           className="edit-project-form"
           onSubmit={handleSubmit}
         >
 
           {/* ==================================================
-              BASIC INFORMATION
+              01 BASIC INFORMATION
           ================================================== */}
 
           <section className="project-form-section">
             <div className="project-form-heading">
-              <span>
-                01
-              </span>
+              <span>01</span>
 
               <div>
                 <h2>
@@ -751,15 +1001,12 @@ function EditProject() {
                 </h2>
 
                 <p>
-                  Update your project
-                  information.
+                  Update your project information.
                 </p>
               </div>
             </div>
 
             <div className="project-form-grid">
-
-              {/* PROJECT NAME */}
 
               <div className="project-form-group full">
                 <label>
@@ -770,17 +1017,11 @@ function EditProject() {
                 <input
                   type="text"
                   name="name"
-                  value={
-                    formData.name
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                 />
               </div>
-
-              {/* PROJECT TYPE */}
 
               <div className="project-form-group">
                 <label>
@@ -790,12 +1031,8 @@ function EditProject() {
 
                 <select
                   name="type"
-                  value={
-                    formData.type
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.type}
+                  onChange={handleChange}
                   required
                 >
                   <option value="Apartment">
@@ -820,8 +1057,6 @@ function EditProject() {
                 </select>
               </div>
 
-              {/* APPROVAL STATUS */}
-
               <div className="project-form-group">
                 <label>
                   Approval status
@@ -842,14 +1077,12 @@ function EditProject() {
           </section>
 
           {/* ==================================================
-              LOCATION
+              02 LOCATION
           ================================================== */}
 
           <section className="project-form-section">
             <div className="project-form-heading">
-              <span>
-                02
-              </span>
+              <span>02</span>
 
               <div>
                 <h2>
@@ -857,15 +1090,12 @@ function EditProject() {
                 </h2>
 
                 <p>
-                  Update where the project
-                  is located.
+                  Update where the project is located.
                 </p>
               </div>
             </div>
 
             <div className="project-form-grid">
-
-              {/* LOCATION */}
 
               <div className="project-form-group full">
                 <label>
@@ -876,17 +1106,11 @@ function EditProject() {
                 <input
                   type="text"
                   name="location"
-                  value={
-                    formData.location
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.location}
+                  onChange={handleChange}
                   required
                 />
               </div>
-
-              {/* CITY */}
 
               <div className="project-form-group">
                 <label>
@@ -896,17 +1120,11 @@ function EditProject() {
                 <input
                   type="text"
                   name="city"
-                  value={
-                    formData.city
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.city}
+                  onChange={handleChange}
                   placeholder="e.g. Hyderabad"
                 />
               </div>
-
-              {/* STATE */}
 
               <div className="project-form-group">
                 <label>
@@ -916,12 +1134,8 @@ function EditProject() {
                 <input
                   type="text"
                   name="state"
-                  value={
-                    formData.state
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.state}
+                  onChange={handleChange}
                   placeholder="e.g. Telangana"
                 />
               </div>
@@ -930,14 +1144,12 @@ function EditProject() {
           </section>
 
           {/* ==================================================
-              PROJECT DETAILS
+              03 PROJECT DETAILS
           ================================================== */}
 
           <section className="project-form-section">
             <div className="project-form-heading">
-              <span>
-                03
-              </span>
+              <span>03</span>
 
               <div>
                 <h2>
@@ -945,8 +1157,7 @@ function EditProject() {
                 </h2>
 
                 <p>
-                  Update pricing, image and
-                  project information.
+                  Update pricing, media and project information.
                 </p>
               </div>
             </div>
@@ -964,12 +1175,8 @@ function EditProject() {
                   type="number"
                   name="units"
                   min="0"
-                  value={
-                    formData.units
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.units}
+                  onChange={handleChange}
                   placeholder="e.g. 120"
                 />
               </div>
@@ -984,120 +1191,201 @@ function EditProject() {
                 <input
                   type="text"
                   name="price"
-                  value={
-                    formData.price
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.price}
+                  onChange={handleChange}
                   placeholder="e.g. ₹65 Lakhs onwards"
                 />
               </div>
 
-              {/* PROJECT IMAGE */}
+              {/* MEDIA */}
 
               <div className="project-form-group full">
-                <label>
-                  Project image
-                </label>
 
-                {!imagePreview &&
-                currentImage ? (
-                  <div className="project-image-preview">
-                    <img
-                      src={
-                        currentImage
-                      }
-                      alt={
-                        formData.name
-                      }
-                    />
+                <div className="edit-media-heading">
+                  <div>
+                    <label>
+                      Project media
+                    </label>
 
-                    <div className="project-image-overlay">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          fileInputRef.current?.click()
-                        }
-                      >
-                        <ImagePlus
-                          size={16}
-                        />
-
-                        Change Image
-                      </button>
-                    </div>
+                    <p>
+                      {totalMedia}/10 media files
+                    </p>
                   </div>
-                ) : imagePreview ? (
-                  <div className="project-image-preview">
-                    <img
-                      src={
-                        imagePreview
-                      }
-                      alt="New project preview"
-                    />
 
-                    <div className="project-image-overlay">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          fileInputRef.current?.click()
-                        }
-                      >
-                        <ImagePlus
-                          size={16}
-                        />
-
-                        Change Image
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={
-                          removeNewImage
-                        }
-                        aria-label="Remove new image"
-                      >
-                        <X size={17} />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
                   <button
                     type="button"
-                    className="project-image-upload"
+                    className="edit-media-add-button"
                     onClick={() =>
-                      fileInputRef.current?.click()
+                      mediaInputRef.current?.click()
+                    }
+                    disabled={
+                      totalMedia >= 10
                     }
                   >
-                    <ImagePlus
-                      size={28}
-                    />
+                    <ImagePlus size={16} />
+                    Add Media
+                  </button>
+                </div>
+
+                <input
+                  ref={mediaInputRef}
+                  type="file"
+                  accept="image/*,video/*"
+                  multiple
+                  onChange={handleMediaChange}
+                  hidden
+                />
+
+                {existingMedia.length === 0 &&
+                newMedia.length === 0 ? (
+                  <button
+                    type="button"
+                    className="edit-media-upload-box"
+                    onClick={() =>
+                      mediaInputRef.current?.click()
+                    }
+                  >
+                    <ImagePlus size={30} />
 
                     <strong>
-                      Upload project image
+                      Add project images & videos
                     </strong>
 
                     <span>
-                      JPG, PNG or WEBP · Max
-                      10MB
+                      Images up to 10MB · Videos up to
+                      100MB
                     </span>
-
-                    <em>
-                      Choose Image
-                    </em>
                   </button>
+                ) : (
+                  <div className="edit-project-media-grid">
+
+                    {/* EXISTING MEDIA */}
+
+                    {existingMedia.map(
+                      (media) => (
+                        <div
+                          className="edit-project-media-item"
+                          key={`existing-${media.id}`}
+                        >
+
+                          {media.type ===
+                          "video" ? (
+                            <video
+                              src={media.url}
+                              controls
+                              preload="metadata"
+                            />
+                          ) : (
+                            <img
+                              src={media.url}
+                              alt="Project media"
+                              onError={(event) => {
+                                event.currentTarget.src =
+                                  FALLBACK_IMAGE;
+                              }}
+                            />
+                          )}
+
+                          <span className="edit-media-existing-badge">
+                            Existing
+                          </span>
+
+                          <button
+                            type="button"
+                            className="edit-media-remove"
+                            onClick={() =>
+                              deleteExistingMedia(
+                                media.id
+                              )
+                            }
+                            disabled={
+                              deletingMediaId ===
+                              media.id
+                            }
+                          >
+                            {deletingMediaId ===
+                            media.id ? (
+                              <Loader2
+                                size={15}
+                                className="project-loading"
+                              />
+                            ) : (
+                              <X size={15} />
+                            )}
+                          </button>
+
+                          {media.type ===
+                            "video" && (
+                            <span className="edit-media-type-badge">
+                              <Video size={12} />
+                              Video
+                            </span>
+                          )}
+                        </div>
+                      )
+                    )}
+
+                    {/* NEW MEDIA */}
+
+                    {newMedia.map(
+                      (media) => (
+                        <div
+                          className="edit-project-media-item new"
+                          key={`new-${media.id}`}
+                        >
+
+                          {media.type ===
+                          "video" ? (
+                            <video
+                              src={media.preview}
+                              controls
+                            />
+                          ) : (
+                            <img
+                              src={media.preview}
+                              alt="New project media"
+                            />
+                          )}
+
+                          <span className="edit-media-new-badge">
+                            New
+                          </span>
+
+                          <button
+                            type="button"
+                            className="edit-media-remove"
+                            onClick={() =>
+                              removeNewMedia(
+                                media.id
+                              )
+                            }
+                          >
+                            <X size={15} />
+                          </button>
+
+                          {media.type ===
+                            "video" && (
+                            <span className="edit-media-type-badge">
+                              <Video size={12} />
+                              Video
+                            </span>
+                          )}
+                        </div>
+                      )
+                    )}
+
+                  </div>
                 )}
 
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={
-                    handleImageChange
-                  }
-                  hidden
-                />
+                <div className="edit-media-guidelines">
+                  <ImageIcon size={15} />
+
+                  <span>
+                    You can keep existing media and
+                    add new images or videos. Maximum
+                    10 total media files.
+                  </span>
+                </div>
               </div>
 
               {/* DESCRIPTION */}
@@ -1109,18 +1397,280 @@ function EditProject() {
 
                 <textarea
                   name="description"
-                  value={
-                    formData.description
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={formData.description}
+                  onChange={handleChange}
                   rows="6"
                   placeholder="Describe the project, amenities, connectivity and other important details..."
                 />
               </div>
 
             </div>
+          </section>
+
+          {/* ==================================================
+              04 AGREEMENT
+          ================================================== */}
+
+          <section className="project-form-section">
+            <div className="project-form-heading">
+              <span>04</span>
+
+              <div>
+                <h2>
+                  Agreement & authorization
+                </h2>
+
+                <p>
+                  Review your listing agreement and
+                  authorization before submitting changes.
+                </p>
+              </div>
+            </div>
+
+            {/* ORIGINAL AGREEMENT */}
+
+            <div className="edit-agreement-card">
+
+              <div className="edit-agreement-document-icon">
+                <FileText size={25} />
+              </div>
+
+              <div className="edit-agreement-info">
+                <strong>
+                  Builder Listing & Commission Agreement
+                </strong>
+
+                <span>
+                  Review the current agreement before
+                  making changes to your project.
+                </span>
+
+                <div className="edit-agreement-actions">
+
+                  <a
+                    href={AGREEMENT_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="edit-agreement-link"
+                  >
+                    <ExternalLink size={14} />
+                    Open Agreement
+                  </a>
+
+                  <a
+                    href={AGREEMENT_URL}
+                    download
+                    className="edit-agreement-link"
+                  >
+                    <FileText size={14} />
+                    Download
+                  </a>
+
+                </div>
+              </div>
+
+            </div>
+
+            {/* CURRENT SIGNED AGREEMENT */}
+
+            {existingAgreement && (
+              <div className="edit-current-agreement">
+
+                <div className="edit-current-agreement-icon">
+                  <FileCheck2 size={21} />
+                </div>
+
+                <div>
+                  <strong>
+                    Signed agreement on file
+                  </strong>
+
+                  <span>
+                    Version{" "}
+                    {existingAgreement.agreement_version ||
+                      "1.0"}
+                    {existingAgreement.accepted_at
+                      ? ` · Accepted ${new Date(
+                          existingAgreement.accepted_at
+                        ).toLocaleDateString()}`
+                      : ""}
+                  </span>
+
+                  {existingAgreement.signed_agreement_url && (
+                    <a
+                      href={
+                        existingAgreement.signed_agreement_url
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <ExternalLink size={13} />
+                      View signed agreement
+                    </a>
+                  )}
+                </div>
+
+              </div>
+            )}
+
+            {/* REPLACEMENT AGREEMENT */}
+
+            <div className="edit-signed-agreement">
+
+              <div className="edit-signed-heading">
+                <div>
+                  <label>
+                    Replace signed agreement
+                  </label>
+
+                  <p>
+                    Upload a new digitally signed PDF,
+                    DOC or DOCX only if the agreement
+                    has been updated.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="edit-signed-upload-button"
+                  onClick={() =>
+                    agreementInputRef.current?.click()
+                  }
+                >
+                  <Upload size={16} />
+                  Choose File
+                </button>
+              </div>
+
+              <input
+                ref={agreementInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={handleAgreementChange}
+                hidden
+              />
+
+              {signedAgreement && (
+                <div className="edit-signed-file">
+
+                  <FileText size={20} />
+
+                  <div>
+                    <strong>
+                      {agreementName}
+                    </strong>
+
+                    <span>
+                      {(
+                        signedAgreement.size /
+                        (1024 * 1024)
+                      ).toFixed(2)}{" "}
+                      MB
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={
+                      removeSignedAgreement
+                    }
+                  >
+                    <X size={16} />
+                  </button>
+
+                </div>
+              )}
+
+            </div>
+
+            {/* CONFIRMATIONS */}
+
+            <div className="edit-agreement-confirmations">
+
+              <label className="edit-agreement-checkbox">
+                <input
+                  type="checkbox"
+                  checked={
+                    agreementAccepted
+                  }
+                  onChange={(e) =>
+                    setAgreementAccepted(
+                      e.target.checked
+                    )
+                  }
+                />
+
+                <span className="edit-custom-checkbox">
+                  {agreementAccepted && "✓"}
+                </span>
+
+                <span>
+                  I have read, understood and agree to
+                  the Builder Listing & Commission
+                  Agreement.
+                </span>
+              </label>
+
+              <label className="edit-agreement-checkbox">
+                <input
+                  type="checkbox"
+                  checked={
+                    informationConfirmed
+                  }
+                  onChange={(e) =>
+                    setInformationConfirmed(
+                      e.target.checked
+                    )
+                  }
+                />
+
+                <span className="edit-custom-checkbox">
+                  {informationConfirmed && "✓"}
+                </span>
+
+                <span>
+                  I confirm that all project information,
+                  pricing and specifications submitted
+                  are accurate and complete.
+                </span>
+              </label>
+
+              <label className="edit-agreement-checkbox">
+                <input
+                  type="checkbox"
+                  checked={
+                    authorizationConfirmed
+                  }
+                  onChange={(e) =>
+                    setAuthorizationConfirmed(
+                      e.target.checked
+                    )
+                  }
+                />
+
+                <span className="edit-custom-checkbox">
+                  {authorizationConfirmed && "✓"}
+                </span>
+
+                <span>
+                  I confirm that I am authorized to list
+                  this project on Xevoprop and submit it
+                  for review.
+                </span>
+              </label>
+
+            </div>
+
+            <div className="edit-agreement-notice">
+              <ShieldCheck size={17} />
+
+              <p>
+                Updated project information will be
+                reviewed by Xevoprop before the listing
+                becomes publicly visible again.
+              </p>
+            </div>
+
           </section>
 
           {/* ==================================================
@@ -1131,14 +1681,14 @@ function EditProject() {
             <Clock3 size={17} />
 
             <p>
-              Saving changes will send this
-              project back to{" "}
+              Saving changes will send this project
+              back to{" "}
               <strong>
                 Pending Review
               </strong>
-              . An administrator must approve
-              the updated project before it becomes
-              publicly visible.
+              . An administrator must approve the
+              updated project before it becomes publicly
+              visible.
             </p>
           </div>
 

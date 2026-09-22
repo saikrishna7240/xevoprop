@@ -72,6 +72,378 @@ const propertyMediaUpload = multer({
 });
 
 /* =========================================================
+   PROJECT MEDIA MULTER
+   Supports:
+   - Images
+   - Videos
+========================================================= */
+
+const projectMediaUpload = multer({
+  storage: multer.memoryStorage(),
+
+  limits: {
+    fileSize: 100 * 1024 * 1024,
+  },
+
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype.startsWith("video/")
+    ) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "Only image and video files are allowed for project media."
+        )
+      );
+    }
+  },
+});
+
+/* =========================================================
+   SIGNED AGREEMENT MULTER
+   Supports:
+   - PDF
+   - DOC
+   - DOCX
+========================================================= */
+
+const agreementUpload = multer({
+  storage: multer.memoryStorage(),
+
+  limits: {
+    fileSize: 15 * 1024 * 1024,
+  },
+
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "Only PDF, DOC, and DOCX agreement files are allowed."
+        )
+      );
+    }
+  },
+});
+
+/* =========================================================
+   UPLOAD SIGNED PROJECT AGREEMENT
+========================================================= */
+
+router.post(
+  "/project/:projectId/agreement",
+  authenticateToken,
+  authorizeRoles("Developer"),
+  agreementUpload.single("agreement"),
+
+  async (req, res) => {
+    try {
+      const { projectId } = req.params;
+
+      console.log("================================");
+      console.log("SIGNED AGREEMENT UPLOAD");
+      console.log("Project ID:", projectId);
+      console.log("Developer ID:", req.user.id);
+      console.log(
+        "File:",
+        req.file
+          ? req.file.originalname
+          : "NO FILE"
+      );
+      console.log("================================");
+
+      /* -----------------------------------------------------
+         CHECK FILE
+      ----------------------------------------------------- */
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please upload the digitally signed agreement.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         CHECK PROJECT OWNER
+      ----------------------------------------------------- */
+
+      const projectResult = await pool.query(
+        `
+        SELECT id
+        FROM projects
+        WHERE id = $1
+          AND developer_id = $2
+        `,
+        [projectId, req.user.id]
+      );
+
+      if (projectResult.rows.length === 0) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You are not the owner of this project.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         AGREEMENT VALUES
+      ----------------------------------------------------- */
+
+      const accepted =
+        String(req.body.accepted) === "true";
+
+      const informationConfirmed =
+        String(
+          req.body.information_confirmed
+        ) === "true";
+
+      const authorizationConfirmed =
+        String(
+          req.body.authorization_confirmed
+        ) === "true";
+
+      const agreementVersion =
+        req.body.agreement_version || "1.0";
+
+      /* -----------------------------------------------------
+         FINAL VALIDATION
+      ----------------------------------------------------- */
+
+      if (
+        !accepted ||
+        !informationConfirmed ||
+        !authorizationConfirmed
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "All agreement confirmations are required.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         CLOUDINARY RAW UPLOAD
+      ----------------------------------------------------- */
+
+      const uploadResult = await new Promise(
+        (resolve, reject) => {
+          const stream =
+            cloudinary.uploader.upload_stream(
+              {
+                folder:
+                  "xevoprop/project-agreements",
+
+                resource_type: "raw",
+              },
+
+              (error, result) => {
+                if (error) {
+                  reject(error);
+                } else {
+                  resolve(result);
+                }
+              }
+            );
+
+          stream.end(req.file.buffer);
+        }
+      );
+
+      console.log(
+        "Signed agreement uploaded:",
+        uploadResult.secure_url
+      );
+
+      /* -----------------------------------------------------
+         SAVE AGREEMENT
+      ----------------------------------------------------- */
+
+      const agreementResult =
+        await pool.query(
+          `
+          INSERT INTO project_agreements
+          (
+            project_id,
+            developer_id,
+            agreement_version,
+            signed_agreement_url,
+            accepted,
+            information_confirmed,
+            authorization_confirmed,
+            accepted_at,
+            ip_address
+          )
+          VALUES
+          (
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            $7,
+            CURRENT_TIMESTAMP,
+            $8
+          )
+          RETURNING *
+          `,
+          [
+            projectId,
+            req.user.id,
+            agreementVersion,
+            uploadResult.secure_url,
+            accepted,
+            informationConfirmed,
+            authorizationConfirmed,
+            req.ip,
+          ]
+        );
+
+      return res.status(201).json({
+        success: true,
+
+        message:
+          "Signed agreement uploaded successfully.",
+
+        agreement: {
+          id: agreementResult.rows[0].id,
+          project_id:
+            agreementResult.rows[0].project_id,
+          agreement_version:
+            agreementResult.rows[0].agreement_version,
+          signed_agreement_url:
+            agreementResult.rows[0]
+              .signed_agreement_url,
+          accepted:
+            agreementResult.rows[0].accepted,
+          information_confirmed:
+            agreementResult.rows[0]
+              .information_confirmed,
+          authorization_confirmed:
+            agreementResult.rows[0]
+              .authorization_confirmed,
+          accepted_at:
+            agreementResult.rows[0].accepted_at,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "SIGNED AGREEMENT UPLOAD ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          error.message ||
+          "Failed to upload signed agreement.",
+      });
+    }
+  }
+);
+
+// ============================================================
+// DELETE PROJECT MEDIA
+// ============================================================
+
+router.delete(
+  "/project/media/:mediaId",
+  authenticateToken,
+  authorizeRoles("Developer"),
+  async (req, res) => {
+    try {
+      const { mediaId } = req.params;
+      const developerId = req.user.id;
+
+      if (!/^\d+$/.test(mediaId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid media ID",
+        });
+      }
+
+      // --------------------------------------------------------
+      // FIND MEDIA + VERIFY PROJECT OWNERSHIP
+      // --------------------------------------------------------
+
+      const mediaResult = await pool.query(
+        `
+        SELECT
+          pm.id,
+          pm.project_id,
+          pm.media_url,
+          pm.media_type
+        FROM project_media pm
+        INNER JOIN projects p
+          ON p.id = pm.project_id
+        WHERE pm.id = $1
+          AND p.developer_id = $2
+        `,
+        [mediaId, developerId]
+      );
+
+      if (mediaResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Media not found or you do not have permission to delete it.",
+        });
+      }
+
+      const media = mediaResult.rows[0];
+
+      // --------------------------------------------------------
+      // DELETE DATABASE RECORD
+      // --------------------------------------------------------
+
+      await pool.query(
+        `
+        DELETE FROM project_media
+        WHERE id = $1
+        `,
+        [mediaId]
+      );
+
+      // --------------------------------------------------------
+      // RESPONSE
+      // --------------------------------------------------------
+
+      return res.status(200).json({
+        success: true,
+        message: "Project media deleted successfully.",
+        media: {
+          id: media.id,
+          project_id: media.project_id,
+          media_url: media.media_url,
+          media_type: media.media_type,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "DELETE PROJECT MEDIA ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete project media.",
+        error: error.message,
+      });
+    }
+  }
+);
+
+/* =========================================================
    TEST UPLOAD ROUTE
 ========================================================= */
 

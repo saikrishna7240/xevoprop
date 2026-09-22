@@ -230,7 +230,7 @@ function Login() {
         ====================================================== */}
 
         <img
-          src="/logo.png"
+          src="/logo.jpeg"
           alt="Xevoprop"
           className="auth-logo"
         />

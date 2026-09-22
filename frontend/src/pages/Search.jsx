@@ -405,7 +405,7 @@ export default function Search() {
                   <img
                     src={
                       property.image ||
-                      "/xevoprop-logo.png"
+                      "/xevoprop-logo.jpeg"
                     }
                     alt={
                       property.title ||

@@ -90,7 +90,7 @@ function Footer() {
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
               <img
-                src="/xevoprop-logo.png"
+                src="/xevoprop-logo-footer.png"
                 alt="Xevoprop"
               />
             </Link>

@@ -53,6 +53,7 @@ router.get("/public", async (req, res) => {
 /* ============================================================
    PUBLIC SINGLE PROJECT
    APPROVED ONLY
+   WITH MEDIA + AGREEMENT STATUS
 ============================================================ */
 
 router.get("/public/:id", async (req, res) => {
@@ -69,22 +70,42 @@ router.get("/public/:id", async (req, res) => {
     const result = await pool.query(
       `
       SELECT
-        id,
-        developer_id,
-        name,
-        type,
-        location,
-        city,
-        units,
-        price,
-        image,
-        description,
-        status,
-        created_at,
-        updated_at
-      FROM projects
-      WHERE id = $1
-        AND status = 'approved'
+        p.id,
+        p.developer_id,
+        p.name,
+        p.type,
+        p.location,
+        p.city,
+        p.units,
+        p.price,
+        p.image,
+        p.description,
+        p.status,
+        p.created_at,
+        p.updated_at,
+
+        COALESCE(
+          (
+            SELECT json_agg(
+              json_build_object(
+                'id', pm.id,
+                'media_url', pm.media_url,
+                'media_type', pm.media_type,
+                'sort_order', pm.sort_order,
+                'created_at', pm.created_at
+              )
+              ORDER BY pm.sort_order, pm.id
+            )
+            FROM project_media pm
+            WHERE pm.project_id = p.id
+          ),
+          '[]'
+        ) AS project_media
+
+      FROM projects p
+
+      WHERE p.id = $1
+        AND p.status = 'approved'
       `,
       [id]
     );
@@ -96,14 +117,17 @@ router.get("/public/:id", async (req, res) => {
       });
     }
 
-    res.json(result.rows[0]);
+    return res.json({
+      success: true,
+      project: result.rows[0],
+    });
   } catch (error) {
     console.error(
       "Get public project error:",
       error.message
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to fetch project",
     });
@@ -123,30 +147,69 @@ router.get(
   async (req, res) => {
     try {
       const result = await pool.query(
-        `
-        SELECT
-          id,
-          developer_id,
-          name,
-          type,
-          location,
-          city,
-          units,
-          price,
-          image,
-          description,
-          status,
-          reviewed_by,
-          reviewed_at,
-          rejection_reason,
-          created_at,
-          updated_at
-        FROM projects
-        WHERE developer_id = $1
-        ORDER BY created_at DESC
-        `,
-        [req.user.id]
-      );
+  `
+  SELECT
+    p.id,
+    p.developer_id,
+    p.name,
+    p.type,
+    p.location,
+    p.city,
+    p.units,
+    p.price,
+    p.image,
+    p.description,
+    p.status,
+    p.reviewed_by,
+    p.reviewed_at,
+    p.rejection_reason,
+    p.created_at,
+    p.updated_at,
+
+    COALESCE(
+      (
+        SELECT COUNT(*)
+        FROM project_media pm
+        WHERE pm.project_id = p.id
+      ),
+      0
+    ) AS media_count,
+
+    COALESCE(
+      (
+        SELECT COUNT(*)
+        FROM project_media pm
+        WHERE pm.project_id = p.id
+          AND pm.media_type = 'video'
+      ),
+      0
+    ) AS video_count,
+
+    (
+      SELECT json_build_object(
+        'id', pa.id,
+        'agreement_version', pa.agreement_version,
+        'accepted', pa.accepted,
+        'information_confirmed',
+          pa.information_confirmed,
+        'authorization_confirmed',
+          pa.authorization_confirmed,
+        'accepted_at', pa.accepted_at
+      )
+      FROM project_agreements pa
+      WHERE pa.project_id = p.id
+      ORDER BY pa.created_at DESC
+      LIMIT 1
+    ) AS agreement
+
+  FROM projects p
+
+  WHERE p.developer_id = $1
+
+  ORDER BY p.created_at DESC
+  `,
+  [req.user.id]
+);
 
       res.json(result.rows);
     } catch (error) {
@@ -184,33 +247,78 @@ router.get(
       }
 
       const result = await pool.query(
-        `
-        SELECT
-          id,
-          developer_id,
-          name,
-          type,
-          location,
-          city,
-          units,
-          price,
-          image,
-          description,
-          status,
-          reviewed_by,
-          reviewed_at,
-          rejection_reason,
-          created_at,
-          updated_at
-        FROM projects
-        WHERE id = $1
-          AND developer_id = $2
-        `,
-        [
-          id,
-          req.user.id,
-        ]
-      );
+  `
+  SELECT
+    p.id,
+    p.developer_id,
+    p.name,
+    p.type,
+    p.location,
+    p.city,
+    p.units,
+    p.price,
+    p.image,
+    p.description,
+    p.status,
+    p.reviewed_by,
+    p.reviewed_at,
+    p.rejection_reason,
+    p.created_at,
+    p.updated_at,
+
+    COALESCE(
+      (
+        SELECT json_agg(
+          json_build_object(
+            'id', pm.id,
+            'media_url', pm.media_url,
+            'media_type', pm.media_type,
+            'sort_order', pm.sort_order,
+            'created_at', pm.created_at
+          )
+          ORDER BY pm.sort_order, pm.id
+        )
+        FROM project_media pm
+        WHERE pm.project_id = p.id
+      ),
+      '[]'
+    ) AS project_media,
+
+    (
+      SELECT json_build_object(
+        'id', pa.id,
+        'agreement_version',
+          pa.agreement_version,
+        'signed_agreement_url',
+          pa.signed_agreement_url,
+        'accepted',
+          pa.accepted,
+        'information_confirmed',
+          pa.information_confirmed,
+        'authorization_confirmed',
+          pa.authorization_confirmed,
+        'accepted_at',
+          pa.accepted_at,
+        'created_at',
+          pa.created_at
+      )
+      FROM project_agreements pa
+      WHERE pa.project_id = p.id
+        AND pa.developer_id = p.developer_id
+      ORDER BY pa.created_at DESC
+      LIMIT 1
+    ) AS agreement
+
+  FROM projects p
+
+  WHERE p.id = $1
+    AND p.developer_id = $2
+  `,
+  [
+    id,
+    req.user.id,
+  ]
+);
 
       if (result.rows.length === 0) {
         return res.status(404).json({

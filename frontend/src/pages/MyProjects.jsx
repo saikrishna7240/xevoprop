@@ -12,6 +12,10 @@ import {
   Clock3,
   CheckCircle2,
   XCircle,
+  Image,
+  Video,
+  FileCheck2,
+  ExternalLink,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./MyProjects.css";
@@ -19,6 +23,9 @@ import "./MyProjects.css";
 const API_URL =
   import.meta.env.VITE_API_URL ||
   "https://xevoprop.onrender.com/api";
+
+const FALLBACK_IMAGE =
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85";
 
 function MyProjects() {
   const navigate = useNavigate();
@@ -56,7 +63,8 @@ function MyProjects() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Failed to load projects."
+          data.message ||
+            "Failed to load projects."
         );
       }
 
@@ -154,6 +162,59 @@ function MyProjects() {
       label: "Pending Review",
       className: "pending",
       icon: Clock3,
+    };
+  };
+
+  const getMediaCount = (project) => {
+    const count = Number(
+      project.media_count
+    );
+
+    return Number.isFinite(count)
+      ? count
+      : 0;
+  };
+
+  const getVideoCount = (project) => {
+    const count = Number(
+      project.video_count
+    );
+
+    return Number.isFinite(count)
+      ? count
+      : 0;
+  };
+
+  const getAgreementStatus = (project) => {
+    if (!project.agreement) {
+      return {
+        label: "Not Uploaded",
+        className: "not-uploaded",
+        icon: FileCheck2,
+      };
+    }
+
+    const agreement = project.agreement;
+
+    const complete =
+      agreement.accepted === true &&
+      agreement.information_confirmed ===
+        true &&
+      agreement.authorization_confirmed ===
+        true;
+
+    if (complete) {
+      return {
+        label: "Agreement Accepted",
+        className: "accepted",
+        icon: FileCheck2,
+      };
+    }
+
+    return {
+      label: "Agreement Incomplete",
+      className: "incomplete",
+      icon: FileCheck2,
     };
   };
 
@@ -256,6 +317,18 @@ function MyProjects() {
               const StatusIcon =
                 projectStatus.icon;
 
+              const agreementStatus =
+                getAgreementStatus(project);
+
+              const AgreementIcon =
+                agreementStatus.icon;
+
+              const mediaCount =
+                getMediaCount(project);
+
+              const videoCount =
+                getVideoCount(project);
+
               return (
                 <article
                   className="my-project-card"
@@ -265,11 +338,14 @@ function MyProjects() {
                   {/* IMAGE */}
 
                   <div className="my-project-image">
-
                     {project.image ? (
                       <img
                         src={project.image}
                         alt={project.name}
+                        onError={(event) => {
+                          event.currentTarget.src =
+                            FALLBACK_IMAGE;
+                        }}
                       />
                     ) : (
                       <div className="project-image-placeholder">
@@ -284,7 +360,6 @@ function MyProjects() {
 
                       {projectStatus.label}
                     </span>
-
                   </div>
 
                   {/* CONTENT */}
@@ -340,6 +415,57 @@ function MyProjects() {
                         </span>
                       </div>
                     )}
+
+                    {/* MEDIA INFORMATION */}
+
+                    <div className="project-media-summary">
+
+                      <div className="project-media-stat">
+                        <Image size={15} />
+
+                        <span>
+                          {mediaCount}{" "}
+                          {mediaCount === 1
+                            ? "Image"
+                            : "Images"}
+                        </span>
+                      </div>
+
+                      <div className="project-media-stat">
+                        <Video size={15} />
+
+                        <span>
+                          {videoCount}{" "}
+                          {videoCount === 1
+                            ? "Video"
+                            : "Videos"}
+                        </span>
+                      </div>
+
+                    </div>
+
+                    {/* AGREEMENT */}
+
+                    <div
+                      className={`project-agreement-status ${agreementStatus.className}`}
+                    >
+                      <AgreementIcon size={15} />
+
+                      <span>
+                        {agreementStatus.label}
+                      </span>
+
+                      {project.agreement
+                        ?.agreement_version && (
+                        <small>
+                          v
+                          {
+                            project.agreement
+                              .agreement_version
+                          }
+                        </small>
+                      )}
+                    </div>
 
                     {/* REJECTION MESSAGE */}
 

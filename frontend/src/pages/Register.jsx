@@ -260,7 +260,7 @@ function Register() {
         ====================================================== */}
 
         <img
-          src="/logo.png"
+          src="/xevoprop-logo.jpeg"
           alt="Xevoprop"
           className="auth-logo"
         />
