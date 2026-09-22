@@ -390,7 +390,7 @@ export default function Home() {
 
             <div className="xp-search-tabs">
 
-              {["Buy", "Rent", "Commercial", "Plots & Land", "New Projects"].map(
+              {["Buy", "Commercial", "Plots & Land", "New Projects"].map(
                 (item) => (
                   <button
                     key={item}
