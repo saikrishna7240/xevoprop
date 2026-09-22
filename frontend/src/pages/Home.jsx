@@ -377,7 +377,7 @@ export default function Home() {
           </h1>
 
           <p className="xp-hero-description">
-            Discover 45,000+ verified residential & commercial properties
+            Discover verified residential & commercial properties
             across India
             <br className="xp-desktop-break" />
             with verified RERA documentation, zero spam, and direct

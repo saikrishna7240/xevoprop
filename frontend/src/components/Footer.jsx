@@ -105,48 +105,26 @@ function Footer() {
             {/* SOCIALS */}
             <div className="footer-socials">
               <a
-                href="#"
-                aria-label="LinkedIn"
-                className="footer-social"
-                onClick={(event) =>
-                  event.preventDefault()
-                }
-              >
-                in
-              </a>
+  href="https://www.linkedin.com/company/xevotech/"
+  aria-label="LinkedIn"
+  className="footer-social"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  in
+</a>
 
               <a
-                href="#"
-                aria-label="Instagram"
-                className="footer-social"
-                onClick={(event) =>
-                  event.preventDefault()
-                }
-              >
-                ◎
-              </a>
+  href="https://www.instagram.com/xevotechpvt.ltd?stkn=YW5tcGs1eXlyN3gy"
+  aria-label="Instagram"
+  className="footer-social"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  ◎
+</a>
 
-              <a
-                href="#"
-                aria-label="YouTube"
-                className="footer-social"
-                onClick={(event) =>
-                  event.preventDefault()
-                }
-              >
-                ▶
-              </a>
-
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="footer-social"
-                onClick={(event) =>
-                  event.preventDefault()
-                }
-              >
-                f
-              </a>
+              
             </div>
           </div>
 
