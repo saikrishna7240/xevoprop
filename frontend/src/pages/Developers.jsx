@@ -1,255 +1,401 @@
 import {
   ArrowRight,
   Building2,
-  ChartNoAxesCombined,
-  ClipboardCheck,
+  CalendarDays,
+  CheckCircle2,
+  ClipboardList,
   Eye,
-  Handshake,
-  ShieldCheck,
-  Users,
+  ImagePlus,
+  MessageCircle,
+  Plus,
 } from "lucide-react";
+
 import { Link } from "react-router-dom";
+
 import "./Developers.css";
 
 function Developers() {
-  const benefits = [
-    {
-      icon: Building2,
-      number: "01",
-      title: "Showcase Projects",
-      text: "Present your residential and commercial projects with a dedicated, professional property experience.",
-    },
-    {
-      icon: Eye,
-      number: "02",
-      title: "Reach Serious Buyers",
-      text: "Put your projects in front of users actively searching for their next property.",
-    },
-    {
-      icon: Users,
-      number: "03",
-      title: "Manage Leads",
-      text: "Keep track of buyer interest and enquiries from one connected platform.",
-    },
-    {
-      icon: ChartNoAxesCombined,
-      number: "04",
-      title: "Grow Visibility",
-      text: "Give your developments a stronger digital presence without building the entire platform yourself.",
-    },
-  ];
-
-  const features = [
-    "Project-focused property discovery",
-    "Centralized project management",
-    "Buyer enquiry management",
-    "Structured project information",
-    "Professional property presentation",
-    "A connected real-estate ecosystem",
-  ];
-
   return (
     <div className="developers-page">
-      {/* HERO */}
-      <section className="developers-hero">
-        <div className="developers-hero-content">
-          <span className="developers-eyebrow">
-            FOR DEVELOPERS
-          </span>
 
-          <h1>
-            Build visibility.
-            <br />
-            <em>Build trust.</em>
-          </h1>
+      {/* =================================================
+          PAGE HEADER
+      ================================================= */}
 
-          <p>
-            Xevoprop gives developers a focused digital space to
-            showcase projects, connect with buyers, and manage
-            property opportunities more efficiently.
-          </p>
+      <section className="developers-header">
+        <div className="developers-header-inner">
 
-          <div className="developers-hero-actions">
-            <Link to="/add-project" className="developers-primary-btn">
-              Add Your Project
-              <ArrowRight size={16} />
-            </Link>
+          <div className="developers-header-copy">
 
-            <Link
-              to="/projects"
-              className="developers-secondary-btn"
-            >
-              Explore Projects
-            </Link>
-          </div>
-        </div>
-
-        <div className="developers-hero-mark">
-          <Building2 size={32} strokeWidth={1.2} />
-          <span>PROJECT<br />PARTNERS</span>
-        </div>
-      </section>
-
-      {/* INTRO */}
-      <section className="developers-intro">
-        <div className="developers-intro-grid">
-          <div>
-            <span className="developers-section-label">
-              THE XEVOPROP APPROACH
+            <span className="developers-label">
+              FOR DEVELOPERS
             </span>
 
-            <h2>
-              More than a listing.
+            <h1>
+              List your projects.
               <br />
-              <em>A project experience.</em>
-            </h2>
-          </div>
-
-          <div className="developers-intro-copy">
-            <p>
-              Property buyers need more than a name and a price.
-              They want to understand the project, its location,
-              available units, and what makes it worth considering.
-            </p>
+              <span>Reach the right buyers.</span>
+            </h1>
 
             <p>
-              Xevoprop brings those details together into one
-              structured experience designed for modern property
-              discovery.
+              Create, manage and present your real-estate projects
+              on Xevoprop with the information buyers need to make
+              their next decision.
             </p>
-          </div>
-        </div>
-      </section>
 
-      {/* BENEFITS */}
-      <section className="developers-benefits">
-        <div className="developers-benefits-header">
-          <div>
-            <span className="developers-section-label">
-              WHY XEVOPROP
-            </span>
+            <div className="developers-header-actions">
 
-            <h2>
-              Everything your
-              <br />
-              project needs to <em>stand out.</em>
-            </h2>
-          </div>
-
-          <p>
-            From discovery to enquiries, give potential buyers a
-            clearer way to understand and engage with your projects.
-          </p>
-        </div>
-
-        <div className="developers-benefits-grid">
-          {benefits.map((benefit) => {
-            const Icon = benefit.icon;
-
-            return (
-              <article
-                className="developers-benefit-card"
-                key={benefit.number}
+              <Link
+                to="/add-project"
+                className="developers-primary-button"
               >
-                <div className="developers-benefit-top">
-                  <span>{benefit.number}</span>
+                <Plus size={17} />
+                Add Project
+              </Link>
 
-                  <div className="developers-benefit-icon">
-                    <Icon size={19} strokeWidth={1.5} />
-                  </div>
-                </div>
+              <Link
+                to="/projects"
+                className="developers-secondary-button"
+              >
+                View Projects
+                <ArrowRight size={16} />
+              </Link>
 
-                <h3>{benefit.title}</h3>
+            </div>
 
-                <p>{benefit.text}</p>
-              </article>
-            );
-          })}
+          </div>
+
+          <div className="developers-header-info">
+
+            <div className="developers-info-row">
+              <Building2 size={18} />
+
+              <div>
+                <span>PROJECT LISTINGS</span>
+                <strong>Manage your developments</strong>
+              </div>
+            </div>
+
+            <div className="developers-info-row">
+              <MessageCircle size={18} />
+
+              <div>
+                <span>BUYER ENQUIRIES</span>
+                <strong>Keep enquiries organized</strong>
+              </div>
+            </div>
+
+            <div className="developers-info-row">
+              <Eye size={18} />
+
+              <div>
+                <span>PROPERTY DISCOVERY</span>
+                <strong>Present projects clearly</strong>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
-      {/* PLATFORM */}
-      <section className="developers-platform">
-        <div className="developers-platform-inner">
-          <div className="developers-platform-content">
-            <span className="developers-section-label">
-              ONE CONNECTED PLATFORM
-            </span>
+      {/* =================================================
+          PROJECT MANAGEMENT
+      ================================================= */}
+
+      <section className="developers-section">
+
+        <div className="developers-section-heading">
+
+          <div>
+            <span>PROJECT MANAGEMENT</span>
 
             <h2>
-              From project launch
-              <br />
-              to <em>buyer enquiry.</em>
+              Everything you need to
+              manage a project listing.
+            </h2>
+          </div>
+
+          <p>
+            Keep your project information structured and
+            ready for property seekers.
+          </p>
+
+        </div>
+
+        <div className="developers-management-list">
+
+          <div className="developers-management-row">
+
+            <span className="developers-row-number">
+              01
+            </span>
+
+            <div className="developers-row-icon">
+              <Building2 size={18} />
+            </div>
+
+            <div className="developers-row-content">
+              <strong>Create a project</strong>
+
+              <span>
+                Add the project name, location, type, units,
+                pricing and description.
+              </span>
+            </div>
+
+            <ArrowRight size={17} />
+
+          </div>
+
+          <div className="developers-management-row">
+
+            <span className="developers-row-number">
+              02
+            </span>
+
+            <div className="developers-row-icon">
+              <ImagePlus size={18} />
+            </div>
+
+            <div className="developers-row-content">
+              <strong>Add project media</strong>
+
+              <span>
+                Upload project images and videos to give
+                buyers a clearer view of the development.
+              </span>
+            </div>
+
+            <ArrowRight size={17} />
+
+          </div>
+
+          <div className="developers-management-row">
+
+            <span className="developers-row-number">
+              03
+            </span>
+
+            <div className="developers-row-icon">
+              <ClipboardList size={18} />
+            </div>
+
+            <div className="developers-row-content">
+              <strong>Submit project information</strong>
+
+              <span>
+                Provide the required information and submit
+                the project for review.
+              </span>
+            </div>
+
+            <ArrowRight size={17} />
+
+          </div>
+
+          <div className="developers-management-row">
+
+            <span className="developers-row-number">
+              04
+            </span>
+
+            <div className="developers-row-icon">
+              <MessageCircle size={18} />
+            </div>
+
+            <div className="developers-row-content">
+              <strong>Manage buyer enquiries</strong>
+
+              <span>
+                Keep track of people interested in your
+                projects through Xevoprop.
+              </span>
+            </div>
+
+            <ArrowRight size={17} />
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =================================================
+          WORKFLOW
+      ================================================= */}
+
+      <section className="developers-workflow">
+
+        <div className="developers-workflow-inner">
+
+          <div className="developers-workflow-heading">
+
+            <span>HOW IT WORKS</span>
+
+            <h2>
+              From project creation
+              to buyer enquiry.
             </h2>
 
             <p>
-              Keep your project information organized while giving
-              buyers the information they need to take the next
-              step.
+              A straightforward process for getting your
+              project listed and discovered.
             </p>
 
-            <div className="developers-platform-points">
-              {features.map((feature) => (
-                <div
-                  className="developers-platform-point"
-                  key={feature}
-                >
-                  <ShieldCheck size={16} />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <div className="developers-platform-card">
-            <div className="developers-platform-card-top">
-              <span>XEVOPROP</span>
-              <ClipboardCheck size={20} />
+          <div className="developers-workflow-list">
+
+            <div className="developers-workflow-item">
+
+              <span>01</span>
+
+              <div>
+                <strong>Create your project</strong>
+
+                <p>
+                  Enter the basic project and location
+                  information.
+                </p>
+              </div>
+
             </div>
 
-            <div className="developers-platform-card-line">
-              <span>PROJECT MANAGEMENT</span>
-              <strong>CONNECTED</strong>
+            <div className="developers-workflow-item">
+
+              <span>02</span>
+
+              <div>
+                <strong>Add details and media</strong>
+
+                <p>
+                  Provide pricing, units, description,
+                  images and videos.
+                </p>
+              </div>
+
             </div>
 
-            <div className="developers-platform-card-line">
-              <span>BUYER DISCOVERY</span>
-              <strong>ACTIVE</strong>
+            <div className="developers-workflow-item">
+
+              <span>03</span>
+
+              <div>
+                <strong>Submit for review</strong>
+
+                <p>
+                  Submit the project with the required
+                  agreement and information.
+                </p>
+              </div>
+
             </div>
 
-            <div className="developers-platform-card-line">
-              <span>ENQUIRIES</span>
-              <strong>ORGANIZED</strong>
+            <div className="developers-workflow-item">
+
+              <span>04</span>
+
+              <div>
+                <strong>Connect with buyers</strong>
+
+                <p>
+                  Manage enquiries from people interested
+                  in your project.
+                </p>
+              </div>
+
             </div>
 
-            <div className="developers-platform-card-footer">
-              <Handshake size={18} />
-              <span>Built for better property connections.</span>
-            </div>
           </div>
+
         </div>
+
       </section>
 
-      {/* CTA */}
-      <section className="developers-cta">
-        <span>READY TO GET STARTED?</span>
+      {/* =================================================
+          PROJECT CHECKLIST
+      ================================================= */}
 
-        <h2>
-          Put your project
-          <br />
-          <em>in the right place.</em>
-        </h2>
+      <section className="developers-checklist">
 
-        <p>
-          Create your project on Xevoprop and give buyers a better
-          way to discover what you are building.
-        </p>
+        <div className="developers-checklist-heading">
 
-        <Link to="/add-project" className="developers-cta-btn">
-          Create a Project
+          <span>BEFORE YOU SUBMIT</span>
+
+          <h2>
+            Prepare your project information.
+          </h2>
+
+        </div>
+
+        <div className="developers-checklist-content">
+
+          <div className="developers-check-item">
+            <CheckCircle2 size={17} />
+
+            <span>
+              Project name and location
+            </span>
+          </div>
+
+          <div className="developers-check-item">
+            <CheckCircle2 size={17} />
+
+            <span>
+              Project type, units and pricing
+            </span>
+          </div>
+
+          <div className="developers-check-item">
+            <CheckCircle2 size={17} />
+
+            <span>
+              Project description and media
+            </span>
+          </div>
+
+          <div className="developers-check-item">
+            <CheckCircle2 size={17} />
+
+            <span>
+              Required agreement and confirmations
+            </span>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* =================================================
+          CTA
+      ================================================= */}
+
+      <section className="developers-final">
+
+        <div>
+          <span>READY TO LIST?</span>
+
+          <h2>
+            Start with your next project.
+          </h2>
+
+          <p>
+            Create a project listing and make it available
+            to property seekers on Xevoprop.
+          </p>
+        </div>
+
+        <Link
+          to="/add-project"
+          className="developers-final-button"
+        >
+          Add Your Project
           <ArrowRight size={16} />
         </Link>
+
       </section>
+
     </div>
   );
 }

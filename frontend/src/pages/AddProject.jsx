@@ -20,6 +20,9 @@ const API_URL =
   import.meta.env.VITE_API_URL ||
   "https://xevoprop.onrender.com/api";
 
+  const AGREEMENT_VIEW_URL =
+  "/documents/Builder_Listing_Commission_Agreement.pdf";
+
 const AGREEMENT_URL =
   "/documents/Builder_Listing_Commission_Agreementfinal.docx";
 
@@ -838,9 +841,9 @@ const AddProject = () => {
                   <div className="agreement-actions">
 
                     <a
-                      href={AGREEMENT_URL}
+                      href={AGREEMENT_VIEW_URL}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="agreement-action"
                     >
                       <ExternalLink size={16} />

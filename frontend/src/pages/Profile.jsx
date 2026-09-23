@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   ArrowLeft,
   User,
@@ -19,6 +18,7 @@ import {
 import "./Profile.css";
 
 const API_URL =
+  import.meta.env.VITE_API_URL ||
   "https://xevoprop.onrender.com/api";
 
 function Profile() {
@@ -85,8 +85,7 @@ function Profile() {
 
         if (!response.ok) {
           throw new Error(
-            data.message ||
-              "Failed to load profile."
+            data.message || "Failed to load profile."
           );
         }
 
@@ -102,15 +101,11 @@ function Profile() {
           });
         }
       } catch (err) {
-        console.error(
-          "Load profile error:",
-          err
-        );
+        console.error("Load profile error:", err);
 
         if (!cancelled) {
           setError(
-            err.message ||
-              "Unable to load profile."
+            err.message || "Unable to load profile."
           );
         }
       } finally {
@@ -183,8 +178,7 @@ function Profile() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to update profile."
+          data.message || "Failed to update profile."
         );
       }
 
@@ -200,17 +194,14 @@ function Profile() {
 
       setEditing(false);
 
-      setSuccess(
-        "Profile updated successfully."
-      );
+      setSuccess("Profile updated successfully.");
 
       const storedUser =
         localStorage.getItem("user");
 
       if (storedUser) {
         try {
-          const parsedUser =
-            JSON.parse(storedUser);
+          const parsedUser = JSON.parse(storedUser);
 
           localStorage.setItem(
             "user",
@@ -224,14 +215,10 @@ function Profile() {
         }
       }
     } catch (err) {
-      console.error(
-        "Update profile error:",
-        err
-      );
+      console.error("Update profile error:", err);
 
       setError(
-        err.message ||
-          "Unable to update profile."
+        err.message || "Unable to update profile."
       );
     } finally {
       setSaving(false);
@@ -251,9 +238,7 @@ function Profile() {
     } = passwordData;
 
     if (!currentPassword) {
-      setError(
-        "Please enter your current password."
-      );
+      setError("Please enter your current password.");
       return;
     }
 
@@ -307,8 +292,7 @@ function Profile() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to update password."
+          data.message || "Failed to update password."
         );
       }
 
@@ -326,18 +310,12 @@ function Profile() {
 
       setShowPasswordSection(false);
 
-      setSuccess(
-        "Password updated successfully."
-      );
+      setSuccess("Password updated successfully.");
     } catch (err) {
-      console.error(
-        "Update password error:",
-        err
-      );
+      console.error("Update password error:", err);
 
       setError(
-        err.message ||
-          "Unable to update password."
+        err.message || "Unable to update password."
       );
     } finally {
       setChangingPassword(false);
@@ -358,9 +336,7 @@ function Profile() {
   };
 
   const getInitial = () => {
-    if (!user?.name) {
-      return "U";
-    }
+    if (!user?.name) return "U";
 
     return user.name
       .trim()
@@ -369,9 +345,7 @@ function Profile() {
   };
 
   const getRole = () => {
-    if (!user?.role) {
-      return "User";
-    }
+    if (!user?.role) return "User";
 
     return (
       user.role.charAt(0).toUpperCase() +
@@ -383,10 +357,9 @@ function Profile() {
     return (
       <div className="my-profile-page">
         <div className="my-profile-container">
-          <div className="profile-card">
-            <div className="profile-loading">
-              Loading profile...
-            </div>
+          <div className="profile-loading-card">
+            <div className="profile-loading-spinner" />
+            <span>Loading profile...</span>
           </div>
         </div>
       </div>
@@ -397,24 +370,33 @@ function Profile() {
     <div className="my-profile-page">
       <div className="my-profile-container">
 
-        <div className="my-profile-header">
+        {/* HEADER */}
+
+        <header className="my-profile-header">
           <button
             type="button"
             className="profile-back-button"
             onClick={() => navigate(-1)}
             title="Go back"
           >
-            <ArrowLeft size={19} />
+            <ArrowLeft size={18} />
           </button>
 
           <div>
+            <span className="profile-eyebrow">
+              ACCOUNT
+            </span>
+
             <h1>My Profile</h1>
+
             <p>
-              Manage your Xevoprop account
-              information.
+              Manage your Xevoprop account information
+              and security.
             </p>
           </div>
-        </div>
+        </header>
+
+        {/* ALERTS */}
 
         {error && (
           <div className="profile-alert profile-error">
@@ -428,130 +410,126 @@ function Profile() {
           </div>
         )}
 
-        <div className="profile-card">
+        {/* ACCOUNT SUMMARY */}
 
-          <div className="profile-card-top">
-            <div className="profile-avatar">
-              {getInitial()}
-            </div>
-
-            <div className="profile-main-info">
-              <h2>
-                {user?.name || "User"}
-              </h2>
-
-              <p>
-                {user?.email ||
-                  "No email available"}
-              </p>
-
-              <span className="profile-role">
-                <Shield size={13} />
-                {getRole()}
-              </span>
-            </div>
+        <section className="profile-account-card">
+          <div className="profile-avatar">
+            {getInitial()}
           </div>
 
-          <div className="profile-details">
+          <div className="profile-account-info">
+            <h2>{user?.name || "User"}</h2>
 
-            <div className="profile-section-title">
-              <User size={20} />
+            <p>
+              {user?.email || "No email available"}
+            </p>
 
-              <h3>
-                Personal Information
-              </h3>
+            <span className="profile-role">
+              <Shield size={13} />
+              {getRole()}
+            </span>
+          </div>
+
+          <div className="profile-account-meta">
+            <span>ACCOUNT TYPE</span>
+            <strong>{getRole()}</strong>
+          </div>
+        </section>
+
+        {/* PERSONAL INFORMATION */}
+
+        <section className="profile-section">
+          <div className="profile-section-header">
+            <div>
+              <span className="profile-section-label">
+                PERSONAL DETAILS
+              </span>
+
+              <h2>Personal Information</h2>
+
+              <p>
+                Your basic account information used
+                across Xevoprop.
+              </p>
             </div>
 
-            {!editing ? (
-              <>
-                <div className="profile-grid">
-
-                  <div className="profile-info-item">
-                    <div className="profile-info-label">
-                      <User size={14} />
-                      Full Name
-                    </div>
-
-                    <div className="profile-info-value">
-                      {user?.name ||
-                        "Not provided"}
-                    </div>
-                  </div>
-
-                  <div className="profile-info-item">
-                    <div className="profile-info-label">
-                      <Mail size={14} />
-                      Email
-                    </div>
-
-                    <div className="profile-info-value">
-                      {user?.email ||
-                        "Not provided"}
-                    </div>
-                  </div>
-
-                  <div className="profile-info-item">
-                    <div className="profile-info-label">
-                      <Phone size={14} />
-                      Phone
-                    </div>
-
-                    <div className="profile-info-value">
-                      {user?.phone ||
-                        "Not provided"}
-                    </div>
-                  </div>
-
-                  <div className="profile-info-item">
-                    <div className="profile-info-label">
-                      <Shield size={14} />
-                      Account Type
-                    </div>
-
-                    <div className="profile-info-value">
-                      {getRole()}
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="profile-actions">
-                  <button
-                    type="button"
-                    className="profile-edit-button"
-                    onClick={() => {
-                      setError("");
-                      setSuccess("");
-                      setEditing(true);
-                    }}
-                  >
-                    <Edit3 size={16} />
-                    Edit Profile
-                  </button>
-
-                  <button
-                    type="button"
-                    className="profile-password-button"
-                    onClick={() => {
-                      setError("");
-                      setSuccess("");
-                      setShowPasswordSection(
-                        (previous) => !previous
-                      );
-                    }}
-                  >
-                    <KeyRound size={16} />
-                    {showPasswordSection
-                      ? "Close Password"
-                      : "Update Password"}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <form
-                className="profile-edit-form"
-                onSubmit={handleSave}
+            {!editing && (
+              <button
+                type="button"
+                className="profile-edit-button"
+                onClick={() => {
+                  setError("");
+                  setSuccess("");
+                  setEditing(true);
+                }}
               >
+                <Edit3 size={15} />
+                Edit Profile
+              </button>
+            )}
+          </div>
+
+          {!editing ? (
+            <div className="profile-info-grid">
+
+              <div className="profile-info-item">
+                <div className="profile-info-icon">
+                  <User size={16} />
+                </div>
+
+                <div>
+                  <span>Full Name</span>
+                  <strong>
+                    {user?.name || "Not provided"}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="profile-info-item">
+                <div className="profile-info-icon">
+                  <Mail size={16} />
+                </div>
+
+                <div>
+                  <span>Email Address</span>
+                  <strong>
+                    {user?.email || "Not provided"}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="profile-info-item">
+                <div className="profile-info-icon">
+                  <Phone size={16} />
+                </div>
+
+                <div>
+                  <span>Phone Number</span>
+                  <strong>
+                    {user?.phone || "Not provided"}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="profile-info-item">
+                <div className="profile-info-icon">
+                  <Shield size={16} />
+                </div>
+
+                <div>
+                  <span>Account Type</span>
+                  <strong>{getRole()}</strong>
+                </div>
+              </div>
+
+            </div>
+          ) : (
+            <form
+              className="profile-edit-form"
+              onSubmit={handleSave}
+            >
+              <div className="profile-form-grid">
+
                 <div className="profile-form-group">
                   <label htmlFor="name">
                     Full Name
@@ -570,7 +548,7 @@ function Profile() {
 
                 <div className="profile-form-group">
                   <label htmlFor="email">
-                    Email
+                    Email Address
                   </label>
 
                   <input
@@ -586,7 +564,7 @@ function Profile() {
 
                 <div className="profile-form-group">
                   <label htmlFor="phone">
-                    Phone
+                    Phone Number
                   </label>
 
                   <input
@@ -599,229 +577,286 @@ function Profile() {
                   />
                 </div>
 
-                <div className="profile-actions">
-                  <button
-                    type="button"
-                    className="profile-cancel-button"
-                    onClick={handleCancel}
-                    disabled={saving}
-                  >
-                    <X size={16} />
-                    Cancel
-                  </button>
+              </div>
 
-                  <button
-                    type="submit"
-                    className="profile-save-button"
-                    disabled={saving}
-                  >
-                    <Save size={16} />
+              <div className="profile-form-actions">
+                <button
+                  type="button"
+                  className="profile-cancel-button"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  <X size={15} />
+                  Cancel
+                </button>
 
-                    {saving
-                      ? "Saving..."
-                      : "Save Changes"}
-                  </button>
-                </div>
-              </form>
-            )}
+                <button
+                  type="submit"
+                  className="profile-save-button"
+                  disabled={saving}
+                >
+                  <Save size={15} />
+                  {saving
+                    ? "Saving..."
+                    : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          )}
+        </section>
 
-            {showPasswordSection && (
-              <form
-                className="password-update-card"
-                onSubmit={handleChangePassword}
+        {/* SECURITY */}
+
+        <section className="profile-section security-section">
+          <div className="profile-section-header">
+            <div>
+              <span className="profile-section-label">
+                ACCOUNT SECURITY
+              </span>
+
+              <h2>Password & Security</h2>
+
+              <p>
+                Keep your account protected with a
+                strong password.
+              </p>
+            </div>
+
+            {!showPasswordSection && (
+              <button
+                type="button"
+                className="profile-password-button"
+                onClick={() => {
+                  setError("");
+                  setSuccess("");
+                  setShowPasswordSection(true);
+                }}
               >
-                <div className="password-update-header">
-                  <div className="password-update-icon">
-                    <LockKeyhole size={19} />
-                  </div>
-
-                  <div>
-                    <h3>Update Password</h3>
-                    <p>
-                      Choose a new password to
-                      keep your account secure.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="password-update-fields">
-
-                  <div className="profile-form-group">
-                    <label htmlFor="currentPassword">
-                      Current Password
-                    </label>
-
-                    <div className="profile-password-input">
-                      <input
-                        id="currentPassword"
-                        name="currentPassword"
-                        type={
-                          showPasswords.current
-                            ? "text"
-                            : "password"
-                        }
-                        value={
-                          passwordData.currentPassword
-                        }
-                        onChange={
-                          handlePasswordChange
-                        }
-                        placeholder="Enter current password"
-                        required
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          togglePassword("current")
-                        }
-                        aria-label={
-                          showPasswords.current
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                      >
-                        {showPasswords.current ? (
-                          <EyeOff size={17} />
-                        ) : (
-                          <Eye size={17} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="profile-form-group">
-                    <label htmlFor="newPassword">
-                      New Password
-                    </label>
-
-                    <div className="profile-password-input">
-                      <input
-                        id="newPassword"
-                        name="newPassword"
-                        type={
-                          showPasswords.new
-                            ? "text"
-                            : "password"
-                        }
-                        value={
-                          passwordData.newPassword
-                        }
-                        onChange={
-                          handlePasswordChange
-                        }
-                        placeholder="Enter new password"
-                        minLength="6"
-                        required
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          togglePassword("new")
-                        }
-                        aria-label={
-                          showPasswords.new
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                      >
-                        {showPasswords.new ? (
-                          <EyeOff size={17} />
-                        ) : (
-                          <Eye size={17} />
-                        )}
-                      </button>
-                    </div>
-
-                    <span className="profile-password-hint">
-                      Minimum 6 characters
-                    </span>
-                  </div>
-
-                  <div className="profile-form-group">
-                    <label htmlFor="confirmPassword">
-                      Confirm New Password
-                    </label>
-
-                    <div className="profile-password-input">
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type={
-                          showPasswords.confirm
-                            ? "text"
-                            : "password"
-                        }
-                        value={
-                          passwordData.confirmPassword
-                        }
-                        onChange={
-                          handlePasswordChange
-                        }
-                        placeholder="Confirm new password"
-                        minLength="6"
-                        required
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          togglePassword("confirm")
-                        }
-                        aria-label={
-                          showPasswords.confirm
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                      >
-                        {showPasswords.confirm ? (
-                          <EyeOff size={17} />
-                        ) : (
-                          <Eye size={17} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="password-update-actions">
-                  <button
-                    type="button"
-                    className="profile-cancel-button"
-                    onClick={() => {
-                      setPasswordData({
-                        currentPassword: "",
-                        newPassword: "",
-                        confirmPassword: "",
-                      });
-
-                      setShowPasswordSection(false);
-                    }}
-                    disabled={changingPassword}
-                  >
-                    <X size={16} />
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="profile-save-button"
-                    disabled={changingPassword}
-                  >
-                    <LockKeyhole size={16} />
-
-                    {changingPassword
-                      ? "Updating..."
-                      : "Update Password"}
-                  </button>
-                </div>
-              </form>
+                <KeyRound size={15} />
+                Update Password
+              </button>
             )}
-
           </div>
-        </div>
+
+          {!showPasswordSection ? (
+            <div className="security-summary">
+              <div className="security-summary-icon">
+                <LockKeyhole size={19} />
+              </div>
+
+              <div>
+                <strong>Password protected</strong>
+
+                <span>
+                  Your account password is securely
+                  managed.
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setError("");
+                  setSuccess("");
+                  setShowPasswordSection(true);
+                }}
+              >
+                Change password
+              </button>
+            </div>
+          ) : (
+            <form
+              className="password-update-form"
+              onSubmit={handleChangePassword}
+            >
+              <div className="password-update-heading">
+                <div className="password-update-icon">
+                  <LockKeyhole size={18} />
+                </div>
+
+                <div>
+                  <h3>Update Password</h3>
+                  <p>
+                    Enter your current password and
+                    choose a new one.
+                  </p>
+                </div>
+              </div>
+
+              <div className="password-fields">
+
+                <div className="profile-form-group">
+                  <label htmlFor="currentPassword">
+                    Current Password
+                  </label>
+
+                  <div className="profile-password-input">
+                    <input
+                      id="currentPassword"
+                      name="currentPassword"
+                      type={
+                        showPasswords.current
+                          ? "text"
+                          : "password"
+                      }
+                      value={
+                        passwordData.currentPassword
+                      }
+                      onChange={handlePasswordChange}
+                      placeholder="Enter current password"
+                      required
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        togglePassword("current")
+                      }
+                      aria-label={
+                        showPasswords.current
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                    >
+                      {showPasswords.current ? (
+                        <EyeOff size={17} />
+                      ) : (
+                        <Eye size={17} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="profile-form-group">
+                  <label htmlFor="newPassword">
+                    New Password
+                  </label>
+
+                  <div className="profile-password-input">
+                    <input
+                      id="newPassword"
+                      name="newPassword"
+                      type={
+                        showPasswords.new
+                          ? "text"
+                          : "password"
+                      }
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="Enter new password"
+                      minLength="6"
+                      required
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        togglePassword("new")
+                      }
+                      aria-label={
+                        showPasswords.new
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                    >
+                      {showPasswords.new ? (
+                        <EyeOff size={17} />
+                      ) : (
+                        <Eye size={17} />
+                      )}
+                    </button>
+                  </div>
+
+                  <span className="profile-password-hint">
+                    Minimum 6 characters
+                  </span>
+                </div>
+
+                <div className="profile-form-group">
+                  <label htmlFor="confirmPassword">
+                    Confirm New Password
+                  </label>
+
+                  <div className="profile-password-input">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={
+                        showPasswords.confirm
+                          ? "text"
+                          : "password"
+                      }
+                      value={
+                        passwordData.confirmPassword
+                      }
+                      onChange={handlePasswordChange}
+                      placeholder="Confirm new password"
+                      minLength="6"
+                      required
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        togglePassword("confirm")
+                      }
+                      aria-label={
+                        showPasswords.confirm
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                    >
+                      {showPasswords.confirm ? (
+                        <EyeOff size={17} />
+                      ) : (
+                        <Eye size={17} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="profile-form-actions">
+                <button
+                  type="button"
+                  className="profile-cancel-button"
+                  onClick={() => {
+                    setPasswordData({
+                      currentPassword: "",
+                      newPassword: "",
+                      confirmPassword: "",
+                    });
+
+                    setShowPasswords({
+                      current: false,
+                      new: false,
+                      confirm: false,
+                    });
+
+                    setShowPasswordSection(false);
+                  }}
+                  disabled={changingPassword}
+                >
+                  <X size={15} />
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="profile-save-button"
+                  disabled={changingPassword}
+                >
+                  <LockKeyhole size={15} />
+                  {changingPassword
+                    ? "Updating..."
+                    : "Update Password"}
+                </button>
+              </div>
+            </form>
+          )}
+        </section>
+
       </div>
     </div>
   );

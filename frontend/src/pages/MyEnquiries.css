@@ -1,717 +1,643 @@
-/* =========================================================
-   MY ENQUIRIES — XEVOPROP BRIGHT PROPTECH THEME
-   ========================================================= */
-
 .my-enquiries-page {
   min-height: 100vh;
-  padding: 44px 0 80px;
-  background:
-    radial-gradient(circle at 8% 8%, rgba(0, 198, 255, 0.08), transparent 28%),
-    radial-gradient(circle at 92% 18%, rgba(105, 87, 255, 0.06), transparent 25%),
-    #f7faff;
+
+  background: #f5f7fa;
+  color: #172033;
 }
 
 .my-enquiries-container {
-  width: min(1180px, calc(100% - 80px));
+  width: min(1180px, calc(100% - 48px));
+
   margin: 0 auto;
+  padding-bottom: 60px;
 }
 
-/* =========================================================
+/* =====================================================
    HEADER
-   ========================================================= */
+===================================================== */
 
 .my-enquiries-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 32px;
-}
+  min-height: 175px;
 
-.my-enquiries-header > div:first-child {
-  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #dfe5ec;
+
+  gap: 30px;
 }
 
 .my-enquiries-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 11px;
-  border-radius: 999px;
-  background: #eaf2ff;
-  border: 1px solid #cfe0ff;
-  color: #1264ff;
-  font-size: 10px;
+  display: block;
+  margin-bottom: 10px;
+
+  color: #155eef;
+
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
 }
 
 .my-enquiries-header h1 {
-  margin: 12px 0 7px;
-  color: #0b1736;
-  font-size: clamp(30px, 4vw, 46px);
-  line-height: 1.05;
-  font-weight: 850;
-  letter-spacing: -0.04em;
+  margin: 0;
+
+  color: #182d49;
+
+  font-size: clamp(32px, 4vw, 43px);
+  line-height: 1.1;
+
+  letter-spacing: -0.045em;
+  font-weight: 700;
 }
 
 .my-enquiries-header h1 span {
-  color: #1264ff;
+  color: #155eef;
 }
 
 .my-enquiries-header p {
-  margin: 0;
-  color: #526078;
-  font-size: 14px;
-  line-height: 1.7;
+  margin: 10px 0 0;
+
+  color: #718095;
+
+  font-size: 12px;
 }
 
-/* COUNT */
-
 .enquiries-count {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 15px;
-  border: 1px solid #dce8f7;
-  border-radius: 12px;
-  background: #ffffff;
-  color: #526078;
-  box-shadow: 0 6px 20px rgba(11, 23, 54, 0.05);
+  min-width: 120px;
+
+  padding-left: 25px;
+
+  display: grid;
+  grid-template-columns: 18px auto;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+
+  border-left: 1px solid #dfe5ec;
 }
 
 .enquiries-count svg {
-  color: #1264ff;
+  grid-row: 1 / 3;
+
+  align-self: center;
+
+  color: #155eef;
 }
 
 .enquiries-count strong {
-  color: #0b1736;
-  font-size: 16px;
-  font-weight: 850;
+  color: #173b68;
+
+  font-size: 25px;
+  line-height: 1;
 }
 
 .enquiries-count span {
-  font-size: 11px;
+  margin-top: 4px;
+
+  color: #8994a3;
+
+  font-size: 8px;
   font-weight: 700;
 }
 
-/* =========================================================
-   EMPTY / LOADING / ERROR
-   ========================================================= */
+/* =====================================================
+   STATES
+===================================================== */
 
-.enquiries-empty {
-  position: relative;
-  overflow: hidden;
+.enquiries-state {
+  min-height: 310px;
+
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
-  padding: 70px 30px;
-  border: 1px solid #e1e9f3;
-  border-radius: 22px;
-  background: #ffffff;
-  box-shadow: 0 10px 35px rgba(11, 23, 54, 0.06);
+
+  color: #7b8797;
 }
 
-.enquiries-empty::before {
-  content: "";
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  top: -150px;
-  left: -100px;
-  border-radius: 50%;
-  background: rgba(0, 198, 255, 0.08);
-  pointer-events: none;
-}
+.enquiries-state-icon {
+  width: 42px;
+  height: 42px;
 
-.enquiries-empty::after {
-  content: "";
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  right: -100px;
-  bottom: -150px;
-  border-radius: 50%;
-  background: rgba(105, 87, 255, 0.06);
-  pointer-events: none;
-}
-
-.enquiries-empty-icon {
-  position: relative;
-  z-index: 1;
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  margin-bottom: 18px;
-  border: 1px solid #cfe0ff;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #edf5ff, #e8faff);
-  color: #1264ff;
+
+  background: #edf4fc;
+  color: #155eef;
 }
 
-.enquiries-empty h2 {
-  position: relative;
-  z-index: 1;
-  margin: 0 0 8px;
-  color: #0b1736;
-  font-size: 20px;
-  font-weight: 800;
+.enquiries-state h2 {
+  margin: 13px 0 0;
+
+  color: #34465e;
+
+  font-size: 17px;
 }
 
-.enquiries-empty p {
-  position: relative;
-  z-index: 1;
-  max-width: 460px;
-  margin: 0;
-  color: #718097;
-  font-size: 13px;
-  line-height: 1.7;
+.enquiries-state p {
+  max-width: 350px;
+
+  margin: 7px 0 0;
+
+  color: #7b8797;
+
+  font-size: 11px;
+  line-height: 1.6;
 }
 
-.enquiries-empty button {
-  position: relative;
-  z-index: 1;
-  margin-top: 20px;
-  padding: 10px 17px;
-  border: 0;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #1264ff, #00c6ff);
-  color: #ffffff;
+.enquiries-retry {
+  margin-top: 17px;
+
+  min-height: 35px;
+  padding: 0 14px;
+
+  border: 1px solid #d5dde7;
+  background: #ffffff;
+
+  color: #155eef;
+
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 800;
+
+  font-size: 10px;
+  font-weight: 700;
+
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(18, 100, 255, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.enquiries-empty button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 25px rgba(18, 100, 255, 0.26);
+.enquiries-retry:hover {
+  border-color: #155eef;
 }
 
-.enquiries-empty > a {
-  position: relative;
-  z-index: 1;
+.enquiries-explore {
+  margin-top: 18px;
+
+  min-height: 37px;
+  padding: 0 13px;
+
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: 21px;
-  padding: 11px 16px;
-  border: 1px solid #cfe0ff;
-  border-radius: 10px;
-  background: #f5f9ff;
-  color: #1264ff;
+
+  background: #155eef;
+  color: #ffffff;
+
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 800;
-  transition: all 0.2s ease;
-}
 
-.enquiries-empty > a:hover {
-  transform: translateY(-2px);
-  border-color: #1264ff;
-  background: #edf5ff;
-}
-
-/* =========================================================
-   ENQUIRIES LIST
-   ========================================================= */
-
-.enquiries-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* =========================================================
-   HISTORY CARD
-   ========================================================= */
-
-.enquiry-history-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  gap: 18px;
-  padding: 22px;
-  border: 1px solid #e1e9f3;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 7px 25px rgba(11, 23, 54, 0.055);
-  overflow: hidden;
-  transition:
-    transform 0.22s ease,
-    box-shadow 0.22s ease,
-    border-color 0.22s ease;
-}
-
-.enquiry-history-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    #1264ff,
-    #00c6ff,
-    #6957ff
-  );
-  opacity: 0;
-  transition: opacity 0.22s ease;
-}
-
-.enquiry-history-card:hover {
-  transform: translateY(-3px);
-  border-color: #cfe0ff;
-  box-shadow: 0 14px 34px rgba(18, 100, 255, 0.09);
-}
-
-.enquiry-history-card:hover::before {
-  opacity: 1;
-}
-
-/* ICON */
-
-.history-icon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #edf5ff, #e8faff);
-  border: 1px solid #cfe0ff;
-  color: #1264ff;
-}
-
-/* CONTENT */
-
-.history-content {
-  min-width: 0;
-}
-
-/* =========================================================
-   HEADING
-   ========================================================= */
-
-.history-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.history-label {
-  display: block;
-  margin-bottom: 5px;
-  color: #1264ff;
-  font-size: 9px;
-  font-weight: 850;
-  letter-spacing: 0.12em;
-}
-
-.history-heading h2 {
-  margin: 0;
-  color: #0b1736;
-  font-size: 18px;
-  line-height: 1.3;
-  font-weight: 800;
-}
-
-.history-date {
-  flex-shrink: 0;
-  padding-top: 3px;
-  color: #8190a8;
   font-size: 10px;
   font-weight: 700;
-  text-align: right;
 }
 
-/* =========================================================
-   LOCATION
-   ========================================================= */
+.enquiries-explore:hover {
+  background: #104dcc;
+}
 
-.history-location {
-  display: flex;
+.enquiries-loader {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid #d9e2ed;
+  border-top-color: #155eef;
+
+  border-radius: 50%;
+
+  animation: enquiries-spin 0.7s linear infinite;
+}
+
+@keyframes enquiries-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   LIST
+===================================================== */
+
+.enquiries-section {
+  margin-top: 30px;
+}
+
+.enquiries-list-heading {
+  min-height: 40px;
+
+  padding: 0 20px;
+
+  display: grid;
+  grid-template-columns:
+    1.5fr
+    0.8fr
+    0.65fr
+    1fr;
+
   align-items: center;
-  gap: 6px;
-  margin-top: 9px;
-  color: #66748a;
-  font-size: 12px;
-  line-height: 1.5;
-}
 
-.history-location svg {
-  flex-shrink: 0;
-  color: #00a9df;
-}
+  border-top: 1px solid #d9e1ea;
+  border-bottom: 1px solid #d9e1ea;
 
-/* =========================================================
-   MESSAGE
-   ========================================================= */
+  color: #8994a3;
 
-.history-message {
-  margin-top: 17px;
-  padding: 13px 15px;
-  border: 1px solid #e8eef6;
-  border-radius: 11px;
-  background: #f8fbff;
-}
-
-.history-message span {
-  display: block;
-  margin-bottom: 5px;
-  color: #8190a8;
-  font-size: 9px;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.history-message p {
-  margin: 0;
-  color: #40506b;
-  font-size: 12px;
-  line-height: 1.65;
-  word-break: break-word;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.history-footer {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 18px;
-  padding-top: 15px;
-  border-top: 1px solid #edf2f8;
-}
-
-/* STATUS */
-
-.history-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 29px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.enquiries-list {
+  background: #ffffff;
+
+  border-bottom: 1px solid #d9e1ea;
+}
+
+/* =====================================================
+   ENQUIRY ROW
+===================================================== */
+
+.enquiry-row {
+  position: relative;
+
+  min-height: 92px;
+
+  padding: 0 20px;
+
+  display: grid;
+  grid-template-columns:
+    1.5fr
+    0.8fr
+    0.65fr
+    1fr;
+
+  align-items: center;
+
+  border-bottom: 1px solid #e5e9ee;
+
+  transition: background 0.15s ease;
+}
+
+.enquiry-row:last-child {
+  border-bottom: 0;
+}
+
+.enquiry-row:hover {
+  background: #fafbfd;
+}
+
+/* =====================================================
+   PROPERTY
+===================================================== */
+
+.enquiry-property {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.enquiry-property-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: #edf3fa;
+  color: #155eef;
+}
+
+.enquiry-property-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.enquiry-property-info strong {
+  overflow: hidden;
+
+  color: #293b53;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.history-status svg {
+.enquiry-property-info span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  overflow: hidden;
+
+  color: #8994a3;
+
+  font-size: 9px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   DATE
+===================================================== */
+
+.enquiry-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #778497;
+
+  font-size: 9px;
+}
+
+.enquiry-date svg {
+  color: #8c98a7;
   flex-shrink: 0;
 }
 
-/* Default / New */
+/* =====================================================
+   STATUS
+===================================================== */
 
-.history-status.new {
-  border: 1px solid #cfe0ff;
-  background: #edf5ff;
-  color: #1264ff;
-}
-
-/* Contacted */
-
-.history-status.contacted {
-  border: 1px solid #bdebf8;
-  background: #e9faff;
-  color: #008cb8;
-}
-
-/* Resolved */
-
-.history-status.resolved {
-  border: 1px solid #bdebd4;
-  background: #e9f9f1;
-  color: #128457;
-}
-
-/* =========================================================
-   ACTION LINKS
-   ========================================================= */
-
-.history-view {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 29px;
-  padding: 0 10px;
-  border: 1px solid #e1e9f3;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #526078;
-  text-decoration: none;
-  font-size: 10px;
-  font-weight: 800;
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-.history-view svg {
-  color: #1264ff;
-}
-
-.history-view:hover {
-  transform: translateY(-1px);
-  border-color: #bcd2f4;
-  background: #f4f8ff;
-  color: #1264ff;
-}
-
-/* DELETE */
-
-.history-delete {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  margin-left: auto;
-  padding: 0;
-  border: 1px solid #f0dede;
-  border-radius: 8px;
-  background: #fffafa;
-  color: #d45b5b;
-  cursor: pointer;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.history-delete:hover {
-  transform: translateY(-1px);
-  border-color: #efbcbc;
-  background: #fff0f0;
-  color: #c63f3f;
-}
-
-/* =========================================================
-   BOTTOM ACTION
-   ========================================================= */
-
-.enquiries-bottom {
+.enquiry-status {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 25px;
-  padding: 17px 20px;
-  border: 1px solid #dce8f7;
-  border-radius: 13px;
-  background: linear-gradient(
-    135deg,
-    #f4f8ff,
-    #f7fbff
-  );
-  color: #66748a;
-  font-size: 11px;
-  font-weight: 700;
 }
 
-.enquiries-bottom > svg {
-  color: #1264ff;
-}
-
-.enquiries-bottom a {
+.enquiry-status-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-left: 3px;
-  color: #1264ff;
+
+  padding: 5px 8px;
+
+  border: 1px solid #dfe5ec;
+
+  background: #f7f8fa;
+
+  color: #718095;
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.enquiry-status-badge.new {
+  border-color: #cbdcf7;
+  background: #eef5ff;
+  color: #155eef;
+}
+
+.enquiry-status-badge.contacted {
+  border-color: #d9dfc7;
+  background: #f5f7ec;
+  color: #697a31;
+}
+
+.enquiry-status-badge.resolved {
+  border-color: #cbe5d9;
+  background: #eff9f4;
+  color: #16885b;
+}
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.enquiry-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.enquiry-action {
+  min-height: 30px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 0 8px;
+
+  border: 1px solid #dce3eb;
+
+  background: #ffffff;
+  color: #637287;
+
   text-decoration: none;
-  font-weight: 850;
-  transition: color 0.2s ease;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
-.enquiries-bottom a:hover {
-  color: #084dcc;
+.enquiry-action:hover {
+  border-color: #155eef;
+
+  background: #f5f8fd;
+
+  color: #155eef;
 }
 
-/* =========================================================
-   RESPONSIVE — 900px
-   ========================================================= */
+.enquiry-delete {
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid #dce3eb;
+
+  background: #ffffff;
+  color: #8994a3;
+
+  cursor: pointer;
+}
+
+.enquiry-delete:hover {
+  border-color: #d45d5d;
+  color: #c64e4e;
+}
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.enquiry-message {
+  grid-column: 1 / -1;
+
+  margin: 0 0 14px;
+  padding: 12px 0 0 45px;
+
+  border-top: 1px solid #edf0f3;
+}
+
+.enquiry-message span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #9aa3af;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.enquiry-message p {
+  max-width: 850px;
+
+  margin: 0;
+
+  color: #69778a;
+
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+/* =====================================================
+   BOTTOM
+===================================================== */
+
+.enquiries-bottom {
+  min-height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #dfe5ec;
+
+  color: #7d8998;
+
+  font-size: 10px;
+}
+
+.enquiries-bottom > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.enquiries-bottom svg {
+  color: #155eef;
+}
+
+.enquiries-bottom > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #155eef;
+
+  text-decoration: none;
+
+  font-weight: 700;
+}
+
+.enquiries-bottom > a:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
 
 @media (max-width: 900px) {
-  .my-enquiries-page {
-    padding: 35px 0 65px;
+  .enquiries-list-heading {
+    display: none;
   }
 
-  .my-enquiries-container {
-    width: min(100% - 48px, 760px);
+  .enquiry-row {
+    grid-template-columns:
+      1fr
+      1fr;
+
+    gap: 15px;
+
+    padding: 18px 20px;
   }
 
-  .my-enquiries-header {
-    align-items: flex-start;
+  .enquiry-property {
+    grid-column: 1 / -1;
   }
 
-  .enquiry-history-card {
-    padding: 19px;
+  .enquiry-actions {
+    justify-content: flex-start;
+  }
+
+  .enquiry-message {
+    padding-left: 0;
   }
 }
 
-/* =========================================================
-   RESPONSIVE — 650px
-   ========================================================= */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-@media (max-width: 650px) {
-  .my-enquiries-page {
-    padding: 28px 0 55px;
-  }
-
+@media (max-width: 600px) {
   .my-enquiries-container {
     width: calc(100% - 30px);
   }
 
   .my-enquiries-header {
-    flex-direction: column;
-    gap: 17px;
-    margin-bottom: 23px;
-  }
+    min-height: 145px;
 
-  .my-enquiries-header h1 {
-    font-size: 32px;
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 32px 0;
   }
 
   .enquiries-count {
-    align-self: flex-start;
+    padding-left: 0;
+
+    border-left: 0;
   }
 
-  .enquiry-history-card {
+  .enquiry-row {
     grid-template-columns: 1fr;
-    gap: 13px;
-    padding: 17px;
-    border-radius: 15px;
+    gap: 14px;
+
+    padding: 18px 15px;
   }
 
-  .history-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
+  .enquiry-property,
+  .enquiry-date,
+  .enquiry-status,
+  .enquiry-actions,
+  .enquiry-message {
+    grid-column: 1;
   }
 
-  .history-heading {
-    flex-direction: column;
-    gap: 7px;
+  .enquiry-actions {
+    flex-wrap: wrap;
   }
 
-  .history-date {
-    padding-top: 0;
-    text-align: left;
+  .enquiry-action {
+    flex: 1;
+    justify-content: center;
   }
 
-  .history-footer {
-    align-items: stretch;
-  }
-
-  .history-view,
-  .history-status {
-    min-height: 32px;
-  }
-
-  .history-delete {
-    margin-left: 0;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — 440px
-   ========================================================= */
-
-@media (max-width: 440px) {
-  .my-enquiries-container {
-    width: calc(100% - 22px);
-  }
-
-  .my-enquiries-header h1 {
-    font-size: 29px;
-  }
-
-  .my-enquiries-header p {
-    font-size: 12px;
-  }
-
-  .my-enquiries-eyebrow {
-    font-size: 8px;
-    padding: 6px 9px;
-  }
-
-  .enquiry-history-card {
-    padding: 15px;
-  }
-
-  .history-heading h2 {
-    font-size: 16px;
-  }
-
-  .history-message {
-    padding: 11px 12px;
-  }
-
-  .history-footer {
-    gap: 7px;
-  }
-
-  .history-view {
-    font-size: 9px;
-    padding: 0 8px;
-  }
-
-  .history-status {
-    font-size: 9px;
-    padding: 0 8px;
-  }
-
-  .enquiries-empty {
-    padding: 55px 20px;
+  .enquiry-delete {
+    flex-shrink: 0;
   }
 
   .enquiries-bottom {
-    text-align: center;
-    line-height: 1.6;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — 360px
-   ========================================================= */
-
-@media (max-width: 360px) {
-  .my-enquiries-header h1 {
-    font-size: 26px;
-  }
-
-  .enquiry-history-card {
-    padding: 13px;
-  }
-
-  .history-footer {
+    align-items: flex-start;
     flex-direction: column;
-    align-items: stretch;
-  }
+    gap: 10px;
 
-  .history-status,
-  .history-view {
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .history-delete {
-    width: 100%;
+    padding: 15px 0;
   }
 }

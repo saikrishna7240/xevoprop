@@ -15,9 +15,9 @@ import {
   Image,
   Video,
   FileCheck2,
-  ExternalLink,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 import "./MyProjects.css";
 
 const API_URL =
@@ -50,38 +50,28 @@ function MyProjects() {
         return;
       }
 
-      const response = await fetch(
-        `${API_URL}/projects`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/projects`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to load projects."
+          data.message || "Failed to load projects."
         );
       }
 
       setProjects(
-        Array.isArray(data)
-          ? data
-          : data.projects || []
+        Array.isArray(data) ? data : data.projects || []
       );
     } catch (err) {
-      console.error(
-        "PROJECT FETCH ERROR:",
-        err
-      );
+      console.error("PROJECT FETCH ERROR:", err);
 
       setError(
-        err.message ||
-          "Unable to load projects."
+        err.message || "Unable to load projects."
       );
     } finally {
       setLoading(false);
@@ -96,8 +86,7 @@ function MyProjects() {
     if (!confirmed) return;
 
     try {
-      const token =
-        localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
         `${API_URL}/projects/${id}`,
@@ -113,26 +102,18 @@ function MyProjects() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to delete project."
+          data.message || "Failed to delete project."
         );
       }
 
       setProjects((previous) =>
-        previous.filter(
-          (project) =>
-            project.id !== id
-        )
+        previous.filter((project) => project.id !== id)
       );
     } catch (err) {
-      console.error(
-        "DELETE PROJECT ERROR:",
-        err
-      );
+      console.error("DELETE PROJECT ERROR:", err);
 
       alert(
-        err.message ||
-          "Unable to delete project."
+        err.message || "Unable to delete project."
       );
     }
   };
@@ -166,23 +147,13 @@ function MyProjects() {
   };
 
   const getMediaCount = (project) => {
-    const count = Number(
-      project.media_count
-    );
-
-    return Number.isFinite(count)
-      ? count
-      : 0;
+    const count = Number(project.media_count);
+    return Number.isFinite(count) ? count : 0;
   };
 
   const getVideoCount = (project) => {
-    const count = Number(
-      project.video_count
-    );
-
-    return Number.isFinite(count)
-      ? count
-      : 0;
+    const count = Number(project.video_count);
+    return Number.isFinite(count) ? count : 0;
   };
 
   const getAgreementStatus = (project) => {
@@ -198,21 +169,19 @@ function MyProjects() {
 
     const complete =
       agreement.accepted === true &&
-      agreement.information_confirmed ===
-        true &&
-      agreement.authorization_confirmed ===
-        true;
+      agreement.information_confirmed === true &&
+      agreement.authorization_confirmed === true;
 
     if (complete) {
       return {
-        label: "Agreement Accepted",
+        label: "Accepted",
         className: "accepted",
         icon: FileCheck2,
       };
     }
 
     return {
-      label: "Agreement Incomplete",
+      label: "Incomplete",
       className: "incomplete",
       icon: FileCheck2,
     };
@@ -224,12 +193,9 @@ function MyProjects() {
         <div className="my-projects-loading">
           <Loader2
             className="projects-spinner"
-            size={30}
+            size={25}
           />
-
-          <p>
-            Loading your projects...
-          </p>
+          <span>Loading your projects...</span>
         </div>
       </div>
     );
@@ -239,9 +205,7 @@ function MyProjects() {
     <div className="my-projects-page">
       <div className="my-projects-container">
 
-        {/* HEADER */}
-
-        <div className="my-projects-header">
+        <header className="my-projects-header">
           <div>
             <span className="my-projects-label">
               DEVELOPER SPACE
@@ -250,23 +214,20 @@ function MyProjects() {
             <h1>My Projects</h1>
 
             <p>
-              Manage the property projects you
-              have created on Xevoprop.
+              Manage the property projects you have
+              created on Xevoprop.
             </p>
           </div>
 
           <button
+            type="button"
             className="add-project-btn"
-            onClick={() =>
-              navigate("/add-project")
-            }
+            onClick={() => navigate("/add-project")}
           >
-            <Plus size={18} />
+            <Plus size={16} />
             Create Project
           </button>
-        </div>
-
-        {/* ERROR */}
+        </header>
 
         {error && (
           <div className="my-projects-error">
@@ -274,298 +235,280 @@ function MyProjects() {
           </div>
         )}
 
-        {/* EMPTY STATE */}
+        {!error && projects.length === 0 && (
+          <div className="my-projects-empty">
+            <div className="empty-icon">
+              <Building2 size={25} />
+            </div>
 
-        {!error &&
-          projects.length === 0 && (
-            <div className="my-projects-empty">
-              <div className="empty-project-icon">
-                <Building2 size={32} />
+            <h2>No projects yet</h2>
+
+            <p>
+              Create your first property project and
+              submit it for admin approval.
+            </p>
+
+            <button
+              type="button"
+              className="add-project-btn"
+              onClick={() => navigate("/add-project")}
+            >
+              <Plus size={16} />
+              Create Your First Project
+            </button>
+          </div>
+        )}
+
+        {!error && projects.length > 0 && (
+          <section className="projects-section">
+
+            <div className="projects-summary">
+              <div>
+                <strong>
+                  {projects.length}
+                </strong>{" "}
+                {projects.length === 1
+                  ? "Project"
+                  : "Projects"}
               </div>
 
-              <h2>No projects yet</h2>
-
-              <p>
-                Create your first property
-                project and submit it for
-                admin approval.
-              </p>
-
-              <button
-                className="add-project-btn"
-                onClick={() =>
-                  navigate("/add-project")
-                }
-              >
-                <Plus size={18} />
-                Create Your First Project
-              </button>
+              <span>
+                Your project listings
+              </span>
             </div>
-          )}
 
-        {/* PROJECTS */}
+            <div className="projects-grid">
+              {projects.map((project) => {
+                const projectStatus =
+                  getProjectStatus(project.status);
 
-        {projects.length > 0 && (
-          <div className="my-projects-grid">
+                const StatusIcon =
+                  projectStatus.icon;
 
-            {projects.map((project) => {
-              const projectStatus =
-                getProjectStatus(
-                  project.status
-                );
+                const agreementStatus =
+                  getAgreementStatus(project);
 
-              const StatusIcon =
-                projectStatus.icon;
+                const AgreementIcon =
+                  agreementStatus.icon;
 
-              const agreementStatus =
-                getAgreementStatus(project);
+                const mediaCount =
+                  getMediaCount(project);
 
-              const AgreementIcon =
-                agreementStatus.icon;
+                const videoCount =
+                  getVideoCount(project);
 
-              const mediaCount =
-                getMediaCount(project);
+                return (
+                  <article
+                    className="project-card"
+                    key={project.id}
+                  >
+                    <div className="project-image-wrap">
+                      {project.image ? (
+                        <img
+                          src={project.image}
+                          alt={project.name}
+                          className="project-image"
+                          onError={(event) => {
+                            event.currentTarget.src =
+                              FALLBACK_IMAGE;
+                          }}
+                        />
+                      ) : (
+                        <div className="project-image-placeholder">
+                          <Building2 size={32} />
+                        </div>
+                      )}
 
-              const videoCount =
-                getVideoCount(project);
-
-              return (
-                <article
-                  className="my-project-card"
-                  key={project.id}
-                >
-
-                  {/* IMAGE */}
-
-                  <div className="my-project-image">
-                    {project.image ? (
-                      <img
-                        src={project.image}
-                        alt={project.name}
-                        onError={(event) => {
-                          event.currentTarget.src =
-                            FALLBACK_IMAGE;
-                        }}
-                      />
-                    ) : (
-                      <div className="project-image-placeholder">
-                        <Building2 size={42} />
-                      </div>
-                    )}
-
-                    <span
-                      className={`project-status ${projectStatus.className}`}
-                    >
-                      <StatusIcon size={13} />
-
-                      {projectStatus.label}
-                    </span>
-                  </div>
-
-                  {/* CONTENT */}
-
-                  <div className="my-project-content">
-
-                    <h2>
-                      {project.name}
-                    </h2>
-
-                    <div className="project-location">
-                      <MapPin size={15} />
-
-                      <span>
-                        {project.location ||
-                          project.city ||
-                          "Location not available"}
+                      <span
+                        className={`project-status ${projectStatus.className}`}
+                      >
+                        <StatusIcon size={13} />
+                        {projectStatus.label}
                       </span>
                     </div>
 
-                    <div className="project-meta">
+                    <div className="project-card-body">
 
-                      {project.type && (
+                      <div className="project-title-row">
                         <div>
-                          <Building2 size={14} />
+                          <h2>{project.name}</h2>
+
+                          <div className="project-location">
+                            <MapPin size={13} />
+                            <span>
+                              {project.location ||
+                                project.city ||
+                                "Location unavailable"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="project-details">
+                        {project.type && (
+                          <div className="detail-item">
+                            <Building2 size={14} />
+                            <div>
+                              <small>Type</small>
+                              <span>{project.type}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {project.units !== null &&
+                          project.units !== undefined && (
+                            <div className="detail-item">
+                              <Layers size={14} />
+                              <div>
+                                <small>Units</small>
+                                <span>
+                                  {project.units}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                        {project.price && (
+                          <div className="detail-item">
+                            <IndianRupee size={14} />
+                            <div>
+                              <small>Price</small>
+                              <span>
+                                {project.price}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="project-media-row">
+                        <span>
+                          <Image size={14} />
+                          {mediaCount} Images
+                        </span>
+
+                        <span>
+                          <Video size={14} />
+                          {videoCount} Videos
+                        </span>
+                      </div>
+
+                      <div className="project-agreement">
+                        <div>
+                          <AgreementIcon size={15} />
 
                           <span>
-                            {project.type}
+                            Agreement
+                          </span>
+                        </div>
+
+                        <strong
+                          className={
+                            agreementStatus.className
+                          }
+                        >
+                          {agreementStatus.label}
+                        </strong>
+
+                        {project.agreement
+                          ?.agreement_version && (
+                          <small>
+                            v
+                            {
+                              project.agreement
+                                .agreement_version
+                            }
+                          </small>
+                        )}
+                      </div>
+
+                      {project.status ===
+                        "rejected" &&
+                        project.rejection_reason && (
+                          <div className="project-feedback rejected-feedback">
+                            <XCircle size={15} />
+
+                            <div>
+                              <strong>
+                                Admin feedback
+                              </strong>
+
+                              <p>
+                                {
+                                  project.rejection_reason
+                                }
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                      {project.status === "pending" && (
+                        <div className="project-feedback pending-feedback">
+                          <Clock3 size={15} />
+
+                          <span>
+                            Waiting for admin approval.
                           </span>
                         </div>
                       )}
 
-                      {project.units !== null &&
-                        project.units !==
-                          undefined && (
-                          <div>
-                            <Layers size={14} />
+                      {project.status === "approved" && (
+                        <div className="project-feedback approved-feedback">
+                          <CheckCircle2 size={15} />
 
-                            <span>
-                              {project.units} units
-                            </span>
-                          </div>
-                        )}
-
-                    </div>
-
-                    {project.price && (
-                      <div className="project-price">
-                        <IndianRupee size={16} />
-
-                        <span>
-                          {project.price}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* MEDIA INFORMATION */}
-
-                    <div className="project-media-summary">
-
-                      <div className="project-media-stat">
-                        <Image size={15} />
-
-                        <span>
-                          {mediaCount}{" "}
-                          {mediaCount === 1
-                            ? "Image"
-                            : "Images"}
-                        </span>
-                      </div>
-
-                      <div className="project-media-stat">
-                        <Video size={15} />
-
-                        <span>
-                          {videoCount}{" "}
-                          {videoCount === 1
-                            ? "Video"
-                            : "Videos"}
-                        </span>
-                      </div>
-
-                    </div>
-
-                    {/* AGREEMENT */}
-
-                    <div
-                      className={`project-agreement-status ${agreementStatus.className}`}
-                    >
-                      <AgreementIcon size={15} />
-
-                      <span>
-                        {agreementStatus.label}
-                      </span>
-
-                      {project.agreement
-                        ?.agreement_version && (
-                        <small>
-                          v
-                          {
-                            project.agreement
-                              .agreement_version
-                          }
-                        </small>
-                      )}
-                    </div>
-
-                    {/* REJECTION MESSAGE */}
-
-                    {project.status ===
-                      "rejected" &&
-                      project.rejection_reason && (
-                        <div className="project-rejection">
-
-                          <div className="project-rejection-title">
-                            <XCircle size={15} />
-
-                            <span>
-                              Admin feedback
-                            </span>
-                          </div>
-
-                          <p>
-                            {
-                              project.rejection_reason
-                            }
-                          </p>
-
+                          <span>
+                            This project is live on
+                            Xevoprop.
+                          </span>
                         </div>
                       )}
 
-                    {/* PENDING MESSAGE */}
+                      <div className="project-actions">
+                        <button
+                          type="button"
+                          className="view-project-btn"
+                          onClick={() =>
+                            navigate(
+                              `/projects/${project.id}`
+                            )
+                          }
+                        >
+                          <Eye size={15} />
+                          View
+                        </button>
 
-                    {project.status ===
-                      "pending" && (
-                      <div className="project-review-message">
-                        <Clock3 size={15} />
+                        <button
+                          type="button"
+                          className="edit-project-btn"
+                          onClick={() =>
+                            navigate(
+                              `/edit-project/${project.id}`
+                            )
+                          }
+                        >
+                          <Pencil size={15} />
+                          Edit
+                        </button>
 
-                        <span>
-                          Your project is waiting
-                          for admin approval.
-                        </span>
+                        <button
+                          type="button"
+                          className="delete-project-btn"
+                          onClick={() =>
+                            handleDelete(project.id)
+                          }
+                          title="Delete project"
+                        >
+                          <Trash2 size={15} />
+                        </button>
                       </div>
-                    )}
-
-                    {/* APPROVED MESSAGE */}
-
-                    {project.status ===
-                      "approved" && (
-                      <div className="project-approved-message">
-                        <CheckCircle2 size={15} />
-
-                        <span>
-                          This project is live on
-                          Xevoprop.
-                        </span>
-                      </div>
-                    )}
-
-                    {/* ACTIONS */}
-
-                    <div className="my-project-actions">
-
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/projects/${project.id}`
-                          )
-                        }
-                      >
-                        <Eye size={16} />
-                        View
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/edit-project/${project.id}`
-                          )
-                        }
-                      >
-                        <Pencil size={16} />
-                        Edit
-                      </button>
-
-                      <button
-                        className="delete-project-btn"
-                        onClick={() =>
-                          handleDelete(
-                            project.id
-                          )
-                        }
-                      >
-                        <Trash2 size={16} />
-                      </button>
 
                     </div>
-
-                  </div>
-                </article>
-              );
-            })}
-
-          </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         )}
-
       </div>
     </div>
   );

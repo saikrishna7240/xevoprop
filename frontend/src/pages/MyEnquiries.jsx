@@ -42,21 +42,16 @@ function MyEnquiries() {
 
       if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Failed to load enquiries."
+          data.message || "Failed to load enquiries."
         );
       }
 
       setEnquiries(data.enquiries || []);
     } catch (error) {
-      console.error(
-        "Load enquiries error:",
-        error
-      );
+      console.error("Load enquiries error:", error);
 
       setError(
-        error.message ||
-          "Unable to load enquiries."
+        error.message || "Unable to load enquiries."
       );
     } finally {
       setLoading(false);
@@ -70,16 +65,13 @@ function MyEnquiries() {
   const formatDate = (date) => {
     if (!date) return "Recently";
 
-    return new Date(date).toLocaleString(
-      "en-IN",
-      {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      }
-    );
+    return new Date(date).toLocaleString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
   };
 
   const getStatusLabel = (status) => {
@@ -98,16 +90,7 @@ function MyEnquiries() {
     return status;
   };
 
-  const deleteEnquiry = async (id) => {
-    /*
-      We are intentionally not deleting from
-      localStorage anymore.
-
-      Enquiries now belong to the database.
-      Delete functionality will be handled
-      later with a protected backend endpoint.
-    */
-
+  const deleteEnquiry = async () => {
     alert(
       "Enquiries are now stored securely in the database and cannot be deleted from this page yet."
     );
@@ -117,12 +100,13 @@ function MyEnquiries() {
     <div className="my-enquiries-page">
       <div className="my-enquiries-container">
 
-        {/* HEADER */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
-        <div className="my-enquiries-header">
+        <header className="my-enquiries-header">
 
           <div>
-
             <span className="my-enquiries-eyebrow">
               YOUR PROPERTY ACTIVITY
             </span>
@@ -132,256 +116,230 @@ function MyEnquiries() {
             </h1>
 
             <p>
-              Keep track of the properties
-              you've contacted.
+              Keep track of the properties you&apos;ve contacted.
             </p>
-
           </div>
 
           <div className="enquiries-count">
-
             <MessageCircle size={15} />
 
-            <strong>
-              {enquiries.length}
-            </strong>
+            <strong>{enquiries.length}</strong>
 
-            <span>
-              Enquiries
-            </span>
-
+            <span>Enquiries</span>
           </div>
 
-        </div>
+        </header>
 
-        {/* LOADING */}
+        {/* =================================================
+            LOADING
+        ================================================= */}
 
         {loading && (
-          <div className="enquiries-empty">
-
-            <div className="enquiries-empty-icon">
-              <MessageCircle size={25} />
-            </div>
-
-            <h2>
-              Loading enquiries...
-            </h2>
-
-            <p>
-              Fetching your enquiry history.
-            </p>
-
+          <div className="enquiries-state">
+            <span className="enquiries-loader" />
+            <p>Loading enquiries...</p>
           </div>
         )}
 
-        {/* ERROR */}
+        {/* =================================================
+            ERROR
+        ================================================= */}
 
         {!loading && error && (
-          <div className="enquiries-empty">
+          <div className="enquiries-state">
 
-            <div className="enquiries-empty-icon">
-              <MessageCircle size={25} />
+            <div className="enquiries-state-icon">
+              <MessageCircle size={22} />
             </div>
 
-            <h2>
-              Unable to load enquiries
-            </h2>
+            <h2>Unable to load enquiries</h2>
 
-            <p>
-              {error}
-            </p>
+            <p>{error}</p>
 
             <button
               type="button"
               onClick={loadEnquiries}
+              className="enquiries-retry"
             >
-              Try Again
+              Try again
             </button>
 
           </div>
         )}
 
-        {/* EMPTY */}
+        {/* =================================================
+            EMPTY
+        ================================================= */}
 
         {!loading &&
           !error &&
           enquiries.length === 0 && (
+            <div className="enquiries-state">
 
-            <div className="enquiries-empty">
-
-              <div className="enquiries-empty-icon">
-                <MessageCircle size={25} />
+              <div className="enquiries-state-icon">
+                <MessageCircle size={22} />
               </div>
 
-              <h2>
-                No enquiries yet.
-              </h2>
+              <h2>No enquiries yet</h2>
 
               <p>
-                When you contact a property,
-                your enquiry will appear here.
+                When you contact a property, your enquiry
+                will appear here.
               </p>
 
-              <Link to="/properties">
+              <Link
+                to="/properties"
+                className="enquiries-explore"
+              >
                 <Search size={14} />
                 Explore Properties
                 <ArrowRight size={14} />
               </Link>
 
             </div>
-
           )}
 
-        {/* ENQUIRIES */}
+        {/* =================================================
+            ENQUIRY LIST
+        ================================================= */}
 
         {!loading &&
           !error &&
           enquiries.length > 0 && (
 
-            <div className="enquiries-list">
+            <section className="enquiries-section">
 
-              {enquiries.map(
-                (enquiry) => (
+              <div className="enquiries-list-heading">
+                <span>PROPERTY</span>
+                <span>SUBMITTED</span>
+                <span>STATUS</span>
+                <span />
+              </div>
 
-                  <div
-                    className="enquiry-history-card"
+              <div className="enquiries-list">
+
+                {enquiries.map((enquiry) => (
+
+                  <article
+                    className="enquiry-row"
                     key={enquiry.id}
                   >
 
-                    {/* ICON */}
+                    {/* PROPERTY */}
 
-                    <div className="history-icon">
+                    <div className="enquiry-property">
 
-                      <MessageCircle
-                        size={18}
-                      />
+                      <div className="enquiry-property-icon">
+                        <MessageCircle size={16} />
+                      </div>
+
+                      <div className="enquiry-property-info">
+
+                        <strong>
+                          {enquiry.property_title ||
+                            "Property"}
+                        </strong>
+
+                        <span>
+                          <MapPin size={11} />
+
+                          {enquiry.property_location ||
+                            "Location unavailable"}
+                        </span>
+
+                      </div>
 
                     </div>
 
-                    {/* CONTENT */}
+                    {/* DATE */}
 
-                    <div className="history-content">
+                    <div className="enquiry-date">
+                      <CalendarDays size={13} />
 
-                      <div className="history-heading">
+                      <span>
+                        {formatDate(
+                          enquiry.created_at
+                        )}
+                      </span>
+                    </div>
 
-                        <div>
+                    {/* STATUS */}
 
-                          <span className="history-label">
-                            ENQUIRY SENT
-                          </span>
+                    <div className="enquiry-status">
 
-                          <h2>
-                            {enquiry.property_title ||
-                              "Property"}
-                          </h2>
+                      <span
+                        className={`enquiry-status-badge ${
+                          enquiry.status || "new"
+                        }`}
+                      >
+                        <CheckCircle2 size={12} />
 
-                        </div>
+                        {getStatusLabel(
+                          enquiry.status
+                        )}
+                      </span>
 
-                        <span className="history-date">
-                          {formatDate(
-                            enquiry.created_at
-                          )}
-                        </span>
+                    </div>
 
-                      </div>
+                    {/* ACTIONS */}
 
-                      {/* LOCATION */}
+                    <div className="enquiry-actions">
 
-                      <div className="history-location">
+                      <Link
+                        to={`/enquiries/${enquiry.id}/chat`}
+                        className="enquiry-action"
+                      >
+                        <MessageCircle size={13} />
+                        Chat
+                      </Link>
 
-                        <MapPin size={13} />
-
-                        {enquiry.property_location ||
-                          "Location unavailable"}
-
-                      </div>
-
-                      {/* MESSAGE */}
-
-                      {enquiry.message && (
-                        <div className="history-message">
-
-                          <span>
-                            Your message
-                          </span>
-
-                          <p>
-                            {enquiry.message}
-                          </p>
-
-                        </div>
-                      )}
-
-                      {/* FOOTER */}
-
-                      <div className="history-footer">
-
-                        <span
-                          className={`history-status ${
-                            enquiry.status ||
-                            "new"
-                          }`}
+                      {enquiry.property_id && (
+                        <Link
+                          to={`/properties/${enquiry.property_id}`}
+                          className="enquiry-action"
                         >
-
-                          <CheckCircle2
-                            size={13}
-                          />
-
-                          {getStatusLabel(
-                            enquiry.status
-                          )}
-
-                        </span>
-
-                        <Link to={`/enquiries/${enquiry.id}/chat`} className="history-view">
-                          <MessageCircle size={13} />
-                          Chat
+                          View property
                           <ArrowRight size={13} />
                         </Link>
+                      )}
 
-                        {enquiry.property_id && (
-                          <Link
-                            to={`/properties/${enquiry.property_id}`}
-                            className="history-view"
-                          >
-                            View property
-
-                            <ArrowRight
-                              size={13}
-                            />
-
-                          </Link>
-                        )}
-
-                        <button
-                          type="button"
-                          className="history-delete"
-                          onClick={() =>
-                            deleteEnquiry(
-                              enquiry.id
-                            )
-                          }
-                          aria-label="Delete enquiry"
-                        >
-                          <Trash2
-                            size={14}
-                          />
-                        </button>
-
-                      </div>
+                      <button
+                        type="button"
+                        className="enquiry-delete"
+                        onClick={() =>
+                          deleteEnquiry(enquiry.id)
+                        }
+                        aria-label="Delete enquiry"
+                      >
+                        <Trash2 size={14} />
+                      </button>
 
                     </div>
 
-                  </div>
+                    {/* MESSAGE */}
 
-                )
-              )}
+                    {enquiry.message && (
+                      <div className="enquiry-message">
 
-            </div>
+                        <span>YOUR MESSAGE</span>
 
+                        <p>{enquiry.message}</p>
+
+                      </div>
+                    )}
+
+                  </article>
+
+                ))}
+
+              </div>
+
+            </section>
           )}
 
-        {/* FOOTER ACTION */}
+        {/* =================================================
+            BOTTOM ACTION
+        ================================================= */}
 
         {!loading &&
           !error &&
@@ -389,22 +347,20 @@ function MyEnquiries() {
 
             <div className="enquiries-bottom">
 
-              <CalendarDays size={14} />
+              <div>
+                <CalendarDays size={14} />
 
-              Looking for another property?
+                <span>
+                  Looking for another property?
+                </span>
+              </div>
 
               <Link to="/properties">
-
                 Explore more
-
-                <ArrowRight
-                  size={13}
-                />
-
+                <ArrowRight size={13} />
               </Link>
 
             </div>
-
           )}
 
       </div>

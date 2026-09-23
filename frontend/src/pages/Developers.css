@@ -1,1162 +1,594 @@
-/* =========================================================
-   XEVOPROP — DEVELOPERS PAGE
-   Bright PropTech / Modern SaaS Theme
-   ========================================================= */
-
 .developers-page {
   min-height: 100vh;
-  overflow: hidden;
-  color: var(--text-primary);
   background: #ffffff;
+  color: #172033;
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
+/* =====================================================
+   HEADER
+===================================================== */
 
-.developers-hero {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 70px;
-
-  min-height: 560px;
-
-  padding: 90px max(40px, calc((100% - 1380px) / 2));
-
-  overflow: hidden;
-
-  background:
-    radial-gradient(
-      circle at 88% 40%,
-      rgba(0, 198, 255, 0.12),
-      transparent 29%
-    ),
-    radial-gradient(
-      circle at 8% 85%,
-      rgba(105, 87, 255, 0.06),
-      transparent 28%
-    ),
-    linear-gradient(
-      135deg,
-      #f7faff 0%,
-      #ffffff 55%,
-      #f3f9ff 100%
-    );
+.developers-header {
+  border-bottom: 1px solid #e1e6ed;
+  background: #f7f9fb;
 }
 
-.developers-hero::before {
-  content: "";
+.developers-header-inner {
+  width: min(1180px, calc(100% - 48px));
+  min-height: 430px;
 
-  position: absolute;
-  inset: 0;
+  margin: 0 auto;
+  padding: 65px 0;
 
-  background-image:
-    linear-gradient(
-      rgba(18, 100, 255, 0.025) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(18, 100, 255, 0.025) 1px,
-      transparent 1px
-    );
-
-  background-size: 48px 48px;
-
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 25%,
-    black 75%,
-    transparent
-  );
-
-  pointer-events: none;
-}
-
-.developers-hero-content {
-  position: relative;
-  z-index: 2;
-
-  max-width: 780px;
-}
-
-.developers-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-
-  margin-bottom: 21px;
-
-  color: var(--primary);
-
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-}
-
-.developers-eyebrow::before {
-  content: "";
-
-  width: 28px;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: var(--gradient-primary);
-}
-
-.developers-hero h1 {
-  margin: 0;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(50px, 6vw, 78px);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.055em;
-}
-
-.developers-hero h1 em {
-  font-style: normal;
-
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.developers-hero-content > p {
-  max-width: 620px;
-
-  margin: 27px 0 0;
-
-  color: var(--text-secondary);
-
-  font-size: 15px;
-  line-height: 1.8;
-}
-
-/* =========================================================
-   HERO ACTIONS
-   ========================================================= */
-
-.developers-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  margin-top: 31px;
-}
-
-.developers-primary-btn,
-.developers-secondary-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-
-  min-height: 48px;
-  padding: 0 20px;
-
-  border-radius: 11px;
-
-  text-decoration: none;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  transition: all 0.25s ease;
-}
-
-.developers-primary-btn {
-  color: #ffffff;
-
-  background: var(--gradient-primary);
-
-  box-shadow:
-    0 10px 24px rgba(18, 100, 255, 0.2);
-}
-
-.developers-primary-btn svg {
-  transition: transform 0.25s ease;
-}
-
-.developers-primary-btn:hover {
-  transform: translateY(-3px);
-
-  box-shadow:
-    0 15px 32px rgba(18, 100, 255, 0.27);
-}
-
-.developers-primary-btn:hover svg {
-  transform: translateX(3px);
-}
-
-.developers-secondary-btn {
-  color: #41516b;
-
-  background: #ffffff;
-
-  border: 1px solid #dce6f1;
-}
-
-.developers-secondary-btn:hover {
-  color: var(--primary);
-
-  border-color: var(--border-blue);
-
-  background: #f6faff;
-
-  transform: translateY(-2px);
-}
-
-/* =========================================================
-   HERO MARK
-   ========================================================= */
-
-.developers-hero-mark {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 14px;
-
-  width: 210px;
-  height: 210px;
-
-  flex-shrink: 0;
-
-  color: var(--primary);
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.98),
-      #eef7ff
-    );
-
-  border: 1px solid #d6e7f8;
-  border-radius: 40px;
-
-  box-shadow:
-    0 25px 60px rgba(18, 100, 255, 0.11);
-
-  transform: rotate(5deg);
-}
-
-.developers-hero-mark::before {
-  content: "";
-
-  position: absolute;
-  inset: 13px;
-
-  border: 1px solid rgba(18, 100, 255, 0.09);
-  border-radius: 31px;
-}
-
-.developers-hero-mark svg,
-.developers-hero-mark span {
-  position: relative;
-  z-index: 2;
-}
-
-.developers-hero-mark span {
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.45;
-  letter-spacing: 0.14em;
-
-  text-align: center;
-}
-
-/* =========================================================
-   COMMON LABEL
-   ========================================================= */
-
-.developers-section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-
-  color: var(--primary);
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-}
-
-.developers-section-label::before {
-  content: "";
-
-  width: 25px;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: var(--gradient-primary);
-}
-
-/* =========================================================
-   INTRO
-   ========================================================= */
-
-.developers-intro {
-  padding: 105px max(40px, calc((100% - 1380px) / 2));
-
-  background: #ffffff;
-}
-
-.developers-intro-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 100px;
-  align-items: start;
-}
-
-.developers-intro h2 {
-  margin: 19px 0 0;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(40px, 4.5vw, 59px);
-  font-weight: 800;
-  line-height: 1.07;
-  letter-spacing: -0.045em;
-}
-
-.developers-intro h2 em {
-  font-style: normal;
-
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.developers-intro-copy {
-  padding-top: 5px;
-}
-
-.developers-intro-copy p {
-  margin: 0 0 21px;
-
-  color: var(--text-secondary);
-
-  font-size: 14px;
-  line-height: 1.85;
-}
-
-/* =========================================================
-   BENEFITS
-   ========================================================= */
-
-.developers-benefits {
-  padding: 105px max(40px, calc((100% - 1380px) / 2));
-
-  background:
-    radial-gradient(
-      circle at 92% 15%,
-      rgba(0, 198, 255, 0.06),
-      transparent 27%
-    ),
-    #f7faff;
-}
-
-.developers-benefits-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 60px;
-
-  margin-bottom: 53px;
-}
-
-.developers-benefits-header h2 {
-  margin: 18px 0 0;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(39px, 4.3vw, 57px);
-  font-weight: 800;
-  line-height: 1.07;
-  letter-spacing: -0.045em;
-}
-
-.developers-benefits-header h2 em {
-  font-style: normal;
-
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.developers-benefits-header > p {
-  max-width: 420px;
-  margin: 0 0 4px;
-
-  color: var(--text-secondary);
-
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-/* =========================================================
-   BENEFIT GRID
-   ========================================================= */
-
-.developers-benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.developers-benefit-card {
-  position: relative;
-
-  min-height: 290px;
-
-  padding: 27px;
-
-  overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid var(--border);
-  border-radius: 17px;
-
-  box-shadow: var(--shadow-card);
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.developers-benefit-card::before {
-  content: "";
-
-  position: absolute;
-
-  width: 150px;
-  height: 150px;
-
-  top: -80px;
-  right: -65px;
-
-  border-radius: 50%;
-
-  background: rgba(18, 100, 255, 0.045);
-
-  transition: transform 0.35s ease;
-}
-
-.developers-benefit-card::after {
-  content: "";
-
-  position: absolute;
-
-  left: 27px;
-  right: 27px;
-  bottom: 0;
-
-  height: 3px;
-
-  border-radius: 10px 10px 0 0;
-
-  background: var(--gradient-primary);
-
-  transform: scaleX(0);
-  transform-origin: left;
-
-  transition: transform 0.35s ease;
-}
-
-.developers-benefit-card:hover {
-  transform: translateY(-7px);
-
-  border-color: var(--border-blue);
-
-  box-shadow: var(--shadow-lg);
-}
-
-.developers-benefit-card:hover::before {
-  transform: scale(1.5);
-}
-
-.developers-benefit-card:hover::after {
-  transform: scaleX(1);
-}
-
-.developers-benefit-top {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
   align-items: center;
-  justify-content: space-between;
-
-  margin-bottom: 38px;
+  gap: 90px;
 }
 
-.developers-benefit-top > span {
-  color: #a2afc1;
+.developers-header-copy {
+  max-width: 700px;
+}
 
-  font-size: 11px;
+.developers-label,
+.developers-section-heading > div > span,
+.developers-workflow-heading > span,
+.developers-checklist-heading > span,
+.developers-final > div > span {
+  display: block;
+
+  color: #155eef;
+
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.13em;
 }
 
-.developers-benefit-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.developers-header h1 {
+  margin: 13px 0 0;
 
-  width: 45px;
-  height: 45px;
+  color: #172d4a;
 
-  color: var(--primary);
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.04;
 
-  background: #edf5ff;
-
-  border: 1px solid #d6e6fa;
-  border-radius: 12px;
-
-  transition: all 0.3s ease;
-}
-
-.developers-benefit-card:hover .developers-benefit-icon {
-  color: #ffffff;
-
-  background: var(--gradient-primary);
-
-  border-color: transparent;
-
-  transform: scale(1.05);
-}
-
-.developers-benefit-card h3 {
-  position: relative;
-  z-index: 2;
-
-  margin: 0 0 12px;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: 17px;
-  font-weight: 750;
-  line-height: 1.35;
-}
-
-.developers-benefit-card p {
-  position: relative;
-  z-index: 2;
-
-  margin: 0;
-
-  color: var(--text-secondary);
-
-  font-size: 12.5px;
-  line-height: 1.75;
-}
-
-/* =========================================================
-   PLATFORM
-   ========================================================= */
-
-.developers-platform {
-  padding: 105px max(40px, calc((100% - 1380px) / 2));
-
-  background: #ffffff;
-}
-
-.developers-platform-inner {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  align-items: center;
-  gap: 100px;
-}
-
-.developers-platform-content h2 {
-  margin: 18px 0 22px;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(40px, 4.5vw, 58px);
-  font-weight: 800;
-  line-height: 1.07;
-  letter-spacing: -0.045em;
-}
-
-.developers-platform-content h2 em {
-  font-style: normal;
-
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.developers-platform-content > p {
-  max-width: 560px;
-
-  margin: 0;
-
-  color: var(--text-secondary);
-
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-/* =========================================================
-   PLATFORM POINTS
-   ========================================================= */
-
-.developers-platform-points {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(190px, 1fr));
-  gap: 14px 30px;
-
-  margin-top: 31px;
-}
-
-.developers-platform-point {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-
-  color: #52617a;
-
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.developers-platform-point svg {
-  flex-shrink: 0;
-  color: var(--primary);
-}
-
-/* =========================================================
-   PLATFORM CARD
-   ========================================================= */
-
-.developers-platform-card {
-  position: relative;
-
-  padding: 32px;
-
-  overflow: hidden;
-
-  background:
-    linear-gradient(
-      145deg,
-      #f0f7ff 0%,
-      #f8fbff 52%,
-      #f1efff 100%
-    );
-
-  border: 1px solid #dbe8f6;
-  border-radius: 22px;
-
-  box-shadow:
-    0 20px 50px rgba(18, 100, 255, 0.1);
-}
-
-.developers-platform-card::before {
-  content: "";
-
-  position: absolute;
-
-  width: 230px;
-  height: 230px;
-
-  top: -130px;
-  right: -90px;
-
-  border-radius: 50%;
-
-  background: rgba(0, 198, 255, 0.1);
-}
-
-.developers-platform-card-top {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding-bottom: 22px;
-
-  border-bottom: 1px solid #dce7f3;
-}
-
-.developers-platform-card-top span {
-  color: var(--primary);
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-}
-
-.developers-platform-card-top svg {
-  color: var(--primary);
-}
-
-/* =========================================================
-   STATUS LINES
-   ========================================================= */
-
-.developers-platform-card-line {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 20px 0;
-
-  border-bottom: 1px solid #dce7f3;
-}
-
-.developers-platform-card-line span {
-  color: #6c7b91;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-}
-
-.developers-platform-card-line strong {
-  padding: 5px 9px;
-
-  color: var(--primary);
-
-  background: #eaf3ff;
-
-  border: 1px solid #d1e2fa;
-  border-radius: 999px;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-
-/* =========================================================
-   PLATFORM FOOTER
-   ========================================================= */
-
-.developers-platform-card-footer {
-  position: relative;
-  z-index: 2;
-
-  display: flex;
-  align-items: center;
-  gap: 9px;
-
-  padding-top: 23px;
-
-  color: #52627b;
-
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.developers-platform-card-footer svg {
-  flex-shrink: 0;
-  color: var(--primary);
-}
-
-/* =========================================================
-   CTA
-   ========================================================= */
-
-.developers-cta {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  padding: 105px 30px 115px;
-
-  overflow: hidden;
-
-  text-align: center;
-
-  background:
-    radial-gradient(
-      circle at 50% 110%,
-      rgba(0, 198, 255, 0.14),
-      transparent 43%
-    ),
-    linear-gradient(
-      135deg,
-      #f1f7ff 0%,
-      #ffffff 52%,
-      #f3f0ff 100%
-    );
-
-  border-top: 1px solid #e1ebf6;
-}
-
-.developers-cta::before {
-  content: "";
-
-  position: absolute;
-
-  width: 620px;
-  height: 620px;
-
-  top: -480px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  border: 1px solid rgba(18, 100, 255, 0.07);
-  border-radius: 50%;
-}
-
-.developers-cta > span {
-  position: relative;
-  z-index: 2;
-
-  margin-bottom: 19px;
-
-  color: var(--primary);
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-}
-
-.developers-cta h2 {
-  position: relative;
-  z-index: 2;
-
-  margin: 0 0 23px;
-
-  color: var(--text-primary);
-
-  font-family:
-    "Plus Jakarta Sans",
-    "Inter",
-    sans-serif;
-
-  font-size: clamp(43px, 5vw, 66px);
-  font-weight: 800;
-  line-height: 1.05;
   letter-spacing: -0.05em;
+  font-weight: 700;
 }
 
-.developers-cta h2 em {
-  font-style: normal;
-
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.developers-header h1 span {
+  color: #155eef;
 }
 
-.developers-cta > p {
-  position: relative;
-  z-index: 2;
+.developers-header-copy > p {
+  max-width: 600px;
 
-  max-width: 560px;
+  margin: 20px 0 27px;
 
-  margin: 0 0 30px;
-
-  color: var(--text-secondary);
+  color: #667589;
 
   font-size: 14px;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
-.developers-cta-btn {
-  position: relative;
-  z-index: 2;
+.developers-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.developers-primary-button,
+.developers-secondary-button {
+  min-height: 43px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
 
-  min-height: 49px;
-  padding: 0 23px;
-
-  color: #ffffff;
-
-  background: var(--gradient-primary);
-
-  border-radius: 11px;
+  padding: 0 17px;
 
   text-decoration: none;
 
-  font-size: 13px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.developers-primary-button {
+  background: #155eef;
+  color: #ffffff;
+}
+
+.developers-primary-button:hover {
+  background: #104dcc;
+}
+
+.developers-secondary-button {
+  border: 1px solid #d5dde7;
+  background: #ffffff;
+  color: #34465e;
+}
+
+.developers-secondary-button:hover {
+  border-color: #155eef;
+  color: #155eef;
+}
+
+/* =====================================================
+   HEADER INFORMATION
+===================================================== */
+
+.developers-header-info {
+  border-top: 1px solid #dce3eb;
+}
+
+.developers-info-row {
+  min-height: 78px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  border-bottom: 1px solid #dce3eb;
+}
+
+.developers-info-row > svg {
+  color: #155eef;
+  flex-shrink: 0;
+}
+
+.developers-info-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.developers-info-row span {
+  color: #929dab;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.developers-info-row strong {
+  color: #304158;
+
+  font-size: 12px;
   font-weight: 700;
-
-  box-shadow:
-    0 11px 28px rgba(18, 100, 255, 0.21);
-
-  transition: all 0.25s ease;
 }
 
-.developers-cta-btn svg {
-  transition: transform 0.25s ease;
+/* =====================================================
+   COMMON SECTION
+===================================================== */
+
+.developers-section {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+  padding: 72px 0;
 }
 
-.developers-cta-btn:hover {
-  transform: translateY(-3px);
+.developers-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 
-  box-shadow:
-    0 17px 35px rgba(18, 100, 255, 0.28);
+  gap: 60px;
+
+  margin-bottom: 35px;
 }
 
-.developers-cta-btn:hover svg {
+.developers-section-heading h2 {
+  max-width: 560px;
+
+  margin: 9px 0 0;
+
+  color: #20334e;
+
+  font-size: 31px;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.developers-section-heading > p {
+  max-width: 340px;
+
+  margin: 0;
+
+  color: #718095;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* =====================================================
+   MANAGEMENT LIST
+===================================================== */
+
+.developers-management-list {
+  border-top: 1px solid #dfe5ec;
+}
+
+.developers-management-row {
+  min-height: 100px;
+
+  display: grid;
+  grid-template-columns: 55px 44px minmax(0, 1fr) 25px;
+
+  align-items: center;
+  gap: 15px;
+
+  border-bottom: 1px solid #dfe5ec;
+
+  transition:
+    background 0.18s ease,
+    padding 0.18s ease;
+}
+
+.developers-management-row:hover {
+  padding-left: 8px;
+  padding-right: 8px;
+
+  background: #f8fafc;
+}
+
+.developers-row-number {
+  color: #a0a9b5;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.developers-row-icon {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  background: #edf4fc;
+  color: #155eef;
+}
+
+.developers-row-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.developers-row-content strong {
+  color: #293b53;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.developers-row-content span {
+  color: #778497;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.developers-management-row > svg {
+  color: #8a96a5;
+
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.developers-management-row:hover > svg {
+  color: #155eef;
   transform: translateX(3px);
 }
 
-/* =========================================================
-   1050px
-   ========================================================= */
+/* =====================================================
+   WORKFLOW
+===================================================== */
 
-@media (max-width: 1050px) {
-  .developers-hero,
-  .developers-intro,
-  .developers-benefits,
-  .developers-platform {
-    padding-left: 50px;
-    padding-right: 50px;
-  }
+.developers-workflow {
+  background: #f5f7fa;
+  border-top: 1px solid #e1e6ed;
+  border-bottom: 1px solid #e1e6ed;
+}
 
-  .developers-hero {
+.developers-workflow-inner {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+  padding: 70px 0;
+
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 100px;
+}
+
+.developers-workflow-heading h2 {
+  max-width: 430px;
+
+  margin: 10px 0 13px;
+
+  color: #20334e;
+
+  font-size: 31px;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.developers-workflow-heading p {
+  max-width: 400px;
+
+  margin: 0;
+
+  color: #718095;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.developers-workflow-list {
+  border-top: 1px solid #dce3eb;
+}
+
+.developers-workflow-item {
+  min-height: 105px;
+
+  display: grid;
+  grid-template-columns: 45px 1fr;
+
+  align-items: center;
+
+  border-bottom: 1px solid #dce3eb;
+}
+
+.developers-workflow-item > span {
+  color: #155eef;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.developers-workflow-item strong {
+  display: block;
+
+  color: #2c3e56;
+
+  font-size: 13px;
+}
+
+.developers-workflow-item p {
+  margin: 5px 0 0;
+
+  color: #788596;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* =====================================================
+   CHECKLIST
+===================================================== */
+
+.developers-checklist {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+  padding: 70px 0;
+
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 80px;
+}
+
+.developers-checklist-heading h2 {
+  max-width: 360px;
+
+  margin: 10px 0 0;
+
+  color: #20334e;
+
+  font-size: 27px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.developers-checklist-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  align-content: center;
+
+  border-top: 1px solid #dfe5ec;
+}
+
+.developers-check-item {
+  min-height: 68px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  border-bottom: 1px solid #dfe5ec;
+
+  color: #4b5c72;
+
+  font-size: 11px;
+}
+
+.developers-check-item svg {
+  color: #16885b;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   FINAL CTA
+===================================================== */
+
+.developers-final {
+  width: min(1180px, calc(100% - 48px));
+
+  margin: 0 auto;
+  padding: 50px 0 65px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+
+  border-top: 1px solid #dfe5ec;
+}
+
+.developers-final h2 {
+  margin: 8px 0 8px;
+
+  color: #1d324e;
+
+  font-size: 29px;
+  letter-spacing: -0.035em;
+}
+
+.developers-final p {
+  max-width: 550px;
+
+  margin: 0;
+
+  color: #718095;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.developers-final-button {
+  flex-shrink: 0;
+
+  min-height: 43px;
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #155eef;
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.developers-final-button:hover {
+  background: #104dcc;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 850px) {
+  .developers-header-inner {
+    grid-template-columns: 1fr;
     gap: 45px;
   }
 
-  .developers-intro-grid,
-  .developers-platform-inner {
-    gap: 55px;
-  }
-
-  .developers-benefits-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* =========================================================
-   850px
-   ========================================================= */
-
-@media (max-width: 850px) {
-  .developers-hero {
-    min-height: 500px;
-  }
-
-  .developers-hero-mark {
-    width: 160px;
-    height: 160px;
-  }
-
-  .developers-intro-grid,
-  .developers-platform-inner {
-    grid-template-columns: 1fr;
-  }
-
-  .developers-benefits-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 22px;
-  }
-
-  .developers-benefits-header > p {
+  .developers-header-info {
     max-width: 600px;
   }
 
-  .developers-platform-card {
-    max-width: 650px;
+  .developers-workflow-inner,
+  .developers-checklist {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .developers-checklist-content {
+    max-width: 700px;
   }
 }
 
-/* =========================================================
-   650px
-   ========================================================= */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-@media (max-width: 650px) {
-  .developers-hero {
-    display: block;
-
-    min-height: auto;
-
-    padding: 70px 20px 80px;
+@media (max-width: 600px) {
+  .developers-header-inner,
+  .developers-section,
+  .developers-workflow-inner,
+  .developers-checklist,
+  .developers-final {
+    width: calc(100% - 30px);
   }
 
-  .developers-hero h1 {
-    font-size: 47px;
+  .developers-header-inner {
+    padding: 45px 0;
   }
 
-  .developers-hero-content > p {
-    font-size: 14px;
+  .developers-header h1 {
+    font-size: 37px;
   }
 
-  .developers-hero-actions {
+  .developers-header-copy > p {
+    font-size: 12px;
+  }
+
+  .developers-header-actions {
     align-items: stretch;
     flex-direction: column;
-    max-width: 300px;
   }
 
-  .developers-hero-mark {
-    margin-top: 48px;
-
-    width: 125px;
-    height: 125px;
-
-    border-radius: 27px;
-  }
-
-  .developers-hero-mark span {
-    font-size: 9px;
-  }
-
-  .developers-intro,
-  .developers-benefits,
-  .developers-platform {
-    padding: 75px 20px;
-  }
-
-  .developers-intro h2,
-  .developers-benefits-header h2,
-  .developers-platform-content h2 {
-    font-size: 38px;
-  }
-
-  .developers-benefits-grid {
-    grid-template-columns: 1fr;
-    gap: 13px;
-  }
-
-  .developers-benefit-card {
-    min-height: 250px;
-  }
-
-  .developers-platform-points {
-    grid-template-columns: 1fr;
-  }
-
-  .developers-platform-card {
-    padding: 27px;
-    border-radius: 18px;
-  }
-
-  .developers-cta {
-    padding: 80px 20px 90px;
-  }
-
-  .developers-cta h2 {
-    font-size: 40px;
-  }
-
-  .developers-cta > p {
-    font-size: 13px;
-  }
-}
-
-/* =========================================================
-   420px
-   ========================================================= */
-
-@media (max-width: 420px) {
-  .developers-hero {
-    padding: 60px 16px 70px;
-  }
-
-  .developers-hero h1 {
-    font-size: 41px;
-  }
-
-  .developers-hero-content > p {
-    font-size: 13px;
-    line-height: 1.7;
-  }
-
-  .developers-intro,
-  .developers-benefits,
-  .developers-platform {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .developers-intro h2,
-  .developers-benefits-header h2,
-  .developers-platform-content h2 {
-    font-size: 33px;
-  }
-
-  .developers-benefit-card {
-    padding: 23px;
-  }
-
-  .developers-platform-card {
-    padding: 23px;
-  }
-
-  .developers-platform-card-line {
-    gap: 12px;
-  }
-
-  .developers-platform-card-line span {
-    font-size: 9px;
-  }
-
-  .developers-cta {
-    padding: 70px 16px 80px;
-  }
-
-  .developers-cta h2 {
-    font-size: 35px;
-  }
-
-  .developers-cta-btn {
+  .developers-primary-button,
+  .developers-secondary-button {
     width: 100%;
-    max-width: 280px;
+  }
+
+  .developers-section {
+    padding: 50px 0;
+  }
+
+  .developers-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .developers-section-heading h2,
+  .developers-workflow-heading h2 {
+    font-size: 26px;
+  }
+
+  .developers-management-row {
+    grid-template-columns: 35px 38px minmax(0, 1fr) 18px;
+    gap: 8px;
+    min-height: 94px;
+  }
+
+  .developers-row-content span {
+    font-size: 10px;
+  }
+
+  .developers-workflow-inner {
+    padding: 50px 0;
+  }
+
+  .developers-checklist {
+    padding: 50px 0;
+  }
+
+  .developers-checklist-content {
+    grid-template-columns: 1fr;
+  }
+
+  .developers-final {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 45px 0 55px;
+  }
+
+  .developers-final-button {
+    width: 100%;
+    justify-content: center;
   }
 }
