@@ -3,12 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarDays,
+  Building2,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Clock3,
-  Home,
   Mail,
   MapPin,
   MessageSquare,
@@ -44,10 +42,7 @@ const getProjectMedia = (project) => {
       return {
         id: item.id,
         url,
-        type:
-          item.media_type === "video"
-            ? "video"
-            : "image",
+        type: item.media_type === "video" ? "video" : "image",
         sort_order: item.sort_order ?? 0,
       };
     })
@@ -112,14 +107,20 @@ function ProjectDetails() {
     loadProject();
   }, [id]);
 
+  useEffect(() => {
+    setActiveMedia(0);
+    setFormStatus({
+      type: "",
+      message: "",
+    });
+  }, [id]);
+
   const loadProject = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response = await apiFetch(
-        `/projects/public/${id}`
-      );
+      const response = await apiFetch(`/projects/public/${id}`);
 
       const data =
         response?.project ||
@@ -135,8 +136,7 @@ function ProjectDetails() {
       console.error("PROJECT DETAILS ERROR:", err);
 
       setError(
-        err?.message ||
-          "Failed to load project details."
+        err?.message || "Failed to load project details."
       );
     } finally {
       setLoading(false);
@@ -195,40 +195,84 @@ function ProjectDetails() {
       ...previous,
       [name]: value,
     }));
+
+    if (formStatus.message) {
+      setFormStatus({
+        type: "",
+        message: "",
+      });
+    }
   };
 
-  const handleEnquirySubmit = async (event) => {
-    event.preventDefault();
+  const validateEnquiry = () => {
+    const name = enquiryForm.name.trim();
+    const email = enquiryForm.email.trim();
 
-    setFormStatus({
-      type: "",
-      message: "",
-    });
+    if (!name) {
+      return "Please enter your name.";
+    }
 
+    if (!email) {
+      return "Please enter your email address.";
+    }
+
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      return "Please enter a valid email address.";
+    }
+
+    return "";
+  };
+
+  /**
+   * Returns true only when the enquiry is actually submitted.
+   * This fixes the previous mobile-modal issue where the caller
+   * checked formStatus before React had updated it.
+   */
+  const submitEnquiry = async () => {
     const token =
       localStorage.getItem("token") ||
       localStorage.getItem("accessToken");
 
     if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    if (
-      !enquiryForm.name.trim() ||
-      !enquiryForm.email.trim()
-    ) {
-      setFormStatus({
-        type: "error",
-        message:
-          "Name and email are required.",
+      navigate("/login", {
+        state: {
+          from: `/projects/${id}`,
+        },
       });
 
-      return;
+      return false;
+    }
+
+    const validationError = validateEnquiry();
+
+    if (validationError) {
+      setFormStatus({
+        type: "error",
+        message: validationError,
+      });
+
+      return false;
+    }
+
+    if (!project?.id) {
+      setFormStatus({
+        type: "error",
+        message: "Project information is unavailable.",
+      });
+
+      return false;
     }
 
     try {
       setSubmitting(true);
+
+      setFormStatus({
+        type: "",
+        message: "",
+      });
 
       const response = await apiFetch(
         "/enquiries/project",
@@ -246,9 +290,7 @@ function ProjectDetails() {
         }
       );
 
-      if (
-        response?.success === false
-      ) {
+      if (response?.success === false) {
         throw new Error(
           response?.message ||
             "Failed to submit enquiry."
@@ -258,7 +300,7 @@ function ProjectDetails() {
       setFormStatus({
         type: "success",
         message:
-          "Your enquiry has been submitted successfully.",
+          "Enquiry sent successfully. The project representative can now contact you.",
       });
 
       setEnquiryForm({
@@ -267,6 +309,8 @@ function ProjectDetails() {
         phone: "",
         message: "",
       });
+
+      return true;
     } catch (err) {
       console.error(
         "PROJECT ENQUIRY ERROR:",
@@ -277,11 +321,68 @@ function ProjectDetails() {
         type: "error",
         message:
           err?.message ||
-          "Failed to submit enquiry.",
+          "Unable to send your enquiry. Please try again.",
       });
+
+      return false;
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleDesktopSubmit = async (event) => {
+    event.preventDefault();
+    await submitEnquiry();
+  };
+
+  const handleMobileSubmit = async (event) => {
+    event.preventDefault();
+
+    const success = await submitEnquiry();
+
+    if (success) {
+      setTimeout(() => {
+        setShowEnquiry(false);
+
+        setFormStatus({
+          type: "",
+          message: "",
+        });
+      }, 900);
+    }
+  };
+
+  const openEnquiry = () => {
+    const token =
+      localStorage.getItem("token") ||
+      localStorage.getItem("accessToken");
+
+    if (!token) {
+      navigate("/login", {
+        state: {
+          from: `/projects/${id}`,
+        },
+      });
+      return;
+    }
+
+    setFormStatus({
+      type: "",
+      message: "",
+    });
+
+    setShowEnquiry(true);
+  };
+
+  const closeEnquiry = () => {
+    if (submitting) return;
+
+    setShowEnquiry(false);
+
+    setFormStatus({
+      type: "",
+      message: "",
+    });
   };
 
   if (loading) {
@@ -311,25 +412,25 @@ function ProjectDetails() {
 
           <div className="project-details-error">
             <div className="project-error-icon">
-              <Home size={28} />
+              <Building2 size={28} />
             </div>
 
-            <h2>
-              Unable to load project
-            </h2>
+            <span className="project-error-label">
+              PROJECT DETAILS
+            </span>
+
+            <h2>Unable to load project</h2>
 
             <p>
-              {error ||
-                "Project not found."}
+              {error || "Project not found."}
             </p>
 
             <button
               className="project-primary-button"
-              onClick={() =>
-                navigate("/projects")
-              }
+              onClick={() => navigate("/projects")}
             >
               Browse Projects
+              <ArrowRight size={17} />
             </button>
           </div>
         </div>
@@ -340,7 +441,8 @@ function ProjectDetails() {
   return (
     <div className="project-details-page">
       <div className="project-details-container">
-        {/* HEADER */}
+
+        {/* TOP NAVIGATION */}
         <div className="project-details-topbar">
           <button
             className="project-back-button"
@@ -351,7 +453,7 @@ function ProjectDetails() {
           </button>
 
           <div className="project-topbar-status">
-            <CheckCircle2 size={16} />
+            <CheckCircle2 size={15} />
             Verified Project
           </div>
         </div>
@@ -359,12 +461,14 @@ function ProjectDetails() {
         {/* MEDIA */}
         <section className="project-gallery-section">
           <div className="project-main-media">
-            {currentMedia.type === "video" ? (
+
+            {currentMedia?.type === "video" ? (
               <video
                 className="project-main-media-element"
                 src={currentMedia.url}
                 controls
                 playsInline
+                preload="metadata"
               />
             ) : (
               <img
@@ -385,7 +489,7 @@ function ProjectDetails() {
                   onClick={handlePrevious}
                   aria-label="Previous media"
                 >
-                  <ChevronLeft size={22} />
+                  <ChevronLeft size={21} />
                 </button>
 
                 <button
@@ -393,7 +497,7 @@ function ProjectDetails() {
                   onClick={handleNext}
                   aria-label="Next media"
                 >
-                  <ChevronRight size={22} />
+                  <ChevronRight size={21} />
                 </button>
               </>
             )}
@@ -402,10 +506,9 @@ function ProjectDetails() {
               {activeMedia + 1} / {media.length}
             </div>
 
-            {currentMedia.type ===
-              "video" && (
+            {currentMedia?.type === "video" && (
               <div className="project-current-video-label">
-                <Play size={14} />
+                <Play size={13} />
                 Project Video
               </div>
             )}
@@ -427,6 +530,7 @@ function ProjectDetails() {
                   onClick={() =>
                     setActiveMedia(index)
                   }
+                  aria-label={`View media ${index + 1}`}
                 >
                   {item.type === "video" ? (
                     <div className="project-video-thumbnail">
@@ -437,13 +541,17 @@ function ProjectDetails() {
                       />
 
                       <span>
-                        <Play size={16} />
+                        <Play size={14} />
                       </span>
                     </div>
                   ) : (
                     <img
                       src={item.url}
                       alt={`${projectTitle} ${index + 1}`}
+                      onError={(event) => {
+                        event.currentTarget.src =
+                          FALLBACK_IMAGE;
+                      }}
                     />
                   )}
                 </button>
@@ -452,24 +560,31 @@ function ProjectDetails() {
           )}
         </section>
 
-        {/* CONTENT */}
+        {/* MAIN INFORMATION */}
         <section className="project-details-layout">
+
           <main className="project-details-main">
+
+            {/* PROJECT HEADER */}
             <div className="project-heading-block">
-              <div className="project-type-label">
+              <span className="project-type-label">
                 {projectType}
-              </div>
+              </span>
 
               <h1>{projectTitle}</h1>
 
               <div className="project-location">
-                <MapPin size={18} />
+                <MapPin size={17} />
+
                 <span>{location}</span>
+
                 {project.city &&
-                  project.city !==
-                    location && (
+                  project.city !== location && (
                     <>
-                      <span>•</span>
+                      <span className="project-location-separator">
+                        •
+                      </span>
+
                       <span>
                         {project.city}
                       </span>
@@ -478,172 +593,201 @@ function ProjectDetails() {
               </div>
             </div>
 
+            {/* PRICE */}
             <div className="project-price-block">
-              <span className="project-price-label">
-                Starting Price
-              </span>
+              <div>
+                <span className="project-price-label">
+                  Starting price
+                </span>
 
-              <strong>{price}</strong>
+                <strong>{price}</strong>
+              </div>
+
+              <button
+                className="project-inline-enquiry"
+                onClick={openEnquiry}
+              >
+                <MessageSquare size={17} />
+                Enquire
+              </button>
             </div>
 
+            {/* KEY INFORMATION */}
             <div className="project-specs">
               <div className="project-spec">
-                <div className="project-spec-icon">
-                  <Building2Icon />
-                </div>
+                <Building2 size={19} />
+
                 <div>
-                  <span>Project Type</span>
+                  <span>Project type</span>
                   <strong>{projectType}</strong>
                 </div>
               </div>
 
               <div className="project-spec">
-                <div className="project-spec-icon">
-                  <Users size={20} />
-                </div>
+                <Users size={19} />
+
                 <div>
-                  <span>Total Units</span>
+                  <span>Total units</span>
                   <strong>{units}</strong>
                 </div>
               </div>
 
               <div className="project-spec">
-                <div className="project-spec-icon">
-                  <ShieldCheck size={20} />
-                </div>
+                <ShieldCheck size={19} />
+
                 <div>
-                  <span>Listing Status</span>
+                  <span>Listing status</span>
                   <strong>
-                    {project.status ||
-                      "Approved"}
+                    {project.status || "Approved"}
                   </strong>
                 </div>
               </div>
             </div>
 
-            <div className="project-content-section">
-              <h2>About this Project</h2>
+            {/* DESCRIPTION */}
+            <section className="project-content-section">
+              <div className="project-section-heading">
+                <span>PROJECT OVERVIEW</span>
+                <h2>About this project</h2>
+              </div>
 
               <p className="project-description">
                 {description}
               </p>
-            </div>
+            </section>
 
-            <div className="project-content-section">
-              <h2>Project Highlights</h2>
+            {/* HIGHLIGHTS */}
+            <section className="project-content-section">
+              <div className="project-section-heading">
+                <span>AT A GLANCE</span>
+                <h2>Project information</h2>
+              </div>
 
-              <div className="project-highlight-grid">
-                <div>
-                  <CheckCircle2 size={18} />
-                  Verified project listing
+              <div className="project-highlight-list">
+                <div className="project-highlight-row">
+                  <CheckCircle2 size={17} />
+                  <span>Verified project listing</span>
                 </div>
 
-                <div>
-                  <CheckCircle2 size={18} />
-                  Professional developer listing
+                <div className="project-highlight-row">
+                  <CheckCircle2 size={17} />
+                  <span>
+                    Professional developer listing
+                  </span>
                 </div>
 
-                <div>
-                  <CheckCircle2 size={18} />
-                  Multiple project media
+                <div className="project-highlight-row">
+                  <CheckCircle2 size={17} />
+                  <span>
+                    Project images and videos available
+                  </span>
                 </div>
 
-                <div>
-                  <CheckCircle2 size={18} />
-                  Enquiry support
+                <div className="project-highlight-row">
+                  <CheckCircle2 size={17} />
+                  <span>
+                    Direct enquiry support
+                  </span>
                 </div>
               </div>
-            </div>
+            </section>
           </main>
 
-          {/* ENQUIRY CARD */}
+          {/* DESKTOP ENQUIRY */}
           <aside className="project-enquiry-card">
             <div className="project-enquiry-header">
-              <span>Interested in this project?</span>
+              <span>PROJECT ENQUIRY</span>
+
               <h2>
-                Request Project Details
+                Interested in this project?
               </h2>
+
               <p>
-                Send an enquiry and the
-                developer can contact you.
+                Share your details and the
+                project representative can
+                contact you.
               </p>
             </div>
 
             <form
               className="project-enquiry-form"
-              onSubmit={handleEnquirySubmit}
+              onSubmit={handleDesktopSubmit}
             >
               <div className="project-input-group">
-                <label>Your Name</label>
+                <label htmlFor="desktop-name">
+                  Your name
+                </label>
 
                 <div className="project-input-wrapper">
                   <Users size={17} />
+
                   <input
+                    id="desktop-name"
                     type="text"
                     name="name"
                     value={enquiryForm.name}
-                    onChange={
-                      handleEnquiryChange
-                    }
+                    onChange={handleEnquiryChange}
                     placeholder="Enter your name"
+                    autoComplete="name"
                   />
                 </div>
               </div>
 
               <div className="project-input-group">
-                <label>Email Address</label>
+                <label htmlFor="desktop-email">
+                  Email address
+                </label>
 
                 <div className="project-input-wrapper">
                   <Mail size={17} />
+
                   <input
+                    id="desktop-email"
                     type="email"
                     name="email"
-                    value={
-                      enquiryForm.email
-                    }
-                    onChange={
-                      handleEnquiryChange
-                    }
+                    value={enquiryForm.email}
+                    onChange={handleEnquiryChange}
                     placeholder="Enter your email"
+                    autoComplete="email"
                   />
                 </div>
               </div>
 
               <div className="project-input-group">
-                <label>Phone Number</label>
+                <label htmlFor="desktop-phone">
+                  Phone number
+                </label>
 
                 <div className="project-input-wrapper">
                   <Phone size={17} />
+
                   <input
+                    id="desktop-phone"
                     type="tel"
                     name="phone"
-                    value={
-                      enquiryForm.phone
-                    }
-                    onChange={
-                      handleEnquiryChange
-                    }
+                    value={enquiryForm.phone}
+                    onChange={handleEnquiryChange}
                     placeholder="Enter your phone"
+                    autoComplete="tel"
                   />
                 </div>
               </div>
 
               <div className="project-input-group">
-                <label>Message</label>
+                <label htmlFor="desktop-message">
+                  Message
+                </label>
 
                 <div className="project-input-wrapper project-textarea-wrapper">
                   <MessageSquare size={17} />
 
                   <textarea
+                    id="desktop-message"
                     name="message"
-                    value={
-                      enquiryForm.message
-                    }
-                    onChange={
-                      handleEnquiryChange
-                    }
+                    value={enquiryForm.message}
+                    onChange={handleEnquiryChange}
                     placeholder="I am interested in this project..."
-                    rows="4"
+                    rows={4}
                   />
                 </div>
               </div>
@@ -651,15 +795,13 @@ function ProjectDetails() {
               {formStatus.message && (
                 <div
                   className={`project-form-status ${formStatus.type}`}
+                  role="alert"
                 >
-                  {formStatus.type ===
-                    "success" && (
-                    <CheckCircle2
-                      size={17}
-                    />
+                  {formStatus.type === "success" && (
+                    <CheckCircle2 size={17} />
                   )}
 
-                  {formStatus.message}
+                  <span>{formStatus.message}</span>
                 </div>
               )}
 
@@ -675,18 +817,21 @@ function ProjectDetails() {
                   </>
                 ) : (
                   <>
-                    Send Enquiry
-                    <ArrowRight size={18} />
+                    Send enquiry
+                    <ArrowRight size={17} />
                   </>
                 )}
               </button>
             </form>
 
             <div className="project-enquiry-note">
-              <ShieldCheck size={17} />
-              Your information is shared
-              securely with the project
-              representative.
+              <ShieldCheck size={16} />
+
+              <span>
+                Your information is shared
+                securely with the project
+                representative.
+              </span>
             </div>
           </aside>
         </section>
@@ -699,119 +844,149 @@ function ProjectDetails() {
           <strong>{price}</strong>
         </div>
 
-        <button
-          onClick={() =>
-            setShowEnquiry(true)
-          }
-        >
-          <MessageSquare size={18} />
+        <button onClick={openEnquiry}>
+          <MessageSquare size={17} />
           Enquire
         </button>
       </div>
 
       {/* MOBILE ENQUIRY MODAL */}
       {showEnquiry && (
-        <div className="project-enquiry-overlay">
-          <div className="project-enquiry-modal">
+        <div
+          className="project-enquiry-overlay"
+          onMouseDown={(event) => {
+            if (
+              event.target === event.currentTarget &&
+              !submitting
+            ) {
+              closeEnquiry();
+            }
+          }}
+        >
+          <div
+            className="project-enquiry-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-enquiry-title"
+          >
             <button
               className="project-modal-close"
-              onClick={() =>
-                setShowEnquiry(false)
-              }
-              aria-label="Close"
+              onClick={closeEnquiry}
+              disabled={submitting}
+              aria-label="Close enquiry"
             >
-              <X size={21} />
+              <X size={20} />
             </button>
 
             <div className="project-enquiry-header">
-              <span>Project Enquiry</span>
-              <h2>
-                Request Details
+              <span>PROJECT ENQUIRY</span>
+
+              <h2 id="mobile-enquiry-title">
+                Request project details
               </h2>
+
               <p>
-                Fill in your details and
-                we'll connect you with the
-                developer.
+                Fill in your details and we'll
+                connect you with the developer.
               </p>
             </div>
 
             <form
               className="project-enquiry-form"
-              onSubmit={(event) => {
-                handleEnquirySubmit(event);
-                if (
-                  !formStatus.message
-                ) {
-                  setShowEnquiry(false);
-                }
-              }}
+              onSubmit={handleMobileSubmit}
             >
               <div className="project-input-group">
-                <label>Your Name</label>
+                <label htmlFor="mobile-name">
+                  Your name
+                </label>
+
                 <input
+                  id="mobile-name"
                   type="text"
                   name="name"
                   value={enquiryForm.name}
-                  onChange={
-                    handleEnquiryChange
-                  }
+                  onChange={handleEnquiryChange}
                   placeholder="Enter your name"
+                  autoComplete="name"
                 />
               </div>
 
               <div className="project-input-group">
-                <label>Email Address</label>
+                <label htmlFor="mobile-email">
+                  Email address
+                </label>
+
                 <input
+                  id="mobile-email"
                   type="email"
                   name="email"
-                  value={
-                    enquiryForm.email
-                  }
-                  onChange={
-                    handleEnquiryChange
-                  }
+                  value={enquiryForm.email}
+                  onChange={handleEnquiryChange}
                   placeholder="Enter your email"
+                  autoComplete="email"
                 />
               </div>
 
               <div className="project-input-group">
-                <label>Phone Number</label>
+                <label htmlFor="mobile-phone">
+                  Phone number
+                </label>
+
                 <input
+                  id="mobile-phone"
                   type="tel"
                   name="phone"
-                  value={
-                    enquiryForm.phone
-                  }
-                  onChange={
-                    handleEnquiryChange
-                  }
+                  value={enquiryForm.phone}
+                  onChange={handleEnquiryChange}
                   placeholder="Enter your phone"
+                  autoComplete="tel"
                 />
               </div>
 
               <div className="project-input-group">
-                <label>Message</label>
+                <label htmlFor="mobile-message">
+                  Message
+                </label>
+
                 <textarea
+                  id="mobile-message"
                   name="message"
-                  value={
-                    enquiryForm.message
-                  }
-                  onChange={
-                    handleEnquiryChange
-                  }
+                  value={enquiryForm.message}
+                  onChange={handleEnquiryChange}
                   placeholder="Your message"
-                  rows="4"
+                  rows={4}
                 />
               </div>
+
+              {formStatus.message && (
+                <div
+                  className={`project-form-status ${formStatus.type}`}
+                  role="alert"
+                >
+                  {formStatus.type === "success" && (
+                    <CheckCircle2 size={17} />
+                  )}
+
+                  <span>{formStatus.message}</span>
+                </div>
+              )}
 
               <button
                 type="submit"
                 className="project-submit-button"
                 disabled={submitting}
               >
-                {submitting
-                  ? "Sending..."
-                  : "Send Enquiry"}
+                {submitting ? (
+                  <>
+                    <span className="project-button-spinner" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send enquiry
+                    <ArrowRight size={17} />
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -819,10 +994,6 @@ function ProjectDetails() {
       )}
     </div>
   );
-}
-
-function Building2Icon() {
-  return <Home size={20} />;
 }
 
 export default ProjectDetails;

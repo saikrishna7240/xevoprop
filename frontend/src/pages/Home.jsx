@@ -1,32 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+
 import {
   ArrowRight,
-  ArrowUpRight,
   Building2,
-  Check,
+  CalendarDays,
   ChevronRight,
   FileCheck2,
   Heart,
   Home as HomeIcon,
+  Handshake,
   Landmark,
   MapPin,
+  Phone,
   Search,
   ShieldCheck,
   Sparkles,
   Star,
   TrendingUp,
-  Users,
   WalletCards,
-  Scale,
-  Handshake,
-  FileText,
-  CalendarDays,
-  ClipboardCheck,
-  KeyRound,
-  BadgeCheck,
-  Phone,
 } from "lucide-react";
 
 import "./Home.css";
@@ -44,37 +37,31 @@ const fallbackImages = [
 const categoryItems = [
   {
     title: "Apartments & Condos",
-    count: "18,400+ properties",
     icon: Building2,
     type: "Apartment",
   },
   {
     title: "Luxury Gated Villas",
-    count: "3,200+ properties",
     icon: HomeIcon,
     type: "Villa",
   },
   {
     title: "Builder Floors",
-    count: "5,100+ properties",
     icon: Landmark,
     type: "Builder Floor",
   },
   {
     title: "Commercial & Grade-A",
-    count: "2,800+ spaces",
     icon: Building2,
     type: "Commercial",
   },
   {
     title: "Plots & Farmhouses",
-    count: "4,100+ plots",
     icon: MapPin,
     type: "Plot",
   },
   {
     title: "Penthouses & Duplexes",
-    count: "920+ exclusive units",
     icon: HomeIcon,
     type: "Penthouse",
   },
@@ -83,26 +70,26 @@ const categoryItems = [
 const trustStats = [
   {
     icon: Building2,
-    value: "45,000+",
-    label: "VERIFIED PROPERTIES",
+    value: "Verified",
+    label: "PROPERTY LISTINGS",
     tone: "blue",
   },
   {
     icon: ShieldCheck,
-    value: "100%",
-    label: "RERA CHECKED & LEGAL",
+    value: "Verified",
+    label: "PROPERTY DETAILS",
     tone: "green",
   },
   {
     icon: Handshake,
-    value: "₹0 Brokerage",
-    label: "ON DIRECT OWNER LISTINGS",
+    value: "Direct",
+    label: "OWNER & DEVELOPER CONNECT",
     tone: "orange",
   },
   {
     icon: Star,
-    value: "4.9 / 5",
-    label: "18,000+ REVIEWS",
+    value: "Trusted",
+    label: "REAL ESTATE PLATFORM",
     tone: "purple",
   },
 ];
@@ -110,30 +97,30 @@ const trustStats = [
 const whyItems = [
   {
     icon: ShieldCheck,
-    title: "Triple-Layer Verification",
+    title: "Verified Property Information",
     description:
-      "Title deeds, RERA filings, and physical carpet boundaries cross-checked on-ground by licensed legal engineers before publication.",
+      "Browse property information submitted through the Xevoprop platform with clear details about location, type, pricing and specifications.",
     tone: "blue",
   },
   {
     icon: Handshake,
-    title: "Zero Spam & Direct Connect",
+    title: "Direct Connect",
     description:
-      "Encrypted contact channels. Converse exclusively with verified sellers or developer representatives. No cold calls from unverified agents.",
+      "Connect directly with property owners and developers through the platform without unnecessary communication layers.",
     tone: "orange",
   },
   {
     icon: TrendingUp,
-    title: "Smart Price Intelligence",
+    title: "Better Property Discovery",
     description:
-      "AI benchmark calculations using sub-registrar transaction archives and historical quarter-on-quarter market appreciation curves.",
+      "Search and compare properties using practical filters such as location, property type, bedrooms and budget.",
     tone: "green",
   },
   {
     icon: FileCheck2,
-    title: "End-to-End Paperwork",
+    title: "Structured Property Journey",
     description:
-      "From encumbrance certificate retrieval to stamp-duty calculation and turnkey doorstep home loan disbursement with top banks.",
+      "Move from property discovery to enquiries, visits and the next steps through one connected platform.",
     tone: "purple",
   },
 ];
@@ -143,44 +130,27 @@ const milestones = [
     number: "1",
     title: "Search with Precision",
     description:
-      "Filter by RERA status, carpet sq. ft, Vastu compliance, and proximity to major IT corridors and metro lines.",
+      "Search properties using location, property type, configuration and budget.",
   },
   {
     number: "2",
-    title: "Schedule 3D or Site Visit",
+    title: "Explore the Property",
     description:
-      "Book private walkthroughs or inspect spatial layouts with guided digital tours verified by Xevoprop.",
+      "Review property images, specifications, location and available information.",
   },
   {
     number: "3",
-    title: "Instant Document Audit",
+    title: "Connect Directly",
     description:
-      "Access Khata extracts, sanctioned plans, and 30-year mother deed verification reports on the client dashboard.",
+      "Send an enquiry and connect with the relevant property owner or developer.",
   },
   {
     number: "4",
-    title: "Handover & Move In",
+    title: "Take the Next Step",
     description:
-      "Seamless registry closure with transparent escrow protections and doorstep key handover.",
+      "Continue with property visits, discussions and the next stage of your property journey.",
   },
 ];
-
-const footerLinks = {
-  popular: [
-    "3 BHK in Whitefield",
-    "Luxury Villas in ECR Chennai",
-    "Sea-facing in Worli",
-    "Flats near HITEC City Hyderabad",
-    "Penthouses in Golf Course Extn",
-  ],
-  portals: [
-    "Buyer Advisory Services",
-    "Verified Rental Agreements",
-    "Post Property for Free",
-    "Corporate Leases & Coworking",
-    "Builder Launchpad",
-  ],
-};
 
 function getPropertyImage(property, index) {
   if (property?.image) return property.image;
@@ -197,47 +167,50 @@ function getPropertyImage(property, index) {
     return firstImage?.image_url || firstImage?.url;
   }
 
+  if (
+    Array.isArray(property?.property_images) &&
+    property.property_images.length
+  ) {
+    const firstImage = property.property_images[0];
+
+    if (typeof firstImage === "string") {
+      return firstImage;
+    }
+
+    return firstImage?.image_url || firstImage?.url || firstImage?.media_url;
+  }
+
   return fallbackImages[index % fallbackImages.length];
 }
 
-function getPropertyTitle(property, index) {
+function getPropertyTitle(property) {
   return (
     property?.title ||
     property?.name ||
     property?.property_name ||
-    [
-      "The Sovereign Sky Residences",
-      "Elysium Gated Villas",
-      "Maritime Crest Horizon",
-    ][index] ||
-    "Premium Property"
+    "Property"
   );
 }
 
-function getPropertyLocation(property, index) {
+function getPropertyLocation(property) {
   return (
     property?.location ||
     property?.address ||
     property?.city ||
-    [
-      "Hebbal Lake, North Bengaluru",
-      "Narsingi, Financial District, Hyderabad",
-      "Worli Bay, South Mumbai",
-    ][index] ||
-    "Prime Location"
+    "Location not specified"
   );
 }
 
-function getPropertyPrice(property, index) {
-  if (property?.price) {
-    return property.price;
-  }
-
-  return ["₹3.40 Cr – ₹5.80 Cr", "₹6.25 Cr", "₹8.90 Cr Onwards"][index];
+function getPropertyPrice(property) {
+  return property?.price || "Price on request";
 }
 
 function getPropertyType(property) {
-  return property?.property_type || property?.type || "Residential";
+  return (
+    property?.property_type ||
+    property?.type ||
+    "Property"
+  );
 }
 
 function getBedrooms(property) {
@@ -245,7 +218,7 @@ function getBedrooms(property) {
     property?.bedrooms ||
     property?.bhk ||
     property?.bedroom_count ||
-    "3 & 4 BHK"
+    "—"
   );
 }
 
@@ -254,16 +227,20 @@ function getArea(property) {
     property?.area ||
     property?.carpet_area ||
     property?.built_up_area ||
-    "2,450 sq.ft"
+    "—"
   );
 }
 
 function getPossession(property) {
-  return property?.possession || property?.possession_date || "Dec 2025";
+  return (
+    property?.possession ||
+    property?.possession_date ||
+    "—"
+  );
 }
 
-function getImageAlt(property, index) {
-  return `${getPropertyTitle(property, index)} property`;
+function getImageAlt(property) {
+  return `${getPropertyTitle(property)} property`;
 }
 
 export default function Home() {
@@ -294,9 +271,16 @@ export default function Home() {
 
         const propertyList = Array.isArray(data)
           ? data
-          : data?.properties || data?.data || [];
+          : data?.properties ||
+            data?.data ||
+            data?.results ||
+            [];
 
-        setProperties(propertyList);
+        setProperties(
+          Array.isArray(propertyList)
+            ? propertyList
+            : []
+        );
       } catch (error) {
         console.error("Home properties error:", error);
         setProperties([]);
@@ -316,15 +300,24 @@ export default function Home() {
     const params = new URLSearchParams();
 
     if (activeIntent) {
-      params.set("intent", activeIntent.toLowerCase());
+      params.set(
+        "intent",
+        activeIntent.toLowerCase()
+      );
     }
 
     if (location.trim()) {
-      params.set("location", location.trim());
+      params.set(
+        "location",
+        location.trim()
+      );
     }
 
     if (propertyType) {
-      params.set("propertyType", propertyType);
+      params.set(
+        "propertyType",
+        propertyType
+      );
     }
 
     if (budget) {
@@ -337,36 +330,47 @@ export default function Home() {
   const handlePopularLocation = (city) => {
     setLocation(city);
 
-    navigate(`/search?location=${encodeURIComponent(city)}`);
+    navigate(
+      `/search?location=${encodeURIComponent(city)}`
+    );
   };
 
   const toggleSave = (propertyId) => {
     setSavedProperties((current) =>
       current.includes(propertyId)
-        ? current.filter((id) => id !== propertyId)
+        ? current.filter(
+            (id) => id !== propertyId
+          )
         : [...current, propertyId]
     );
   };
 
   const handleCategoryClick = (type) => {
-    navigate(`/properties?type=${encodeURIComponent(type)}`);
+    navigate(
+      `/properties?type=${encodeURIComponent(type)}`
+    );
   };
 
   return (
     <main className="xevoprop-home">
 
-      {/* =========================================================
+      {/* =====================================================
           HERO
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-hero">
         <div className="xp-container">
 
           <div className="xp-hero-badge">
             <span className="xp-badge-dot"></span>
+
             INDIA'S VERIFIED PROPTECH GATEWAY
-            <span className="xp-badge-separator">•</span>
-            RERA CERTIFIED 2025
+
+            <span className="xp-badge-separator">
+              •
+            </span>
+
+            REAL ESTATE MADE CLEAR
           </div>
 
           <h1 className="xp-hero-title">
@@ -377,56 +381,77 @@ export default function Home() {
           </h1>
 
           <p className="xp-hero-description">
-            Discover verified residential & commercial properties
-            across India
-            <br className="xp-desktop-break" />
-            with verified RERA documentation, zero spam, and direct
-            owner/builder connect.
+            Discover residential and commercial properties
+            across India with clear property information,
+            direct connections and a structured property
+            discovery experience.
           </p>
 
-          {/* SEARCH BOX */}
+          {/* SEARCH */}
 
           <div className="xp-search-card">
 
             <div className="xp-search-tabs">
 
-              {["Buy", "Commercial", "Plots & Land", "New Projects"].map(
-                (item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    className={
-                      activeIntent === item
-                        ? "xp-search-tab active"
-                        : "xp-search-tab"
-                    }
-                    onClick={() => setActiveIntent(item)}
-                  >
-                    {item === "Buy" && <HomeIcon size={13} />}
-                    {item === "Rent" && <KeyRound size={13} />}
-                    {item === "Commercial" && <Building2 size={13} />}
-                    {item === "Plots & Land" && <MapPin size={13} />}
-                    {item === "New Projects" && <Landmark size={13} />}
-                    <span>{item}</span>
-                  </button>
-                )
-              )}
+              {[
+                "Buy",
+                "Commercial",
+                "Plots & Land",
+                "New Projects",
+              ].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className={
+                    activeIntent === item
+                      ? "xp-search-tab active"
+                      : "xp-search-tab"
+                  }
+                  onClick={() =>
+                    setActiveIntent(item)
+                  }
+                >
+                  {item === "Buy" && (
+                    <HomeIcon size={13} />
+                  )}
+
+                  {item === "Commercial" && (
+                    <Building2 size={13} />
+                  )}
+
+                  {item === "Plots & Land" && (
+                    <MapPin size={13} />
+                  )}
+
+                  {item === "New Projects" && (
+                    <Landmark size={13} />
+                  )}
+
+                  <span>{item}</span>
+                </button>
+              ))}
 
             </div>
 
             <div className="xp-search-fields">
 
               <div className="xp-search-field xp-location-field">
+
                 <MapPin size={17} />
 
                 <div className="xp-field-content">
-                  <label>LOCALITY OR BUILDER</label>
+
+                  <label>
+                    LOCALITY OR BUILDER
+                  </label>
 
                   <input
                     type="text"
                     value={location}
                     onChange={(event) =>
-                      setLocation(event.target.value)
+                      setLocation(
+                        event.target.value
+                      )
                     }
                     onKeyDown={(event) => {
                       if (event.key === "Enter") {
@@ -435,70 +460,107 @@ export default function Home() {
                     }}
                     placeholder="Indiranagar, Whitefield, Bandra West..."
                   />
+
                 </div>
+
               </div>
 
               <div className="xp-search-field">
+
                 <Building2 size={17} />
 
                 <div className="xp-field-content">
-                  <label>PROPERTY TYPE</label>
+
+                  <label>
+                    PROPERTY TYPE
+                  </label>
 
                   <select
                     value={propertyType}
                     onChange={(event) =>
-                      setPropertyType(event.target.value)
+                      setPropertyType(
+                        event.target.value
+                      )
                     }
                   >
-                    <option value="">Flats & Apartments</option>
-                    <option value="Apartment">Apartments</option>
-                    <option value="Villa">Villas</option>
+                    <option value="">
+                      Flats & Apartments
+                    </option>
+
+                    <option value="Apartment">
+                      Apartments
+                    </option>
+
+                    <option value="Villa">
+                      Villas
+                    </option>
+
                     <option value="Independent House">
                       Independent Houses
                     </option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Plot">Plots</option>
+
+                    <option value="Commercial">
+                      Commercial
+                    </option>
+
+                    <option value="Plot">
+                      Plots
+                    </option>
                   </select>
+
                 </div>
 
                 <ChevronRight
                   size={15}
                   className="xp-field-chevron"
                 />
+
               </div>
 
               <div className="xp-search-field">
+
                 <WalletCards size={17} />
 
                 <div className="xp-field-content">
+
                   <label>BUDGET</label>
 
                   <select
                     value={budget}
                     onChange={(event) =>
-                      setBudget(event.target.value)
+                      setBudget(
+                        event.target.value
+                      )
                     }
                   >
-                    <option value="">₹50 Lakhs – ₹1.5 Crore</option>
+                    <option value="">
+                      Select Budget
+                    </option>
+
                     <option value="0-5000000">
                       Under ₹50 Lakhs
                     </option>
+
                     <option value="5000000-10000000">
                       ₹50 Lakhs – ₹1 Crore
                     </option>
+
                     <option value="10000000-15000000">
                       ₹1 Crore – ₹1.5 Crore
                     </option>
+
                     <option value="15000000+">
                       ₹1.5 Crore+
                     </option>
                   </select>
+
                 </div>
 
                 <ChevronRight
                   size={15}
                   className="xp-field-chevron"
                 />
+
               </div>
 
               <button
@@ -515,27 +577,83 @@ export default function Home() {
             <div className="xp-search-footer">
 
               <div className="xp-configurations">
-                <span>Configurations:</span>
 
-                <button type="button">1 BHK</button>
-                <button type="button">2 BHK</button>
-                <button type="button">3 BHK</button>
-                <button type="button">4+ BHK</button>
-                <button type="button">Villas</button>
+                <span>
+                  Configurations:
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/search?bedrooms=1"
+                    )
+                  }
+                >
+                  1 BHK
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/search?bedrooms=2"
+                    )
+                  }
+                >
+                  2 BHK
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/search?bedrooms=3"
+                    )
+                  }
+                >
+                  3 BHK
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/search?bedrooms=4"
+                    )
+                  }
+                >
+                  4+ BHK
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate(
+                      "/search?propertyType=Villa"
+                    )
+                  }
+                >
+                  Villas
+                </button>
+
               </div>
 
               <button
                 type="button"
                 className="xp-more-filters"
-                onClick={() => navigate("/properties")}
+                onClick={() =>
+                  navigate("/properties")
+                }
               >
                 <Sparkles size={13} />
-                More Filters (Floor, Facing, Vastu)
+                More Filters
               </button>
 
             </div>
 
             <div className="xp-trending-row">
+
               <span className="xp-trending-label">
                 <TrendingUp size={12} />
                 Trending:
@@ -544,10 +662,12 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() =>
-                  handlePopularLocation("Hyderabad")
+                  handlePopularLocation(
+                    "Whitefield"
+                  )
                 }
               >
-                RERA Approved in Whitefield
+                Whitefield
               </button>
 
               <span>•</span>
@@ -555,10 +675,12 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() =>
-                  handlePopularLocation("Bengaluru")
+                  handlePopularLocation(
+                    "Worli"
+                  )
                 }
               >
-                Luxury Sea View in Worli
+                Worli
               </button>
 
               <span>•</span>
@@ -566,10 +688,12 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() =>
-                  handlePopularLocation("Hyderabad")
+                  handlePopularLocation(
+                    "Gurugram"
+                  )
                 }
               >
-                Golf Course Road Gurugram
+                Gurugram
               </button>
 
               <span>•</span>
@@ -577,25 +701,31 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() =>
-                  handlePopularLocation("Hyderabad")
+                  handlePopularLocation(
+                    "Gachibowli"
+                  )
                 }
               >
                 Gachibowli Hyderabad
               </button>
+
             </div>
 
           </div>
+
         </div>
       </section>
 
-      {/* =========================================================
-          TRUST STATS
-      ========================================================= */}
+      {/* =====================================================
+          TRUST
+      ===================================================== */}
 
       <section className="xp-trust-strip">
+
         <div className="xp-container xp-trust-grid">
 
           {trustStats.map((item) => {
+
             const Icon = item.icon;
 
             return (
@@ -603,6 +733,7 @@ export default function Home() {
                 className="xp-trust-item"
                 key={item.label}
               >
+
                 <div
                   className={`xp-trust-icon ${item.tone}`}
                 >
@@ -610,46 +741,99 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
+
+                  <strong>
+                    {item.value}
+                  </strong>
+
+                  <span>
+                    {item.label}
+                  </span>
+
                 </div>
+
               </div>
             );
           })}
 
         </div>
+
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           CURATED PROPERTIES
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-section xp-properties-section">
+
         <div className="xp-container">
 
           <div className="xp-section-heading-row">
 
             <div>
+
               <div className="xp-section-kicker">
+
                 <span></span>
-                CURATED HANDPICKED PORTFOLIO
+
+                CURATED PROPERTY LISTINGS
+
               </div>
 
               <h2>
-                Curated Architectural Residences
+                Explore Featured Properties
               </h2>
 
               <p>
-                Independently audited title records, verified builder
-                credentials, and guaranteed floor plans.
+                Browse available properties and
+                review their details before taking
+                the next step.
               </p>
+
             </div>
 
             <div className="xp-property-filters">
-              <button className="active">All</button>
-              <button>Ready to Move</button>
-              <button>Penthouse Collection</button>
-              <button>Gated Villas</button>
+
+              <button
+                type="button"
+                className="active"
+              >
+                All
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(
+                    "/properties?ready_to_move=true"
+                  )
+                }
+              >
+                Ready to Move
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(
+                    "/properties?type=Penthouse"
+                  )
+                }
+              >
+                Penthouses
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  navigate(
+                    "/properties?type=Villa"
+                  )
+                }
+              >
+                Gated Villas
+              </button>
+
             </div>
 
           </div>
@@ -663,193 +847,243 @@ export default function Home() {
                   key={item}
                 >
                   <div className="xp-skeleton xp-skeleton-image"></div>
+
                   <div className="xp-skeleton xp-skeleton-line"></div>
+
                   <div className="xp-skeleton xp-skeleton-line short"></div>
+
                   <div className="xp-skeleton xp-skeleton-box"></div>
                 </div>
               ))
             ) : featuredProperties.length > 0 ? (
-              featuredProperties.map((property, index) => {
-                const propertyId =
-                  property?.id ||
-                  property?._id ||
-                  index;
+              featuredProperties.map(
+                (property, index) => {
 
-                const isSaved =
-                  savedProperties.includes(propertyId);
+                  const propertyId =
+                    property?.id ||
+                    property?._id;
 
-                return (
-                  <article
-                    className="xp-property-card"
-                    key={propertyId}
-                  >
+                  if (!propertyId) {
+                    return null;
+                  }
 
-                    <div className="xp-property-image">
+                  const isSaved =
+                    savedProperties.includes(
+                      propertyId
+                    );
 
-                      <img
-                        src={getPropertyImage(property, index)}
-                        alt={getImageAlt(property, index)}
-                        onError={(event) => {
-                          event.currentTarget.src =
-                            fallbackImages[index % 3];
-                        }}
-                      />
+                  return (
+                    <article
+                      className="xp-property-card"
+                      key={propertyId}
+                    >
 
-                      <div className="xp-property-top-tags">
-                        <span className="xp-property-status">
-                          {index === 1
-                            ? "Ready to Move"
-                            : "RERA Approved"}
-                        </span>
+                      <div className="xp-property-image">
 
-                        <span className="xp-property-brokerage">
-                          {index === 0
-                            ? "0% BROKERAGE"
-                            : index === 1
-                            ? "Verified Title Deed"
-                            : "New Launch"}
-                        </span>
-                      </div>
-
-                      <button
-                        type="button"
-                        className={`xp-save-button ${
-                          isSaved ? "saved" : ""
-                        }`}
-                        onClick={() =>
-                          toggleSave(propertyId)
-                        }
-                        aria-label="Save property"
-                      >
-                        <Heart
-                          size={17}
-                          fill={
-                            isSaved
-                              ? "currentColor"
-                              : "none"
-                          }
-                        />
-                      </button>
-
-                      <div className="xp-property-location">
-                        <MapPin size={12} />
-                        {getPropertyLocation(
-                          property,
-                          index
-                        )}
-                      </div>
-
-                    </div>
-
-                    <div className="xp-property-content">
-
-                      <div className="xp-property-price-row">
-                        <strong>
-                          {getPropertyPrice(
+                        <img
+                          src={getPropertyImage(
                             property,
                             index
                           )}
-                        </strong>
-
-                        <span>
-                          {index === 0
-                            ? "EMI starts ₹2.41L/mo"
-                            : index === 1
-                            ? "100% Vastu Compliant"
-                            : "Sea-Facing Decks"}
-                        </span>
-                      </div>
-
-                      <h3>
-                        {getPropertyTitle(
-                          property,
-                          index
-                        )}
-                      </h3>
-
-                      <div className="xp-property-specs">
-
-                        <div>
-                          <span>CONFIG</span>
-                          <strong>
-                            {getBedrooms(property)}
-                          </strong>
-                        </div>
-
-                        <div>
-                          <span>CARPET AREA</span>
-                          <strong>
-                            {getArea(property)}
-                          </strong>
-                        </div>
-
-                        <div>
-                          <span>POSSESSION</span>
-                          <strong>
-                            {getPossession(property)}
-                          </strong>
-                        </div>
-
-                      </div>
-
-                      <div className="xp-property-tags">
-                        <span>Infinity Pool</span>
-                        <span>Lake View Deck</span>
-                        <span>2 Covered Parking</span>
-                      </div>
-
-                      <div className="xp-property-actions">
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            navigate(
-                              `/properties/${propertyId}`
-                            )
-                          }
-                        >
-                          View Details
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            index === 1
-                              ? "visit-button"
-                              : "enquire-button"
-                          }
-                          onClick={() =>
-                            navigate(
-                              `/properties/${propertyId}`
-                            )
-                          }
-                        >
-                          {index === 1 ? (
-                            <>
-                              <CalendarDays size={13} />
-                              Schedule Visit
-                            </>
-                          ) : (
-                            <>
-                              <Phone size={13} />
-                              Enquire Now
-                            </>
+                          alt={getImageAlt(
+                            property
                           )}
+                          onError={(event) => {
+                            event.currentTarget.src =
+                              fallbackImages[
+                                index %
+                                  fallbackImages.length
+                              ];
+                          }}
+                        />
+
+                        <div className="xp-property-top-tags">
+
+                          {property?.status && (
+                            <span className="xp-property-status">
+                              {property.status ===
+                              "approved"
+                                ? "Approved"
+                                : property.status}
+                            </span>
+                          )}
+
+                          {property?.zero_brokerage && (
+                            <span className="xp-property-brokerage">
+                              0% BROKERAGE
+                            </span>
+                          )}
+
+                        </div>
+
+                        <button
+                          type="button"
+                          className={`xp-save-button ${
+                            isSaved
+                              ? "saved"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            toggleSave(
+                              propertyId
+                            )
+                          }
+                          aria-label="Save property"
+                        >
+                          <Heart
+                            size={17}
+                            fill={
+                              isSaved
+                                ? "currentColor"
+                                : "none"
+                            }
+                          />
                         </button>
+
+                        <div className="xp-property-location">
+
+                          <MapPin size={12} />
+
+                          {getPropertyLocation(
+                            property
+                          )}
+
+                        </div>
 
                       </div>
 
-                    </div>
-                  </article>
-                );
-              })
+                      <div className="xp-property-content">
+
+                        <div className="xp-property-price-row">
+
+                          <strong>
+                            {getPropertyPrice(
+                              property
+                            )}
+                          </strong>
+
+                          <span>
+                            {getPropertyType(
+                              property
+                            )}
+                          </span>
+
+                        </div>
+
+                        <h3>
+                          {getPropertyTitle(
+                            property
+                          )}
+                        </h3>
+
+                        <div className="xp-property-specs">
+
+                          <div>
+                            <span>
+                              CONFIG
+                            </span>
+
+                            <strong>
+                              {getBedrooms(
+                                property
+                              )}
+                            </strong>
+                          </div>
+
+                          <div>
+                            <span>
+                              AREA
+                            </span>
+
+                            <strong>
+                              {getArea(
+                                property
+                              )}
+                            </strong>
+                          </div>
+
+                          <div>
+                            <span>
+                              POSSESSION
+                            </span>
+
+                            <strong>
+                              {getPossession(
+                                property
+                              )}
+                            </strong>
+                          </div>
+
+                        </div>
+
+                        <div className="xp-property-tags">
+
+                          {property?.verified && (
+                            <span>
+                              Verified
+                            </span>
+                          )}
+
+                          {property?.ready_to_move && (
+                            <span>
+                              Ready to Move
+                            </span>
+                          )}
+
+                          {property?.zero_brokerage && (
+                            <span>
+                              Zero Brokerage
+                            </span>
+                          )}
+
+                        </div>
+
+                        <div className="xp-property-actions">
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate(
+                                `/properties/${propertyId}`
+                              )
+                            }
+                          >
+                            View Details
+                          </button>
+
+                          <button
+                            type="button"
+                            className="enquire-button"
+                            onClick={() =>
+                              navigate(
+                                `/properties/${propertyId}`
+                              )
+                            }
+                          >
+                            <Phone size={13} />
+                            Enquire Now
+                          </button>
+
+                        </div>
+
+                      </div>
+
+                    </article>
+                  );
+                }
+              )
             ) : (
               <div className="xp-properties-empty">
+
                 <Building2 size={32} />
-                <h3>Properties are being updated</h3>
+
+                <h3>
+                  Properties are being updated
+                </h3>
+
                 <p>
-                  Explore the full marketplace to discover
-                  available properties.
+                  Explore the full marketplace
+                  to discover available properties.
                 </p>
 
                 <button
@@ -861,12 +1095,14 @@ export default function Home() {
                   Explore Properties
                   <ArrowRight size={15} />
                 </button>
+
               </div>
             )}
 
           </div>
 
           <div className="xp-properties-bottom">
+
             <button
               type="button"
               onClick={() =>
@@ -876,24 +1112,31 @@ export default function Home() {
               Explore all properties
               <ArrowRight size={16} />
             </button>
+
           </div>
 
         </div>
+
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           CATEGORIES
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-section xp-categories-section">
+
         <div className="xp-container">
 
           <div className="xp-section-heading-row category-heading">
 
             <div>
+
               <div className="xp-section-kicker">
+
                 <span></span>
-                BROWSE ARCHETYPES
+
+                BROWSE PROPERTY TYPES
+
               </div>
 
               <h2>
@@ -901,9 +1144,10 @@ export default function Home() {
               </h2>
 
               <p>
-                Segmented by lifestyle requisites and
-                institutional zoning parameters.
+                Find properties based on the type
+                that fits your requirements.
               </p>
+
             </div>
 
             <button
@@ -922,6 +1166,7 @@ export default function Home() {
           <div className="xp-category-grid">
 
             {categoryItems.map((category) => {
+
               const Icon = category.icon;
 
               return (
@@ -941,8 +1186,15 @@ export default function Home() {
                   </span>
 
                   <span className="xp-category-content">
-                    <strong>{category.title}</strong>
-                    <small>{category.count}</small>
+
+                    <strong>
+                      {category.title}
+                    </strong>
+
+                    <small>
+                      Explore listings
+                    </small>
+
                   </span>
 
                   <ChevronRight
@@ -957,33 +1209,37 @@ export default function Home() {
           </div>
 
         </div>
+
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           WHY XEVOPROP
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-section xp-why-section">
+
         <div className="xp-container">
 
           <div className="xp-centered-heading">
 
             <div className="xp-section-kicker centered">
+
               <span></span>
-              INSTITUTIONAL REALTY
+
+              THE XEVOPROP DIFFERENCE
+
               <span></span>
+
             </div>
 
             <h2>
-              Why Thousands Trust Xevoprop Over
-              <br />
-              Traditional Portals
+              A Clearer Way to Navigate Real Estate
             </h2>
 
             <p>
-              Engineered to eradicate ghost listings,
-              unverified broker rings, and opaque pricing
-              from modern Indian realty.
+              Xevoprop brings property discovery,
+              direct connections and the next steps
+              of your property journey into one place.
             </p>
 
           </div>
@@ -991,6 +1247,7 @@ export default function Home() {
           <div className="xp-why-grid">
 
             {whyItems.map((item) => {
+
               const Icon = item.icon;
 
               return (
@@ -1005,9 +1262,13 @@ export default function Home() {
                     <Icon size={18} />
                   </div>
 
-                  <h3>{item.title}</h3>
+                  <h3>
+                    {item.title}
+                  </h3>
 
-                  <p>{item.description}</p>
+                  <p>
+                    {item.description}
+                  </p>
 
                 </article>
               );
@@ -1016,27 +1277,31 @@ export default function Home() {
           </div>
 
         </div>
+
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           MILESTONES
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-section xp-milestones-section">
+
         <div className="xp-container">
 
           <div className="xp-centered-heading">
 
             <div className="xp-section-kicker centered">
+
               <span></span>
+
               FRICTIONLESS PATH
+
               <span></span>
+
             </div>
 
             <h2>
-              Your Home Purchase in 4 Structured
-              <br />
-              Milestones
+              Your Property Journey in 4 Steps
             </h2>
 
           </div>
@@ -1044,6 +1309,7 @@ export default function Home() {
           <div className="xp-milestones-grid">
 
             {milestones.map((milestone) => (
+
               <article
                 className="xp-milestone-card"
                 key={milestone.number}
@@ -1059,23 +1325,30 @@ export default function Home() {
                   {milestone.number}
                 </div>
 
-                <h3>{milestone.title}</h3>
+                <h3>
+                  {milestone.title}
+                </h3>
 
-                <p>{milestone.description}</p>
+                <p>
+                  {milestone.description}
+                </p>
 
               </article>
+
             ))}
 
           </div>
 
         </div>
+
       </section>
 
-      {/* =========================================================
+      {/* =====================================================
           LIST PROPERTY CTA
-      ========================================================= */}
+      ===================================================== */}
 
       <section className="xp-owner-section">
+
         <div className="xp-container">
 
           <div className="xp-owner-card">
@@ -1083,21 +1356,24 @@ export default function Home() {
             <div className="xp-owner-content">
 
               <div className="xp-owner-kicker">
+
                 <Sparkles size={13} />
-                Zero Listing Brokerage For Property Owners
+
+                FOR PROPERTY OWNERS
+
               </div>
 
               <h2>
                 Own a property? List it on
                 <br />
-                Xevoprop in under 3 minutes.
+                Xevoprop.
               </h2>
 
               <p>
-                Connect with 1.2 Million genuine buyers &
-                corporate tenants every month. Zero listing
-                fee, full privacy control, and dedicated
-                relationship manager.
+                List your property on Xevoprop,
+                provide the required details and
+                connect with interested buyers
+                through the platform.
               </p>
 
             </div>
@@ -1122,8 +1398,8 @@ export default function Home() {
                   navigate("/list-property")
                 }
               >
-                <FileText size={14} />
-                Request Valuation Report
+                <FileTextIcon />
+                List Your Property
               </button>
 
             </div>
@@ -1131,12 +1407,11 @@ export default function Home() {
           </div>
 
         </div>
+
       </section>
 
-      {/* =========================================================
-          FOOTER
-      ========================================================= */}
-<Footer/>
+      <Footer />
+
     </main>
   );
 }
@@ -1145,6 +1420,14 @@ function PlusIcon() {
   return (
     <span className="xp-plus-icon">
       +
+    </span>
+  );
+}
+
+function FileTextIcon() {
+  return (
+    <span className="xp-plus-icon">
+      ↗
     </span>
   );
 }

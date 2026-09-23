@@ -4,6 +4,7 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
+
 import {
   ArrowRight,
   BedDouble,
@@ -22,8 +23,14 @@ import "./Search.css";
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85";
 
+/* =========================================================
+   PROPERTY IMAGE
+========================================================= */
+
 const getPropertyImage = (property) => {
-  if (!property) return FALLBACK_IMAGE;
+  if (!property) {
+    return FALLBACK_IMAGE;
+  }
 
   const media =
     property.property_images ||
@@ -32,9 +39,11 @@ const getPropertyImage = (property) => {
     property.gallery ||
     [];
 
-  if (Array.isArray(media)) {
+  if (Array.isArray(media) && media.length > 0) {
     const imageItem = media.find((item) => {
-      if (!item) return false;
+      if (!item) {
+        return false;
+      }
 
       if (typeof item === "string") {
         return !/\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(
@@ -77,16 +86,71 @@ const getPropertyImage = (property) => {
   );
 };
 
+/* =========================================================
+   LOCATION
+========================================================= */
+
 const formatLocation = (property) => {
-  const location = property?.location?.trim?.() || "";
-  const city = property?.city?.trim?.() || "";
+  const location =
+    typeof property?.location === "string"
+      ? property.location.trim()
+      : "";
+
+  const city =
+    typeof property?.city === "string"
+      ? property.city.trim()
+      : "";
 
   if (location && city) {
     return `${location}, ${city}`;
   }
 
-  return location || city || "Location unavailable";
+  return (
+    location ||
+    city ||
+    "Location unavailable"
+  );
 };
+
+/* =========================================================
+   RESPONSE NORMALIZER
+========================================================= */
+
+const getPropertiesFromResponse = (data) => {
+  if (!data) {
+    return [];
+  }
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data.properties)) {
+    return data.properties;
+  }
+
+  if (Array.isArray(data.data)) {
+    return data.data;
+  }
+
+  if (Array.isArray(data.data?.properties)) {
+    return data.data.properties;
+  }
+
+  if (Array.isArray(data.results)) {
+    return data.results;
+  }
+
+  if (Array.isArray(data.data?.results)) {
+    return data.data.results;
+  }
+
+  return [];
+};
+
+/* =========================================================
+   SEARCH
+========================================================= */
 
 export default function Search() {
   const [params] = useSearchParams();
@@ -112,70 +176,186 @@ export default function Search() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* =========================================================
-     SEARCH
-  ========================================================= */
+  /* =======================================================
+     LOAD PROPERTIES
+  ======================================================= */
 
   useEffect(() => {
-    const searchProperties = async () => {
+    let cancelled = false;
+
+    const loadProperties = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const query = new URLSearchParams({
-          city,
-          type,
-          bedrooms,
-          maxPrice,
-        });
+        const cleanCity = city.trim();
 
-        const data = await apiFetch(
-          `/search?${query.toString()}`
+        const hasFilters =
+          Boolean(cleanCity) ||
+          type !== "All" ||
+          bedrooms !== "All" ||
+          Boolean(maxPrice);
+
+        let response;
+
+        /* ---------------------------------------------------
+           NO FILTERS
+
+           Load the normal approved property inventory.
+        --------------------------------------------------- */
+
+        if (!hasFilters) {
+          response = await apiFetch(
+            "/properties"
+          );
+        } else {
+          /* -------------------------------------------------
+             FILTERED SEARCH
+
+             Only send parameters that actually exist.
+          ------------------------------------------------- */
+
+          const query = new URLSearchParams();
+
+          if (cleanCity) {
+            query.set(
+              "city",
+              cleanCity
+            );
+          }
+
+          if (type && type !== "All") {
+            query.set(
+              "type",
+              type
+            );
+          }
+
+          if (
+            bedrooms &&
+            bedrooms !== "All"
+          ) {
+            query.set(
+              "bedrooms",
+              bedrooms
+            );
+          }
+
+          if (maxPrice) {
+            query.set(
+              "maxPrice",
+              maxPrice
+            );
+          }
+
+          const queryString =
+            query.toString();
+
+          response = await apiFetch(
+            queryString
+              ? `/search?${queryString}`
+              : "/properties"
+          );
+        }
+
+        if (cancelled) {
+          return;
+        }
+
+        const properties =
+          getPropertiesFromResponse(
+            response
+          );
+
+        setResults(properties);
+      } catch (err) {
+        if (cancelled) {
+          return;
+        }
+
+        console.error(
+          "SEARCH PROPERTIES ERROR:",
+          err
         );
 
-        setResults(data.properties || []);
-      } catch (err) {
-        console.error("Search error:", err);
-
         setResults([]);
+
         setError(
-          err.message ||
+          err?.message ||
             "Unable to load properties right now."
         );
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    searchProperties();
-  }, [city, type, bedrooms, maxPrice]);
+    loadProperties();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    city,
+    type,
+    bedrooms,
+    maxPrice,
+  ]);
 
   /* =========================================================
      SEARCH SUBMIT
   ========================================================= */
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = (event) => {
+    event.preventDefault();
 
     const query = new URLSearchParams();
 
-    if (city.trim()) {
-      query.set("city", city.trim());
+    const cleanCity = city.trim();
+
+    if (cleanCity) {
+      query.set(
+        "city",
+        cleanCity
+      );
     }
 
-    if (type !== "All") {
-      query.set("type", type);
+    if (
+      type &&
+      type !== "All"
+    ) {
+      query.set(
+        "type",
+        type
+      );
     }
 
-    if (bedrooms !== "All") {
-      query.set("bedrooms", bedrooms);
+    if (
+      bedrooms &&
+      bedrooms !== "All"
+    ) {
+      query.set(
+        "bedrooms",
+        bedrooms
+      );
     }
 
     if (maxPrice) {
-      query.set("maxPrice", maxPrice);
+      query.set(
+        "maxPrice",
+        maxPrice
+      );
     }
 
-    navigate(`/search?${query.toString()}`);
+    const queryString =
+      query.toString();
+
+    navigate(
+      queryString
+        ? `/search?${queryString}`
+        : "/search"
+    );
   };
 
   /* =========================================================
@@ -187,22 +367,45 @@ export default function Search() {
     setType("All");
     setBedrooms("All");
     setMaxPrice("");
+
+    navigate("/search");
   };
 
   /* =========================================================
      ACTIVE FILTER COUNT
   ========================================================= */
 
-  const activeFilterCount = useMemo(() => {
-    let count = 0;
+  const activeFilterCount =
+    useMemo(() => {
+      let count = 0;
 
-    if (city.trim()) count += 1;
-    if (type !== "All") count += 1;
-    if (bedrooms !== "All") count += 1;
-    if (maxPrice) count += 1;
+      if (city.trim()) {
+        count += 1;
+      }
 
-    return count;
-  }, [city, type, bedrooms, maxPrice]);
+      if (type !== "All") {
+        count += 1;
+      }
+
+      if (bedrooms !== "All") {
+        count += 1;
+      }
+
+      if (maxPrice) {
+        count += 1;
+      }
+
+      return count;
+    }, [
+      city,
+      type,
+      bedrooms,
+      maxPrice,
+    ]);
+
+  /* =========================================================
+     RENDER
+  ========================================================= */
 
   return (
     <div className="search-page">
@@ -212,7 +415,6 @@ export default function Search() {
       ===================================================== */}
 
       <section className="search-hero">
-
         <div className="search-hero-inner">
 
           <div className="search-hero-copy">
@@ -225,13 +427,15 @@ export default function Search() {
             <h1>
               Find property
               <br />
-              <span>with more certainty.</span>
+              <span>
+                with more certainty.
+              </span>
             </h1>
 
             <p>
-              Search properties by location, type,
-              configuration and budget across the
-              Xevoprop marketplace.
+              Search properties by location,
+              type, configuration and budget
+              across the Xevoprop marketplace.
             </p>
 
           </div>
@@ -255,7 +459,6 @@ export default function Search() {
           </div>
 
         </div>
-
       </section>
 
       {/* =====================================================
@@ -288,7 +491,9 @@ export default function Search() {
                 onClick={clearFilters}
               >
                 Clear {activeFilterCount} filter
-                {activeFilterCount > 1 ? "s" : ""}
+                {activeFilterCount > 1
+                  ? "s"
+                  : ""}
               </button>
             )}
 
@@ -312,8 +517,10 @@ export default function Search() {
                   type="text"
                   placeholder="City or location"
                   value={city}
-                  onChange={(e) =>
-                    setCity(e.target.value)
+                  onChange={(event) =>
+                    setCity(
+                      event.target.value
+                    )
                   }
                 />
 
@@ -335,8 +542,10 @@ export default function Search() {
 
                 <select
                   value={type}
-                  onChange={(e) =>
-                    setType(e.target.value)
+                  onChange={(event) =>
+                    setType(
+                      event.target.value
+                    )
                   }
                 >
                   <option value="All">
@@ -382,8 +591,10 @@ export default function Search() {
 
                 <select
                   value={bedrooms}
-                  onChange={(e) =>
-                    setBedrooms(e.target.value)
+                  onChange={(event) =>
+                    setBedrooms(
+                      event.target.value
+                    )
                   }
                 >
                   <option value="All">
@@ -429,8 +640,10 @@ export default function Search() {
 
                 <select
                   value={maxPrice}
-                  onChange={(e) =>
-                    setMaxPrice(e.target.value)
+                  onChange={(event) =>
+                    setMaxPrice(
+                      event.target.value
+                    )
                   }
                 >
                   <option value="">
@@ -486,7 +699,8 @@ export default function Search() {
 
             <span>
               Refine your search using location,
-              property type, configuration and budget.
+              property type, configuration and
+              budget.
             </span>
 
           </div>
@@ -531,9 +745,7 @@ export default function Search() {
 
         </div>
 
-        {/* ===================================================
-            ERROR
-        =================================================== */}
+        {/* ERROR */}
 
         {!loading && error && (
           <div className="search-state search-error-state">
@@ -552,7 +764,9 @@ export default function Search() {
 
             <button
               type="button"
-              onClick={() => window.location.reload()}
+              onClick={() =>
+                window.location.reload()
+              }
             >
               Try again
             </button>
@@ -560,37 +774,33 @@ export default function Search() {
           </div>
         )}
 
-        {/* ===================================================
-            LOADING
-        =================================================== */}
+        {/* LOADING */}
 
         {loading && (
           <div className="search-results-grid">
 
-            {Array.from({ length: 6 }).map(
-              (_, index) => (
-                <div
-                  className="search-card search-card-skeleton"
-                  key={index}
-                >
-                  <div className="skeleton-image" />
+            {Array.from({
+              length: 6,
+            }).map((_, index) => (
+              <div
+                className="search-card search-card-skeleton"
+                key={index}
+              >
+                <div className="skeleton-image" />
 
-                  <div className="skeleton-content">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
+                <div className="skeleton-content">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
                 </div>
-              )
-            )}
+              </div>
+            ))}
 
           </div>
         )}
 
-        {/* ===================================================
-            EMPTY
-        =================================================== */}
+        {/* EMPTY */}
 
         {!loading &&
           !error &&
@@ -606,28 +816,36 @@ export default function Search() {
               </span>
 
               <h2>
-                No properties match
-                your current search.
+                No properties found.
               </h2>
 
               <p>
-                Try a different location, property type,
-                configuration or budget.
+                There are currently no properties
+                matching your search. Try changing
+                the filters or browse the complete
+                property inventory.
               </p>
 
-              <button
-                type="button"
-                onClick={clearFilters}
-              >
-                Clear search filters
-              </button>
+              <div className="search-empty-actions">
+
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                >
+                  Clear search filters
+                </button>
+
+                <Link to="/properties">
+                  Browse all properties
+                  <ArrowRight size={15} />
+                </Link>
+
+              </div>
 
             </div>
           )}
 
-        {/* ===================================================
-            RESULTS GRID
-        =================================================== */}
+        {/* RESULTS */}
 
         {!loading &&
           !error &&
@@ -637,10 +855,14 @@ export default function Search() {
               {results.map((property) => {
 
                 const image =
-                  getPropertyImage(property);
+                  getPropertyImage(
+                    property
+                  );
 
                 const location =
-                  formatLocation(property);
+                  formatLocation(
+                    property
+                  );
 
                 return (
                   <Link
@@ -659,8 +881,8 @@ export default function Search() {
                           property.title ||
                           "Property"
                         }
-                        onError={(e) => {
-                          e.currentTarget.src =
+                        onError={(event) => {
+                          event.currentTarget.src =
                             FALLBACK_IMAGE;
                         }}
                       />

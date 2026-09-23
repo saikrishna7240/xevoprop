@@ -37,29 +37,7 @@
   gap: 28px;
 }
 
-/* =========================================================
-   LOGO
-   ========================================================= */
 
-.navbar-logo {
-  width: fit-content;
-
-  display: flex;
-  align-items: center;
-
-  text-decoration: none;
-}
-
-.navbar-logo img {
-  display: block;
-
-  width: 148px;
-  height: auto;
-
-  max-height: 44px;
-
-  object-fit: contain;
-}
 
 /* =========================================================
    PRIMARY NAVIGATION
@@ -622,9 +600,7 @@
     gap: 15px;
   }
 
-  .navbar-logo img {
-    width: 132px;
-  }
+ 
 
   .navbar-primary {
     gap: 0;
@@ -671,9 +647,7 @@
     gap: 15px;
   }
 
-  .navbar-logo img {
-    width: 132px;
-  }
+
 
   .navbar-primary,
   .navbar-actions {
@@ -864,9 +838,7 @@
     height: 64px;
   }
 
-  .navbar-logo img {
-    width: 122px;
-  }
+  
 
   .navbar-mobile-button {
     width: 38px;
@@ -901,4 +873,44 @@
   .mobile-nav-link {
     transition: none;
   }
+}
+
+.navbar-logo {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.navbar-logo img {
+  width: 48px;
+  height: 48px;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 10px rgba(15, 23, 42, 0.15),
+    0 1px 3px rgba(15, 23, 42, 0.08);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.navbar-logo img:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 16px rgba(15, 23, 42, 0.18),
+    0 2px 5px rgba(15, 23, 42, 0.08);
 }
