@@ -25,7 +25,8 @@ function Projects() {
   const [type, setType] = useState("All");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] =
+    useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -36,7 +37,10 @@ function Projects() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(`${API_URL}/projects/public`);
+      const response = await fetch(
+        `${API_URL}/projects/public`
+      );
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -51,10 +55,14 @@ function Projects() {
 
       setProjects(projectList);
     } catch (err) {
-      console.error("PUBLIC PROJECTS ERROR:", err);
+      console.error(
+        "PUBLIC PROJECTS ERROR:",
+        err
+      );
 
       setError(
-        err.message || "Unable to load projects."
+        err.message ||
+          "Unable to load projects."
       );
     } finally {
       setLoading(false);
@@ -65,7 +73,8 @@ function Projects() {
     let result = [...projects];
 
     if (search.trim()) {
-      const keyword = search.toLowerCase().trim();
+      const keyword =
+        search.toLowerCase().trim();
 
       result = result.filter((project) =>
         [
@@ -89,7 +98,8 @@ function Projects() {
       result = result.filter(
         (project) =>
           String(project.type || "")
-            .toLowerCase() === type.toLowerCase()
+            .toLowerCase() ===
+          type.toLowerCase()
       );
     }
 
@@ -126,6 +136,59 @@ function Projects() {
     return project.type || "Residential";
   };
 
+  /* =====================================================
+     STATUS HELPERS
+  ===================================================== */
+
+  const getStatusLabel = (status) => {
+    if (!status) return "Available";
+
+    const normalized = String(status)
+      .trim()
+      .toLowerCase();
+
+    const labels = {
+      approved: "Approved",
+      pending: "Pending",
+      rejected: "Rejected",
+      available: "Available",
+      active: "Active",
+      draft: "Draft",
+    };
+
+    return (
+      labels[normalized] ||
+      normalized.charAt(0).toUpperCase() +
+        normalized.slice(1)
+    );
+  };
+
+  const getStatusClass = (status) => {
+    if (!status) return "available";
+
+    const normalized = String(status)
+      .trim()
+      .toLowerCase();
+
+    if (normalized === "approved") {
+      return "approved";
+    }
+
+    if (normalized === "pending") {
+      return "pending";
+    }
+
+    if (normalized === "rejected") {
+      return "rejected";
+    }
+
+    if (normalized === "active") {
+      return "active";
+    }
+
+    return "available";
+  };
+
   const clearFilters = () => {
     setSearch("");
     setType("All");
@@ -134,14 +197,17 @@ function Projects() {
   return (
     <div className="projects-page">
 
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
       <header className="projects-header">
         <div className="projects-container">
 
           <div className="projects-breadcrumb">
-            Home
+            <span>Home</span>
             <span>/</span>
-            Projects
+            <span>Projects</span>
           </div>
 
           <div className="projects-heading-row">
@@ -164,8 +230,13 @@ function Projects() {
             </div>
 
             <div className="projects-header-stat">
-              <strong>{projects.length}</strong>
-              <span>Projects Listed</span>
+              <strong>
+                {projects.length}
+              </strong>
+
+              <span>
+                Projects Listed
+              </span>
             </div>
 
           </div>
@@ -175,7 +246,10 @@ function Projects() {
 
       <main className="projects-container">
 
-        {/* SEARCH */}
+        {/* =====================================================
+            SEARCH
+        ===================================================== */}
+
         <section className="projects-search-section">
 
           <div className="projects-search-card">
@@ -186,7 +260,9 @@ function Projects() {
 
               <div className="projects-search-field">
 
-                <label>SEARCH PROJECTS</label>
+                <label>
+                  SEARCH PROJECTS
+                </label>
 
                 <input
                   type="text"
@@ -205,7 +281,9 @@ function Projects() {
 
             <div className="projects-search-type">
 
-              <label>PROJECT TYPE</label>
+              <label>
+                PROJECT TYPE
+              </label>
 
               <div className="projects-type-select">
 
@@ -217,16 +295,18 @@ function Projects() {
                     setType(e.target.value)
                   }
                 >
-                  {projectTypes.map((projectType) => (
-                    <option
-                      key={projectType}
-                      value={projectType}
-                    >
-                      {projectType === "All"
-                        ? "All Project Types"
-                        : projectType}
-                    </option>
-                  ))}
+                  {projectTypes.map(
+                    (projectType) => (
+                      <option
+                        key={projectType}
+                        value={projectType}
+                      >
+                        {projectType === "All"
+                          ? "All Project Types"
+                          : projectType}
+                      </option>
+                    )
+                  )}
                 </select>
 
                 <ChevronDown size={15} />
@@ -236,8 +316,11 @@ function Projects() {
             </div>
 
             <button
+              type="button"
               className="projects-search-button"
-              onClick={() => setShowMobileFilters(false)}
+              onClick={() =>
+                setShowMobileFilters(false)
+              }
             >
               <Search size={17} />
               Search
@@ -247,29 +330,45 @@ function Projects() {
 
         </section>
 
-        {/* MARKETPLACE */}
+        {/* =====================================================
+            MARKETPLACE
+        ===================================================== */}
+
         <section className="projects-marketplace">
 
           <div className="projects-layout">
 
-            {/* SIDEBAR */}
+            {/* =================================================
+                SIDEBAR
+            ================================================= */}
+
             <aside
               className={`projects-sidebar ${
-                showMobileFilters ? "mobile-open" : ""
+                showMobileFilters
+                  ? "mobile-open"
+                  : ""
               }`}
             >
 
               <div className="projects-sidebar-header">
 
                 <div>
-                  <span>FILTER PROJECTS</span>
-                  <h3>Refine your search</h3>
+                  <span>
+                    FILTER PROJECTS
+                  </span>
+
+                  <h3>
+                    Refine your search
+                  </h3>
                 </div>
 
                 <button
+                  type="button"
                   className="projects-mobile-close"
                   onClick={() =>
-                    setShowMobileFilters(false)
+                    setShowMobileFilters(
+                      false
+                    )
                   }
                 >
                   <X size={19} />
@@ -285,30 +384,40 @@ function Projects() {
 
                 <div className="project-filter-options">
 
-                  {projectTypes.map((projectType) => (
-                    <button
-                      key={projectType}
-                      className={
-                        type === projectType
-                          ? "active"
-                          : ""
-                      }
-                      onClick={() => {
-                        setType(projectType);
-                        setShowMobileFilters(false);
-                      }}
-                    >
-                      <span className="filter-radio">
-                        {type === projectType && (
-                          <span />
-                        )}
-                      </span>
+                  {projectTypes.map(
+                    (projectType) => (
+                      <button
+                        type="button"
+                        key={projectType}
+                        className={
+                          type === projectType
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() => {
+                          setType(
+                            projectType
+                          );
+                          setShowMobileFilters(
+                            false
+                          );
+                        }}
+                      >
 
-                      {projectType === "All"
-                        ? "All Projects"
-                        : `${projectType}s`}
-                    </button>
-                  ))}
+                        <span className="filter-radio">
+                          {type ===
+                            projectType && (
+                            <span />
+                          )}
+                        </span>
+
+                        {projectType === "All"
+                          ? "All Projects"
+                          : `${projectType}s`}
+
+                      </button>
+                    )
+                  )}
 
                 </div>
 
@@ -342,6 +451,7 @@ function Projects() {
 
               {(search || type !== "All") && (
                 <button
+                  type="button"
                   className="clear-project-filters"
                   onClick={clearFilters}
                 >
@@ -351,7 +461,10 @@ function Projects() {
 
             </aside>
 
-            {/* RESULTS */}
+            {/* =================================================
+                RESULTS
+            ================================================= */}
+
             <div className="projects-results">
 
               <div className="projects-results-toolbar">
@@ -365,7 +478,8 @@ function Projects() {
                     {loading
                       ? "Discover projects"
                       : `${filteredProjects.length} ${
-                          filteredProjects.length === 1
+                          filteredProjects.length ===
+                          1
                             ? "Project"
                             : "Projects"
                         }`}
@@ -373,26 +487,39 @@ function Projects() {
                 </div>
 
                 <button
+                  type="button"
                   className="projects-mobile-filter-button"
                   onClick={() =>
-                    setShowMobileFilters(true)
+                    setShowMobileFilters(
+                      true
+                    )
                   }
                 >
-                  <SlidersHorizontal size={16} />
+                  <SlidersHorizontal
+                    size={16}
+                  />
                   Filters
                 </button>
 
               </div>
 
-              {/* ACTIVE FILTERS */}
+              {/* =================================================
+                  ACTIVE FILTERS
+              ================================================= */}
+
               {(search || type !== "All") && (
                 <div className="projects-active-filters">
 
-                  <span>Active filters:</span>
+                  <span>
+                    Active filters:
+                  </span>
 
                   {search && (
                     <button
-                      onClick={() => setSearch("")}
+                      type="button"
+                      onClick={() =>
+                        setSearch("")
+                      }
                     >
                       Search: {search}
                       <X size={13} />
@@ -401,7 +528,10 @@ function Projects() {
 
                   {type !== "All" && (
                     <button
-                      onClick={() => setType("All")}
+                      type="button"
+                      onClick={() =>
+                        setType("All")
+                      }
                     >
                       {type}
                       <X size={13} />
@@ -411,11 +541,15 @@ function Projects() {
                 </div>
               )}
 
-              {/* LOADING */}
+              {/* =================================================
+                  LOADING
+              ================================================= */}
+
               {loading && (
                 <div className="projects-loading">
 
                   <div className="projects-loading-grid">
+
                     {[1, 2, 3, 4, 5, 6].map(
                       (item) => (
                         <div
@@ -423,14 +557,20 @@ function Projects() {
                           key={item}
                         >
                           <div className="skeleton-image" />
+
                           <div className="skeleton-content">
+
                             <div className="skeleton-line large" />
+
                             <div className="skeleton-line medium" />
+
                             <div className="skeleton-line small" />
+
                           </div>
                         </div>
                       )
                     )}
+
                   </div>
 
                   <div className="projects-loading-message">
@@ -438,13 +578,17 @@ function Projects() {
                       size={18}
                       className="projects-spinner"
                     />
+
                     Discovering projects...
                   </div>
 
                 </div>
               )}
 
-              {/* ERROR */}
+              {/* =================================================
+                  ERROR
+              ================================================= */}
+
               {!loading && error && (
                 <div className="projects-error">
 
@@ -458,17 +602,24 @@ function Projects() {
 
                   <p>{error}</p>
 
-                  <button onClick={fetchProjects}>
+                  <button
+                    type="button"
+                    onClick={fetchProjects}
+                  >
                     Try Again
                   </button>
 
                 </div>
               )}
 
-              {/* EMPTY */}
+              {/* =================================================
+                  EMPTY
+              ================================================= */}
+
               {!loading &&
                 !error &&
-                filteredProjects.length === 0 && (
+                filteredProjects.length ===
+                  0 && (
                   <div className="projects-empty">
 
                     <div className="projects-empty-icon">
@@ -480,11 +631,12 @@ function Projects() {
                     </h2>
 
                     <p>
-                      Try another search or project
-                      type.
+                      Try another search or
+                      project type.
                     </p>
 
                     <button
+                      type="button"
                       onClick={clearFilters}
                     >
                       Clear Filters
@@ -493,17 +645,33 @@ function Projects() {
                   </div>
                 )}
 
-              {/* GRID */}
+              {/* =================================================
+                  PROJECT GRID
+              ================================================= */}
+
               {!loading &&
                 !error &&
-                filteredProjects.length > 0 && (
+                filteredProjects.length >
+                  0 && (
                   <div className="projects-grid">
 
                     {filteredProjects.map(
                       (project) => {
 
                         const image =
-                          getProjectImage(project);
+                          getProjectImage(
+                            project
+                          );
+
+                        const statusLabel =
+                          getStatusLabel(
+                            project.status
+                          );
+
+                        const statusClass =
+                          getStatusClass(
+                            project.status
+                          );
 
                         return (
                           <article
@@ -511,13 +679,19 @@ function Projects() {
                             key={project.id}
                           >
 
-                            {/* IMAGE */}
+                            {/* ================================
+                                IMAGE
+                            ================================= */}
+
                             <div className="project-card-image">
 
                               {image ? (
                                 <img
                                   src={image}
-                                  alt={project.name}
+                                  alt={
+                                    project.name ||
+                                    "Project"
+                                  }
                                   loading="lazy"
                                 />
                               ) : (
@@ -528,28 +702,39 @@ function Projects() {
                                 </div>
                               )}
 
+                              {/* STATUS AREA */}
+
                               <div className="project-card-top">
 
                                 <span className="project-verified">
                                   <CheckCircle2
                                     size={13}
+                                    strokeWidth={2.4}
                                   />
-                                  Verified
+
+                                  <span>
+                                    Verified
+                                  </span>
                                 </span>
 
-                                <span className="project-status">
-                                  {project.status ||
-                                    "Available"}
+                                <span
+                                  className={`project-status ${statusClass}`}
+                                >
+                                  {statusLabel}
                                 </span>
 
                               </div>
 
                             </div>
 
-                            {/* CONTENT */}
+                            {/* ================================
+                                CONTENT
+                            ================================= */}
+
                             <div className="project-card-content">
 
                               <div className="project-card-location">
+
                                 <MapPin size={15} />
 
                                 <span>
@@ -557,6 +742,7 @@ function Projects() {
                                     project
                                   )}
                                 </span>
+
                               </div>
 
                               <h2>
@@ -590,7 +776,9 @@ function Projects() {
                                       />
 
                                       <span>
-                                        {project.units}{" "}
+                                        {
+                                          project.units
+                                        }{" "}
                                         Units
                                       </span>
                                     </div>
@@ -606,13 +794,16 @@ function Projects() {
 
                               {project.description && (
                                 <p className="project-card-description">
-                                  {project.description}
+                                  {
+                                    project.description
+                                  }
                                 </p>
                               )}
 
                               <div className="project-card-footer">
 
                                 <div className="project-card-developer">
+
                                   <CalendarDays
                                     size={14}
                                   />
@@ -620,6 +811,7 @@ function Projects() {
                                   <span>
                                     Project
                                   </span>
+
                                 </div>
 
                                 <Link
@@ -627,6 +819,7 @@ function Projects() {
                                   className="project-view-btn"
                                 >
                                   View Project
+
                                   <ArrowRight
                                     size={16}
                                   />
@@ -651,6 +844,7 @@ function Projects() {
         </section>
 
       </main>
+
     </div>
   );
 }

@@ -1969,3 +1969,233 @@
     animation: none;
   }
 }
+/* =========================================================
+   XEVOPROP DIFFERENCE
+   Single visual + editorial content
+   ========================================================= */
+
+.xp-why-section {
+  background: #ffffff;
+}
+
+.xp-difference-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 55px;
+
+  align-items: start;
+
+  padding: 10px 0;
+}
+
+.xp-difference-icon {
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--xp-blue);
+
+  border: 1px solid #dbe5ef;
+  border-radius: 50%;
+
+  background: #f7faff;
+}
+
+.xp-difference-content {
+  max-width: 850px;
+}
+
+.xp-difference-content h2 {
+  margin: 0;
+
+  color: var(--xp-text);
+
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.xp-difference-intro {
+  max-width: 690px;
+
+  margin: 12px 0 28px;
+
+  color: var(--xp-secondary);
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.xp-difference-list {
+  border-top: 1px solid var(--xp-border);
+}
+
+.xp-difference-item {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+
+  gap: 16px;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--xp-border);
+}
+
+.xp-difference-number {
+  color: var(--xp-orange);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.xp-difference-item h3 {
+  margin: 0 0 5px;
+
+  color: var(--xp-text);
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.xp-difference-item p {
+  max-width: 700px;
+
+  margin: 0;
+
+  color: var(--xp-secondary);
+
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   FRICTIONLESS PATH
+   Continuous product journey
+   ========================================================= */
+
+.xp-milestones-section {
+  background: var(--xp-background);
+}
+
+.xp-path-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+
+  gap: 55px;
+
+  align-items: start;
+}
+
+.xp-path-icon {
+  width: 150px;
+  height: 150px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--xp-orange);
+
+  border: 1px solid #eadcc8;
+  border-radius: 50%;
+
+  background: #fffaf3;
+}
+
+.xp-path-content {
+  max-width: 1000px;
+}
+
+.xp-path-content h2 {
+  margin: 0;
+
+  color: var(--xp-text);
+
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.xp-path-intro {
+  margin: 10px 0 28px;
+
+  color: var(--xp-secondary);
+
+  font-size: 13px;
+}
+
+.xp-path-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  border-top: 1px solid var(--xp-border);
+  border-bottom: 1px solid var(--xp-border);
+}
+
+.xp-path-step {
+  position: relative;
+
+  min-height: 145px;
+
+  padding: 20px 24px 20px 0;
+
+  border-right: 1px solid var(--xp-border);
+}
+
+.xp-path-step:not(:first-child) {
+  padding-left: 24px;
+}
+
+.xp-path-step:last-child {
+  border-right: 0;
+}
+
+.xp-path-number {
+  display: block;
+
+  margin-bottom: 18px;
+
+  color: var(--xp-orange);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.xp-path-step-content h3 {
+  margin: 0 0 7px;
+
+  color: var(--xp-text);
+
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.xp-path-step-content p {
+  margin: 0;
+
+  color: var(--xp-secondary);
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.xp-path-arrow {
+  position: absolute;
+
+  top: 20px;
+  right: -10px;
+
+  color: var(--xp-orange);
+
+  background: var(--xp-background);
+
+  z-index: 2;
+}
