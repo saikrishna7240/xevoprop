@@ -99,12 +99,25 @@
    ========================================================= */
 
 .auth-logo {
-  width: 170px;
-  max-width: 75%;
-  height: auto;
+  width: 150px;
+  height: 150px;
+
+  max-width: none;
+
   display: block;
   margin: 0 auto 27px;
-  object-fit: contain;
+
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  border: 1px solid #e3eaf3;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 12px 28px rgba(15, 35, 55, 0.18),
+    0 4px 10px rgba(15, 35, 55, 0.10);
 }
 
 /* =========================================================
@@ -305,10 +318,7 @@
     border-radius: 20px;
   }
 
-  .auth-logo {
-    width: 155px;
-    margin-bottom: 23px;
-  }
+  
 
   .auth-card h1 {
     font-size: 25px;
@@ -316,6 +326,28 @@
 
   .auth-subtitle {
     margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-logo {
+    width: 125px;
+    height: 125px;
+
+    margin-bottom: 23px;
+
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .auth-logo {
+    width: 110px;
+    height: 110px;
+
+    margin-bottom: 20px;
+
+    border-radius: 14px;
   }
 }
 
