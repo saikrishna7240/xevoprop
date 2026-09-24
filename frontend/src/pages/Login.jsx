@@ -16,9 +16,12 @@ import "./Auth.css";
 
 
 function Login() {
-  const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const navigate =
+    useNavigate();
+
+  const { login } =
+    useAuth();
 
 
   const [step, setStep] =
@@ -53,128 +56,144 @@ function Login() {
      LOGIN
   ============================================================ */
 
-  const handleLogin = async (e) => {
+  const handleLogin =
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    setError("");
-    setLoading(true);
+      setError("");
+      setLoading(true);
 
-    try {
+      try {
 
-      const data =
-        await apiFetch(
-          "/auth/login",
-          {
-            method: "POST",
+        const data =
+          await apiFetch(
+            "/auth/login",
+            {
+              method: "POST",
 
-            body: JSON.stringify({
-              email:
-                email.trim().toLowerCase(),
+              body: JSON.stringify({
+                email:
+                  email
+                    .trim()
+                    .toLowerCase(),
 
-              password,
-            }),
-          }
+                password,
+              }),
+            }
+          );
+
+
+        if (
+          !data.requiresOtp
+        ) {
+
+          throw new Error(
+            "Unable to start email verification."
+          );
+        }
+
+
+        setStep("otp");
+
+      } catch (error) {
+
+        setError(
+          error.message ||
+            "Unable to login."
         );
 
+      } finally {
 
-      if (!data.requiresOtp) {
-        throw new Error(
-          "Unable to start email verification."
-        );
+        setLoading(false);
       }
-
-
-      setStep("otp");
-
-    } catch (error) {
-
-      setError(
-        error.message ||
-          "Unable to login."
-      );
-
-    } finally {
-
-      setLoading(false);
-    }
-  };
+    };
 
 
   /* ============================================================
-     VERIFY OTP
+     VERIFY LOGIN OTP
   ============================================================ */
 
-  const handleVerifyOTP = async (e) => {
+  const handleVerifyOTP =
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    setError("");
-    setLoading(true);
+      setError("");
+      setLoading(true);
 
-    try {
+      try {
 
-      const data =
-        await apiFetch(
-          "/auth/verify-login-otp",
-          {
-            method: "POST",
+        const data =
+          await apiFetch(
+            "/auth/verify-login-otp",
+            {
+              method: "POST",
 
-            body: JSON.stringify({
-              email:
-                email.trim().toLowerCase(),
+              body: JSON.stringify({
+                email:
+                  email
+                    .trim()
+                    .toLowerCase(),
 
-              otp: otp.trim(),
-            }),
-          }
+                otp:
+                  otp.trim(),
+              }),
+            }
+          );
+
+
+        if (
+          !data.token
+        ) {
+
+          throw new Error(
+            "OTP verified, but authentication token was not received."
+          );
+        }
+
+
+        /* JWT ONLY AFTER OTP */
+
+        login(data);
+
+
+        localStorage.setItem(
+          "username",
+          data.user?.name ||
+            data.user?.username ||
+            ""
         );
 
 
-      if (!data.token) {
-        throw new Error(
-          "OTP verified, but authentication token was not received."
+        if (
+          data.user?.role ===
+          "Admin"
+        ) {
+
+          navigate("/admin");
+
+        } else {
+
+          navigate("/dashboard");
+        }
+
+      } catch (error) {
+
+        setError(
+          error.message ||
+            "Unable to verify code."
         );
+
+      } finally {
+
+        setLoading(false);
       }
-
-
-      /* LOGIN ONLY AFTER OTP */
-
-      login(data);
-
-
-      localStorage.setItem(
-        "username",
-        data.user?.name ||
-          data.user?.username ||
-          ""
-      );
-
-
-      if (
-        data.user?.role ===
-        "Admin"
-      ) {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
-
-    } catch (error) {
-
-      setError(
-        error.message ||
-          "Unable to verify code."
-      );
-
-    } finally {
-
-      setLoading(false);
-    }
-  };
+    };
 
 
   /* ============================================================
-     BACK TO LOGIN
+     BACK
   ============================================================ */
 
   const handleBack = () => {
@@ -188,6 +207,7 @@ function Login() {
 
 
   return (
+
     <div className="auth-page">
 
       <div className="auth-card">
@@ -202,13 +222,16 @@ function Login() {
         {step === "credentials" ? (
 
           <>
+
             <span className="auth-label">
               WELCOME BACK
             </span>
 
+
             <h1>
               Sign in to Xevoprop
             </h1>
+
 
             <p className="auth-subtitle">
               Continue your property discovery
@@ -234,6 +257,7 @@ function Login() {
                   Email address
                 </label>
 
+
                 <input
                   type="email"
                   name="email"
@@ -256,6 +280,7 @@ function Login() {
                 <label>
                   Password
                 </label>
+
 
                 <div className="password-input-wrapper">
 
@@ -312,9 +337,11 @@ function Login() {
                 className="auth-submit"
                 disabled={loading}
               >
+
                 {loading
                   ? "Checking..."
                   : "Continue"}
+
               </button>
 
             </form>
@@ -329,25 +356,32 @@ function Login() {
               </Link>
 
             </p>
+
           </>
 
         ) : (
 
           <>
+
             <button
               type="button"
               className="auth-back-button"
               onClick={handleBack}
             >
+
               <ArrowLeft size={16} />
+
               Back
+
             </button>
 
 
             <div className="auth-otp-icon">
+
               <ShieldCheck
                 size={28}
               />
+
             </div>
 
 
@@ -394,9 +428,11 @@ function Login() {
                   Verification code
                 </label>
 
+
                 <div className="auth-otp-input-wrapper">
 
                   <Mail size={17} />
+
 
                   <input
                     type="text"
@@ -431,9 +467,11 @@ function Login() {
                   otp.length !== 6
                 }
               >
+
                 {loading
                   ? "Verifying..."
                   : "Verify & Sign In"}
+
               </button>
 
             </form>
@@ -445,6 +483,7 @@ function Login() {
             </p>
 
           </>
+
         )}
 
       </div>

@@ -10,11 +10,16 @@ const {
 } = require("../middleware/authMiddleware");
 
 const {
-  sendLoginOTP,
+  sendAuthOTP,
 } = require("../utils/sendEmail");
+
 
 const router = express.Router();
 
+
+/* ============================================================
+   ALLOWED ROLES
+============================================================ */
 
 const ALLOWED_ROLES = [
   "Buyer",
@@ -28,13 +33,16 @@ const ALLOWED_ROLES = [
 ============================================================ */
 
 const signToken = (user) => {
+
   return jwt.sign(
     {
       id: user.id,
       email: user.email,
       role: user.role,
     },
+
     process.env.JWT_SECRET,
+
     {
       expiresIn: "7d",
     }
@@ -47,13 +55,18 @@ const signToken = (user) => {
 ============================================================ */
 
 const generateOTP = () => {
+
   return crypto
-    .randomInt(100000, 1000000)
+    .randomInt(
+      100000,
+      1000000
+    )
     .toString();
 };
 
 
 const hashOTP = (otp) => {
+
   return crypto
     .createHash("sha256")
     .update(otp)
@@ -63,11 +76,13 @@ const hashOTP = (otp) => {
 
 /* ============================================================
    REGISTER
+   CREATE ACCOUNT → SEND EMAIL OTP
 ============================================================ */
 
 router.post(
   "/register",
   async (req, res) => {
+
     try {
 
       const {
@@ -90,8 +105,10 @@ router.post(
         !password ||
         !role
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Name, email, mobile number, password and role are required.",
         });
@@ -101,10 +118,10 @@ router.post(
       if (
         !ALLOWED_ROLES.includes(role)
       ) {
+
         return res.status(400).json({
           success: false,
-          message:
-            "Invalid role.",
+          message: "Invalid role.",
         });
       }
 
@@ -112,8 +129,10 @@ router.post(
       if (
         password.length < 6
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Password must be at least 6 characters.",
         });
@@ -124,6 +143,7 @@ router.post(
         email
           .trim()
           .toLowerCase();
+
 
       const normalizedPhone =
         phone.trim();
@@ -158,8 +178,10 @@ router.post(
         if (
           existingUser.is_verified === false
         ) {
+
           return res.status(409).json({
             success: false,
+
             message:
               "An account with this email is awaiting verification. Please verify your existing account.",
           });
@@ -168,6 +190,7 @@ router.post(
 
         return res.status(409).json({
           success: false,
+
           message:
             "An account with this email already exists.",
         });
@@ -193,8 +216,10 @@ router.post(
       if (
         phoneExists.rows.length
       ) {
+
         return res.status(409).json({
           success: false,
+
           message:
             "An account with this mobile number already exists.",
         });
@@ -273,7 +298,7 @@ router.post(
 
 
       /* ======================================================
-         INVALIDATE OLD REGISTRATION OTPs
+         INVALIDATE OLD REGISTRATION OTPS
       ====================================================== */
 
       await pool.query(
@@ -295,8 +320,10 @@ router.post(
       const otp =
         generateOTP();
 
+
       const otpHash =
         hashOTP(otp);
+
 
       const expiresAt =
         new Date(
@@ -306,7 +333,7 @@ router.post(
 
 
       /* ======================================================
-         STORE OTP
+         STORE REGISTRATION OTP
       ====================================================== */
 
       await pool.query(
@@ -339,7 +366,7 @@ router.post(
 
 
       /* ======================================================
-         SEND OTP
+         SEND REGISTRATION OTP
       ====================================================== */
 
       try {
@@ -373,6 +400,7 @@ router.post(
 
         return res.status(500).json({
           success: false,
+
           message:
             "Unable to send verification code. Please try again.",
         });
@@ -380,7 +408,7 @@ router.post(
 
 
       /* ======================================================
-         NO JWT YET
+         NO JWT HERE
       ====================================================== */
 
       return res.status(201).json({
@@ -403,14 +431,22 @@ router.post(
         error
       );
 
+
       return res.status(500).json({
         success: false,
+
         message:
           "Server error during registration.",
       });
     }
   }
 );
+
+
+/* ============================================================
+   VERIFY REGISTRATION OTP
+   OTP → VERIFY USER → JWT
+============================================================ */
 
 router.post(
   "/verify-register-otp",
@@ -432,8 +468,10 @@ router.post(
         !email?.trim() ||
         !otp?.trim()
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Email and verification code are required.",
         });
@@ -475,8 +513,10 @@ router.post(
       if (
         !userResult.rows.length
       ) {
+
         return res.status(404).json({
           success: false,
+
           message:
             "Account not found.",
         });
@@ -487,22 +527,34 @@ router.post(
         userResult.rows[0];
 
 
+      /* ======================================================
+         ACTIVE CHECK
+      ====================================================== */
+
       if (
         user.is_active === false
       ) {
+
         return res.status(403).json({
           success: false,
+
           message:
             "Your account is inactive.",
         });
       }
 
 
+      /* ======================================================
+         ALREADY VERIFIED
+      ====================================================== */
+
       if (
         user.is_verified === true
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "This account is already verified.",
         });
@@ -535,8 +587,10 @@ router.post(
       if (
         !otpResult.rows.length
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Verification code not found. Please register again.",
         });
@@ -570,6 +624,7 @@ router.post(
 
         return res.status(400).json({
           success: false,
+
           message:
             "Verification code has expired. Please register again.",
         });
@@ -577,7 +632,7 @@ router.post(
 
 
       /* ======================================================
-         ATTEMPTS
+         MAX ATTEMPTS
       ====================================================== */
 
       if (
@@ -596,6 +651,7 @@ router.post(
 
         return res.status(429).json({
           success: false,
+
           message:
             "Too many incorrect attempts. Please register again.",
         });
@@ -629,6 +685,7 @@ router.post(
 
         return res.status(401).json({
           success: false,
+
           message:
             "Incorrect verification code.",
         });
@@ -682,7 +739,7 @@ router.post(
 
 
       /* ======================================================
-         JWT ONLY NOW
+         CREATE JWT ONLY AFTER OTP
       ====================================================== */
 
       const token =
@@ -712,6 +769,7 @@ router.post(
 
       return res.status(500).json({
         success: false,
+
         message:
           "Server error during account verification.",
       });
@@ -722,13 +780,13 @@ router.post(
 
 /* ============================================================
    LOGIN
-   EMAIL + PASSWORD
-   SEND OTP
+   EMAIL + PASSWORD → SEND OTP
 ============================================================ */
 
 router.post(
   "/login",
   async (req, res) => {
+
     try {
 
       const {
@@ -737,14 +795,18 @@ router.post(
       } = req.body;
 
 
-      /* VALIDATION */
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
 
       if (
         !email?.trim() ||
         !password
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Email and password are required.",
         });
@@ -752,10 +814,14 @@ router.post(
 
 
       const normalizedEmail =
-        email.trim().toLowerCase();
+        email
+          .trim()
+          .toLowerCase();
 
 
-      /* FIND USER */
+      /* ======================================================
+         FIND USER
+      ====================================================== */
 
       const result =
         await pool.query(
@@ -780,30 +846,60 @@ router.post(
         );
 
 
-      if (!result.rows.length) {
+      if (
+        !result.rows.length
+      ) {
+
         return res.status(401).json({
           success: false,
+
           message:
             "Invalid email or password.",
         });
       }
 
 
-      const user = result.rows[0];
+      const user =
+        result.rows[0];
 
 
-      /* ACTIVE CHECK */
+      /* ======================================================
+         ACTIVE CHECK
+      ====================================================== */
 
-      if (user.is_active === false) {
+      if (
+        user.is_active === false
+      ) {
+
         return res.status(403).json({
           success: false,
+
           message:
             "Your account is inactive.",
         });
       }
 
 
-      /* PASSWORD CHECK */
+      /* ======================================================
+         EMAIL VERIFICATION CHECK
+      ====================================================== */
+
+      if (
+        user.is_verified !== true
+      ) {
+
+        return res.status(403).json({
+          success: false,
+
+          message:
+            "Please verify your email before logging in.",
+        });
+      }
+
+
+      /* ======================================================
+         PASSWORD CHECK
+      ====================================================== */
 
       const passwordMatches =
         await bcrypt.compare(
@@ -813,8 +909,10 @@ router.post(
 
 
       if (!passwordMatches) {
+
         return res.status(401).json({
           success: false,
+
           message:
             "Invalid email or password.",
         });
@@ -822,7 +920,7 @@ router.post(
 
 
       /* ======================================================
-         REMOVE OLD OTPs
+         INVALIDATE OLD LOGIN OTPS
       ====================================================== */
 
       await pool.query(
@@ -830,6 +928,7 @@ router.post(
         UPDATE login_otps
         SET used = TRUE
         WHERE user_id = $1
+        AND purpose = 'login'
         AND used = FALSE
         `,
         [user.id]
@@ -837,12 +936,16 @@ router.post(
 
 
       /* ======================================================
-         GENERATE OTP
+         GENERATE LOGIN OTP
       ====================================================== */
 
-      const otp = generateOTP();
+      const otp =
+        generateOTP();
 
-      const otpHash = hashOTP(otp);
+
+      const otpHash =
+        hashOTP(otp);
+
 
       const expiresAt =
         new Date(
@@ -852,7 +955,7 @@ router.post(
 
 
       /* ======================================================
-         STORE OTP HASH
+         STORE LOGIN OTP
       ====================================================== */
 
       await pool.query(
@@ -863,7 +966,8 @@ router.post(
           otp_hash,
           expires_at,
           attempts,
-          used
+          used,
+          purpose
         )
         VALUES
         (
@@ -871,7 +975,8 @@ router.post(
           $2,
           $3,
           0,
-          FALSE
+          FALSE,
+          'login'
         )
         `,
         [
@@ -883,21 +988,22 @@ router.post(
 
 
       /* ======================================================
-         SEND EMAIL
+         SEND LOGIN OTP THROUGH BREVO
       ====================================================== */
 
       try {
 
-        await sendLoginOTP({
+        await sendAuthOTP({
           email: user.email,
           name: user.name,
           otp,
+          purpose: "login",
         });
 
       } catch (emailError) {
 
         console.error(
-          "OTP email error:",
+          "Login OTP email error:",
           emailError
         );
 
@@ -907,6 +1013,7 @@ router.post(
           UPDATE login_otps
           SET used = TRUE
           WHERE user_id = $1
+          AND purpose = 'login'
           AND used = FALSE
           `,
           [user.id]
@@ -915,6 +1022,7 @@ router.post(
 
         return res.status(500).json({
           success: false,
+
           message:
             "Unable to send verification code. Please try again.",
         });
@@ -922,14 +1030,19 @@ router.post(
 
 
       /* ======================================================
-         DO NOT SEND JWT HERE
+         DO NOT CREATE JWT HERE
       ====================================================== */
 
       return res.json({
         success: true,
+
         requiresOtp: true,
+
+        purpose: "login",
+
         message:
           "Verification code sent to your email.",
+
         email: user.email,
       });
 
@@ -940,8 +1053,10 @@ router.post(
         error
       );
 
+
       return res.status(500).json({
         success: false,
+
         message:
           "Server error during login.",
       });
@@ -967,14 +1082,18 @@ router.post(
       } = req.body;
 
 
-      /* VALIDATION */
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
 
       if (
         !email?.trim() ||
         !otp?.trim()
       ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Email and verification code are required.",
         });
@@ -982,10 +1101,14 @@ router.post(
 
 
       const normalizedEmail =
-        email.trim().toLowerCase();
+        email
+          .trim()
+          .toLowerCase();
 
 
-      /* FIND USER */
+      /* ======================================================
+         FIND USER
+      ====================================================== */
 
       const userResult =
         await pool.query(
@@ -1009,9 +1132,13 @@ router.post(
         );
 
 
-      if (!userResult.rows.length) {
+      if (
+        !userResult.rows.length
+      ) {
+
         return res.status(401).json({
           success: false,
+
           message:
             "Invalid verification request.",
         });
@@ -1022,9 +1149,17 @@ router.post(
         userResult.rows[0];
 
 
-      if (user.is_active === false) {
+      /* ======================================================
+         ACTIVE CHECK
+      ====================================================== */
+
+      if (
+        user.is_active === false
+      ) {
+
         return res.status(403).json({
           success: false,
+
           message:
             "Your account is inactive.",
         });
@@ -1032,7 +1167,24 @@ router.post(
 
 
       /* ======================================================
-         FIND ACTIVE OTP
+         VERIFIED CHECK
+      ====================================================== */
+
+      if (
+        user.is_verified !== true
+      ) {
+
+        return res.status(403).json({
+          success: false,
+
+          message:
+            "Please verify your email before logging in.",
+        });
+      }
+
+
+      /* ======================================================
+         FIND LOGIN OTP
       ====================================================== */
 
       const otpResult =
@@ -1045,6 +1197,7 @@ router.post(
             attempts
           FROM login_otps
           WHERE user_id = $1
+          AND purpose = 'login'
           AND used = FALSE
           ORDER BY created_at DESC
           LIMIT 1
@@ -1053,9 +1206,13 @@ router.post(
         );
 
 
-      if (!otpResult.rows.length) {
+      if (
+        !otpResult.rows.length
+      ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Verification code not found. Please login again.",
         });
@@ -1086,8 +1243,10 @@ router.post(
           [loginOtp.id]
         );
 
+
         return res.status(400).json({
           success: false,
+
           message:
             "Verification code has expired. Please login again.",
         });
@@ -1111,8 +1270,10 @@ router.post(
           [loginOtp.id]
         );
 
+
         return res.status(429).json({
           success: false,
+
           message:
             "Too many incorrect attempts. Please login again.",
         });
@@ -1143,8 +1304,10 @@ router.post(
           [loginOtp.id]
         );
 
+
         return res.status(401).json({
           success: false,
+
           message:
             "Incorrect verification code.",
         });
@@ -1152,7 +1315,7 @@ router.post(
 
 
       /* ======================================================
-         OTP SUCCESS
+         MARK OTP USED
       ====================================================== */
 
       await pool.query(
@@ -1166,7 +1329,7 @@ router.post(
 
 
       /* ======================================================
-         JWT CREATED ONLY AFTER OTP
+         CREATE JWT ONLY NOW
       ====================================================== */
 
       const token =
@@ -1191,8 +1354,10 @@ router.post(
         error
       );
 
+
       return res.status(500).json({
         success: false,
+
         message:
           "Server error during OTP verification.",
       });
@@ -1234,9 +1399,13 @@ router.get(
         );
 
 
-      if (!result.rows.length) {
+      if (
+        !result.rows.length
+      ) {
+
         return res.status(404).json({
           success: false,
+
           message:
             "User not found.",
         });
@@ -1245,7 +1414,9 @@ router.get(
 
       return res.json({
         success: true,
-        user: result.rows[0],
+
+        user:
+          result.rows[0],
       });
 
     } catch (error) {
@@ -1255,8 +1426,10 @@ router.get(
         error
       );
 
+
       return res.status(500).json({
         success: false,
+
         message:
           "Failed to load profile.",
       });
@@ -1282,9 +1455,13 @@ router.put(
       } = req.body;
 
 
-      if (!name?.trim()) {
+      if (
+        !name?.trim()
+      ) {
+
         return res.status(400).json({
           success: false,
+
           message:
             "Name is required.",
         });
@@ -1320,9 +1497,13 @@ router.put(
         );
 
 
-      if (!result.rows.length) {
+      if (
+        !result.rows.length
+      ) {
+
         return res.status(404).json({
           success: false,
+
           message:
             "User not found.",
         });
@@ -1331,9 +1512,12 @@ router.put(
 
       return res.json({
         success: true,
+
         message:
           "Profile updated successfully.",
-        user: result.rows[0],
+
+        user:
+          result.rows[0],
       });
 
     } catch (error) {
@@ -1343,8 +1527,10 @@ router.put(
         error
       );
 
+
       return res.status(500).json({
         success: false,
+
         message:
           "Failed to update profile.",
       });

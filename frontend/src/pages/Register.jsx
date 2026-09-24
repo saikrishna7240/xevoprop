@@ -16,9 +16,12 @@ import "./Auth.css";
 
 
 function Register() {
-  const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const navigate =
+    useNavigate();
+
+  const { login } =
+    useAuth();
 
 
   const [step, setStep] =
@@ -79,63 +82,67 @@ function Register() {
      REGISTER
   ============================================================ */
 
-  const handleRegister = async (e) => {
+  const handleRegister =
+    async (e) => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    setError("");
-    setLoading(true);
+      setError("");
+      setLoading(true);
 
-    try {
+      try {
 
-      const data =
-        await apiFetch(
-          "/auth/register",
-          {
-            method: "POST",
+        const data =
+          await apiFetch(
+            "/auth/register",
+            {
+              method: "POST",
 
-            body: JSON.stringify({
-              name:
-                formData.name.trim(),
+              body: JSON.stringify({
+                name:
+                  formData.name.trim(),
 
-              email:
-                formData.email
-                  .trim()
-                  .toLowerCase(),
+                email:
+                  formData.email
+                    .trim()
+                    .toLowerCase(),
 
-              phone:
-                formData.phone.trim(),
+                phone:
+                  formData.phone.trim(),
 
-              password:
-                formData.password,
+                password:
+                  formData.password,
 
-              role,
-            }),
-          }
+                role,
+              }),
+            }
+          );
+
+
+        if (
+          !data.requiresOtp
+        ) {
+
+          throw new Error(
+            "Unable to start email verification."
+          );
+        }
+
+
+        setStep("otp");
+
+      } catch (error) {
+
+        setError(
+          error.message ||
+            "Unable to create account."
         );
 
+      } finally {
 
-      if (!data.requiresOtp) {
-        throw new Error(
-          "Unable to start email verification."
-        );
+        setLoading(false);
       }
-
-
-      setStep("otp");
-
-    } catch (error) {
-
-      setError(
-        error.message ||
-          "Unable to create account."
-      );
-
-    } finally {
-
-      setLoading(false);
-    }
-  };
+    };
 
 
   /* ============================================================
@@ -171,12 +178,17 @@ function Register() {
           );
 
 
-        if (!data.token) {
+        if (
+          !data.token
+        ) {
+
           throw new Error(
             "Account verified, but authentication token was not received."
           );
         }
 
+
+        /* JWT ONLY AFTER OTP */
 
         login(data);
 
@@ -193,8 +205,11 @@ function Register() {
           data.user?.role ===
           "Admin"
         ) {
+
           navigate("/admin");
+
         } else {
+
           navigate("/dashboard");
         }
 
@@ -213,7 +228,7 @@ function Register() {
 
 
   /* ============================================================
-     BACK TO DETAILS
+     BACK
   ============================================================ */
 
   const handleBack = () => {
@@ -227,6 +242,7 @@ function Register() {
 
 
   return (
+
     <div className="auth-page">
 
       <div className="auth-card">
@@ -241,13 +257,16 @@ function Register() {
         {step === "details" ? (
 
           <>
+
             <span className="auth-label">
               JOIN XEVOPROP
             </span>
 
+
             <h1>
               Create your account
             </h1>
+
 
             <p className="auth-subtitle">
               Join a smarter and more direct
@@ -267,21 +286,18 @@ function Register() {
               onSubmit={handleRegister}
             >
 
-              {/* NAME */}
-
               <div className="auth-field">
 
                 <label>
                   Full name
                 </label>
 
+
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   placeholder="Your name"
                   autoComplete="name"
                   required
@@ -290,21 +306,18 @@ function Register() {
               </div>
 
 
-              {/* EMAIL */}
-
               <div className="auth-field">
 
                 <label>
                   Email address
                 </label>
 
+
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   placeholder="you@gmail.com"
                   autoComplete="email"
                   required
@@ -313,21 +326,18 @@ function Register() {
               </div>
 
 
-              {/* PHONE */}
-
               <div className="auth-field">
 
                 <label>
                   Mobile number
                 </label>
 
+
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   placeholder="+91 XXXXX XXXXX"
                   autoComplete="tel"
                   required
@@ -336,13 +346,12 @@ function Register() {
               </div>
 
 
-              {/* PASSWORD */}
-
               <div className="auth-field">
 
                 <label>
                   Password
                 </label>
+
 
                 <div className="password-input-wrapper">
 
@@ -364,6 +373,7 @@ function Register() {
                     minLength="6"
                     required
                   />
+
 
                   <button
                     type="button"
@@ -391,14 +401,13 @@ function Register() {
 
                 </div>
 
+
                 <span className="password-hint">
                   Minimum 6 characters
                 </span>
 
               </div>
 
-
-              {/* ROLE */}
 
               <p className="role-title">
                 I am joining as
@@ -413,6 +422,7 @@ function Register() {
                   "Developer",
                 ].map(
                   (item) => (
+
                     <button
                       type="button"
                       key={item}
@@ -427,6 +437,7 @@ function Register() {
                     >
                       {item}
                     </button>
+
                   )
                 )}
 
@@ -438,9 +449,11 @@ function Register() {
                 className="auth-submit"
                 disabled={loading}
               >
+
                 {loading
                   ? "Creating account..."
                   : "Continue"}
+
               </button>
 
             </form>
@@ -455,25 +468,32 @@ function Register() {
               </Link>
 
             </p>
+
           </>
 
         ) : (
 
           <>
+
             <button
               type="button"
               className="auth-back-button"
               onClick={handleBack}
             >
+
               <ArrowLeft size={16} />
+
               Back
+
             </button>
 
 
             <div className="auth-otp-icon">
+
               <ShieldCheck
                 size={28}
               />
+
             </div>
 
 
@@ -520,9 +540,11 @@ function Register() {
                   Verification code
                 </label>
 
+
                 <div className="auth-otp-input-wrapper">
 
                   <Mail size={17} />
+
 
                   <input
                     type="text"
@@ -557,9 +579,11 @@ function Register() {
                   otp.length !== 6
                 }
               >
+
                 {loading
                   ? "Verifying..."
                   : "Verify & Create Account"}
+
               </button>
 
             </form>
@@ -571,6 +595,7 @@ function Register() {
             </p>
 
           </>
+
         )}
 
       </div>

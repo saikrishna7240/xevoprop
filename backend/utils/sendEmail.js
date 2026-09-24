@@ -1,5 +1,9 @@
 const nodemailer = require("nodemailer");
 
+/* ============================================================
+   BREVO SMTP TRANSPORTER
+============================================================ */
+
 const transporter = nodemailer.createTransport({
   host:
     process.env.BREVO_SMTP_HOST ||
@@ -18,6 +22,10 @@ const transporter = nodemailer.createTransport({
 });
 
 
+/* ============================================================
+   SEND AUTHENTICATION OTP
+============================================================ */
+
 const sendAuthOTP = async ({
   email,
   name,
@@ -27,6 +35,7 @@ const sendAuthOTP = async ({
 
   const isRegistration =
     purpose === "register";
+
 
   const subject = isRegistration
     ? "Verify your Xevoprop account"
@@ -44,11 +53,17 @@ const sendAuthOTP = async ({
 
 
   const mailOptions = {
-    from: `"${process.env.BREVO_FROM_NAME || "Xevoprop"}" <${process.env.BREVO_FROM_EMAIL}>`,
+
+    from:
+      `"${process.env.BREVO_FROM_NAME || "Xevoprop"}" <${process.env.BREVO_FROM_EMAIL}>`,
 
     to: email,
 
     subject,
+
+    /* ========================================================
+       PLAIN TEXT
+    ======================================================== */
 
     text: `
 Hello ${name || "there"},
@@ -67,13 +82,26 @@ Regards,
 Xevoprop
 `,
 
+    /* ========================================================
+       HTML EMAIL
+    ======================================================== */
+
     html: `
 <!DOCTYPE html>
+
 <html>
+
 <head>
   <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>${heading}</title>
 </head>
+
 
 <body
   style="
@@ -93,6 +121,8 @@ Xevoprop
     "
   >
 
+    <!-- HEADER -->
+
     <div
       style="
         padding:24px 28px;
@@ -100,6 +130,7 @@ Xevoprop
         color:#ffffff;
       "
     >
+
       <h2
         style="
           margin:0;
@@ -108,6 +139,7 @@ Xevoprop
       >
         XEVOPROP
       </h2>
+
 
       <p
         style="
@@ -118,10 +150,17 @@ Xevoprop
       >
         Real estate, made more certain.
       </p>
+
     </div>
 
 
-    <div style="padding:32px 28px;">
+    <!-- CONTENT -->
+
+    <div
+      style="
+        padding:32px 28px;
+      "
+    >
 
       <h2
         style="
@@ -133,6 +172,7 @@ Xevoprop
         ${heading}
       </h2>
 
+
       <p
         style="
           margin:0 0 24px;
@@ -141,10 +181,13 @@ Xevoprop
           line-height:1.6;
         "
       >
-        Hello ${name || "there"},
+        Hello ${name || "there"},<br /><br />
+
         ${description}
       </p>
 
+
+      <!-- OTP -->
 
       <div
         style="
@@ -166,6 +209,7 @@ Xevoprop
         >
           VERIFICATION CODE
         </div>
+
 
         <div
           style="
@@ -193,20 +237,39 @@ Xevoprop
         <strong>5 minutes</strong>.
       </p>
 
+
+      <p
+        style="
+          margin:12px 0 0;
+          color:#7c8797;
+          font-size:12px;
+          line-height:1.6;
+        "
+      >
+        If you did not request this code,
+        you can safely ignore this email.
+      </p>
+
     </div>
 
   </div>
 
 </body>
+
 </html>
 `,
   };
+
 
   return transporter.sendMail(
     mailOptions
   );
 };
 
+
+/* ============================================================
+   EXPORT
+============================================================ */
 
 module.exports = {
   sendAuthOTP,
