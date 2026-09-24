@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const { pool } = require("../config/db");
 
@@ -8,13 +9,19 @@ const {
   authenticateToken,
 } = require("../middleware/authMiddleware");
 
+const {
+  sendLoginOTP,
+} = require("../utils/sendEmail");
+
 const router = express.Router();
+
 
 const ALLOWED_ROLES = [
   "Buyer",
   "Seller",
   "Developer",
 ];
+
 
 /* ============================================================
    JWT
@@ -34,6 +41,26 @@ const signToken = (user) => {
   );
 };
 
+
+/* ============================================================
+   OTP HELPERS
+============================================================ */
+
+const generateOTP = () => {
+  return crypto
+    .randomInt(100000, 1000000)
+    .toString();
+};
+
+
+const hashOTP = (otp) => {
+  return crypto
+    .createHash("sha256")
+    .update(otp)
+    .digest("hex");
+};
+
+
 /* ============================================================
    REGISTER
 ============================================================ */
@@ -42,6 +69,7 @@ router.post(
   "/register",
   async (req, res) => {
     try {
+
       const {
         name,
         email,
@@ -50,7 +78,10 @@ router.post(
         role,
       } = req.body;
 
-      /* VALIDATION */
+
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
 
       if (
         !name?.trim() ||
@@ -66,14 +97,21 @@ router.post(
         });
       }
 
-      if (!ALLOWED_ROLES.includes(role)) {
+
+      if (
+        !ALLOWED_ROLES.includes(role)
+      ) {
         return res.status(400).json({
           success: false,
-          message: "Invalid role.",
+          message:
+            "Invalid role.",
         });
       }
 
-      if (password.length < 6) {
+
+      if (
+        password.length < 6
+      ) {
         return res.status(400).json({
           success: false,
           message:
@@ -81,18 +119,26 @@ router.post(
         });
       }
 
+
       const normalizedEmail =
-        email.trim().toLowerCase();
+        email
+          .trim()
+          .toLowerCase();
 
       const normalizedPhone =
         phone.trim();
 
-      /* CHECK EMAIL */
+
+      /* ======================================================
+         CHECK EMAIL
+      ====================================================== */
 
       const emailExists =
         await pool.query(
           `
-          SELECT id
+          SELECT
+            id,
+            is_verified
           FROM users
           WHERE LOWER(email) = LOWER($1)
           LIMIT 1
@@ -100,7 +146,26 @@ router.post(
           [normalizedEmail]
         );
 
-      if (emailExists.rows.length) {
+
+      if (
+        emailExists.rows.length
+      ) {
+
+        const existingUser =
+          emailExists.rows[0];
+
+
+        if (
+          existingUser.is_verified === false
+        ) {
+          return res.status(409).json({
+            success: false,
+            message:
+              "An account with this email is awaiting verification. Please verify your existing account.",
+          });
+        }
+
+
         return res.status(409).json({
           success: false,
           message:
@@ -108,7 +173,10 @@ router.post(
         });
       }
 
-      /* CHECK PHONE */
+
+      /* ======================================================
+         CHECK PHONE
+      ====================================================== */
 
       const phoneExists =
         await pool.query(
@@ -121,7 +189,10 @@ router.post(
           [normalizedPhone]
         );
 
-      if (phoneExists.rows.length) {
+
+      if (
+        phoneExists.rows.length
+      ) {
         return res.status(409).json({
           success: false,
           message:
@@ -129,7 +200,10 @@ router.post(
         });
       }
 
-      /* HASH PASSWORD */
+
+      /* ======================================================
+         HASH PASSWORD
+      ====================================================== */
 
       const passwordHash =
         await bcrypt.hash(
@@ -137,7 +211,10 @@ router.post(
           10
         );
 
-      /* CREATE USER */
+
+      /* ======================================================
+         CREATE USER
+      ====================================================== */
 
       const result =
         await pool.query(
@@ -163,7 +240,7 @@ router.post(
             $4,
             $5,
             $6,
-            TRUE,
+            FALSE,
             TRUE,
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP
@@ -190,20 +267,137 @@ router.post(
           ]
         );
 
-      const user = result.rows[0];
 
-      /* CREATE JWT DIRECTLY */
+      const user =
+        result.rows[0];
 
-      const token = signToken(user);
+
+      /* ======================================================
+         INVALIDATE OLD REGISTRATION OTPs
+      ====================================================== */
+
+      await pool.query(
+        `
+        UPDATE login_otps
+        SET used = TRUE
+        WHERE user_id = $1
+        AND purpose = 'register'
+        AND used = FALSE
+        `,
+        [user.id]
+      );
+
+
+      /* ======================================================
+         GENERATE OTP
+      ====================================================== */
+
+      const otp =
+        generateOTP();
+
+      const otpHash =
+        hashOTP(otp);
+
+      const expiresAt =
+        new Date(
+          Date.now() +
+          5 * 60 * 1000
+        );
+
+
+      /* ======================================================
+         STORE OTP
+      ====================================================== */
+
+      await pool.query(
+        `
+        INSERT INTO login_otps
+        (
+          user_id,
+          otp_hash,
+          expires_at,
+          attempts,
+          used,
+          purpose
+        )
+        VALUES
+        (
+          $1,
+          $2,
+          $3,
+          0,
+          FALSE,
+          'register'
+        )
+        `,
+        [
+          user.id,
+          otpHash,
+          expiresAt,
+        ]
+      );
+
+
+      /* ======================================================
+         SEND OTP
+      ====================================================== */
+
+      try {
+
+        await sendAuthOTP({
+          email: user.email,
+          name: user.name,
+          otp,
+          purpose: "register",
+        });
+
+      } catch (emailError) {
+
+        console.error(
+          "Registration OTP email error:",
+          emailError
+        );
+
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE user_id = $1
+          AND purpose = 'register'
+          AND used = FALSE
+          `,
+          [user.id]
+        );
+
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Unable to send verification code. Please try again.",
+        });
+      }
+
+
+      /* ======================================================
+         NO JWT YET
+      ====================================================== */
 
       return res.status(201).json({
         success: true,
+
+        requiresOtp: true,
+
+        purpose: "register",
+
         message:
-          "Registration successful.",
-        token,
-        user,
+          "Verification code sent to your email.",
+
+        email: user.email,
       });
+
     } catch (error) {
+
       console.error(
         "Registration error:",
         error
@@ -218,34 +412,348 @@ router.post(
   }
 );
 
+router.post(
+  "/verify-register-otp",
+  async (req, res) => {
+
+    try {
+
+      const {
+        email,
+        otp,
+      } = req.body;
+
+
+      /* ======================================================
+         VALIDATION
+      ====================================================== */
+
+      if (
+        !email?.trim() ||
+        !otp?.trim()
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Email and verification code are required.",
+        });
+      }
+
+
+      const normalizedEmail =
+        email
+          .trim()
+          .toLowerCase();
+
+
+      /* ======================================================
+         FIND USER
+      ====================================================== */
+
+      const userResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          FROM users
+          WHERE LOWER(email) = LOWER($1)
+          LIMIT 1
+          `,
+          [normalizedEmail]
+        );
+
+
+      if (
+        !userResult.rows.length
+      ) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Account not found.",
+        });
+      }
+
+
+      const user =
+        userResult.rows[0];
+
+
+      if (
+        user.is_active === false
+      ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Your account is inactive.",
+        });
+      }
+
+
+      if (
+        user.is_verified === true
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "This account is already verified.",
+        });
+      }
+
+
+      /* ======================================================
+         FIND REGISTRATION OTP
+      ====================================================== */
+
+      const otpResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            otp_hash,
+            expires_at,
+            attempts
+          FROM login_otps
+          WHERE user_id = $1
+          AND purpose = 'register'
+          AND used = FALSE
+          ORDER BY created_at DESC
+          LIMIT 1
+          `,
+          [user.id]
+        );
+
+
+      if (
+        !otpResult.rows.length
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Verification code not found. Please register again.",
+        });
+      }
+
+
+      const registrationOtp =
+        otpResult.rows[0];
+
+
+      /* ======================================================
+         EXPIRY
+      ====================================================== */
+
+      if (
+        new Date(
+          registrationOtp.expires_at
+        ).getTime() <
+        Date.now()
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE id = $1
+          `,
+          [registrationOtp.id]
+        );
+
+
+        return res.status(400).json({
+          success: false,
+          message:
+            "Verification code has expired. Please register again.",
+        });
+      }
+
+
+      /* ======================================================
+         ATTEMPTS
+      ====================================================== */
+
+      if (
+        registrationOtp.attempts >= 5
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE id = $1
+          `,
+          [registrationOtp.id]
+        );
+
+
+        return res.status(429).json({
+          success: false,
+          message:
+            "Too many incorrect attempts. Please register again.",
+        });
+      }
+
+
+      /* ======================================================
+         VERIFY OTP
+      ====================================================== */
+
+      const submittedOtpHash =
+        hashOTP(
+          otp.trim()
+        );
+
+
+      if (
+        submittedOtpHash !==
+        registrationOtp.otp_hash
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET attempts = attempts + 1
+          WHERE id = $1
+          `,
+          [registrationOtp.id]
+        );
+
+
+        return res.status(401).json({
+          success: false,
+          message:
+            "Incorrect verification code.",
+        });
+      }
+
+
+      /* ======================================================
+         MARK OTP USED
+      ====================================================== */
+
+      await pool.query(
+        `
+        UPDATE login_otps
+        SET used = TRUE
+        WHERE id = $1
+        `,
+        [registrationOtp.id]
+      );
+
+
+      /* ======================================================
+         VERIFY USER
+      ====================================================== */
+
+      const updatedUserResult =
+        await pool.query(
+          `
+          UPDATE users
+          SET
+            is_verified = TRUE,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = $1
+          RETURNING
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          `,
+          [user.id]
+        );
+
+
+      const verifiedUser =
+        updatedUserResult.rows[0];
+
+
+      /* ======================================================
+         JWT ONLY NOW
+      ====================================================== */
+
+      const token =
+        signToken(
+          verifiedUser
+        );
+
+
+      return res.json({
+        success: true,
+
+        message:
+          "Account verified successfully.",
+
+        token,
+
+        user: verifiedUser,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Registration OTP verification error:",
+        error
+      );
+
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Server error during account verification.",
+      });
+    }
+  }
+);
+
+
 /* ============================================================
    LOGIN
+   EMAIL + PASSWORD
+   SEND OTP
 ============================================================ */
 
 router.post(
   "/login",
   async (req, res) => {
     try {
+
       const {
-        phone,
+        email,
         password,
       } = req.body;
+
 
       /* VALIDATION */
 
       if (
-        !phone?.trim() ||
+        !email?.trim() ||
         !password
       ) {
         return res.status(400).json({
           success: false,
           message:
-            "Mobile number and password are required.",
+            "Email and password are required.",
         });
       }
 
-      const normalizedPhone =
-        phone.trim();
+
+      const normalizedEmail =
+        email.trim().toLowerCase();
+
 
       /* FIND USER */
 
@@ -265,21 +773,24 @@ router.post(
             created_at,
             updated_at
           FROM users
-          WHERE phone = $1
+          WHERE LOWER(email) = LOWER($1)
           LIMIT 1
           `,
-          [normalizedPhone]
+          [normalizedEmail]
         );
+
 
       if (!result.rows.length) {
         return res.status(401).json({
           success: false,
           message:
-            "Invalid mobile number or password.",
+            "Invalid email or password.",
         });
       }
 
+
       const user = result.rows[0];
+
 
       /* ACTIVE CHECK */
 
@@ -291,7 +802,8 @@ router.post(
         });
       }
 
-      /* PASSWORD */
+
+      /* PASSWORD CHECK */
 
       const passwordMatches =
         await bcrypt.compare(
@@ -299,30 +811,130 @@ router.post(
           user.password
         );
 
+
       if (!passwordMatches) {
         return res.status(401).json({
           success: false,
           message:
-            "Invalid mobile number or password.",
+            "Invalid email or password.",
         });
       }
 
-      /* REMOVE PASSWORD FROM RESPONSE */
 
-      delete user.password;
+      /* ======================================================
+         REMOVE OLD OTPs
+      ====================================================== */
 
-      /* JWT */
+      await pool.query(
+        `
+        UPDATE login_otps
+        SET used = TRUE
+        WHERE user_id = $1
+        AND used = FALSE
+        `,
+        [user.id]
+      );
 
-      const token = signToken(user);
+
+      /* ======================================================
+         GENERATE OTP
+      ====================================================== */
+
+      const otp = generateOTP();
+
+      const otpHash = hashOTP(otp);
+
+      const expiresAt =
+        new Date(
+          Date.now() +
+          5 * 60 * 1000
+        );
+
+
+      /* ======================================================
+         STORE OTP HASH
+      ====================================================== */
+
+      await pool.query(
+        `
+        INSERT INTO login_otps
+        (
+          user_id,
+          otp_hash,
+          expires_at,
+          attempts,
+          used
+        )
+        VALUES
+        (
+          $1,
+          $2,
+          $3,
+          0,
+          FALSE
+        )
+        `,
+        [
+          user.id,
+          otpHash,
+          expiresAt,
+        ]
+      );
+
+
+      /* ======================================================
+         SEND EMAIL
+      ====================================================== */
+
+      try {
+
+        await sendLoginOTP({
+          email: user.email,
+          name: user.name,
+          otp,
+        });
+
+      } catch (emailError) {
+
+        console.error(
+          "OTP email error:",
+          emailError
+        );
+
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE user_id = $1
+          AND used = FALSE
+          `,
+          [user.id]
+        );
+
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Unable to send verification code. Please try again.",
+        });
+      }
+
+
+      /* ======================================================
+         DO NOT SEND JWT HERE
+      ====================================================== */
 
       return res.json({
         success: true,
+        requiresOtp: true,
         message:
-          "Login successful.",
-        token,
-        user,
+          "Verification code sent to your email.",
+        email: user.email,
       });
+
     } catch (error) {
+
       console.error(
         "Login error:",
         error
@@ -337,6 +949,258 @@ router.post(
   }
 );
 
+
+/* ============================================================
+   VERIFY LOGIN OTP
+   OTP → JWT
+============================================================ */
+
+router.post(
+  "/verify-login-otp",
+  async (req, res) => {
+
+    try {
+
+      const {
+        email,
+        otp,
+      } = req.body;
+
+
+      /* VALIDATION */
+
+      if (
+        !email?.trim() ||
+        !otp?.trim()
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Email and verification code are required.",
+        });
+      }
+
+
+      const normalizedEmail =
+        email.trim().toLowerCase();
+
+
+      /* FIND USER */
+
+      const userResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            username,
+            name,
+            email,
+            phone,
+            role,
+            is_verified,
+            is_active,
+            created_at,
+            updated_at
+          FROM users
+          WHERE LOWER(email) = LOWER($1)
+          LIMIT 1
+          `,
+          [normalizedEmail]
+        );
+
+
+      if (!userResult.rows.length) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Invalid verification request.",
+        });
+      }
+
+
+      const user =
+        userResult.rows[0];
+
+
+      if (user.is_active === false) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Your account is inactive.",
+        });
+      }
+
+
+      /* ======================================================
+         FIND ACTIVE OTP
+      ====================================================== */
+
+      const otpResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            otp_hash,
+            expires_at,
+            attempts
+          FROM login_otps
+          WHERE user_id = $1
+          AND used = FALSE
+          ORDER BY created_at DESC
+          LIMIT 1
+          `,
+          [user.id]
+        );
+
+
+      if (!otpResult.rows.length) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Verification code not found. Please login again.",
+        });
+      }
+
+
+      const loginOtp =
+        otpResult.rows[0];
+
+
+      /* ======================================================
+         EXPIRY
+      ====================================================== */
+
+      if (
+        new Date(
+          loginOtp.expires_at
+        ).getTime() <
+        Date.now()
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE id = $1
+          `,
+          [loginOtp.id]
+        );
+
+        return res.status(400).json({
+          success: false,
+          message:
+            "Verification code has expired. Please login again.",
+        });
+      }
+
+
+      /* ======================================================
+         MAX ATTEMPTS
+      ====================================================== */
+
+      if (
+        loginOtp.attempts >= 5
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE id = $1
+          `,
+          [loginOtp.id]
+        );
+
+        return res.status(429).json({
+          success: false,
+          message:
+            "Too many incorrect attempts. Please login again.",
+        });
+      }
+
+
+      /* ======================================================
+         VERIFY OTP
+      ====================================================== */
+
+      const submittedOtpHash =
+        hashOTP(
+          otp.trim()
+        );
+
+
+      if (
+        submittedOtpHash !==
+        loginOtp.otp_hash
+      ) {
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET attempts = attempts + 1
+          WHERE id = $1
+          `,
+          [loginOtp.id]
+        );
+
+        return res.status(401).json({
+          success: false,
+          message:
+            "Incorrect verification code.",
+        });
+      }
+
+
+      /* ======================================================
+         OTP SUCCESS
+      ====================================================== */
+
+      await pool.query(
+        `
+        UPDATE login_otps
+        SET used = TRUE
+        WHERE id = $1
+        `,
+        [loginOtp.id]
+      );
+
+
+      /* ======================================================
+         JWT CREATED ONLY AFTER OTP
+      ====================================================== */
+
+      const token =
+        signToken(user);
+
+
+      return res.json({
+        success: true,
+
+        message:
+          "Login successful.",
+
+        token,
+
+        user,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "OTP verification error:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Server error during OTP verification.",
+      });
+    }
+  }
+);
+
+
 /* ============================================================
    GET CURRENT USER
 ============================================================ */
@@ -345,7 +1209,9 @@ router.get(
   "/me",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const result =
         await pool.query(
           `
@@ -367,6 +1233,7 @@ router.get(
           [req.user.id]
         );
 
+
       if (!result.rows.length) {
         return res.status(404).json({
           success: false,
@@ -375,11 +1242,14 @@ router.get(
         });
       }
 
+
       return res.json({
         success: true,
         user: result.rows[0],
       });
+
     } catch (error) {
+
       console.error(
         "Get current user error:",
         error
@@ -394,6 +1264,7 @@ router.get(
   }
 );
 
+
 /* ============================================================
    UPDATE CURRENT USER
 ============================================================ */
@@ -402,11 +1273,14 @@ router.put(
   "/me",
   authenticateToken,
   async (req, res) => {
+
     try {
+
       const {
         name,
         phone,
       } = req.body;
+
 
       if (!name?.trim()) {
         return res.status(400).json({
@@ -415,6 +1289,7 @@ router.put(
             "Name is required.",
         });
       }
+
 
       const result =
         await pool.query(
@@ -444,6 +1319,7 @@ router.put(
           ]
         );
 
+
       if (!result.rows.length) {
         return res.status(404).json({
           success: false,
@@ -452,13 +1328,16 @@ router.put(
         });
       }
 
+
       return res.json({
         success: true,
         message:
           "Profile updated successfully.",
         user: result.rows[0],
       });
+
     } catch (error) {
+
       console.error(
         "Profile update error:",
         error
@@ -472,5 +1351,6 @@ router.put(
     }
   }
 );
+
 
 module.exports = router;
