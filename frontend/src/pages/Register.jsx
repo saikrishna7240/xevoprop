@@ -1,251 +1,251 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import {
   Eye,
   EyeOff,
   ArrowLeft,
-  Mail,
   ShieldCheck,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../lib/api";
-
 import "./Auth.css";
 
-
 function Register() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const navigate =
-    useNavigate();
+  const [step, setStep] = useState("details");
 
-  const { login } =
-    useAuth();
+  const [role, setRole] = useState("Buyer");
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
-  const [step, setStep] =
-    useState("details");
+  const [otp, setOtp] = useState("");
 
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [role, setRole] =
-    useState("Buyer");
+  const [showPassword, setShowPassword] = useState(false);
 
-
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
-
-
-  const [otp, setOtp] =
-    useState("");
-
-
-  const [error, setError] =
-    useState("");
-
-
-  const [loading, setLoading] =
-    useState(false);
-
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendTimer, setResendTimer] = useState(30);
 
   /* ============================================================
-     FORM CHANGE
+     OTP COUNTDOWN
+  ============================================================ */
+
+  useEffect(() => {
+    if (step !== "otp") {
+      return;
+    }
+
+    if (resendTimer <= 0) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setResendTimer((previous) =>
+        Math.max(previous - 1, 0)
+      );
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [step, resendTimer]);
+
+  /* ============================================================
+     INPUT HANDLER
   ============================================================ */
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    const {
-      name,
-      value,
-    } = e.target;
-
-
-    setFormData(
-      (previous) => ({
-        ...previous,
-        [name]: value,
-      })
-    );
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   };
 
-
   /* ============================================================
-     REGISTER
+     START REGISTRATION
+     DETAILS → EMAIL OTP
   ============================================================ */
 
-  const handleRegister =
-    async (e) => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
-      e.preventDefault();
+    setError("");
+    setLoading(true);
 
-      setError("");
-      setLoading(true);
+    try {
+      const data = await apiFetch("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          phone: formData.phone.trim(),
+          password: formData.password,
+          role,
+        }),
+      });
 
-      try {
+      /*
+        Backend should create the account and
+        send an OTP to the registered email.
+      */
 
-        const data =
-          await apiFetch(
-            "/auth/register",
-            {
-              method: "POST",
-
-              body: JSON.stringify({
-                name:
-                  formData.name.trim(),
-
-                email:
-                  formData.email
-                    .trim()
-                    .toLowerCase(),
-
-                phone:
-                  formData.phone.trim(),
-
-                password:
-                  formData.password,
-
-                role,
-              }),
-            }
-          );
-
-
-        if (
-          !data.requiresOtp
-        ) {
-
-          throw new Error(
-            "Unable to start email verification."
-          );
-        }
-
-
-        setStep("otp");
-
-      } catch (error) {
-
-        setError(
-          error.message ||
-            "Unable to create account."
+      if (!data.requiresOtp) {
+        throw new Error(
+          "Unable to start email verification."
         );
-
-      } finally {
-
-        setLoading(false);
       }
-    };
 
+      setOtp("");
+      setResendTimer(30);
+      setStep("otp");
+    } catch (error) {
+      setError(
+        error.message ||
+          "Unable to create account."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* ============================================================
-     VERIFY REGISTRATION OTP
+     VERIFY REGISTRATION EMAIL OTP
   ============================================================ */
 
-  const handleVerifyOTP =
-    async (e) => {
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
 
-      e.preventDefault();
+    setError("");
 
-      setError("");
-      setLoading(true);
+    const cleanOtp = otp.trim();
 
-      try {
+    if (!/^\d{6}$/.test(cleanOtp)) {
+      setError(
+        "Please enter the 6-digit OTP."
+      );
+      return;
+    }
 
-        const data =
-          await apiFetch(
-            "/auth/verify-register-otp",
-            {
-              method: "POST",
+    setLoading(true);
 
-              body: JSON.stringify({
-                email:
-                  formData.email
-                    .trim()
-                    .toLowerCase(),
-
-                otp:
-                  otp.trim(),
-              }),
-            }
-          );
-
-
-        if (
-          !data.token
-        ) {
-
-          throw new Error(
-            "Account verified, but authentication token was not received."
-          );
+    try {
+      const data = await apiFetch(
+        "/auth/verify-register-otp",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: formData.email
+              .trim()
+              .toLowerCase(),
+            otp: cleanOtp,
+          }),
         }
+      );
 
-
-        /* JWT ONLY AFTER OTP */
-
-        login(data);
-
-
-        localStorage.setItem(
-          "username",
-          data.user?.name ||
-            data.user?.username ||
-            ""
+      if (!data.token) {
+        throw new Error(
+          "Account verified, but authentication token was not received."
         );
-
-
-        if (
-          data.user?.role ===
-          "Admin"
-        ) {
-
-          navigate("/admin");
-
-        } else {
-
-          navigate("/dashboard");
-        }
-
-      } catch (error) {
-
-        setError(
-          error.message ||
-            "Unable to verify account."
-        );
-
-      } finally {
-
-        setLoading(false);
       }
-    };
 
+      /*
+        JWT is returned only after
+        successful OTP verification.
+      */
+
+      login(data);
+
+      localStorage.setItem(
+        "username",
+        data.user?.name ||
+          data.user?.username ||
+          ""
+      );
+
+      if (data.user?.role === "Admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(
+        error.message ||
+          "Unable to verify account."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* ============================================================
-     BACK
+     RESEND EMAIL OTP
+  ============================================================ */
+
+  const handleResendOtp = async () => {
+    if (
+      resendTimer > 0 ||
+      resendLoading
+    ) {
+      return;
+    }
+
+    setError("");
+    setResendLoading(true);
+
+    try {
+      await apiFetch(
+        "/auth/resend-otp",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: formData.email
+              .trim()
+              .toLowerCase(),
+            purpose: "register",
+          }),
+        }
+      );
+
+      setOtp("");
+      setResendTimer(30);
+    } catch (error) {
+      setError(
+        error.message ||
+          "Unable to resend OTP."
+      );
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  /* ============================================================
+     BACK TO REGISTRATION DETAILS
   ============================================================ */
 
   const handleBack = () => {
-
     setStep("details");
-
     setOtp("");
-
     setError("");
+    setResendTimer(30);
   };
 
-
   return (
-
     <div className="auth-page">
-
       <div className="auth-card">
+
+        {/* ======================================================
+            LOGO
+        ====================================================== */}
 
         <img
           src="/xevoprop-logo.jpeg"
@@ -253,26 +253,24 @@ function Register() {
           className="auth-logo"
         />
 
+        {/* ======================================================
+            REGISTRATION DETAILS
+        ====================================================== */}
 
-        {step === "details" ? (
-
+        {step === "details" && (
           <>
-
             <span className="auth-label">
               JOIN XEVOPROP
             </span>
-
 
             <h1>
               Create your account
             </h1>
 
-
             <p className="auth-subtitle">
               Join a smarter and more direct
               real-estate ecosystem.
             </p>
-
 
             {error && (
               <div className="auth-error auth-register-error">
@@ -280,18 +278,17 @@ function Register() {
               </div>
             )}
 
-
             <form
               className="auth-form"
               onSubmit={handleRegister}
             >
 
-              <div className="auth-field">
+              {/* FULL NAME */}
 
+              <div className="auth-field">
                 <label>
                   Full name
                 </label>
-
 
                 <input
                   type="text"
@@ -302,36 +299,32 @@ function Register() {
                   autoComplete="name"
                   required
                 />
-
               </div>
 
+              {/* EMAIL */}
 
               <div className="auth-field">
-
                 <label>
                   Email address
                 </label>
-
 
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="you@gmail.com"
+                  placeholder="you@example.com"
                   autoComplete="email"
                   required
                 />
-
               </div>
 
+              {/* PHONE */}
 
               <div className="auth-field">
-
                 <label>
                   Mobile number
                 </label>
-
 
                 <input
                   type="tel"
@@ -342,19 +335,16 @@ function Register() {
                   autoComplete="tel"
                   required
                 />
-
               </div>
 
+              {/* PASSWORD */}
 
               <div className="auth-field">
-
                 <label>
                   Password
                 </label>
 
-
                 <div className="password-input-wrapper">
-
                   <input
                     type={
                       showPassword
@@ -362,18 +352,13 @@ function Register() {
                         : "password"
                     }
                     name="password"
-                    value={
-                      formData.password
-                    }
-                    onChange={
-                      handleChange
-                    }
+                    value={formData.password}
+                    onChange={handleChange}
                     placeholder="Create a password"
                     autoComplete="new-password"
                     minLength="6"
                     required
                   />
-
 
                   <button
                     type="button"
@@ -390,186 +375,140 @@ function Register() {
                         : "Show password"
                     }
                   >
-
                     {showPassword ? (
                       <EyeOff size={17} />
                     ) : (
                       <Eye size={17} />
                     )}
-
                   </button>
-
                 </div>
-
 
                 <span className="password-hint">
                   Minimum 6 characters
                 </span>
-
               </div>
 
+              {/* ROLE */}
 
               <p className="role-title">
                 I am joining as
               </p>
 
-
               <div className="role-grid">
-
                 {[
                   "Buyer",
                   "Seller",
                   "Developer",
-                ].map(
-                  (item) => (
-
-                    <button
-                      type="button"
-                      key={item}
-                      className={
-                        role === item
-                          ? "role-option active"
-                          : "role-option"
-                      }
-                      onClick={() =>
-                        setRole(item)
-                      }
-                    >
-                      {item}
-                    </button>
-
-                  )
-                )}
-
+                ].map((item) => (
+                  <button
+                    type="button"
+                    key={item}
+                    className={
+                      role === item
+                        ? "role-option active"
+                        : "role-option"
+                    }
+                    onClick={() =>
+                      setRole(item)
+                    }
+                  >
+                    {item}
+                  </button>
+                ))}
               </div>
 
+              {/* SUBMIT */}
 
               <button
                 type="submit"
                 className="auth-submit"
                 disabled={loading}
               >
-
                 {loading
-                  ? "Creating account..."
+                  ? "Sending OTP..."
                   : "Continue"}
-
               </button>
-
             </form>
 
-
             <p className="auth-switch">
-
               Already have an account?{" "}
-
               <Link to="/login">
                 Sign in
               </Link>
-
             </p>
-
           </>
+        )}
 
-        ) : (
+        {/* ======================================================
+            EMAIL OTP STEP
+        ====================================================== */}
 
+        {step === "otp" && (
           <>
-
             <button
               type="button"
-              className="auth-back-button"
+              className="otp-back-button"
               onClick={handleBack}
             >
-
-              <ArrowLeft size={16} />
-
+              <ArrowLeft size={17} />
               Back
-
             </button>
 
-
-            <div className="auth-otp-icon">
-
-              <ShieldCheck
-                size={28}
-              />
-
+            <div className="otp-icon">
+              <ShieldCheck size={27} />
             </div>
-
 
             <span className="auth-label">
               VERIFY YOUR EMAIL
             </span>
 
-
             <h1>
               Verify your account
             </h1>
 
-
             <p className="auth-subtitle">
-
-              We sent a 6-digit verification
-              code to
-
+              We've sent a 6-digit OTP to{" "}
               <strong>
-                {" "}
                 {formData.email}
               </strong>
-
             </p>
 
-
             {error && (
-              <div className="auth-error">
+              <div className="auth-error auth-register-error">
                 {error}
               </div>
             )}
 
-
             <form
               className="auth-form"
-              onSubmit={
-                handleVerifyOTP
-              }
+              onSubmit={handleVerifyOTP}
             >
-
               <div className="auth-field">
-
                 <label>
                   Verification code
                 </label>
 
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  value={otp}
+                  onChange={(e) => {
+                    const value =
+                      e.target.value.replace(
+                        /\D/g,
+                        ""
+                      );
 
-                <div className="auth-otp-input-wrapper">
-
-                  <Mail size={17} />
-
-
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    value={otp}
-                    onChange={(e) => {
-
-                      const value =
-                        e.target.value.replace(
-                          /\D/g,
-                          ""
-                        );
-
-                      setOtp(value);
-                    }}
-                    placeholder="000000"
-                    autoComplete="one-time-code"
-                    required
-                  />
-
-                </div>
-
+                    setOtp(value);
+                  }}
+                  placeholder="Enter 6-digit OTP"
+                  className="otp-input"
+                  autoFocus
+                  required
+                />
               </div>
-
 
               <button
                 type="submit"
@@ -579,30 +518,38 @@ function Register() {
                   otp.length !== 6
                 }
               >
-
                 {loading
                   ? "Verifying..."
                   : "Verify & Create Account"}
-
               </button>
-
             </form>
 
+            <div className="otp-resend">
+              <span>
+                Didn't receive the OTP?
+              </span>
 
-            <p className="auth-otp-note">
-              The verification code expires
-              in 5 minutes.
-            </p>
-
+              {resendTimer > 0 ? (
+                <span className="otp-timer">
+                  Resend in {resendTimer}s
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={resendLoading}
+                >
+                  {resendLoading
+                    ? "Sending..."
+                    : "Resend OTP"}
+                </button>
+              )}
+            </div>
           </>
-
         )}
-
       </div>
-
     </div>
   );
 }
-
 
 export default Register;
