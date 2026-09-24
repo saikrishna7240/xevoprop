@@ -4,45 +4,12 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const app = express();
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "https://xevoprop.vercel.app",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests without an Origin header
-      // (Postman, server-to-server, etc.)
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.log("Blocked CORS origin:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-app.options("*", cors());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-require("dotenv").config();
-
 const { pool, initializeDatabase } = require("./config/db");
 
-const { authenticateToken, authorizeRoles } = require("./middleware/authMiddleware");
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("./middleware/authMiddleware");
 
 const propertyRoutes = require("./routes/propertyRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -55,6 +22,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -65,14 +33,15 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:3000",
   "https://xevoprop.vercel.app",
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without an origin
-      // such as Postman/server-to-server requests
+      // Allow requests without Origin
+      // Example: Postman, server-to-server requests
       if (!origin) {
         return callback(null, true);
       }
@@ -82,6 +51,7 @@ app.use(
       }
 
       console.log("Blocked CORS origin:", origin);
+
       return callback(new Error("CORS blocked"));
     },
 
@@ -100,15 +70,24 @@ app.use(
     ],
 
     credentials: true,
+
+    optionsSuccessStatus: 204,
   })
 );
 
 // ======================================================
-// BODY PARSER
+// BODY PARSERS
 // ======================================================
 
 app.use(
   express.json({
+    limit: "2mb",
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
     limit: "2mb",
   })
 );
@@ -123,6 +102,10 @@ app.get("/", (req, res) => {
     message: "Xevoprop API is running",
   });
 });
+
+// ======================================================
+// HEALTH CHECK
+// ======================================================
 
 app.get("/api/health", async (req, res) => {
   try {
@@ -170,6 +153,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 app.use("/api/admin", adminRoutes);
+
 // ======================================================
 // DATABASE TEST ROUTES
 // ======================================================
@@ -181,7 +165,8 @@ app.get("/api/users-table", async (req, res) => {
         column_name,
         data_type
       FROM information_schema.columns
-      WHERE table_name = 'users'
+      WHERE table_schema = 'public'
+        AND table_name = 'users'
       ORDER BY ordinal_position
     `);
 
@@ -254,7 +239,17 @@ app.get(
   }
 );
 
+// ======================================================
+// 404 HANDLER
+// ======================================================
 
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "API route not found",
+    path: req.originalUrl,
+  });
+});
 
 // ======================================================
 // ERROR HANDLER
@@ -279,30 +274,26 @@ app.use((err, req, res, next) => {
 });
 
 // ======================================================
-// 404 HANDLER
-// ======================================================
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "API route not found",
-    path: req.originalUrl,
-  });
-});
-
-// ======================================================
 // START SERVER
 // ======================================================
 
 const startServer = async () => {
   try {
+    console.log("Initializing Xevoprop database...");
+
     await initializeDatabase();
 
-    app.listen(PORT, () => {
+    console.log("Database initialization completed.");
+
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Xevoprop backend running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to start Xevoprop backend:", error);
+    console.error(
+      "Failed to start Xevoprop backend:",
+      error
+    );
+
     process.exit(1);
   }
 };
