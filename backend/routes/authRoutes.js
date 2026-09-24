@@ -1365,6 +1365,229 @@ router.post(
   }
 );
 
+/* ============================================================
+   RESEND OTP
+============================================================ */
+
+router.post(
+  "/resend-otp",
+  async (req, res) => {
+    try {
+      const {
+        email,
+        purpose,
+      } = req.body;
+
+      const normalizedEmail =
+        email?.trim().toLowerCase();
+
+      if (!normalizedEmail) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is required.",
+        });
+      }
+
+      if (
+        !["login", "register"].includes(
+          purpose
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid OTP purpose.",
+        });
+      }
+
+      const userResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            name,
+            email,
+            is_verified,
+            is_active
+          FROM users
+          WHERE LOWER(email) = LOWER($1)
+          LIMIT 1
+          `,
+          [normalizedEmail]
+        );
+
+      if (!userResult.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Account not found.",
+        });
+      }
+
+      const user =
+        userResult.rows[0];
+
+      if (user.is_active === false) {
+        return res.status(403).json({
+          success: false,
+          message: "Your account is inactive.",
+        });
+      }
+
+      if (
+        purpose === "register" &&
+        user.is_verified === true
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "This account is already verified.",
+        });
+      }
+
+      if (
+        purpose === "login" &&
+        user.is_verified !== true
+      ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Please verify your email before logging in.",
+        });
+      }
+
+      /* --------------------------------------------------------
+         INVALIDATE PREVIOUS OTP
+      -------------------------------------------------------- */
+
+      await pool.query(
+        `
+        UPDATE login_otps
+        SET used = TRUE
+        WHERE user_id = $1
+          AND purpose = $2
+          AND used = FALSE
+        `,
+        [
+          user.id,
+          purpose,
+        ]
+      );
+
+      /* --------------------------------------------------------
+         CREATE NEW OTP
+      -------------------------------------------------------- */
+
+      const otp =
+        crypto
+          .randomInt(
+            100000,
+            1000000
+          )
+          .toString();
+
+      const otpHash =
+        hashOTP(otp);
+
+      const expiresAt =
+        new Date(
+          Date.now() +
+          5 * 60 * 1000
+        );
+
+      await pool.query(
+        `
+        INSERT INTO login_otps
+        (
+          user_id,
+          otp_hash,
+          expires_at,
+          attempts,
+          used,
+          purpose
+        )
+        VALUES
+        (
+          $1,
+          $2,
+          $3,
+          0,
+          FALSE,
+          $4
+        )
+        `,
+        [
+          user.id,
+          otpHash,
+          expiresAt,
+          purpose,
+        ]
+      );
+
+      /* --------------------------------------------------------
+         SEND NEW OTP
+      -------------------------------------------------------- */
+
+      try {
+
+        await sendAuthOTP({
+          email: user.email,
+          name: user.name,
+          otp,
+          purpose,
+        });
+
+      } catch (emailError) {
+
+        console.error(
+          "Resend OTP email error:",
+          emailError
+        );
+
+        await pool.query(
+          `
+          UPDATE login_otps
+          SET used = TRUE
+          WHERE user_id = $1
+            AND purpose = $2
+            AND used = FALSE
+          `,
+          [
+            user.id,
+            purpose,
+          ]
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Unable to send verification code. Please try again.",
+        });
+      }
+
+      return res.json({
+        success: true,
+        message:
+          "Verification code sent to your email.",
+        requiresOtp: true,
+        purpose,
+        email: user.email,
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Resend OTP error:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Server error while resending verification code.",
+      });
+    }
+  }
+);
+
 
 /* ============================================================
    GET CURRENT USER
