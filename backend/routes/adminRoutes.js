@@ -88,8 +88,12 @@ router.get("/properties", async (req, res) => {
       SELECT
         p.*,
 
+        u.id AS seller_id,
         u.username AS seller_username,
-        u.email AS seller_email
+        u.name AS owner_name,
+        u.email AS owner_email,
+        u.phone AS owner_phone,
+        u.role AS owner_role
 
       FROM properties p
 
@@ -140,8 +144,12 @@ router.get(
         SELECT
           p.*,
 
+          u.id AS seller_id,
           u.username AS seller_username,
-          u.email AS seller_email
+          u.name AS owner_name,
+          u.email AS owner_email,
+          u.phone AS owner_phone,
+          u.role AS owner_role
 
         FROM properties p
 
