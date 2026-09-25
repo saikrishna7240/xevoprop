@@ -1,68 +1,58 @@
 /* =========================================================
    XEVOPROP - ABOUT PAGE
-   Professional PropTech UI
-   Matches Xevoprop Homepage
+   Matches supplied About UI design
    ========================================================= */
 
 .about-page {
-  --about-navy: #061b32;
-  --about-navy-2: #092641;
-  --about-blue: #155eef;
-  --about-blue-soft: #eaf2ff;
-  --about-blue-light: #f5f8ff;
+  --about-navy: #0c1729;
+  --about-navy-2: #111e32;
 
-  --about-gold: #b96b0a;
-  --about-gold-soft: #fff2df;
+  --about-green: #08784f;
+  --about-green-dark: #05613f;
+  --about-green-light: #35c999;
 
-  --about-green: #16966b;
-  --about-green-soft: #e1f8ee;
-
-  --about-text: #10243b;
-  --about-text-secondary: #526173;
-  --about-text-muted: #7c8797;
-
-  --about-border: #e2e8f0;
+  --about-bg: #f7f9fd;
+  --about-blue-bg: #eef4ff;
   --about-white: #ffffff;
-  --about-background: #f5f7fc;
 
-  min-height: 100vh;
+  --about-text: #111827;
+  --about-heading: #101b2b;
+  --about-muted: #748091;
+  --about-border: #dfe5ee;
 
-  background: var(--about-background);
+  --about-shadow: 0 8px 24px rgba(18, 35, 60, 0.08);
+
+  width: 100%;
+  overflow: hidden;
+
+  background: var(--about-bg);
   color: var(--about-text);
 
+  font-family:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.about-page *,
+.about-page *::before,
+.about-page *::after {
+  box-sizing: border-box;
+}
+
+.about-page a {
+  text-decoration: none;
+}
+
+.about-page button,
+.about-page input {
   font-family: inherit;
-}
-
-/* =========================================================
-   COMMON
-   ========================================================= */
-
-.about-section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  color: var(--about-gold);
-
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 800;
-
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.about-section-label::before {
-  content: "";
-
-  width: 7px;
-  height: 7px;
-
-  flex: 0 0 auto;
-
-  border-radius: 50%;
-
-  background: var(--about-gold);
 }
 
 .about-page h1,
@@ -79,167 +69,178 @@
 .about-hero {
   position: relative;
 
+  min-height: 335px;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
-  min-height: 470px;
-
-  padding: 80px max(24px, calc((100% - 1320px) / 2));
+  padding: 55px max(40px, calc((100% - 1180px) / 2));
 
   overflow: hidden;
 
   background:
     radial-gradient(
-      circle at 85% 25%,
-      rgba(44, 105, 170, 0.18),
-      transparent 30%
+      circle at 88% 30%,
+      rgba(55, 113, 157, 0.14),
+      transparent 27%
     ),
     linear-gradient(
       135deg,
-      #f0f5ff 0%,
-      #f7f9fd 55%,
-      #eaf2ff 100%
+      #f5f8ff 0%,
+      #f8faff 50%,
+      #eef3fc 100%
     );
-
-  border-bottom: 1px solid #e0e7f0;
-}
-
-.about-hero::after {
-  content: "";
-
-  position: absolute;
-
-  width: 420px;
-  height: 420px;
-
-  right: -150px;
-  bottom: -220px;
-
-  border: 1px solid rgba(21, 94, 239, 0.12);
-  border-radius: 50%;
-
-  pointer-events: none;
 }
 
 .about-hero-content {
+  width: min(620px, 55%);
+
   position: relative;
   z-index: 2;
-
-  max-width: 760px;
 }
 
-.about-hero .about-eyebrow {
+.about-eyebrow,
+.about-section-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
 
-  margin-bottom: 22px;
-  padding: 7px 12px;
+  width: fit-content;
 
-  border: 1px solid #d9e5fb;
-  border-radius: 20px;
+  color: #4f6e8b;
 
-  background: #e8efff;
-
-  color: #60758d;
-
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 800;
 
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+
+  line-height: 1.2;
+
+  text-transform: uppercase;
 }
 
-.about-hero .about-eyebrow::before {
-  content: "";
+.about-eyebrow {
+  margin-bottom: 13px;
 
-  width: 7px;
-  height: 7px;
+  padding: 4px 7px;
 
-  border-radius: 50%;
+  border-radius: 3px;
 
-  background: var(--about-gold);
+  background: #e6effd;
+
+  color: #53749c;
 }
 
 .about-hero h1 {
-  max-width: 720px;
+  margin: 0;
 
-  margin: 0 0 22px;
+  color: #111827;
 
-  color: #071c34;
-
-  font-size: clamp(48px, 6vw, 76px);
-  line-height: 0.98;
-
+  font-size: clamp(36px, 4.2vw, 53px);
   font-weight: 800;
 
-  letter-spacing: -0.055em;
+  letter-spacing: -0.045em;
+
+  line-height: 1.04;
 }
 
 .about-hero h1 em {
-  color: var(--about-gold);
+  color: var(--about-green);
 
-  font-style: normal;
+  font-style: italic;
+  font-weight: 700;
 }
 
-.about-hero-content > p {
-  max-width: 680px;
+.about-hero-content p {
+  max-width: 570px;
 
-  margin: 0;
+  margin: 15px 0 0;
 
-  color: #5f6e80;
+  color: #687586;
 
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 13px;
+
+  line-height: 1.65;
 }
 
-/* Hero mark */
+/* =========================================================
+   HERO MARK
+   ========================================================= */
 
 .about-hero-mark {
-  position: relative;
-  z-index: 2;
+  position: absolute;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
+  right: max(45px, calc((100% - 1180px) / 2));
+  top: 50%;
 
-  width: 190px;
-  height: 190px;
+  width: 300px;
+  min-height: 210px;
 
-  flex: 0 0 auto;
+  padding: 16px;
 
-  margin-left: 60px;
+  transform: translateY(-50%);
 
-  border: 1px solid #d8e3f0;
-  border-radius: 18px;
+  border: 1px solid #dce4ee;
+  border-radius: 9px;
 
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.96),
-      rgba(236, 243, 253, 0.96)
-    );
-
-  color: var(--about-navy);
+  background: #ffffff;
 
   box-shadow:
-    0 18px 40px rgba(24, 54, 87, 0.08);
+    0 10px 28px rgba(28, 45, 68, 0.1);
+
+  color: #182536;
+}
+
+.about-hero-mark::before {
+  content: "Xevoprop Architecture";
+
+  position: absolute;
+
+  top: 18px;
+  left: 52px;
+
+  color: #243346;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.about-hero-mark::after {
+  content: "Built for greater transparency";
+
+  position: absolute;
+
+  top: 35px;
+  left: 52px;
+
+  color: #8a96a4;
+
+  font-size: 8px;
 }
 
 .about-hero-mark svg {
-  color: var(--about-blue);
+  width: 29px;
+  height: 29px;
+
+  display: grid;
+
+  padding: 6px;
+
+  border-radius: 6px;
+
+  background: #0b1425;
+
+  color: #ffffff;
 }
 
 .about-hero-mark span {
-  color: var(--about-navy);
+  position: absolute;
 
-  font-size: 30px;
-  line-height: 1;
+  top: 22px;
+  left: 23px;
 
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  color: transparent;
+
+  font-size: 1px;
 }
 
 /* =========================================================
@@ -247,75 +248,79 @@
    ========================================================= */
 
 .about-mission {
-  padding: 90px max(24px, calc((100% - 1240px) / 2));
+  padding: 72px max(40px, calc((100% - 1180px) / 2));
 
   background: #ffffff;
 }
 
+.about-mission > .about-section-label {
+  margin-bottom: 17px;
+
+  color: #27876a;
+}
+
 .about-mission-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
 
-  gap: 100px;
+  grid-template-columns: 1fr 1fr;
 
-  margin-top: 30px;
+  gap: 90px;
+
+  align-items: start;
 }
 
-.about-mission-grid h2 {
+.about-mission h2 {
   margin: 0;
 
-  color: var(--about-navy);
+  color: #111827;
 
-  font-size: clamp(38px, 4vw, 58px);
-  line-height: 1.05;
+  font-size: clamp(32px, 3.3vw, 44px);
+  font-weight: 750;
 
-  font-weight: 800;
+  letter-spacing: -0.04em;
 
-  letter-spacing: -0.045em;
+  line-height: 1.04;
 }
 
-.about-mission-grid h2 span {
-  color: var(--about-gold);
+.about-mission h2 span {
+  color: var(--about-green);
+
+  text-decoration: underline;
+
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .about-mission-copy {
-  padding-top: 4px;
+  max-width: 510px;
 }
 
 .about-mission-copy p {
-  margin: 0 0 20px;
+  margin-bottom: 14px;
 
-  color: var(--about-text-secondary);
+  color: #737f8e;
 
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: 12px;
+
+  line-height: 1.65;
 }
 
 .about-link {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
 
-  margin-top: 8px;
-  padding-bottom: 5px;
+  gap: 6px;
 
-  border-bottom: 1px solid var(--about-gold);
+  margin-top: 7px;
 
-  color: var(--about-navy);
+  color: #172537;
 
-  font-size: 15px;
-  font-weight: 800;
-
-  text-decoration: none;
-
-  transition:
-    color 0.2s ease,
-    gap 0.2s ease;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .about-link:hover {
-  color: var(--about-gold);
-  gap: 13px;
+  color: var(--about-green);
 }
 
 /* =========================================================
@@ -323,133 +328,131 @@
    ========================================================= */
 
 .about-values {
-  padding: 90px max(24px, calc((100% - 1240px) / 2));
+  padding: 62px max(40px, calc((100% - 1180px) / 2));
 
-  background: #f5f8ff;
+  background: var(--about-blue-bg);
 }
 
 .about-values-header {
-  margin-bottom: 36px;
+  margin-bottom: 26px;
+}
+
+.about-values-header .about-section-label {
+  margin-bottom: 8px;
+
+  color: #4f6f93;
 }
 
 .about-values-header h2 {
-  margin: 18px 0 0;
+  margin: 0;
 
-  color: var(--about-navy);
+  color: #111827;
 
-  font-size: clamp(36px, 4vw, 54px);
-  line-height: 1.05;
+  font-size: 27px;
+  font-weight: 750;
 
-  font-weight: 800;
+  letter-spacing: -0.025em;
 
-  letter-spacing: -0.045em;
+  line-height: 1.12;
 }
 
 .about-values-header h2 em {
-  color: var(--about-gold);
+  color: var(--about-green);
 
-  font-style: normal;
+  font-style: italic;
 }
+
+/* =========================================================
+   VALUE CARDS
+   ========================================================= */
 
 .about-values-grid {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
 
-  gap: 18px;
+  gap: 15px;
 }
 
 .about-value-card {
   position: relative;
 
-  min-height: 280px;
+  min-height: 215px;
 
-  padding: 28px;
+  padding: 20px;
 
-  overflow: hidden;
+  border: 1px solid #e0e6ef;
+  border-radius: 8px;
 
   background: #ffffff;
 
-  border: 1px solid var(--about-border);
-  border-radius: 12px;
-
   box-shadow:
-    0 4px 15px rgba(26, 55, 91, 0.035);
+    0 4px 12px rgba(25, 43, 68, 0.035);
 
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .about-value-card:hover {
-  transform: translateY(-4px);
-
-  border-color: #cbd8e8;
+  transform: translateY(-2px);
 
   box-shadow:
-    0 15px 32px rgba(26, 55, 91, 0.08);
+    0 9px 20px rgba(25, 43, 68, 0.08);
 }
 
 .about-value-number {
-  position: absolute;
+  color: #a0aab6;
 
-  top: 22px;
-  right: 25px;
-
-  color: #dbe4ef;
-
-  font-size: 30px;
-  line-height: 1;
-
-  font-weight: 900;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .about-value-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 37px;
+  height: 37px;
 
-  width: 46px;
-  height: 46px;
+  display: grid;
+  place-items: center;
 
-  margin-bottom: 30px;
+  margin-top: 17px;
+  margin-bottom: 16px;
 
-  border-radius: 9px;
+  border-radius: 7px;
 
-  background: var(--about-blue-soft);
+  background: #e3f8ef;
 
-  color: var(--about-blue);
-}
-
-.about-value-card:nth-child(2) .about-value-icon {
-  background: var(--about-green-soft);
   color: var(--about-green);
 }
 
+.about-value-card:nth-child(2) .about-value-icon {
+  background: #e6efff;
+  color: #557bb5;
+}
+
 .about-value-card:nth-child(3) .about-value-icon {
-  background: var(--about-gold-soft);
-  color: var(--about-gold);
+  background: #fff0e4;
+  color: #d6814d;
 }
 
 .about-value-card h3 {
-  margin: 0 0 11px;
+  margin: 0 0 7px;
 
-  color: #1b3048;
+  color: #162334;
 
-  font-size: 21px;
-  line-height: 1.2;
+  font-size: 15px;
+  font-weight: 750;
 
-  font-weight: 800;
+  line-height: 1.3;
 }
 
 .about-value-card p {
-  max-width: 360px;
-
   margin: 0;
 
-  color: #718092;
+  color: #778393;
 
-  font-size: 15px;
+  font-size: 11px;
+
   line-height: 1.7;
 }
 
@@ -458,166 +461,171 @@
    ========================================================= */
 
 .about-platform {
-  padding: 90px max(24px, calc((100% - 1240px) / 2));
+  padding: 68px max(40px, calc((100% - 1180px) / 2));
 
-  background: #ffffff;
+  background: #f7f9fd;
 }
 
 .about-platform-inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.8fr);
+
+  grid-template-columns: 1.35fr 0.65fr;
+
+  gap: 70px;
 
   align-items: center;
+}
 
-  gap: 80px;
+.about-platform-content .about-section-label {
+  margin-bottom: 10px;
+
+  color: #27876a;
 }
 
 .about-platform-content h2 {
-  margin: 18px 0 18px;
+  margin: 0;
 
-  color: var(--about-navy);
+  color: #111827;
 
-  font-size: clamp(38px, 4vw, 56px);
-  line-height: 1.05;
+  font-size: clamp(27px, 3vw, 38px);
+  font-weight: 750;
 
-  font-weight: 800;
+  letter-spacing: -0.035em;
 
-  letter-spacing: -0.045em;
+  line-height: 1.08;
 }
 
 .about-platform-content h2 em {
-  color: var(--about-gold);
+  color: var(--about-green);
 
-  font-style: normal;
+  font-style: italic;
 }
 
 .about-platform-content > p {
-  max-width: 620px;
+  max-width: 570px;
 
-  margin: 0 0 28px;
+  margin: 12px 0 22px;
 
-  color: var(--about-text-secondary);
+  color: #778393;
 
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 12px;
+
+  line-height: 1.65;
 }
+
+/* =========================================================
+   PLATFORM POINTS
+   ========================================================= */
 
 .about-platform-points {
   display: grid;
-  grid-template-columns: 1fr 1fr;
 
-  gap: 14px 30px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+
+  max-width: 570px;
 }
 
 .about-platform-points > div {
+  min-height: 53px;
+
   display: flex;
   align-items: center;
+
   gap: 9px;
 
-  color: #30465d;
+  padding: 9px 11px;
 
-  font-size: 15px;
-  font-weight: 700;
+  border: 1px solid #e0e6ee;
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #29384a;
 }
 
 .about-platform-points svg {
   flex: 0 0 auto;
 
+  padding: 3px;
+
+  border-radius: 4px;
+
+  background: #e4f7ef;
+
   color: var(--about-green);
 }
 
-/* Platform card */
-
-.about-platform-card {
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  min-height: 330px;
-
-  padding: 38px;
-
-  overflow: hidden;
-
-  border-radius: 14px;
-
-  background:
-    radial-gradient(
-      circle at 90% 15%,
-      rgba(45, 101, 158, 0.35),
-      transparent 35%
-    ),
-    linear-gradient(
-      145deg,
-      #061b32,
-      #0b3155
-    );
-
-  box-shadow:
-    0 20px 45px rgba(6, 29, 53, 0.16);
+.about-platform-points span {
+  font-size: 10px;
+  font-weight: 650;
 }
 
-.about-platform-card::after {
-  content: "";
+/* =========================================================
+   PLATFORM CARD
+   ========================================================= */
 
-  position: absolute;
+.about-platform-card {
+  min-height: 235px;
 
-  width: 230px;
-  height: 230px;
+  padding: 22px;
 
-  right: -110px;
-  bottom: -110px;
+  border: 1px solid #dce5f1;
+  border-radius: 9px;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 50%;
+  background: #ffffff;
+
+  box-shadow:
+    0 9px 22px rgba(25, 43, 68, 0.08);
 }
 
 .about-platform-card > span {
-  color: #d18a1d;
+  display: block;
 
-  font-size: 11px;
+  margin-bottom: 17px;
+
+  color: #85909d;
+
+  font-size: 8px;
   font-weight: 800;
 
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
+
+  text-transform: uppercase;
 }
 
 .about-platform-card strong {
-  position: relative;
-  z-index: 2;
+  display: block;
 
-  margin-top: 55px;
+  color: #172536;
 
-  color: #ffffff;
+  font-size: 22px;
+  font-weight: 750;
 
-  font-size: clamp(30px, 3vw, 43px);
-  line-height: 1.05;
+  letter-spacing: -0.025em;
 
-  font-weight: 800;
-
-  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .about-platform-line {
-  width: 70px;
+  width: 55px;
   height: 2px;
 
-  margin: 28px 0 18px;
+  margin: 13px 0;
 
-  background: #c87508;
+  border-radius: 99px;
+
+  background: var(--about-green);
 }
 
 .about-platform-card p {
-  position: relative;
-  z-index: 2;
-
-  max-width: 360px;
-
   margin: 0;
 
-  color: #a9bbcd;
+  color: #778393;
 
-  font-size: 14px;
+  font-size: 10px;
+
   line-height: 1.65;
 }
 
@@ -626,94 +634,146 @@
    ========================================================= */
 
 .about-cta {
+  position: relative;
+
+  min-height: 250px;
+
   display: flex;
-  align-items: center;
   flex-direction: column;
 
-  padding: 100px 24px;
+  align-items: flex-start;
+  justify-content: center;
 
-  text-align: center;
+  padding: 38px max(40px, calc((100% - 1180px) / 2));
+
+  overflow: hidden;
 
   background:
+    radial-gradient(
+      circle at 88% 20%,
+      rgba(27, 145, 111, 0.14),
+      transparent 30%
+    ),
     linear-gradient(
-      180deg,
-      #edf3ff 0%,
-      #f7f9fd 100%
+      105deg,
+      #0b1527 0%,
+      #111e32 57%,
+      #083b36 100%
     );
 
-  border-top: 1px solid #e0e7f0;
+  color: #ffffff;
+}
+
+.about-cta::after {
+  content: "";
+
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  right: -140px;
+  top: -160px;
+
+  border: 1px solid rgba(255,255,255,0.04);
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 0 40px rgba(255,255,255,0.012),
+    0 0 0 80px rgba(255,255,255,0.01);
+}
+
+.about-cta .about-section-label {
+  position: relative;
+  z-index: 1;
+
+  margin-bottom: 10px;
+
+  color: #75d5b5;
 }
 
 .about-cta h2 {
-  margin: 18px 0 30px;
+  position: relative;
+  z-index: 1;
 
-  color: var(--about-navy);
+  margin: 0;
 
-  font-size: clamp(40px, 5vw, 62px);
-  line-height: 1.02;
+  color: #ffffff;
 
+  font-size: clamp(30px, 3.5vw, 43px);
   font-weight: 800;
 
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
+
+  line-height: 1.03;
 }
 
 .about-cta h2 em {
-  color: var(--about-gold);
+  color: #ffffff;
 
-  font-style: normal;
+  font-style: italic;
 }
 
 .about-cta-button {
+  position: relative;
+  z-index: 1;
+
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 9px;
 
-  min-height: 48px;
+  gap: 6px;
 
-  padding: 0 22px;
+  margin-top: 20px;
 
-  border-radius: 6px;
+  padding: 10px 15px;
 
-  background: var(--about-navy);
+  border: 1px solid var(--about-green);
+  border-radius: 5px;
+
+  background: var(--about-green);
+
   color: #ffffff;
 
-  font-size: 14px;
-  font-weight: 800;
-
-  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
 
   box-shadow:
-    0 8px 20px rgba(6, 29, 53, 0.15);
+    0 5px 12px rgba(0, 0, 0, 0.12);
 
   transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+    background 0.18s ease,
+    transform 0.18s ease;
 }
 
 .about-cta-button:hover {
-  background: #0b3155;
+  background: var(--about-green-dark);
 
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 /* =========================================================
-   TABLET
+   LARGE TABLET
    ========================================================= */
 
-@media (max-width: 1000px) {
-  .about-hero {
-    min-height: 420px;
-
-    padding-left: 40px;
-    padding-right: 40px;
+@media (max-width: 1100px) {
+  .about-hero,
+  .about-mission,
+  .about-values,
+  .about-platform,
+  .about-cta {
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
   .about-hero-mark {
-    width: 150px;
-    height: 150px;
+    right: 32px;
 
-    margin-left: 35px;
+    width: 270px;
+  }
+
+  .about-hero-content {
+    width: 55%;
   }
 
   .about-mission-grid {
@@ -723,13 +783,55 @@
   .about-platform-inner {
     gap: 45px;
   }
+}
 
-  .about-values-grid {
-    grid-template-columns: 1fr 1fr;
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .about-hero {
+    min-height: 400px;
+
+    padding-top: 45px;
+    padding-bottom: 45px;
   }
 
-  .about-value-card:last-child {
-    grid-column: 1 / -1;
+  .about-hero-content {
+    width: 58%;
+  }
+
+  .about-hero-mark {
+    width: 245px;
+    min-height: 190px;
+  }
+
+  .about-hero h1 {
+    font-size: 39px;
+  }
+
+  .about-mission-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 35px;
+  }
+
+  .about-values-grid {
+    gap: 10px;
+  }
+
+  .about-value-card {
+    padding: 16px;
+  }
+
+  .about-platform-inner {
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+  }
+
+  .about-platform-card {
+    max-width: 500px;
   }
 }
 
@@ -737,138 +839,191 @@
    MOBILE
    ========================================================= */
 
-@media (max-width: 720px) {
-  .about-hero {
-    display: block;
+@media (max-width: 700px) {
+  .about-hero,
+  .about-mission,
+  .about-values,
+  .about-platform,
+  .about-cta {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
+  /* HERO */
+
+  .about-hero {
     min-height: auto;
 
-    padding: 65px 24px 60px;
+    display: block;
+
+    padding-top: 42px;
+    padding-bottom: 35px;
   }
 
   .about-hero-content {
-    max-width: none;
+    width: 100%;
   }
 
-  .about-hero .about-eyebrow {
-    margin-bottom: 18px;
+  .about-eyebrow {
+    margin-bottom: 12px;
 
-    font-size: 10px;
+    font-size: 8px;
   }
 
   .about-hero h1 {
-    font-size: 45px;
+    font-size: clamp(34px, 9vw, 43px);
+
+    line-height: 1.05;
   }
 
-  .about-hero-content > p {
-    font-size: 16px;
-    line-height: 1.65;
+  .about-hero-content p {
+    max-width: 520px;
+
+    margin-top: 14px;
+
+    font-size: 11px;
   }
 
   .about-hero-mark {
-    width: 100px;
-    height: 100px;
+    position: relative;
 
-    margin: 35px 0 0;
+    right: auto;
+    top: auto;
+
+    width: 100%;
+    max-width: 390px;
+
+    min-height: 175px;
+
+    margin: 28px auto 0;
+
+    transform: none;
   }
 
-  .about-hero-mark svg {
-    width: 28px;
-    height: 28px;
-  }
+  /* MISSION */
 
-  .about-hero-mark span {
-    font-size: 21px;
-  }
-
-  .about-mission,
-  .about-values,
-  .about-platform {
-    padding: 65px 24px;
+  .about-mission {
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
 
   .about-mission-grid {
     grid-template-columns: 1fr;
 
-    gap: 28px;
-
-    margin-top: 24px;
+    gap: 23px;
   }
 
-  .about-mission-grid h2 {
-    font-size: 38px;
+  .about-mission h2 {
+    font-size: 34px;
+  }
+
+  .about-mission-copy {
+    max-width: none;
   }
 
   .about-mission-copy p {
-    font-size: 16px;
+    font-size: 11px;
+  }
+
+  .about-link {
+    font-size: 10px;
+  }
+
+  /* VALUES */
+
+  .about-values {
+    padding-top: 45px;
+    padding-bottom: 45px;
+  }
+
+  .about-values-header {
+    margin-bottom: 20px;
   }
 
   .about-values-header h2 {
-    font-size: 38px;
+    font-size: 25px;
   }
 
   .about-values-grid {
     grid-template-columns: 1fr;
 
-    gap: 14px;
-  }
-
-  .about-value-card:last-child {
-    grid-column: auto;
+    gap: 10px;
   }
 
   .about-value-card {
     min-height: auto;
 
-    padding: 25px;
+    padding: 17px;
   }
 
   .about-value-card h3 {
-    font-size: 20px;
-  }
-
-  .about-value-card p {
     font-size: 15px;
   }
 
-  .about-platform-inner {
-    grid-template-columns: 1fr;
+  .about-value-card p {
+    font-size: 11px;
+  }
 
-    gap: 40px;
+  /* PLATFORM */
+
+  .about-platform {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .about-platform-inner {
+    gap: 25px;
   }
 
   .about-platform-content h2 {
-    font-size: 38px;
+    font-size: 29px;
   }
 
   .about-platform-content > p {
-    font-size: 16px;
+    font-size: 11px;
   }
 
   .about-platform-points {
     grid-template-columns: 1fr;
 
-    gap: 13px;
+    max-width: none;
+  }
+
+  .about-platform-points > div {
+    min-height: 48px;
   }
 
   .about-platform-card {
-    min-height: 290px;
+    min-height: 210px;
 
-    padding: 30px;
+    padding: 19px;
   }
 
   .about-platform-card strong {
-    margin-top: 45px;
-
-    font-size: 34px;
+    font-size: 21px;
   }
 
+  .about-platform-card p {
+    font-size: 10px;
+  }
+
+  /* CTA */
+
   .about-cta {
-    padding: 75px 24px;
+    min-height: 275px;
+
+    padding-top: 45px;
+    padding-bottom: 45px;
   }
 
   .about-cta h2 {
-    font-size: 42px;
+    font-size: 33px;
+  }
+
+  .about-cta-button {
+    margin-top: 17px;
+
+    font-size: 10px;
   }
 }
 
@@ -877,61 +1032,107 @@
    ========================================================= */
 
 @media (max-width: 480px) {
+  .about-hero,
+  .about-mission,
+  .about-values,
+  .about-platform,
+  .about-cta {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .about-hero {
-    padding: 55px 20px 50px;
+    padding-top: 34px;
   }
 
   .about-hero h1 {
-    font-size: 38px;
+    font-size: 33px;
   }
 
-  .about-hero-content > p {
-    font-size: 15px;
-  }
-
-  .about-section-label {
+  .about-hero-content p {
     font-size: 10px;
   }
 
-  .about-mission,
-  .about-values,
-  .about-platform {
-    padding: 55px 20px;
+  .about-hero-mark {
+    min-height: 165px;
   }
 
-  .about-mission-grid h2,
-  .about-values-header h2,
-  .about-platform-content h2 {
-    font-size: 34px;
+  .about-section-label {
+    font-size: 8px;
   }
 
-  .about-value-card {
-    padding: 22px;
-  }
-
-  .about-platform-points > div {
-    font-size: 14px;
-  }
-
-  .about-platform-card {
-    padding: 26px;
-  }
-
-  .about-platform-card strong {
+  .about-mission h2 {
     font-size: 30px;
   }
 
+  .about-mission-copy p {
+    font-size: 10px;
+  }
+
+  .about-values-header h2 {
+    font-size: 23px;
+  }
+
+  .about-value-card {
+    padding: 15px;
+  }
+
+  .about-value-card h3 {
+    font-size: 14px;
+  }
+
+  .about-value-card p {
+    font-size: 10px;
+  }
+
+  .about-platform-content h2 {
+    font-size: 26px;
+  }
+
+  .about-platform-content > p {
+    font-size: 10px;
+  }
+
+  .about-platform-points span {
+    font-size: 9px;
+  }
+
+  .about-platform-card strong {
+    font-size: 19px;
+  }
+
   .about-cta {
-    padding: 65px 20px;
+    min-height: 245px;
   }
 
   .about-cta h2 {
-    font-size: 36px;
+    font-size: 29px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 360px) {
+  .about-hero h1 {
+    font-size: 29px;
   }
 
-  .about-cta-button {
-    width: 100%;
-    max-width: 280px;
+  .about-mission h2 {
+    font-size: 27px;
+  }
+
+  .about-values-header h2 {
+    font-size: 21px;
+  }
+
+  .about-platform-content h2 {
+    font-size: 24px;
+  }
+
+  .about-cta h2 {
+    font-size: 26px;
   }
 }
 
@@ -940,9 +1141,14 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .about-value-card,
-  .about-link,
-  .about-cta-button {
-    transition: none;
+  .about-page *,
+  .about-page *::before,
+  .about-page *::after {
+    scroll-behavior: auto !important;
+
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
   }
 }

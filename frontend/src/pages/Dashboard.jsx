@@ -13,11 +13,16 @@ import {
   Search,
   ShieldCheck,
   UserRound,
+  Bookmark,
+  FileCheck2,
+  WalletCards,
+  LayoutDashboard,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
 import "./Dashboard.css";
+
 
 function Dashboard() {
   const { user, logout } = useAuth();
@@ -29,10 +34,13 @@ function Dashboard() {
   if (!user) {
     return (
       <div className="dashboard-login-page">
+
         <div className="dashboard-login-box">
 
           <div className="dashboard-login-brand">
-            <span className="dashboard-logo-mark">X</span>
+            <span className="dashboard-logo-mark">
+              X
+            </span>
 
             <span className="dashboard-logo-text">
               XEVO<span>PROP</span>
@@ -47,11 +55,13 @@ function Dashboard() {
             XEVOPROP ACCOUNT
           </span>
 
-          <h1>You&apos;re not signed in</h1>
+          <h1>
+            You&apos;re not signed in
+          </h1>
 
           <p>
-            Sign in to access your properties, enquiries,
-            visits and account settings.
+            Sign in to access your properties,
+            enquiries, visits and account settings.
           </p>
 
           <Link
@@ -63,9 +73,11 @@ function Dashboard() {
           </Link>
 
         </div>
+
       </div>
     );
   }
+
 
   /* =====================================================
      USER ROLE
@@ -73,15 +85,15 @@ function Dashboard() {
 
   const role = user.role || "Buyer";
 
+
   /* =====================================================
-     DASHBOARD DATA
+     ROLE DATA
   ===================================================== */
 
   const dashboardData = {
+
     Buyer: {
       eyebrow: "BUYER ACCOUNT",
-
-      title: `Welcome, ${user.name}.`,
 
       description:
         "Manage your property search, saved listings, enquiries and visits.",
@@ -91,7 +103,8 @@ function Dashboard() {
           icon: Search,
           title: "Explore Properties",
           description:
-            "Find properties matching your requirements.",
+            "Find premium properties matching your requirements.",
+          badge: "142 verified today",
           link: "/properties",
         },
 
@@ -99,7 +112,8 @@ function Dashboard() {
           icon: Heart,
           title: "Saved Properties",
           description:
-            "View the properties you have saved.",
+            "View, compare and manage your saved properties.",
+          badge: "4 saved assets",
           link: "/favorites",
         },
 
@@ -108,39 +122,42 @@ function Dashboard() {
           title: "Property Enquiries",
           description:
             "Track your property enquiries and conversations.",
+          badge: "2 active chats",
           link: "/my-enquiries",
         },
 
         {
-          icon: MessageCircle,
+          icon: Building2,
           title: "Project Enquiries",
           description:
             "View your enquiries with developers.",
+          badge: "Project enquiries",
           link: "/buyer/project-enquiries",
         },
 
         {
           icon: CalendarDays,
-          title: "My Visits",
+          title: "My Scheduled Visits",
           description:
-            "View and manage your scheduled visits.",
+            "View and manage your scheduled property visits.",
+          badge: "Upcoming visits",
           link: "/my-visits",
         },
 
         {
           icon: UserRound,
-          title: "My Profile",
+          title: "Profile & KYC",
           description:
             "Manage your personal account information.",
+          badge: "100% complete",
           link: "/profile",
         },
       ],
     },
 
+
     Seller: {
       eyebrow: "SELLER ACCOUNT",
-
-      title: `Welcome, ${user.name}.`,
 
       description:
         "Manage your property listings, visits and buyer enquiries.",
@@ -151,6 +168,7 @@ function Dashboard() {
           title: "My Properties",
           description:
             "View and manage your listed properties.",
+          badge: "Active listings",
           link: "/my-properties",
         },
 
@@ -159,14 +177,16 @@ function Dashboard() {
           title: "List a Property",
           description:
             "Add a new property listing to Xevoprop.",
+          badge: "Start listing",
           link: "/list-property",
         },
 
         {
           icon: CalendarDays,
-          title: "Schedule Visit",
+          title: "Schedule Visits",
           description:
             "Manage property visits and appointments.",
+          badge: "Upcoming visits",
           link: "/seller-visits",
         },
 
@@ -175,6 +195,16 @@ function Dashboard() {
           title: "Buyer Enquiries",
           description:
             "View people interested in your properties.",
+          badge: "Active enquiries",
+          link: "/seller-enquiries",
+        },
+
+        {
+          icon: BarChart3,
+          title: "Listing Performance",
+          description:
+            "Review enquiries and property engagement.",
+          badge: "View activity",
           link: "/seller-enquiries",
         },
 
@@ -183,15 +213,15 @@ function Dashboard() {
           title: "My Profile",
           description:
             "Manage your seller profile.",
+          badge: "Account settings",
           link: "/profile",
         },
       ],
     },
 
+
     Developer: {
       eyebrow: "DEVELOPER ACCOUNT",
-
-      title: `Welcome, ${user.name}.`,
 
       description:
         "Manage your projects, listings and enquiries from one place.",
@@ -202,6 +232,7 @@ function Dashboard() {
           title: "My Projects",
           description:
             "View and manage your projects on Xevoprop.",
+          badge: "Active projects",
           link: "/my-projects",
         },
 
@@ -210,14 +241,25 @@ function Dashboard() {
           title: "Add Project",
           description:
             "Create and submit a new project listing.",
+          badge: "Create project",
           link: "/add-project",
         },
 
         {
-          icon: BarChart3,
+          icon: MessageCircle,
           title: "Project Enquiries",
           description:
             "Track enquiries from potential buyers.",
+          badge: "Active enquiries",
+          link: "/project-enquiries",
+        },
+
+        {
+          icon: BarChart3,
+          title: "Project Performance",
+          description:
+            "Review your project engagement and enquiries.",
+          badge: "View activity",
           link: "/project-enquiries",
         },
 
@@ -226,158 +268,522 @@ function Dashboard() {
           title: "Company Profile",
           description:
             "Manage your developer company profile.",
+          badge: "Company details",
+          link: "/profile",
+        },
+
+        {
+          icon: UserRound,
+          title: "Account Settings",
+          description:
+            "Manage your developer account information.",
+          badge: "Settings",
           link: "/profile",
         },
       ],
     },
   };
 
+
   const data =
-    dashboardData[role] || dashboardData.Buyer;
+    dashboardData[role] ||
+    dashboardData.Buyer;
+
+
+  /* =====================================================
+     ROLE LABEL
+  ===================================================== */
+
+  const roleLabel =
+    role === "Developer"
+      ? "Developer"
+      : role;
+
+
+  /* =====================================================
+     RETURN
+  ===================================================== */
 
   return (
     <div className="dashboard-page">
 
-      <div className="dashboard-container">
 
-        {/* =================================================
-            HEADER
-        ================================================= */}
+      {/* =================================================
+          TOP NAVIGATION
+      ================================================= */}
 
-        <header className="dashboard-header">
+      <header className="dashboard-topbar">
+
+        <div className="dashboard-topbar-left">
 
           <Link
             to="/"
             className="dashboard-brand"
           >
-            
 
-            <span className="dashboard-logo-text">
+            <span className="dashboard-brand-mark">
+              X
+            </span>
+
+            <span className="dashboard-brand-name">
               XEVO<span>PROP</span>
             </span>
+
           </Link>
 
-          <div className="dashboard-header-actions">
 
-            <div className="dashboard-user-mini">
+          <nav className="dashboard-main-nav">
 
-              <div className="dashboard-mini-avatar">
-                {user.name
-                  ?.charAt(0)
-                  .toUpperCase()}
-              </div>
+            <Link to="/properties">
+              Marketplace
+            </Link>
 
-              <div className="dashboard-mini-info">
-                <strong>{user.name}</strong>
-                <span>{role}</span>
-              </div>
+            <Link to="/properties">
+              Properties
+            </Link>
 
+            <Link to="/projects">
+              Projects
+            </Link>
+
+            <Link to="/about">
+              Insights
+            </Link>
+
+          </nav>
+
+        </div>
+
+
+        <div className="dashboard-topbar-right">
+
+          <div className="dashboard-user-header">
+
+            <div className="dashboard-header-avatar">
+              {user.name
+                ?.charAt(0)
+                .toUpperCase()}
             </div>
 
-            <button
-              type="button"
-              className="dashboard-logout"
-              onClick={logout}
-            >
-              <LogOut size={15} />
-              <span>Logout</span>
-            </button>
+            <div className="dashboard-header-user-info">
+
+              <strong>
+                {user.name}
+              </strong>
+
+              <span>
+                {roleLabel.toUpperCase()} ACCOUNT
+              </span>
+
+            </div>
 
           </div>
 
-        </header>
+
+          <button
+            type="button"
+            className="dashboard-header-logout"
+            onClick={logout}
+          >
+            <LogOut size={16} />
+            <span>Logout</span>
+          </button>
+
+        </div>
+
+      </header>
+
+
+      {/* =================================================
+          PAGE BODY
+      ================================================= */}
+
+      <div className="dashboard-body">
+
 
         {/* =================================================
-            INTRO
+            SIDEBAR
         ================================================= */}
 
-        <main>
+        <aside className="dashboard-sidebar">
+
+          <div className="dashboard-sidebar-title">
+            ACCOUNT NAVIGATION
+          </div>
+
+
+          <nav className="dashboard-sidebar-nav">
+
+            <Link
+              to="/dashboard"
+              className="dashboard-sidebar-link active"
+            >
+              <LayoutDashboard size={18} />
+              <span>Overview</span>
+            </Link>
+
+
+            {role === "Buyer" && (
+              <>
+                <Link
+                  to="/favorites"
+                  className="dashboard-sidebar-link"
+                >
+                  <Bookmark size={18} />
+                  <span>Saved Assets</span>
+                </Link>
+
+                <Link
+                  to="/my-enquiries"
+                  className="dashboard-sidebar-link"
+                >
+                  <MessageCircle size={18} />
+                  <span>Property Enquiries</span>
+                </Link>
+
+                <Link
+                  to="/my-visits"
+                  className="dashboard-sidebar-link"
+                >
+                  <CalendarDays size={18} />
+                  <span>Site Visits</span>
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="dashboard-sidebar-link"
+                >
+                  <WalletCards size={18} />
+                  <span>Financial Escrow</span>
+                </Link>
+              </>
+            )}
+
+
+            {role === "Seller" && (
+              <>
+                <Link
+                  to="/my-properties"
+                  className="dashboard-sidebar-link"
+                >
+                  <Home size={18} />
+                  <span>My Properties</span>
+                </Link>
+
+                <Link
+                  to="/seller-enquiries"
+                  className="dashboard-sidebar-link"
+                >
+                  <MessageCircle size={18} />
+                  <span>Buyer Enquiries</span>
+                </Link>
+
+                <Link
+                  to="/seller-visits"
+                  className="dashboard-sidebar-link"
+                >
+                  <CalendarDays size={18} />
+                  <span>Site Visits</span>
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="dashboard-sidebar-link"
+                >
+                  <UserRound size={18} />
+                  <span>Profile</span>
+                </Link>
+              </>
+            )}
+
+
+            {role === "Developer" && (
+              <>
+                <Link
+                  to="/my-projects"
+                  className="dashboard-sidebar-link"
+                >
+                  <Building2 size={18} />
+                  <span>My Projects</span>
+                </Link>
+
+                <Link
+                  to="/project-enquiries"
+                  className="dashboard-sidebar-link"
+                >
+                  <MessageCircle size={18} />
+                  <span>Project Enquiries</span>
+                </Link>
+
+                <Link
+                  to="/add-project"
+                  className="dashboard-sidebar-link"
+                >
+                  <Plus size={18} />
+                  <span>Add Project</span>
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="dashboard-sidebar-link"
+                >
+                  <UserRound size={18} />
+                  <span>Company Profile</span>
+                </Link>
+              </>
+            )}
+
+          </nav>
+
+
+          <div className="dashboard-sidebar-bottom">
+
+            <ShieldCheck size={17} />
+
+            <div>
+              <strong>
+                Account Verified
+              </strong>
+
+              <span>
+                Xevoprop secure account
+              </span>
+            </div>
+
+          </div>
+
+        </aside>
+
+
+        {/* =================================================
+            MAIN CONTENT
+        ================================================= */}
+
+        <main className="dashboard-content">
+
+
+          {/* =================================================
+              INTRO
+          ================================================= */}
 
           <section className="dashboard-intro">
 
-            <div>
-              <span className="dashboard-eyebrow">
-                {data.eyebrow}
-              </span>
+            <div className="dashboard-intro-copy">
 
-              <h1>{data.title}</h1>
+              <div className="dashboard-intro-badges">
 
-              <p>{data.description}</p>
+                <span className="dashboard-account-badge">
+                  <ShieldCheck size={14} />
+                  {data.eyebrow}
+                </span>
+
+                <span className="dashboard-active-badge">
+                  <span />
+                  Account Active
+                </span>
+
+              </div>
+
+
+              <h1>
+                Welcome,{" "}
+                <em>{user.name}.</em>
+              </h1>
+
+              <p>
+                {data.description}
+              </p>
+
             </div>
 
-            <div className="dashboard-intro-status">
-              <ShieldCheck size={16} />
-              <span>Account active</span>
+
+            {/* ROLE SWITCH VISUAL */}
+
+            <div className="dashboard-role-switch">
+
+              <div
+                className={
+                  role === "Buyer"
+                    ? "dashboard-role active"
+                    : "dashboard-role"
+                }
+              >
+                <UserRound size={17} />
+                <span>
+                  Buyer
+                  <small>View</small>
+                </span>
+              </div>
+
+
+              <div
+                className={
+                  role === "Seller"
+                    ? "dashboard-role active"
+                    : "dashboard-role"
+                }
+              >
+                <Home size={17} />
+                <span>
+                  Seller
+                  <small>View</small>
+                </span>
+              </div>
+
+
+              <div
+                className={
+                  role === "Developer"
+                    ? "dashboard-role active"
+                    : "dashboard-role"
+                }
+              >
+                <Building2 size={17} />
+                <span>
+                  Developer
+                  <small>View</small>
+                </span>
+              </div>
+
             </div>
 
           </section>
 
+
           {/* =================================================
-              ACCOUNT DETAILS
+              ACCOUNT HOLDER
           ================================================= */}
 
-          <section className="dashboard-account">
+          <section className="dashboard-account-card">
 
-            <div className="dashboard-account-person">
+            <div className="dashboard-account-holder">
 
-              <div className="dashboard-avatar">
+              <div className="dashboard-profile-avatar">
+
                 {user.name
                   ?.charAt(0)
                   .toUpperCase()}
-              </div>
 
-              <div>
-                <span className="dashboard-field-label">
-                  ACCOUNT HOLDER
+                <span>
+                  <ShieldCheck size={13} />
                 </span>
 
-                <strong>{user.name}</strong>
+              </div>
 
-                <p>{user.email}</p>
+
+              <div className="dashboard-holder-info">
+
+                <span className="dashboard-card-label">
+                  VERIFIED ACCOUNT HOLDER
+                  <ShieldCheck size={14} />
+                </span>
+
+                <h2>
+                  {user.name}
+                </h2>
+
+                <p>
+                  {user.email}
+                </p>
+
               </div>
 
             </div>
 
-            <div className="dashboard-account-meta">
 
-              <div>
-                <span className="dashboard-field-label">
-                  ACCOUNT TYPE
-                </span>
+            <div className="dashboard-account-column">
 
-                <strong>{role}</strong>
-              </div>
+              <span className="dashboard-card-label">
+                ACCOUNT CLASSIFICATION
+              </span>
 
-              <div className="dashboard-meta-divider" />
+              <strong>
+                {role}
+              </strong>
 
-              <div className="dashboard-account-security">
-                <ShieldCheck size={15} />
-                <span>Secure account</span>
-              </div>
+              <span className="dashboard-green-text">
+                Tier-1 Xevoprop Access
+              </span>
+
+            </div>
+
+
+            <div className="dashboard-account-column">
+
+              <span className="dashboard-card-label">
+                SECURITY STATUS
+              </span>
+
+              <strong className="dashboard-security-value">
+                <ShieldCheck size={16} />
+                Verified
+              </strong>
+
+              <span className="dashboard-green-text">
+                Secure account
+              </span>
+
+            </div>
+
+
+            <div className="dashboard-account-column dashboard-portfolio">
+
+              <span className="dashboard-card-label">
+                PORTFOLIO DESK
+              </span>
+
+              <strong>
+                Active Member
+              </strong>
+
+              <span>
+                Since 2024
+              </span>
 
             </div>
 
           </section>
 
+
           {/* =================================================
-              QUICK ACCESS
+              WORKSPACE HEADING
           ================================================= */}
 
-          <section className="dashboard-access">
+          <section className="dashboard-workspace-heading">
 
-            <div className="dashboard-access-heading">
+            <div>
 
-              <div>
-                <span>QUICK ACCESS</span>
+              <div className="dashboard-workspace-label">
 
-                <h2>Manage your account</h2>
+                ACTIVE {role.toUpperCase()} WORKSPACE
+
+                <span>
+                  {data.items.length} Modules
+                </span>
+
               </div>
+
+              <h2>
+                Manage your account
+              </h2>
 
             </div>
 
-            <div className="dashboard-access-list">
+            <span className="dashboard-workspace-sync">
+              Real-time property workspace
+            </span>
 
-              {data.items.map((item, index) => {
+          </section>
+
+
+          {/* =================================================
+              MODULES
+          ================================================= */}
+
+          <section className="dashboard-module-grid">
+
+            {data.items.map(
+              (item, index) => {
 
                 const Icon = item.icon;
 
@@ -385,52 +791,85 @@ function Dashboard() {
                   <Link
                     key={item.title}
                     to={item.link}
-                    className="dashboard-access-row"
+                    className="dashboard-module-card"
                   >
 
-                    <span className="dashboard-row-number">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                    <div className="dashboard-module-top">
 
-                    <span className="dashboard-row-icon">
-                      <Icon size={18} />
-                    </span>
+                      <span className="dashboard-module-number">
+                        {String(index + 1).padStart(
+                          2,
+                          "0"
+                        )}
+                      </span>
 
-                    <span className="dashboard-row-content">
-                      <strong>{item.title}</strong>
-                      <span>{item.description}</span>
-                    </span>
+                      <span className="dashboard-module-icon">
+                        <Icon size={20} />
+                      </span>
 
-                    <span className="dashboard-row-arrow">
-                      <ArrowRight size={17} />
+                      <span className="dashboard-module-badge">
+                        {item.badge}
+                      </span>
+
+                    </div>
+
+
+                    <div className="dashboard-module-content">
+
+                      <h3>
+                        {item.title}
+                      </h3>
+
+                      <p>
+                        {item.description}
+                      </p>
+
+                    </div>
+
+
+                    <span className="dashboard-module-arrow">
+                      <ArrowRight size={19} />
                     </span>
 
                   </Link>
                 );
-              })}
+              }
+            )}
+
+          </section>
+
+
+          {/* =================================================
+              PROTOCOL BAR
+          ================================================= */}
+
+          <section className="dashboard-protocol">
+
+            <div className="dashboard-protocol-icon">
+              <ArrowRight size={21} />
+            </div>
+
+            <div className="dashboard-protocol-content">
+
+              <h3>
+                Multi-Persona Real Estate Protocol
+              </h3>
+
+              <p>
+                Your Xevoprop account keeps your
+                property activity, enquiries and
+                account access connected in one place.
+              </p>
 
             </div>
+
+            <span className="dashboard-protocol-id">
+              Unified Account
+            </span>
 
           </section>
 
         </main>
-
-        {/* =================================================
-            FOOTER
-        ================================================= */}
-
-        <footer className="dashboard-footer">
-
-          <span>
-            Xevoprop account
-          </span>
-
-          <Link to="/profile">
-            Account settings
-            <ArrowRight size={13} />
-          </Link>
-
-        </footer>
 
       </div>
 

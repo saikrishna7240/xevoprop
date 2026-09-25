@@ -1,551 +1,657 @@
+/* =========================================================
+   XEVOPROP - DEVELOPERS PAGE
+   Larger typography / screenshot-matched design
+   ========================================================= */
+
 .developers-page {
+  width: 100%;
   min-height: 100vh;
-  background: #ffffff;
-  color: #172033;
+  background: #f7f9ff;
+  color: #111827;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  overflow: hidden;
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
+.developers-page *,
+.developers-page *::before,
+.developers-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
 
 .developers-header {
-  border-bottom: 1px solid #e1e6ed;
-  background: #f7f9fb;
+  width: 100%;
+  padding: 72px 24px 70px;
 }
 
 .developers-header-inner {
-  width: min(1180px, calc(100% - 48px));
-  min-height: 430px;
-
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 65px 0;
-
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
   align-items: center;
-  gap: 90px;
+  gap: 75px;
 }
 
 .developers-header-copy {
-  max-width: 700px;
+  max-width: 650px;
 }
 
-.developers-label,
-.developers-section-heading > div > span,
-.developers-workflow-heading > span,
-.developers-checklist-heading > span,
-.developers-final > div > span {
-  display: block;
+.developers-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 20px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: #e6f8f2;
+  color: #14785d;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 
-  color: #155eef;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
+.developers-label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #12a477;
 }
 
 .developers-header h1 {
-  margin: 13px 0 0;
-
-  color: #172d4a;
-
-  font-size: clamp(38px, 5vw, 58px);
-  line-height: 1.04;
-
-  letter-spacing: -0.05em;
-  font-weight: 700;
+  margin: 0;
+  color: #101828;
+  font-size: clamp(46px, 5.2vw, 64px);
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.055em;
 }
 
 .developers-header h1 span {
-  color: #155eef;
+  color: #087653;
 }
 
 .developers-header-copy > p {
-  max-width: 600px;
-
-  margin: 20px 0 27px;
-
-  color: #667589;
-
-  font-size: 14px;
-  line-height: 1.7;
+  max-width: 610px;
+  margin: 25px 0 0;
+  color: #4b5565;
+  font-size: 16px;
+  line-height: 1.65;
 }
 
 .developers-header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
+  margin-top: 28px;
 }
 
 .developers-primary-button,
 .developers-secondary-button {
-  min-height: 43px;
-
+  min-height: 45px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-
-  padding: 0 17px;
-
+  gap: 9px;
+  padding: 0 19px;
+  border-radius: 8px;
   text-decoration: none;
-
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 650;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .developers-primary-button {
-  background: #155eef;
+  background: #050505;
   color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .developers-primary-button:hover {
-  background: #104dcc;
+  background: #171717;
+  transform: translateY(-1px);
 }
 
 .developers-secondary-button {
-  border: 1px solid #d5dde7;
+  border: 1px solid #e2e6ef;
   background: #ffffff;
-  color: #34465e;
+  color: #172033;
 }
 
 .developers-secondary-button:hover {
-  border-color: #155eef;
-  color: #155eef;
+  border-color: #cbd4e5;
+  background: #fafbff;
+  transform: translateY(-1px);
 }
 
-/* =====================================================
-   HEADER INFORMATION
-===================================================== */
+/* =========================================================
+   HERO INFO PANEL
+   ========================================================= */
 
 .developers-header-info {
-  border-top: 1px solid #dce3eb;
+  width: 100%;
+  max-width: 390px;
+  justify-self: end;
+  padding: 15px;
+  border: 1px solid #e4e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 35px rgba(31, 50, 90, 0.05);
 }
 
 .developers-info-row {
-  min-height: 78px;
-
+  min-height: 76px;
   display: flex;
   align-items: center;
   gap: 14px;
-
-  border-bottom: 1px solid #dce3eb;
+  padding: 12px 13px;
+  border-radius: 10px;
+  background: #edf3ff;
 }
 
-.developers-info-row > svg {
-  color: #155eef;
-  flex-shrink: 0;
+.developers-info-row + .developers-info-row {
+  margin-top: 8px;
+}
+
+.developers-info-row svg {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  padding: 7px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1855b9;
+}
+
+.developers-info-row:nth-child(2) svg {
+  color: #087653;
+}
+
+.developers-info-row:nth-child(3) svg {
+  color: #48546a;
 }
 
 .developers-info-row div {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .developers-info-row span {
-  color: #929dab;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  color: #7b8495;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.08em;
 }
 
 .developers-info-row strong {
-  color: #304158;
-
-  font-size: 12px;
-  font-weight: 700;
+  color: #172033;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 650;
 }
 
-/* =====================================================
-   COMMON SECTION
-===================================================== */
+/* =========================================================
+   PROJECT MANAGEMENT
+   ========================================================= */
 
 .developers-section {
-  width: min(1180px, calc(100% - 48px));
-
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 72px 0;
+  padding: 50px 24px 75px;
 }
 
 .developers-section-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
-  gap: 60px;
-
-  margin-bottom: 35px;
+  gap: 50px;
+  margin-bottom: 29px;
 }
 
-.developers-section-heading h2 {
-  max-width: 560px;
+.developers-section-heading > div {
+  max-width: 600px;
+}
 
-  margin: 9px 0 0;
+.developers-section-heading > div > span,
+.developers-checklist-heading > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #168062;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
 
-  color: #20334e;
-
-  font-size: 31px;
+.developers-section-heading h2,
+.developers-checklist-heading h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 28px;
   line-height: 1.2;
+  font-weight: 700;
   letter-spacing: -0.035em;
 }
 
 .developers-section-heading > p {
-  max-width: 340px;
-
+  max-width: 350px;
   margin: 0;
-
-  color: #718095;
-
-  font-size: 12px;
-  line-height: 1.65;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
-/* =====================================================
+/* =========================================================
    MANAGEMENT LIST
-===================================================== */
+   ========================================================= */
 
 .developers-management-list {
-  border-top: 1px solid #dfe5ec;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
 }
 
 .developers-management-row {
-  min-height: 100px;
-
+  min-height: 72px;
+  padding: 12px 16px 12px 14px;
   display: grid;
-  grid-template-columns: 55px 44px minmax(0, 1fr) 25px;
-
+  grid-template-columns: 38px 38px minmax(0, 1fr) 30px;
   align-items: center;
-  gap: 15px;
-
-  border-bottom: 1px solid #dfe5ec;
-
+  gap: 12px;
+  border: 1px solid #e7eaf1;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(16, 24, 40, 0.018);
   transition:
-    background 0.18s ease,
-    padding 0.18s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .developers-management-row:hover {
-  padding-left: 8px;
-  padding-right: 8px;
-
-  background: #f8fafc;
+  border-color: #d3dcf1;
+  box-shadow: 0 7px 20px rgba(35, 56, 100, 0.06);
+  transform: translateY(-1px);
 }
 
 .developers-row-number {
-  color: #a0a9b5;
-
-  font-size: 9px;
-  font-weight: 800;
+  color: #667085;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-align: center;
 }
 
 .developers-row-icon {
-  width: 34px;
-  height: 34px;
-
-  display: grid;
-  place-items: center;
-
-  background: #edf4fc;
-  color: #155eef;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #edf3ff;
+  color: #3157d5;
 }
 
 .developers-row-content {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
 .developers-row-content strong {
-  color: #293b53;
-
-  font-size: 14px;
-  font-weight: 700;
+  color: #172033;
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 650;
 }
 
 .developers-row-content span {
-  color: #778497;
-
+  overflow: hidden;
+  color: #7b8495;
   font-size: 11px;
-  line-height: 1.5;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .developers-management-row > svg {
-  color: #8a96a5;
-
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  border-radius: 50%;
+  background: #edf3ff;
+  color: #172033;
   transition:
-    color 0.18s ease,
-    transform 0.18s ease;
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .developers-management-row:hover > svg {
-  color: #155eef;
-  transform: translateX(3px);
+  background: #dfe9ff;
+  transform: translateX(2px);
 }
 
-/* =====================================================
+/* =========================================================
    WORKFLOW
-===================================================== */
+   ========================================================= */
 
 .developers-workflow {
-  background: #f5f7fa;
-  border-top: 1px solid #e1e6ed;
-  border-bottom: 1px solid #e1e6ed;
+  width: calc(100% - 48px);
+  max-width: 1180px;
+  margin: 0 auto 78px;
+  padding: 48px 50px;
+  border-radius: 18px;
+  background: #e5efff;
 }
 
-.developers-workflow-inner {
-  width: min(1180px, calc(100% - 48px));
+.developers-workflow-heading {
+  max-width: 650px;
+}
 
-  margin: 0 auto;
-  padding: 70px 0;
-
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 100px;
+.developers-workflow-heading > span {
+  display: inline-block;
+  margin-bottom: 11px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4d5b70;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.1em;
 }
 
 .developers-workflow-heading h2 {
-  max-width: 430px;
-
-  margin: 10px 0 13px;
-
-  color: #20334e;
-
-  font-size: 31px;
+  margin: 0;
+  color: #101828;
+  font-size: 29px;
   line-height: 1.2;
+  font-weight: 700;
   letter-spacing: -0.035em;
 }
 
 .developers-workflow-heading p {
-  max-width: 400px;
-
-  margin: 0;
-
-  color: #718095;
-
+  margin: 8px 0 0;
+  color: #667085;
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.55;
 }
 
 .developers-workflow-list {
-  border-top: 1px solid #dce3eb;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 27px;
 }
 
 .developers-workflow-item {
-  min-height: 105px;
-
-  display: grid;
-  grid-template-columns: 45px 1fr;
-
-  align-items: center;
-
-  border-bottom: 1px solid #dce3eb;
+  min-height: 145px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #dce5f5;
+  border-radius: 12px;
+  background: #ffffff;
 }
 
 .developers-workflow-item > span {
-  color: #155eef;
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #edf3ff;
+  color: #3157d5;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+}
 
-  font-size: 10px;
-  font-weight: 800;
+.developers-workflow-item div {
+  margin-top: 20px;
 }
 
 .developers-workflow-item strong {
   display: block;
-
-  color: #2c3e56;
-
-  font-size: 13px;
+  color: #172033;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 650;
 }
 
 .developers-workflow-item p {
-  margin: 5px 0 0;
-
-  color: #788596;
-
+  margin: 6px 0 0;
+  color: #7b8495;
   font-size: 10px;
   line-height: 1.5;
 }
 
-/* =====================================================
+/* =========================================================
    CHECKLIST
-===================================================== */
+   ========================================================= */
 
 .developers-checklist {
-  width: min(1180px, calc(100% - 48px));
-
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 70px 0;
-
-  display: grid;
-  grid-template-columns: 0.7fr 1.3fr;
-  gap: 80px;
+  padding: 0 24px 75px;
 }
 
-.developers-checklist-heading h2 {
-  max-width: 360px;
-
-  margin: 10px 0 0;
-
-  color: #20334e;
-
-  font-size: 27px;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+.developers-checklist-heading {
+  margin-bottom: 24px;
 }
 
 .developers-checklist-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  align-content: center;
-
-  border-top: 1px solid #dfe5ec;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .developers-check-item {
-  min-height: 68px;
-
+  min-height: 100px;
+  padding: 16px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
-
-  border-bottom: 1px solid #dfe5ec;
-
-  color: #4b5c72;
-
-  font-size: 11px;
+  border: 1px solid #e7eaf1;
+  border-radius: 11px;
+  background: #ffffff;
 }
 
 .developers-check-item svg {
-  color: #16885b;
-  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  color: #15a97d;
 }
 
-/* =====================================================
+.developers-check-item span {
+  color: #344054;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+/* =========================================================
    FINAL CTA
-===================================================== */
+   ========================================================= */
 
 .developers-final {
-  width: min(1180px, calc(100% - 48px));
-
-  margin: 0 auto;
-  padding: 50px 0 65px;
-
+  width: calc(100% - 48px);
+  max-width: 1180px;
+  min-height: 170px;
+  margin: 0 auto 78px;
+  padding: 38px 44px;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 35px;
+  border: 1px solid #080f1e;
+  border-radius: 16px;
+  background: #10182b;
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.13);
+}
 
-  gap: 40px;
+.developers-final::before {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  right: -85px;
+  top: -105px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
 
-  border-top: 1px solid #dfe5ec;
+.developers-final::after {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  right: -15px;
+  top: -20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transform: rotate(45deg);
+}
+
+.developers-final > div {
+  position: relative;
+  z-index: 2;
+}
+
+.developers-final > div > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #72e4bd;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.developers-final > div > span::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #72e4bd;
 }
 
 .developers-final h2 {
-  margin: 8px 0 8px;
-
-  color: #1d324e;
-
+  margin: 0;
+  color: #ffffff;
   font-size: 29px;
-  letter-spacing: -0.035em;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .developers-final p {
-  max-width: 550px;
-
-  margin: 0;
-
-  color: #718095;
-
+  max-width: 560px;
+  margin: 9px 0 0;
+  color: #b9c1d0;
   font-size: 11px;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .developers-final-button {
-  flex-shrink: 0;
-
-  min-height: 43px;
-  padding: 0 17px;
-
+  min-width: 155px;
+  min-height: 44px;
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-
-  background: #155eef;
-  color: #ffffff;
-
+  justify-content: center;
+  gap: 9px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172033;
   text-decoration: none;
-
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 650;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .developers-final-button:hover {
-  background: #104dcc;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
-/* =====================================================
+/* =========================================================
    TABLET
-===================================================== */
+   ========================================================= */
 
-@media (max-width: 850px) {
+@media (max-width: 1000px) {
   .developers-header-inner {
-    grid-template-columns: 1fr;
-    gap: 45px;
-  }
-
-  .developers-header-info {
-    max-width: 600px;
-  }
-
-  .developers-workflow-inner,
-  .developers-checklist {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
+  .developers-header-info {
+    max-width: 100%;
+    justify-self: stretch;
+  }
+
+  .developers-workflow-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .developers-checklist-content {
-    max-width: 700px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* =========================================================
+   TABLET
+   ========================================================= */
 
-@media (max-width: 600px) {
-  .developers-header-inner,
-  .developers-section,
-  .developers-workflow-inner,
-  .developers-checklist,
-  .developers-final {
-    width: calc(100% - 30px);
-  }
-
-  .developers-header-inner {
-    padding: 45px 0;
+@media (max-width: 768px) {
+  .developers-header {
+    padding: 50px 20px 48px;
   }
 
   .developers-header h1 {
-    font-size: 37px;
+    font-size: clamp(40px, 9vw, 55px);
   }
 
   .developers-header-copy > p {
-    font-size: 12px;
-  }
-
-  .developers-header-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .developers-primary-button,
-  .developers-secondary-button {
-    width: 100%;
+    font-size: 14px;
   }
 
   .developers-section {
-    padding: 50px 0;
+    padding: 40px 20px 58px;
   }
 
   .developers-section-heading {
@@ -554,41 +660,209 @@
     gap: 15px;
   }
 
+  .developers-section-heading > p {
+    max-width: 520px;
+  }
+
+  .developers-workflow {
+    width: calc(100% - 40px);
+    margin-bottom: 60px;
+    padding: 38px 28px;
+  }
+
+  .developers-checklist {
+    padding: 0 20px 60px;
+  }
+
+  .developers-final {
+    width: calc(100% - 40px);
+    margin-bottom: 60px;
+    padding: 34px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .developers-header {
+    padding: 40px 16px 42px;
+  }
+
+  .developers-header h1 {
+    font-size: 39px;
+    line-height: 1.02;
+  }
+
+  .developers-header-copy > p {
+    margin-top: 19px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .developers-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .developers-primary-button,
+  .developers-secondary-button {
+    width: 100%;
+    min-height: 46px;
+    font-size: 13px;
+  }
+
+  .developers-header-info {
+    padding: 10px;
+  }
+
+  .developers-info-row {
+    min-height: 68px;
+  }
+
+  .developers-info-row strong {
+    font-size: 12px;
+  }
+
+  .developers-section {
+    padding: 32px 16px 50px;
+  }
+
   .developers-section-heading h2,
-  .developers-workflow-heading h2 {
-    font-size: 26px;
+  .developers-workflow-heading h2,
+  .developers-checklist-heading h2 {
+    font-size: 24px;
+  }
+
+  .developers-section-heading > div > span,
+  .developers-checklist-heading > span {
+    font-size: 9px;
   }
 
   .developers-management-row {
-    grid-template-columns: 35px 38px minmax(0, 1fr) 18px;
-    gap: 8px;
-    min-height: 94px;
+    grid-template-columns: 28px 37px minmax(0, 1fr) 27px;
+    gap: 9px;
+    min-height: 74px;
+    padding: 12px;
+  }
+
+  .developers-row-number {
+    font-size: 9px;
+  }
+
+  .developers-row-icon {
+    width: 37px;
+    height: 37px;
+  }
+
+  .developers-row-content strong {
+    font-size: 12px;
   }
 
   .developers-row-content span {
     font-size: 10px;
   }
 
-  .developers-workflow-inner {
-    padding: 50px 0;
+  .developers-workflow {
+    width: calc(100% - 32px);
+    padding: 30px 18px;
+    border-radius: 15px;
+  }
+
+  .developers-workflow-list {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .developers-workflow-item {
+    min-height: 120px;
+  }
+
+  .developers-workflow-item strong {
+    font-size: 12px;
+  }
+
+  .developers-workflow-item p {
+    font-size: 10px;
   }
 
   .developers-checklist {
-    padding: 50px 0;
+    padding: 0 16px 50px;
   }
 
   .developers-checklist-content {
     grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .developers-check-item {
+    min-height: 72px;
+  }
+
+  .developers-check-item span {
+    font-size: 11px;
   }
 
   .developers-final {
+    width: calc(100% - 32px);
+    min-height: auto;
+    margin-bottom: 50px;
+    padding: 30px 23px;
     align-items: flex-start;
     flex-direction: column;
-    padding: 45px 0 55px;
+  }
+
+  .developers-final h2 {
+    font-size: 25px;
+  }
+
+  .developers-final p {
+    font-size: 10px;
   }
 
   .developers-final-button {
     width: 100%;
-    justify-content: center;
+    min-height: 45px;
+    font-size: 12px;
   }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .developers-header h1 {
+    font-size: 35px;
+  }
+
+  .developers-header-copy > p {
+    font-size: 13px;
+  }
+
+  .developers-management-row {
+    grid-template-columns: 23px 34px minmax(0, 1fr) 24px;
+    gap: 7px;
+  }
+
+  .developers-row-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .developers-row-content span {
+    white-space: normal;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.developers-primary-button:focus-visible,
+.developers-secondary-button:focus-visible,
+.developers-final-button:focus-visible {
+  outline: 3px solid rgba(49, 87, 213, 0.22);
+  outline-offset: 3px;
 }

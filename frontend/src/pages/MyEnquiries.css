@@ -1,328 +1,340 @@
-.my-enquiries-page {
-  min-height: 100vh;
+/* =========================================================
+   XEVOPROP - MY ENQUIRIES
+   Screenshot-matched design
+   ========================================================= */
 
-  background: #f5f7fa;
-  color: #172033;
+.my-enquiries-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f6f8fd;
+  color: #111827;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
+
+.my-enquiries-page *,
+.my-enquiries-page *::before,
+.my-enquiries-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
 
 .my-enquiries-container {
-  width: min(1180px, calc(100% - 48px));
-
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
-  padding-bottom: 60px;
+  padding: 55px 24px 75px;
 }
 
-/* =====================================================
+/* =========================================================
    HEADER
-===================================================== */
+   ========================================================= */
 
 .my-enquiries-header {
-  min-height: 175px;
-
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  gap: 35px;
+  margin-bottom: 38px;
+}
 
-  border-bottom: 1px solid #dfe5ec;
-
-  gap: 30px;
+.my-enquiries-header > div:first-child {
+  min-width: 0;
 }
 
 .my-enquiries-eyebrow {
-  display: block;
-  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #e7f8f2;
+  color: #087653;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
 
-  color: #155eef;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
+.my-enquiries-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0b966d;
 }
 
 .my-enquiries-header h1 {
   margin: 0;
-
-  color: #182d49;
-
-  font-size: clamp(32px, 4vw, 43px);
-  line-height: 1.1;
-
-  letter-spacing: -0.045em;
-  font-weight: 700;
+  color: #101828;
+  font-size: 43px;
+  line-height: 1.02;
+  font-weight: 750;
+  letter-spacing: -0.05em;
 }
 
 .my-enquiries-header h1 span {
-  color: #155eef;
+  color: #087653;
 }
 
 .my-enquiries-header p {
-  margin: 10px 0 0;
-
-  color: #718095;
-
-  font-size: 12px;
+  max-width: 610px;
+  margin: 12px 0 0;
+  color: #4b5565;
+  font-size: 15px;
+  line-height: 1.55;
 }
+
+/* =========================================================
+   ENQUIRY COUNT
+   ========================================================= */
 
 .enquiries-count {
-  min-width: 120px;
-
-  padding-left: 25px;
-
-  display: grid;
-  grid-template-columns: 18px auto;
-  grid-template-rows: auto auto;
-  column-gap: 7px;
-
-  border-left: 1px solid #dfe5ec;
+  min-width: 220px;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 17px;
+  border: 1px solid #e1e7f0;
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(25, 40, 70, 0.035);
 }
 
-.enquiries-count svg {
-  grid-row: 1 / 3;
-
-  align-self: center;
-
-  color: #155eef;
+.enquiries-count > svg {
+  width: 30px;
+  height: 30px;
+  padding: 7px;
+  border-radius: 7px;
+  background: #edf3ff;
+  color: #3157a5;
 }
 
 .enquiries-count strong {
-  color: #173b68;
-
-  font-size: 25px;
+  color: #172033;
+  font-size: 19px;
   line-height: 1;
+  font-weight: 750;
 }
 
 .enquiries-count span {
-  margin-top: 4px;
-
-  color: #8994a3;
-
-  font-size: 8px;
-  font-weight: 700;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 550;
 }
 
-/* =====================================================
-   STATES
-===================================================== */
+/* =========================================================
+   LOADING / ERROR / EMPTY STATE
+   ========================================================= */
 
 .enquiries-state {
-  min-height: 310px;
-
+  width: 100%;
+  min-height: 330px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  text-align: center;
-
-  color: #7b8797;
-}
-
-.enquiries-state-icon {
-  width: 42px;
-  height: 42px;
-
-  display: grid;
-  place-items: center;
-
-  background: #edf4fc;
-  color: #155eef;
-}
-
-.enquiries-state h2 {
-  margin: 13px 0 0;
-
-  color: #34465e;
-
-  font-size: 17px;
-}
-
-.enquiries-state p {
-  max-width: 350px;
-
-  margin: 7px 0 0;
-
-  color: #7b8797;
-
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-.enquiries-retry {
-  margin-top: 17px;
-
-  min-height: 35px;
-  padding: 0 14px;
-
-  border: 1px solid #d5dde7;
+  padding: 40px;
+  border: 1px solid #e2e7ef;
+  border-radius: 13px;
   background: #ffffff;
-
-  color: #155eef;
-
-  font-family: inherit;
-
-  font-size: 10px;
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-.enquiries-retry:hover {
-  border-color: #155eef;
-}
-
-.enquiries-explore {
-  margin-top: 18px;
-
-  min-height: 37px;
-  padding: 0 13px;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-
-  background: #155eef;
-  color: #ffffff;
-
-  text-decoration: none;
-
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.enquiries-explore:hover {
-  background: #104dcc;
+  text-align: center;
+  box-shadow: 0 3px 12px rgba(25, 40, 70, 0.025);
 }
 
 .enquiries-loader {
-  width: 20px;
-  height: 20px;
-
-  border: 2px solid #d9e2ed;
-  border-top-color: #155eef;
-
+  width: 30px;
+  height: 30px;
+  display: block;
+  border: 3px solid #dfe6f1;
+  border-top-color: #087653;
   border-radius: 50%;
-
-  animation: enquiries-spin 0.7s linear infinite;
+  animation: enquiriesSpin 0.8s linear infinite;
 }
 
-@keyframes enquiries-spin {
+@keyframes enquiriesSpin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* =====================================================
-   LIST
-===================================================== */
+.enquiries-state-icon {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: #edf3ff;
+  color: #3157a5;
+}
+
+.enquiries-state h2 {
+  margin: 14px 0 0;
+  color: #172033;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.enquiries-state-icon + h2 {
+  margin-top: 0;
+}
+
+.enquiries-state p {
+  max-width: 430px;
+  margin: 7px 0 0;
+  color: #7b8495;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.enquiries-retry,
+.enquiries-explore {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 19px;
+  padding: 0 16px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.enquiries-retry {
+  border: 0;
+  background: #050505;
+  color: #ffffff;
+}
+
+.enquiries-explore {
+  background: #050505;
+  color: #ffffff;
+}
+
+.enquiries-retry:hover,
+.enquiries-explore:hover {
+  background: #1c1c1c;
+}
+
+/* =========================================================
+   LIST SECTION
+   ========================================================= */
 
 .enquiries-section {
-  margin-top: 30px;
+  width: 100%;
 }
 
 .enquiries-list-heading {
-  min-height: 40px;
-
-  padding: 0 20px;
-
   display: grid;
   grid-template-columns:
-    1.5fr
-    0.8fr
-    0.65fr
-    1fr;
-
+    minmax(320px, 1.55fr)
+    minmax(170px, 0.75fr)
+    minmax(155px, 0.65fr)
+    minmax(190px, 0.8fr);
   align-items: center;
-
-  border-top: 1px solid #d9e1ea;
-  border-bottom: 1px solid #d9e1ea;
-
-  color: #8994a3;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  padding: 0 18px 10px;
+  color: #667085;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .enquiries-list {
-  background: #ffffff;
-
-  border-bottom: 1px solid #d9e1ea;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* =====================================================
+/* =========================================================
    ENQUIRY ROW
-===================================================== */
+   ========================================================= */
 
 .enquiry-row {
   position: relative;
-
-  min-height: 92px;
-
-  padding: 0 20px;
-
   display: grid;
   grid-template-columns:
-    1.5fr
-    0.8fr
-    0.65fr
-    1fr;
-
+    minmax(320px, 1.55fr)
+    minmax(170px, 0.75fr)
+    minmax(155px, 0.65fr)
+    minmax(190px, 0.8fr);
   align-items: center;
-
-  border-bottom: 1px solid #e5e9ee;
-
-  transition: background 0.15s ease;
-}
-
-.enquiry-row:last-child {
-  border-bottom: 0;
+  column-gap: 20px;
+  padding: 18px;
+  border: 1px solid #e2e7ef;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(25, 40, 70, 0.025);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .enquiry-row:hover {
-  background: #fafbfd;
+  border-color: #d2dce9;
+  box-shadow: 0 9px 24px rgba(25, 40, 70, 0.055);
+  transform: translateY(-1px);
 }
 
-/* =====================================================
+/* =========================================================
    PROPERTY
-===================================================== */
+   ========================================================= */
 
 .enquiry-property {
   min-width: 0;
-
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
 }
 
 .enquiry-property-icon {
-  width: 34px;
-  height: 34px;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #e0e6ef;
+  border-radius: 9px;
+  background: #edf3ff;
+  color: #3157a5;
+}
 
-  flex-shrink: 0;
-
-  display: grid;
-  place-items: center;
-
-  background: #edf3fa;
-  color: #155eef;
+.enquiry-property-icon svg {
+  width: 19px;
+  height: 19px;
 }
 
 .enquiry-property-info {
   min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
 }
 
 .enquiry-property-info strong {
+  display: block;
   overflow: hidden;
-
-  color: #293b53;
-
-  font-size: 12px;
+  color: #172033;
+  font-size: 14px;
+  line-height: 1.35;
   font-weight: 700;
-
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -331,313 +343,438 @@
   display: flex;
   align-items: center;
   gap: 4px;
-
+  margin-top: 7px;
   overflow: hidden;
-
-  color: #8994a3;
-
-  font-size: 9px;
-
+  color: #7b8495;
+  font-size: 10px;
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* =====================================================
+.enquiry-property-info span svg {
+  flex: 0 0 auto;
+  color: #087653;
+}
+
+/* =========================================================
    DATE
-===================================================== */
+   ========================================================= */
 
 .enquiry-date {
+  min-width: 0;
   display: flex;
-  align-items: center;
-  gap: 6px;
-
-  color: #778497;
-
-  font-size: 9px;
+  align-items: flex-start;
+  gap: 7px;
+  color: #344054;
 }
 
 .enquiry-date svg {
-  color: #8c98a7;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #68758a;
 }
 
-/* =====================================================
+.enquiry-date span {
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+/* =========================================================
    STATUS
-===================================================== */
+   ========================================================= */
 
 .enquiry-status {
-  display: flex;
-  align-items: center;
+  min-width: 0;
 }
 
 .enquiry-status-badge {
+  width: fit-content;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-
-  padding: 5px 8px;
-
-  border: 1px solid #dfe5ec;
-
-  background: #f7f8fa;
-
-  color: #718095;
-
-  font-size: 8px;
-  font-weight: 800;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .enquiry-status-badge.new {
-  border-color: #cbdcf7;
-  background: #eef5ff;
-  color: #155eef;
+  background: #fff0df;
+  color: #b45309;
 }
 
 .enquiry-status-badge.contacted {
-  border-color: #d9dfc7;
-  background: #f5f7ec;
-  color: #697a31;
+  background: #e7f8f2;
+  color: #087653;
 }
 
 .enquiry-status-badge.resolved {
-  border-color: #cbe5d9;
-  background: #eff9f4;
-  color: #16885b;
+  background: #d8f8e9;
+  color: #087653;
 }
 
-/* =====================================================
+.enquiry-status-badge.resolved::after {
+  content: "";
+}
+
+/* =========================================================
    ACTIONS
-===================================================== */
+   ========================================================= */
 
 .enquiry-actions {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 7px;
+  flex-wrap: wrap;
 }
 
 .enquiry-action {
-  min-height: 30px;
-
+  min-height: 33px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-
-  padding: 0 8px;
-
-  border: 1px solid #dce3eb;
-
-  background: #ffffff;
-  color: #637287;
-
+  padding: 0 10px;
+  border: 1px solid #dfe5ef;
+  border-radius: 6px;
+  background: #f0f4fc;
+  color: #344054;
   text-decoration: none;
-
-  font-size: 8px;
-  font-weight: 700;
-
+  font-size: 9px;
+  font-weight: 650;
+  white-space: nowrap;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease,
-    background 0.15s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.enquiry-action:first-child {
+  border-color: #050505;
+  background: #050505;
+  color: #ffffff;
+}
+
+.enquiry-action:first-child:hover {
+  background: #1b1b1b;
 }
 
 .enquiry-action:hover {
-  border-color: #155eef;
-
-  background: #f5f8fd;
-
-  color: #155eef;
+  border-color: #cbd5e5;
+  background: #e8eef9;
 }
 
 .enquiry-delete {
-  width: 30px;
-  height: 30px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid #dce3eb;
-
+  width: 33px;
+  height: 33px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #e0e5ed;
+  border-radius: 6px;
   background: #ffffff;
-  color: #8994a3;
-
+  color: #667085;
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .enquiry-delete:hover {
-  border-color: #d45d5d;
-  color: #c64e4e;
+  border-color: #fecaca;
+  background: #fff1f1;
+  color: #d92d20;
 }
 
-/* =====================================================
+/* =========================================================
    MESSAGE
-===================================================== */
+   ========================================================= */
 
 .enquiry-message {
   grid-column: 1 / -1;
-
-  margin: 0 0 14px;
-  padding: 12px 0 0 45px;
-
-  border-top: 1px solid #edf0f3;
+  margin-top: 4px;
+  padding: 11px 13px;
+  border-radius: 7px;
+  background: #f0f4fc;
 }
 
-.enquiry-message span {
+.enquiry-message > span {
   display: block;
-
-  margin-bottom: 4px;
-
-  color: #9aa3af;
-
-  font-size: 7px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  margin-bottom: 5px;
+  color: #667085;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: 0.08em;
 }
 
 .enquiry-message p {
-  max-width: 850px;
-
   margin: 0;
-
-  color: #69778a;
-
+  color: #475467;
   font-size: 10px;
-  line-height: 1.55;
+  line-height: 1.5;
+  font-style: italic;
 }
 
-/* =====================================================
-   BOTTOM
-===================================================== */
+/* =========================================================
+   BOTTOM ACTION
+   ========================================================= */
 
 .enquiries-bottom {
-  min-height: 55px;
-
+  min-height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  border-bottom: 1px solid #dfe5ec;
-
-  color: #7d8998;
-
-  font-size: 10px;
+  gap: 20px;
+  margin-top: 28px;
+  padding: 14px 17px;
+  border: 1px solid #dce5f3;
+  border-radius: 11px;
+  background: #eaf1ff;
 }
 
 .enquiries-bottom > div {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
 }
 
-.enquiries-bottom svg {
-  color: #155eef;
+.enquiries-bottom > div svg {
+  width: 31px;
+  height: 31px;
+  padding: 7px;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #087653;
+}
+
+.enquiries-bottom > div span {
+  color: #344054;
+  font-size: 11px;
+  font-weight: 650;
 }
 
 .enquiries-bottom > a {
+  min-height: 35px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-
-  color: #155eef;
-
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #d8e0ed;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #344054;
   text-decoration: none;
-
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 650;
 }
 
 .enquiries-bottom > a:hover {
-  text-decoration: underline;
+  background: #f7f9fd;
 }
 
-/* =====================================================
+/* =========================================================
    TABLET
-===================================================== */
+   ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1050px) {
+  .my-enquiries-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .enquiry-row {
+    grid-template-columns:
+      minmax(280px, 1.4fr)
+      minmax(150px, 0.7fr)
+      minmax(135px, 0.65fr)
+      minmax(170px, 0.75fr);
+    column-gap: 12px;
+  }
+
+  .enquiries-list-heading {
+    grid-template-columns:
+      minmax(280px, 1.4fr)
+      minmax(150px, 0.7fr)
+      minmax(135px, 0.65fr)
+      minmax(170px, 0.75fr);
+  }
+}
+
+/* =========================================================
+   TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+  .my-enquiries-container {
+    padding: 42px 18px 60px;
+  }
+
+  .my-enquiries-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .enquiries-count {
+    min-width: 200px;
+  }
+
   .enquiries-list-heading {
     display: none;
   }
 
   .enquiry-row {
-    grid-template-columns:
-      1fr
-      1fr;
-
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 15px;
-
-    padding: 18px 20px;
   }
 
   .enquiry-property {
     grid-column: 1 / -1;
   }
 
+  .enquiry-date {
+    grid-column: 1;
+  }
+
+  .enquiry-status {
+    grid-column: 2;
+    justify-self: end;
+  }
+
   .enquiry-actions {
+    grid-column: 1 / -1;
     justify-content: flex-start;
   }
 
   .enquiry-message {
-    padding-left: 0;
+    grid-column: 1 / -1;
   }
 }
 
-/* =====================================================
+/* =========================================================
    MOBILE
-===================================================== */
+   ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .my-enquiries-container {
-    width: calc(100% - 30px);
+    padding: 34px 12px 45px;
   }
 
   .my-enquiries-header {
-    min-height: 145px;
+    margin-bottom: 28px;
+  }
 
-    align-items: flex-start;
-    flex-direction: column;
+  .my-enquiries-eyebrow {
+    font-size: 9px;
+  }
 
-    padding: 32px 0;
+  .my-enquiries-header h1 {
+    font-size: 34px;
+  }
+
+  .my-enquiries-header p {
+    font-size: 13px;
+    line-height: 1.55;
   }
 
   .enquiries-count {
-    padding-left: 0;
-
-    border-left: 0;
+    width: 100%;
+    min-height: 60px;
   }
 
   .enquiry-row {
     grid-template-columns: 1fr;
-    gap: 14px;
-
-    padding: 18px 15px;
+    gap: 13px;
+    padding: 14px;
+    border-radius: 10px;
   }
 
-  .enquiry-property,
-  .enquiry-date,
-  .enquiry-status,
-  .enquiry-actions,
-  .enquiry-message {
+  .enquiry-property {
     grid-column: 1;
   }
 
+  .enquiry-property-icon {
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
+  }
+
+  .enquiry-property-info strong {
+    font-size: 13px;
+    white-space: normal;
+  }
+
+  .enquiry-property-info span {
+    font-size: 9px;
+  }
+
+  .enquiry-date {
+    grid-column: 1;
+  }
+
+  .enquiry-status {
+    grid-column: 1;
+    justify-self: start;
+  }
+
   .enquiry-actions {
-    flex-wrap: wrap;
+    grid-column: 1;
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .enquiry-action {
-    flex: 1;
-    justify-content: center;
+    min-height: 35px;
+    font-size: 9px;
   }
 
-  .enquiry-delete {
-    flex-shrink: 0;
+  .enquiry-message {
+    grid-column: 1;
   }
 
   .enquiries-bottom {
     align-items: flex-start;
     flex-direction: column;
-    gap: 10px;
+  }
 
-    padding: 15px 0;
+  .enquiries-bottom > a {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .my-enquiries-header h1 {
+    font-size: 30px;
+  }
+
+  .enquiry-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 35px;
+  }
+
+  .enquiry-action {
+    width: 100%;
+  }
+
+  .enquiry-delete {
+    width: 35px;
+  }
+
+  .enquiries-state {
+    padding: 25px 16px;
   }
 }

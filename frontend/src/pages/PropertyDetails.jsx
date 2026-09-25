@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import {
   ArrowLeft,
   ArrowRight,
@@ -12,16 +13,16 @@ import {
   ChevronRight,
   Heart,
   Home,
-  IndianRupee,
   Mail,
   MapPin,
   Maximize,
   Phone,
   Ruler,
   ShieldCheck,
-  Sparkles,
   UserRound,
+  MessageCircle,
 } from "lucide-react";
+
 import "./PropertyDetails.css";
 
 const API_URL =
@@ -29,18 +30,28 @@ const API_URL =
   "https://xevoprop.onrender.com/api";
 
 const FALLBACK_IMAGES = [
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85",
-  "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85",
-  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85",
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=90",
+  "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=90",
+  "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=90",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90",
 ];
 
-const getValue = (property, keys, fallback = "") => {
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const getValue = (
+  property,
+  keys,
+  fallback = ""
+) => {
+  if (!property) return fallback;
+
   for (const key of keys) {
     if (
-      property?.[key] !== undefined &&
-      property?.[key] !== null &&
-      property?.[key] !== ""
+      property[key] !== undefined &&
+      property[key] !== null &&
+      property[key] !== ""
     ) {
       return property[key];
     }
@@ -49,10 +60,17 @@ const getValue = (property, keys, fallback = "") => {
   return fallback;
 };
 
+
+/* =========================================================
+   PROPERTY MEDIA
+========================================================= */
+
 const getPropertyMedia = (property) => {
   if (!property) return [];
 
-  const media = Array.isArray(property.property_images)
+  const media = Array.isArray(
+    property.property_images
+  )
     ? property.property_images
     : [];
 
@@ -65,7 +83,8 @@ const getPropertyMedia = (property) => {
         item.url ||
         item.secure_url ||
         item.image ||
-        item.src;
+        item.src ||
+        item.media_url;
 
       if (!url) return null;
 
@@ -80,20 +99,19 @@ const getPropertyMedia = (property) => {
         id: item.id,
         url,
         type: mediaType,
-        sort_order: item.sort_order ?? 0,
+        sort_order: Number(
+          item.sort_order || 0
+        ),
       };
     })
     .filter(Boolean)
     .sort(
       (a, b) =>
         a.sort_order - b.sort_order ||
-        Number(a.id || 0) - Number(b.id || 0)
+        Number(a.id || 0) -
+          Number(b.id || 0)
     );
 
-  /*
-   * If the property_images table has no records,
-   * use the property's cover image.
-   */
   if (normalizedMedia.length > 0) {
     return normalizedMedia;
   }
@@ -116,46 +134,86 @@ const getPropertyMedia = (property) => {
     ];
   }
 
-  return FALLBACK_IMAGES.map((url, index) => ({
-    id: `fallback-${index}`,
-    url,
-    type: "image",
-    sort_order: index,
-  }));
+  return FALLBACK_IMAGES.map(
+    (url, index) => ({
+      id: `fallback-${index}`,
+      url,
+      type: "image",
+      sort_order: index,
+    })
+  );
 };
 
+
+/* =========================================================
+   PRICE
+========================================================= */
+
 const formatPrice = (price) => {
-  if (price === null || price === undefined || price === "") {
+  if (
+    price === null ||
+    price === undefined ||
+    price === ""
+  ) {
     return "Price on Request";
   }
 
   if (typeof price === "number") {
     if (price >= 10000000) {
-      return `₹${(price / 10000000).toFixed(2)} Cr`;
+      return `₹${(
+        price / 10000000
+      ).toFixed(2)} Cr`;
     }
 
     if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(2)} Lakh`;
+      return `₹${(
+        price / 100000
+      ).toFixed(2)} Lakh`;
     }
 
-    return `₹${price.toLocaleString("en-IN")}`;
+    return `₹${price.toLocaleString(
+      "en-IN"
+    )}`;
   }
 
-  return String(price).startsWith("₹") ? price : `₹${price}`;
+  return String(price).startsWith("₹")
+    ? price
+    : `₹${price}`;
 };
 
-const PropertyDetails = () => {
+
+/* =========================================================
+   COMPONENT
+========================================================= */
+
+function PropertyDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [property, setProperty] = useState(null);
-  const [similarProperties, setSimilarProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [similarLoading, setSimilarLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [property, setProperty] =
+    useState(null);
 
-  const [activeMedia, setActiveMedia] = useState(0);
-  const [saved, setSaved] = useState(false);
+  const [
+    similarProperties,
+    setSimilarProperties,
+  ] = useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [
+    similarLoading,
+    setSimilarLoading,
+  ] = useState(true);
+
+  const [error, setError] =
+    useState("");
+
+  const [activeMedia, setActiveMedia] =
+    useState(0);
+
+  const [saved, setSaved] =
+    useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -164,8 +222,16 @@ const PropertyDetails = () => {
     message: "",
   });
 
-  const [formStatus, setFormStatus] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [formStatus, setFormStatus] =
+    useState("");
+
+  const [submitting, setSubmitting] =
+    useState(false);
+
+
+  /* =======================================================
+     FETCH PROPERTY
+  ======================================================= */
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -173,13 +239,19 @@ const PropertyDetails = () => {
         setLoading(true);
         setError("");
 
-        const response = await fetch(`${API_URL}/properties/${id}`);
+        const response = await fetch(
+          `${API_URL}/properties/${id}`
+        );
+
+        const data =
+          await response.json();
 
         if (!response.ok) {
-          throw new Error("Property could not be loaded.");
+          throw new Error(
+            data?.message ||
+              "Property could not be loaded."
+          );
         }
-
-        const data = await response.json();
 
         const propertyData =
           data?.property ||
@@ -187,8 +259,18 @@ const PropertyDetails = () => {
           data;
 
         setProperty(propertyData);
+        setActiveMedia(0);
+
       } catch (err) {
-        setError(err.message || "Unable to load property.");
+        console.error(
+          "Property details error:",
+          err
+        );
+
+        setError(
+          err.message ||
+            "Unable to load property."
+        );
       } finally {
         setLoading(false);
       }
@@ -199,167 +281,304 @@ const PropertyDetails = () => {
     }
   }, [id]);
 
+
+  /* =======================================================
+     FETCH SIMILAR PROPERTIES
+  ======================================================= */
+
   useEffect(() => {
-    const fetchSimilar = async () => {
-      try {
-        setSimilarLoading(true);
+    const fetchSimilar =
+      async () => {
+        try {
+          setSimilarLoading(true);
 
-        const response = await fetch(`${API_URL}/properties`);
+          const response =
+            await fetch(
+              `${API_URL}/properties`
+            );
 
-        if (!response.ok) {
-          return;
+          if (!response.ok) {
+            setSimilarProperties([]);
+            return;
+          }
+
+          const data =
+            await response.json();
+
+          const list =
+            Array.isArray(data)
+              ? data
+              : data?.properties ||
+                data?.data ||
+                [];
+
+          const filtered = list
+            .filter(
+              (item) =>
+                String(item.id) !==
+                  String(id) &&
+                String(
+                  item.status ||
+                    "approved"
+                ).toLowerCase() ===
+                  "approved"
+            )
+            .slice(0, 4);
+
+          setSimilarProperties(
+            filtered
+          );
+
+        } catch (err) {
+          console.error(
+            "Similar properties error:",
+            err
+          );
+
+          setSimilarProperties([]);
+
+        } finally {
+          setSimilarLoading(false);
         }
+      };
 
-        const data = await response.json();
-
-        const list = Array.isArray(data)
-          ? data
-          : data?.properties || data?.data || [];
-
-        const filtered = list
-          .filter(
-            (item) =>
-              String(item.id) !== String(id) &&
-              String(item.status || "approved").toLowerCase() === "approved"
-          )
-          .slice(0, 4);
-
-        setSimilarProperties(filtered);
-      } catch {
-        setSimilarProperties([]);
-      } finally {
-        setSimilarLoading(false);
-      }
-    };
-
-    fetchSimilar();
+    if (id) {
+      fetchSimilar();
+    }
   }, [id]);
 
+
+  /* =======================================================
+     MEDIA
+  ======================================================= */
+
   const media = useMemo(
-  () => getPropertyMedia(property),
-  [property]
-);
+    () =>
+      getPropertyMedia(property),
+    [property]
+  );
 
-const currentMedia =
-  media[activeMedia] || media[0];
+  const currentMedia =
+    media[activeMedia] ||
+    media[0];
 
-  const title = getValue(property, [
-    "title",
-    "property_name",
-    "name",
-  ], "Premium Property");
 
-  const location = getValue(property, [
-    "location",
-    "address",
-    "locality",
-  ], "Location not specified");
+  /* =======================================================
+     PROPERTY VALUES
+  ======================================================= */
 
-  const city = getValue(property, [
-    "city",
-    "city_name",
-  ]);
+  const title = getValue(
+    property,
+    [
+      "title",
+      "property_name",
+      "name",
+    ],
+    "Premium Property"
+  );
 
-  const propertyType = getValue(property, [
-    "property_type",
-    "propertyType",
-    "type",
-  ], "Residential");
+  const location = getValue(
+    property,
+    [
+      "location",
+      "address",
+      "locality",
+    ],
+    "Location not specified"
+  );
 
-  const price = getValue(property, [
-    "price",
-    "amount",
-    "expected_price",
-  ]);
+  const city = getValue(
+    property,
+    [
+      "city",
+      "city_name",
+    ]
+  );
 
-  const bedrooms = getValue(property, [
-    "bedrooms",
-    "bhk",
-    "beds",
-  ]);
+  const propertyType = getValue(
+    property,
+    [
+      "property_type",
+      "propertyType",
+      "type",
+    ],
+    "Residential"
+  );
 
-  const bathrooms = getValue(property, [
-    "bathrooms",
-    "baths",
-  ]);
+  const price = getValue(
+    property,
+    [
+      "price",
+      "amount",
+      "expected_price",
+    ]
+  );
 
-  const area = getValue(property, [
-    "area",
-    "built_up_area",
-    "carpet_area",
-    "sqft",
-    "square_feet",
-  ]);
+  const bedrooms = getValue(
+    property,
+    [
+      "bedrooms",
+      "bhk",
+      "beds",
+    ]
+  );
 
-  const possession = getValue(property, [
-    "possession",
-    "possession_date",
-  ]);
+  const bathrooms = getValue(
+    property,
+    [
+      "bathrooms",
+      "baths",
+    ]
+  );
 
-  const description = getValue(property, [
-    "description",
-    "property_description",
-  ], "Detailed property information will be available soon.");
+  const area = getValue(
+    property,
+    [
+      "area",
+      "built_up_area",
+      "carpet_area",
+      "sqft",
+      "square_feet",
+    ]
+  );
 
-  const reraNumber = getValue(property, [
-    "rera_number",
-    "reraNumber",
-    "rera_id",
-  ]);
+  const possession = getValue(
+    property,
+    [
+      "possession",
+      "possession_date",
+    ]
+  );
 
- const seller = property?.seller || {};
+  const description =
+    getValue(
+      property,
+      [
+        "description",
+        "property_description",
+      ],
+      "Detailed property information will be available soon."
+    );
 
-const ownerName =
-  seller.name ||
-  seller.username ||
-  property?.owner_name ||
-  property?.seller_name ||
-  property?.developer_name ||
-  property?.listed_by ||
-  "Property Owner";
+  const reraNumber = getValue(
+    property,
+    [
+      "rera_number",
+      "reraNumber",
+      "rera_id",
+    ]
+  );
 
-const ownerPhone =
-  seller.phone ||
-  property?.owner_phone ||
-  property?.seller_phone ||
-  property?.phone ||
-  "";
+  const propertyId =
+    getValue(
+      property,
+      ["id", "_id"],
+      id
+    );
 
-const ownerEmail =
-  seller.email ||
-  property?.owner_email ||
-  property?.seller_email ||
-  "";
 
-  const propertyId = getValue(property, [
-    "id",
-    "_id",
-  ], id);
+  /* =======================================================
+     OWNER DETAILS
+  ======================================================= */
 
-  const nextImage = () => {
-    setActiveImage((current) =>
-      current === images.length - 1 ? 0 : current + 1
+  const seller =
+    property?.seller ||
+    property?.owner ||
+    {};
+
+  const ownerName =
+    seller.name ||
+    seller.username ||
+    property?.owner_name ||
+    property?.seller_name ||
+    property?.developer_name ||
+    property?.listed_by ||
+    "Property Owner";
+
+  const ownerPhone =
+    seller.phone ||
+    property?.owner_phone ||
+    property?.seller_phone ||
+    property?.phone ||
+    "";
+
+  const ownerEmail =
+    seller.email ||
+    property?.owner_email ||
+    property?.seller_email ||
+    "";
+
+  const ownerImage =
+    seller.profile_image ||
+    seller.profile_picture ||
+    seller.avatar ||
+    seller.image ||
+    property?.owner_image ||
+    property?.seller_image ||
+    property?.owner_avatar ||
+    "";
+
+
+  /* =======================================================
+     MEDIA NAVIGATION
+  ======================================================= */
+
+  const nextMedia = () => {
+    if (media.length <= 1) return;
+
+    setActiveMedia(
+      (current) =>
+        current === media.length - 1
+          ? 0
+          : current + 1
     );
   };
 
-  const previousImage = () => {
-    setActiveImage((current) =>
-      current === 0 ? images.length - 1 : current - 1
+  const previousMedia = () => {
+    if (media.length <= 1) return;
+
+    setActiveMedia(
+      (current) =>
+        current === 0
+          ? media.length - 1
+          : current - 1
     );
   };
 
-  const handleFormChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+
+  /* =======================================================
+     FORM
+  ======================================================= */
+
+  const handleFormChange = (
+    event
+  ) => {
+    const {
+      name,
+      value,
+    } = event.target;
+
+    setForm(
+      (previous) => ({
+        ...previous,
+        [name]: value,
+      })
+    );
   };
 
-  const handleEnquiry = async (event) => {
+
+  const handleEnquiry = async (
+    event
+  ) => {
     event.preventDefault();
 
-    if (!form.name || !form.phone) {
-      setFormStatus("Please enter your name and phone number.");
+    if (
+      !form.name.trim() ||
+      !form.phone.trim()
+    ) {
+      setFormStatus(
+        "Please enter your name and phone number."
+      );
       return;
     }
 
@@ -368,14 +587,14 @@ const ownerEmail =
       setFormStatus("");
 
       /*
-       * Connect this to your enquiry API when the endpoint
-       * is available.
-       *
-       * Example:
-       * POST /api/enquiries
+       * Keep your existing enquiry API
+       * integration here.
        */
 
-      await new Promise((resolve) => setTimeout(resolve, 700));
+      await new Promise(
+        (resolve) =>
+          setTimeout(resolve, 700)
+      );
 
       setFormStatus(
         "Your enquiry has been submitted successfully."
@@ -387,57 +606,129 @@ const ownerEmail =
         email: "",
         message: "",
       });
-    } catch {
+
+    } catch (err) {
+      console.error(
+        "Enquiry error:",
+        err
+      );
+
       setFormStatus(
         "Unable to submit your enquiry. Please try again."
       );
+
     } finally {
       setSubmitting(false);
     }
   };
 
-  const getSimilarImage = (item) => {
-    const itemImages = getImageList(item);
-    return itemImages[0] || FALLBACK_IMAGES[0];
+
+  /* =======================================================
+     SIMILAR PROPERTY HELPERS
+  ======================================================= */
+
+  const getSimilarImage = (
+    item
+  ) => {
+    const itemMedia =
+      getPropertyMedia(item);
+
+    return (
+      itemMedia[0]?.url ||
+      FALLBACK_IMAGES[0]
+    );
   };
 
-  const getSimilarTitle = (item) =>
-    getValue(item, ["title", "property_name", "name"], "Property");
-
-  const getSimilarLocation = (item) =>
-    getValue(item, ["location", "address", "locality"], "Location");
-
-  const getSimilarPrice = (item) =>
-    formatPrice(
-      getValue(item, ["price", "amount", "expected_price"])
+  const getSimilarTitle = (
+    item
+  ) =>
+    getValue(
+      item,
+      [
+        "title",
+        "property_name",
+        "name",
+      ],
+      "Property"
     );
+
+  const getSimilarLocation = (
+    item
+  ) =>
+    getValue(
+      item,
+      [
+        "location",
+        "address",
+        "locality",
+      ],
+      "Location"
+    );
+
+  const getSimilarPrice = (
+    item
+  ) =>
+    formatPrice(
+      getValue(
+        item,
+        [
+          "price",
+          "amount",
+          "expected_price",
+        ]
+      )
+    );
+
+
+  /* =======================================================
+     LOADING
+  ======================================================= */
 
   if (loading) {
     return (
       <div className="property-details-page">
+
         <div className="property-details-loading">
+
           <div className="details-loading-image" />
 
           <div className="details-loading-content">
+
             <div className="loading-line large" />
             <div className="loading-line medium" />
             <div className="loading-line small" />
+
             <div className="loading-box" />
+
           </div>
+
         </div>
+
       </div>
     );
   }
 
-  if (error || !property) {
+
+  /* =======================================================
+     ERROR
+  ======================================================= */
+
+  if (
+    error ||
+    !property
+  ) {
     return (
       <div className="property-details-page">
+
         <div className="property-details-error">
+
           <div className="error-icon">
             <Home size={28} />
           </div>
 
-          <h1>Property Not Available</h1>
+          <h1>
+            Property Not Available
+          </h1>
 
           <p>
             {error ||
@@ -446,678 +737,1035 @@ const ownerEmail =
 
           <button
             className="details-back-button"
-            onClick={() => navigate("/properties")}
+            onClick={() =>
+              navigate(
+                "/properties"
+              )
+            }
           >
             <ArrowLeft size={17} />
             Back to Properties
           </button>
+
         </div>
+
       </div>
     );
   }
 
+
+  /* =======================================================
+     PAGE
+  ======================================================= */
+
   return (
     <div className="property-details-page">
 
-      {/* TOP BAR */}
+      {/* =================================================
+          TOP BAR
+      ================================================= */}
+
       <div className="property-details-topbar">
+
         <div className="property-details-container">
+
           <button
             className="back-to-properties"
-            onClick={() => navigate("/properties")}
+            onClick={() =>
+              navigate(
+                "/properties"
+              )
+            }
           >
-            <ArrowLeft size={17} />
-            Back to Properties
+            <ArrowLeft size={16} />
+            Properties
           </button>
 
           <div className="property-details-breadcrumb">
-            Properties
+
+            <span>
+              Properties
+            </span>
+
             <span>/</span>
-            {propertyType}
+
+            <span>
+              {propertyType}
+            </span>
+
             <span>/</span>
-            {title}
+
+            <strong>
+              {title}
+            </strong>
+
           </div>
+
         </div>
+
       </div>
+
+
+      {/* =================================================
+          MAIN
+      ================================================= */}
 
       <main className="property-details-container">
 
-        {/* GALLERY */}
-        {/* GALLERY */}
-<section className="property-gallery-section">
 
-  <div className="property-gallery-main">
+        {/* =================================================
+            GALLERY
+        ================================================= */}
 
-    {currentMedia?.type === "video" ? (
-      <video
-        className="property-main-image"
-        src={currentMedia.url}
-        controls
-        playsInline
-        preload="metadata"
-      />
-    ) : (
-      <img
-        src={currentMedia?.url}
-        alt={title}
-        className="property-main-image"
-        onError={(event) => {
-          event.currentTarget.src = FALLBACK_IMAGES[0];
-        }}
-      />
-    )}
+        <section className="property-gallery-section">
 
-    <div className="gallery-overlay-top">
+          <div className="property-gallery-main">
 
-      <div className="gallery-verification">
-        <ShieldCheck size={15} />
-        Verified Property
-      </div>
-
-      <button
-        className={`gallery-save ${
-          saved ? "saved" : ""
-        }`}
-        onClick={() => setSaved(!saved)}
-        aria-label="Save property"
-      >
-        <Heart
-          size={19}
-          fill={saved ? "currentColor" : "none"}
-        />
-      </button>
-
-    </div>
-
-    {media.length > 1 && (
-      <>
-        <button
-          className="gallery-arrow gallery-arrow-left"
-          onClick={() =>
-            setActiveMedia((current) =>
-              current === 0
-                ? media.length - 1
-                : current - 1
-            )
-          }
-          aria-label="Previous media"
-        >
-          <ChevronLeft size={23} />
-        </button>
-
-        <button
-          className="gallery-arrow gallery-arrow-right"
-          onClick={() =>
-            setActiveMedia((current) =>
-              current === media.length - 1
-                ? 0
-                : current + 1
-            )
-          }
-          aria-label="Next media"
-        >
-          <ChevronRight size={23} />
-        </button>
-      </>
-    )}
-
-    <div className="gallery-counter">
-      {activeMedia + 1} / {media.length}
-    </div>
-
-  </div>
-
-  {/* ALL MEDIA THUMBNAILS */}
-  {media.length > 0 && (
-    <div className="property-gallery-thumbnails">
-
-      {media.map((item, index) => (
-        <button
-          key={`${item.id || item.url}-${index}`}
-          type="button"
-          className={`gallery-thumbnail ${
-            activeMedia === index
-              ? "active"
-              : ""
-          }`}
-          onClick={() =>
-            setActiveMedia(index)
-          }
-          aria-label={`View media ${index + 1}`}
-        >
-
-          {item.type === "video" ? (
-            <div className="property-video-thumbnail">
-
+            {currentMedia?.type ===
+            "video" ? (
               <video
-                src={item.url}
-                muted
+                className="property-main-image"
+                src={
+                  currentMedia.url
+                }
+                controls
+                playsInline
                 preload="metadata"
               />
+            ) : (
+              <img
+                src={
+                  currentMedia?.url ||
+                  FALLBACK_IMAGES[0]
+                }
+                alt={title}
+                className="property-main-image"
+                onError={(event) => {
+                  event.currentTarget.src =
+                    FALLBACK_IMAGES[0];
+                }}
+              />
+            )}
 
-              <span className="property-video-play">
-                ▶
-              </span>
+
+            <div className="gallery-overlay-top">
+
+              <div className="gallery-verification">
+
+                <ShieldCheck
+                  size={14}
+                />
+
+                RERA Verified Property
+
+              </div>
+
+              <div className="gallery-direct-owner">
+                Direct from Owner
+              </div>
 
             </div>
-          ) : (
-            <img
-              src={item.url}
-              alt={`${title} ${index + 1}`}
-              onError={(event) => {
-                event.currentTarget.src =
-                  FALLBACK_IMAGES[0];
-              }}
-            />
-          )}
 
-        </button>
-      ))}
 
-    </div>
-  )}
+            <button
+              type="button"
+              className={`gallery-save ${
+                saved
+                  ? "saved"
+                  : ""
+              }`}
+              onClick={() =>
+                setSaved(
+                  (value) =>
+                    !value
+                )
+              }
+            >
+              <Heart
+                size={18}
+                fill={
+                  saved
+                    ? "currentColor"
+                    : "none"
+                }
+              />
+            </button>
 
-</section>
 
-        {/* MAIN CONTENT */}
+            {media.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  className="gallery-arrow gallery-arrow-left"
+                  onClick={
+                    previousMedia
+                  }
+                >
+                  <ChevronLeft
+                    size={22}
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  className="gallery-arrow gallery-arrow-right"
+                  onClick={
+                    nextMedia
+                  }
+                >
+                  <ChevronRight
+                    size={22}
+                  />
+                </button>
+              </>
+            )}
+
+
+            <div className="gallery-counter">
+              {activeMedia + 1} /{" "}
+              {media.length}
+            </div>
+
+          </div>
+
+
+          <div className="property-gallery-thumbnails">
+
+            {media.map(
+              (
+                item,
+                index
+              ) => (
+                <button
+                  key={
+                    `${item.id || item.url}-${index}`
+                  }
+                  type="button"
+                  className={`gallery-thumbnail ${
+                    activeMedia ===
+                    index
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setActiveMedia(
+                      index
+                    )
+                  }
+                >
+
+                  {item.type ===
+                  "video" ? (
+                    <div className="property-video-thumbnail">
+
+                      <video
+                        src={
+                          item.url
+                        }
+                        muted
+                        preload="metadata"
+                      />
+
+                      <span className="property-video-play">
+                        ▶
+                      </span>
+
+                    </div>
+                  ) : (
+                    <img
+                      src={
+                        item.url
+                      }
+                      alt={`${title} ${
+                        index + 1
+                      }`}
+                      onError={(
+                        event
+                      ) => {
+                        event.currentTarget.src =
+                          FALLBACK_IMAGES[0];
+                      }}
+                    />
+                  )}
+
+                </button>
+              )
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* =================================================
+            DETAILS LAYOUT
+        ================================================= */}
+
         <section className="property-details-layout">
 
-          {/* LEFT */}
+
+          {/* =================================================
+              LEFT CONTENT
+          ================================================= */}
+
           <div className="property-details-main">
 
-            <div className="property-title-section">
+
+            {/* TITLE */}
+
+            <section className="property-title-section">
 
               <div className="property-title-meta">
+
                 <span className="property-type-pill">
                   {propertyType}
                 </span>
 
                 <span className="verified-title">
-                  <CheckCircle2 size={14} />
-                  Verified
+
+                  <CheckCircle2
+                    size={13}
+                  />
+
+                  RERA Verified
+
                 </span>
+
+                <span className="zero-brokerage">
+                  Zero Brokerage
+                </span>
+
               </div>
 
-              <h1>{title}</h1>
+
+              <h1>
+                {title}
+              </h1>
+
 
               <div className="property-location">
-                <MapPin size={17} />
-                <span>{location}</span>
+
+                <MapPin
+                  size={15}
+                />
+
+                <span>
+                  {location}
+                </span>
 
                 {city && (
                   <>
-                    <span className="location-dot">•</span>
-                    <span>{city}</span>
+                    <span className="location-dot">
+                      •
+                    </span>
+
+                    <span>
+                      {city}
+                    </span>
                   </>
                 )}
+
               </div>
 
-              <div className="property-price-row">
-                <div>
-                  <span className="price-label">
-                    Asking Price
-                  </span>
+            </section>
 
-                  <strong>{formatPrice(price)}</strong>
-                </div>
 
-                {area && (
-                  <div className="price-area">
-                    <Ruler size={16} />
-                    {area} sq.ft
-                  </div>
-                )}
+            {/* PRICE */}
+
+            <section className="property-price-card">
+
+              <div>
+
+                <span className="price-label">
+                  ALL-INCLUSIVE ASKING VALUATION
+                </span>
+
+                <strong>
+                  {formatPrice(
+                    price
+                  )}
+                </strong>
+
+                <small>
+                  Estimated pricing subject
+                  to final verification.
+                </small>
+
               </div>
-            </div>
 
-            {/* QUICK SPECS */}
+
+              <div className="price-card-actions">
+
+                <span className="ready-badge">
+                  Ready to Move
+                </span>
+
+                <button
+                  type="button"
+                  className="emi-button"
+                >
+                  Calculate EMI
+                </button>
+
+              </div>
+
+            </section>
+
+
+            {/* SPECS */}
+
             <div className="property-specifications">
 
               {bedrooms && (
                 <div className="property-spec">
+
                   <div className="spec-icon">
-                    <BedDouble size={21} />
+                    <BedDouble
+                      size={19}
+                    />
                   </div>
 
                   <div>
-                    <strong>{bedrooms}</strong>
-                    <span>Bedrooms</span>
+
+                    <strong>
+                      {bedrooms}
+                    </strong>
+
+                    <span>
+                      Bedrooms
+                    </span>
+
                   </div>
+
                 </div>
               )}
+
 
               {bathrooms && (
                 <div className="property-spec">
+
                   <div className="spec-icon">
-                    <Bath size={21} />
+                    <Bath size={19} />
                   </div>
 
                   <div>
-                    <strong>{bathrooms}</strong>
-                    <span>Bathrooms</span>
+
+                    <strong>
+                      {bathrooms}
+                    </strong>
+
+                    <span>
+                      Bathrooms
+                    </span>
+
                   </div>
+
                 </div>
               )}
+
 
               {area && (
                 <div className="property-spec">
+
                   <div className="spec-icon">
-                    <Maximize size={20} />
+                    <Maximize
+                      size={19}
+                    />
                   </div>
 
                   <div>
-                    <strong>{area}</strong>
-                    <span>Sq. Ft.</span>
+
+                    <strong>
+                      {area}
+                    </strong>
+
+                    <span>
+                      Sq. Ft.
+                    </span>
+
                   </div>
+
                 </div>
               )}
 
+
               <div className="property-spec">
+
                 <div className="spec-icon">
-                  <Building2 size={20} />
+                  <Building2
+                    size={19}
+                  />
                 </div>
 
                 <div>
-                  <strong>{propertyType}</strong>
-                  <span>Property Type</span>
+
+                  <strong>
+                    {propertyType}
+                  </strong>
+
+                  <span>
+                    Property Type
+                  </span>
+
                 </div>
+
               </div>
+
             </div>
 
+
             {/* OVERVIEW */}
+
             <section className="details-content-section">
 
               <div className="details-section-heading">
-                <span>PROPERTY OVERVIEW</span>
-                <h2>Everything you need to know</h2>
+
+                <span>
+                  PROPERTY OVERVIEW
+                </span>
+
+                <h2>
+                  Property Overview &
+                  Design Notes
+                </h2>
+
               </div>
+
 
               <p className="property-description">
                 {description}
               </p>
 
+
               <div className="overview-grid">
 
                 <div className="overview-item">
-                  <span>Property Type</span>
-                  <strong>{propertyType}</strong>
+                  <span>
+                    Property Type
+                  </span>
+
+                  <strong>
+                    {propertyType}
+                  </strong>
                 </div>
 
+
                 <div className="overview-item">
-                  <span>Property ID</span>
-                  <strong>{propertyId}</strong>
+                  <span>
+                    Property ID
+                  </span>
+
+                  <strong>
+                    {propertyId}
+                  </strong>
                 </div>
+
 
                 {possession && (
                   <div className="overview-item">
-                    <span>Possession</span>
-                    <strong>{possession}</strong>
+
+                    <span>
+                      Possession
+                    </span>
+
+                    <strong>
+                      {possession}
+                    </strong>
+
                   </div>
                 )}
+
 
                 {reraNumber && (
                   <div className="overview-item">
-                    <span>RERA Registration</span>
-                    <strong>{reraNumber}</strong>
+
+                    <span>
+                      RERA Registration
+                    </span>
+
+                    <strong>
+                      {reraNumber}
+                    </strong>
+
                   </div>
                 )}
 
               </div>
+
             </section>
 
+
             {/* VERIFICATION */}
+
             <section className="verification-section">
 
               <div className="verification-icon">
-                <ShieldCheck size={25} />
+
+                <ShieldCheck
+                  size={24}
+                />
+
               </div>
 
               <div className="verification-content">
+
                 <span className="verification-label">
                   XEVOPROP VERIFICATION
                 </span>
 
                 <h3>
-                  Property information reviewed for your
-                  confidence.
+                  Property information
+                  reviewed for your confidence.
                 </h3>
 
                 <p>
-                  Review the available property information,
-                  ownership details and applicable registration
-                  information before proceeding with a transaction.
+                  Review the available property
+                  information, ownership details and
+                  applicable registration information
+                  before proceeding with a transaction.
                 </p>
+
               </div>
 
               <CheckCircle2
                 className="verification-check"
-                size={25}
+                size={24}
               />
+
             </section>
 
+
             {/* RERA */}
+
             {reraNumber && (
               <section className="rera-section">
 
                 <div className="rera-icon">
-                  <ShieldCheck size={22} />
+
+                  <ShieldCheck
+                    size={22}
+                  />
+
                 </div>
 
                 <div>
-                  <span>RERA INFORMATION</span>
+
+                  <span>
+                    RERA INFORMATION
+                  </span>
 
                   <h3>
                     {reraNumber}
                   </h3>
 
                   <p>
-                    Registration information provided for this
-                    property.
+                    Registration information
+                    provided for this property.
                   </p>
+
                 </div>
+
               </section>
             )}
 
+
             {/* AMENITIES */}
-            {Array.isArray(property.amenities) &&
-              property.amenities.length > 0 && (
+
+            {Array.isArray(
+              property.amenities
+            ) &&
+              property.amenities.length >
+                0 && (
                 <section className="details-content-section">
 
                   <div className="details-section-heading">
-                    <span>AMENITIES</span>
-                    <h2>Designed around your lifestyle</h2>
+
+                    <span>
+                      AMENITIES
+                    </span>
+
+                    <h2>
+                      Designed around
+                      your lifestyle
+                    </h2>
+
                   </div>
 
+
                   <div className="amenities-grid">
-                    {property.amenities.map((amenity, index) => (
-                      <div
-                        className="amenity-item"
-                        key={`${amenity}-${index}`}
-                      >
-                        <CheckCircle2 size={17} />
-                        {typeof amenity === "string"
-                          ? amenity
-                          : amenity?.name || "Amenity"}
-                      </div>
-                    ))}
+
+                    {property.amenities.map(
+                      (
+                        amenity,
+                        index
+                      ) => (
+                        <div
+                          className="amenity-item"
+                          key={`${amenity}-${index}`}
+                        >
+
+                          <CheckCircle2
+                            size={16}
+                          />
+
+                          <span>
+                            {typeof amenity ===
+                            "string"
+                              ? amenity
+                              : amenity?.name ||
+                                "Amenity"}
+                          </span>
+
+                        </div>
+                      )
+                    )}
+
                   </div>
+
                 </section>
               )}
 
+
             {/* LOCATION */}
+
             <section className="details-content-section">
 
               <div className="details-section-heading">
-                <span>LOCATION</span>
-                <h2>Explore the neighbourhood</h2>
+
+                <span>
+                  STRATEGIC GEOGRAPHY
+                </span>
+
+                <h2>
+                  Explore the neighbourhood
+                </h2>
+
               </div>
 
+
               <div className="property-map-placeholder">
-                <MapPin size={30} />
+
+                <MapPin size={29} />
 
                 <strong>
                   {location}
                 </strong>
 
                 <span>
-                  Map integration can be connected here.
+                  Map integration can be
+                  connected here.
                 </span>
+
               </div>
+
             </section>
 
           </div>
 
-          {/* RIGHT ENQUIRY PANEL */}
+
+          {/* =================================================
+              RIGHT ENQUIRY PANEL
+          ================================================= */}
+
           <aside className="property-enquiry-column">
 
             <div className="enquiry-card">
 
-              <div className="enquiry-card-header">
-                <span className="enquiry-kicker">
-                  INTERESTED IN THIS PROPERTY?
-                </span>
+  <div className="enquiry-card-header">
+    <span className="enquiry-kicker">
+      INTERESTED IN THIS PROPERTY?
+    </span>
 
-                <h2>
-                  Let's help you take the next step.
-                </h2>
+    <h2>
+      Let's help you take the next step.
+    </h2>
 
-                <p>
-                  Share your details and our property team
-                  will get in touch with you.
-                </p>
-              </div>
-
-              <div className="owner-card">
-
-  <div className="owner-avatar">
-    <UserRound size={21} />
+    <p>
+      Share your details and our property team
+      will get in touch with you.
+    </p>
   </div>
 
-  <div className="owner-details">
+  {/* OWNER DETAILS */}
+  <div className="owner-card">
 
-    <span>LISTED BY</span>
+    <div className="owner-avatar">
+      <UserRound size={22} />
+    </div>
 
-    <strong>{ownerName}</strong>
+    <div className="owner-details">
+      <span>DIRECT OWNER LISTING</span>
 
-    {ownerPhone && (
-      <a
-        href={`tel:${ownerPhone}`}
-        className="owner-contact"
-      >
-        <Phone size={14} />
-        {ownerPhone}
-      </a>
-    )}
+      <strong>{ownerName}</strong>
 
-    {ownerEmail && (
-      <a
-        href={`mailto:${ownerEmail}`}
-        className="owner-contact"
-      >
-        <Mail size={14} />
-        {ownerEmail}
-      </a>
-    )}
+      <small>Property Owner / Seller</small>
+
+      {ownerPhone && (
+        <a
+          href={`tel:${ownerPhone}`}
+          className="owner-contact"
+        >
+          <Phone size={15} />
+          {ownerPhone}
+        </a>
+      )}
+
+      {ownerEmail && (
+        <a
+          href={`mailto:${ownerEmail}`}
+          className="owner-contact"
+        >
+          <Mail size={15} />
+          {ownerEmail}
+        </a>
+      )}
+    </div>
+
+    <span className="owner-active">
+      Active Today
+    </span>
 
   </div>
+
+  {/* ENQUIRY FORM */}
+  <form
+    className="enquiry-form"
+    onSubmit={handleEnquiry}
+  >
+
+    <label>
+      Your Full Name
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter your full name"
+        value={form.name}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    <label>
+      Contact Number
+      <input
+        type="tel"
+        name="phone"
+        placeholder="Enter your phone number"
+        value={form.phone}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    <label>
+      Email Address
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        value={form.email}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    <label>
+      Personal Message
+      <textarea
+        name="message"
+        rows="4"
+        placeholder="I am interested in this property..."
+        value={form.message}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {formStatus && (
+      <div
+        className={`form-status ${
+          formStatus.includes("successfully")
+            ? "success"
+            : "error"
+        }`}
+      >
+        {formStatus}
+      </div>
+    )}
+
+    <button
+      type="submit"
+      className="submit-enquiry-button"
+      disabled={submitting}
+    >
+      {submitting ? "Submitting..." : "Send Direct Enquiry"}
+
+      {!submitting && <ArrowRight size={17} />}
+    </button>
+
+  </form>
+
+  {/* BELOW ENQUIRY BUTTON */}
+  <div className="enquiry-actions">
+
+    <button
+      type="button"
+      className="schedule-visit-button"
+    >
+      <CalendarDays size={17} />
+      Schedule Private Site Visit
+    </button>
+
+  </div>
+
+  <div className="enquiry-security">
+    <ShieldCheck size={15} />
+    <span>
+      100% Privacy Protected&nbsp; • &nbsp;Encrypted & Secure
+    </span>
+  </div>
+
+  <p className="enquiry-security-text">
+    Your information is kept confidential and will only be
+    shared with the property owner or relevant property team.
+  </p>
 
 </div>
-
-              <form
-                className="enquiry-form"
-                onSubmit={handleEnquiry}
-              >
-
-                <label>
-                  Your Name
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your name"
-                    value={form.name}
-                    onChange={handleFormChange}
-                  />
-                </label>
-
-                <label>
-                  Phone Number
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Enter your phone number"
-                    value={form.phone}
-                    onChange={handleFormChange}
-                  />
-                </label>
-
-                <label>
-                  Email
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={form.email}
-                    onChange={handleFormChange}
-                  />
-                </label>
-
-                <label>
-                  Message
-                  <textarea
-                    name="message"
-                    rows="4"
-                    placeholder="I am interested in this property..."
-                    value={form.message}
-                    onChange={handleFormChange}
-                  />
-                </label>
-
-                {formStatus && (
-                  <div
-                    className={`form-status ${
-                      formStatus.includes("successfully")
-                        ? "success"
-                        : "error"
-                    }`}
-                  >
-                    {formStatus}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="submit-enquiry-button"
-                  disabled={submitting}
-                >
-                  {submitting
-                    ? "Submitting..."
-                    : "Send Enquiry"}
-
-                  {!submitting && <ArrowRight size={17} />}
-                </button>
-
-              </form>
-
-              <div className="enquiry-actions">
-
-                <button type="button">
-                  <CalendarDays size={17} />
-                  Schedule Visit
-                </button>
-
-                {ownerPhone && (
-  <a
-    href={`tel:${ownerPhone}`}
-    className="owner-action-button"
-  >
-    <Phone size={17} />
-    Call Owner
-  </a>
-)}
-
-{ownerEmail && (
-  <a
-    href={`mailto:${ownerEmail}`}
-    className="owner-action-button"
-  >
-    <Mail size={17} />
-    Email Owner
-  </a>
-)}
-
-              </div>
-
-              <div className="enquiry-security">
-                <ShieldCheck size={15} />
-                Your information is kept secure.
-              </div>
-
-            </div>
 
           </aside>
 
         </section>
 
-        {/* SIMILAR PROPERTIES */}
+
+        {/* =================================================
+            SIMILAR PROPERTIES
+        ================================================= */}
+
         <section className="similar-properties-section">
 
           <div className="similar-heading">
 
             <div>
-              <span>YOU MAY ALSO LIKE</span>
-              <h2>Similar properties</h2>
+
+              <span>
+                CURATED PROPERTIES
+              </span>
+
+              <h2>
+                Similar Residences
+              </h2>
+
             </div>
 
             <button
-              onClick={() => navigate("/properties")}
+              type="button"
+              onClick={() =>
+                navigate(
+                  "/properties"
+                )
+              }
             >
               View All
-              <ArrowRight size={16} />
+              <ArrowRight
+                size={16}
+              />
             </button>
 
           </div>
+
 
           {similarLoading ? (
             <div className="similar-loading">
               Loading similar properties...
             </div>
-          ) : similarProperties.length === 0 ? (
+
+          ) : similarProperties.length ===
+            0 ? (
+
             <div className="similar-loading">
               No similar properties available.
             </div>
+
           ) : (
+
             <div className="similar-properties-grid">
 
-              {similarProperties.map((item) => (
-                <article
-                  className="similar-property-card"
-                  key={item.id}
-                  onClick={() =>
-                    navigate(`/properties/${item.id}`)
-                  }
-                >
+              {similarProperties.map(
+                (item) => (
 
-                  <div className="similar-image-wrapper">
+                  <article
+                    className="similar-property-card"
+                    key={item.id}
+                    onClick={() =>
+                      navigate(
+                        `/properties/${item.id}`
+                      )
+                    }
+                  >
 
-                    <img
-                      src={getSimilarImage(item)}
-                      alt={getSimilarTitle(item)}
-                    />
+                    <div className="similar-image-wrapper">
 
-                    <span>
-                      Verified
-                    </span>
+                      <img
+                        src={getSimilarImage(
+                          item
+                        )}
+                        alt={getSimilarTitle(
+                          item
+                        )}
+                        onError={(
+                          event
+                        ) => {
+                          event.currentTarget.src =
+                            FALLBACK_IMAGES[0];
+                        }}
+                      />
 
-                  </div>
+                      <span>
+                        RERA Verified
+                      </span>
 
-                  <div className="similar-property-body">
-
-                    <div className="similar-price">
-                      {getSimilarPrice(item)}
                     </div>
 
-                    <h3>
-                      {getSimilarTitle(item)}
-                    </h3>
 
-                    <p>
-                      <MapPin size={14} />
-                      {getSimilarLocation(item)}
-                    </p>
+                    <div className="similar-property-body">
 
-                  </div>
+                      <div className="similar-price">
+                        {getSimilarPrice(
+                          item
+                        )}
+                      </div>
 
-                </article>
-              ))}
+                      <h3>
+                        {getSimilarTitle(
+                          item
+                        )}
+                      </h3>
+
+                      <p>
+
+                        <MapPin
+                          size={13}
+                        />
+
+                        {getSimilarLocation(
+                          item
+                        )}
+
+                      </p>
+
+                    </div>
+
+                  </article>
+
+                )
+              )}
 
             </div>
+
           )}
 
         </section>
 
       </main>
+
     </div>
   );
-};
+}
 
 export default PropertyDetails;

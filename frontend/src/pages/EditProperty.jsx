@@ -14,7 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-import "./ListProperty.css";
+import "./EditProperty.css";
 
 function EditProperty() {
   const { id } = useParams();

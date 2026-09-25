@@ -1,175 +1,154 @@
 /* =========================================================
-   XEVOPROP ADMIN — PROJECT MANAGEMENT
-========================================================= */
+   XEVOPROP ADMIN - PROJECT REVIEW
+   Screenshot-matched professional admin interface
+   ========================================================= */
 
 .admin-projects-page {
   min-height: 100vh;
-  padding: 42px 28px 80px;
-  background:
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(18, 100, 255, 0.05),
-      transparent 28%
-    ),
-    #f6f8fc;
+  background: #f5f7fc;
+  color: #111827;
+  padding: 30px 32px 40px;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  box-sizing: border-box;
+}
+
+.admin-projects-page *,
+.admin-projects-page *::before,
+.admin-projects-page *::after {
+  box-sizing: border-box;
 }
 
 .admin-projects-container {
-  width: min(1380px, 100%);
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 /* =========================================================
    HEADER
-========================================================= */
+   ========================================================= */
 
 .admin-projects-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 30px;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.admin-projects-header > div:first-child {
+  min-width: 0;
 }
 
 .admin-projects-back {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-
-  margin-bottom: 18px;
-
-  color: #728096;
-  font-size: 12px;
-  font-weight: 700;
+  margin-bottom: 20px;
+  color: #667085;
   text-decoration: none;
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .admin-projects-back:hover {
-  color: #1264ff;
-  transform: translateX(-2px);
+  color: #111827;
 }
 
 .admin-projects-title-row {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 15px;
 }
 
 .admin-projects-title-icon {
-  width: 51px;
-  height: 51px;
-  flex: 0 0 51px;
-
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border: 1px solid #d8e6ff;
-  border-radius: 14px;
-
-  background: linear-gradient(
-    145deg,
-    #edf5ff,
-    #e3efff
-  );
-
-  color: #1264ff;
-
-  box-shadow:
-    0 8px 22px rgba(18, 100, 255, 0.07);
+  background: #e9efff;
+  color: #3157d5;
+  border-radius: 12px;
 }
 
 .admin-projects-label {
   display: block;
-  margin-bottom: 7px;
-
-  color: #1264ff;
-
+  margin-bottom: 5px;
+  color: #3157d5;
   font-size: 10px;
+  line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .admin-projects-title-row h1 {
   margin: 0;
-
-  color: #0b1736;
-
-  font-size: clamp(31px, 4vw, 43px);
+  color: #101828;
+  font-size: clamp(28px, 3vw, 40px);
   line-height: 1.08;
-  font-weight: 800;
-
-  letter-spacing: -0.045em;
+  font-weight: 750;
+  letter-spacing: -0.035em;
 }
 
 .admin-projects-title-row h1 span {
-  color: #1264ff;
+  color: #3157d5;
 }
 
 .admin-projects-title-row p {
-  max-width: 580px;
-
-  margin: 10px 0 0;
-
-  color: #74829a;
-
-  font-size: 14px;
+  max-width: 640px;
+  margin: 9px 0 0;
+  color: #667085;
+  font-size: 13px;
   line-height: 1.55;
 }
 
 .admin-projects-refresh {
-  min-height: 43px;
-
-  padding: 0 17px;
-
+  min-width: 105px;
+  height: 42px;
+  border: 1px solid #e4e7ec;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #344054;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  border: 1px solid #d8e1ee;
-  border-radius: 10px;
-
-  background: #ffffff;
-  color: #182641;
-
-  font-size: 13px;
-  font-weight: 750;
-
+  padding: 0 15px;
+  font-size: 12px;
+  font-weight: 650;
   cursor: pointer;
-
-  box-shadow:
-    0 4px 14px rgba(11, 23, 54, 0.035);
-
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
   transition:
+    background 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease,
     transform 0.2s ease;
 }
 
-.admin-projects-refresh:hover {
-  border-color: #9dbdff;
-  color: #1264ff;
+.admin-projects-refresh:hover:not(:disabled) {
+  background: #f8faff;
+  border-color: #cbd5f5;
+}
 
-  box-shadow:
-    0 8px 22px rgba(18, 100, 255, 0.08);
-
-  transform: translateY(-1px);
+.admin-projects-refresh:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .admin-projects-refresh:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
 .admin-projects-spinning {
-  animation: admin-projects-spin 0.8s linear infinite;
+  animation: admin-projects-spin 0.9s linear infinite;
 }
 
 @keyframes admin-projects-spin {
@@ -179,39 +158,28 @@
 }
 
 /* =========================================================
-   STATUS STATISTICS
-========================================================= */
+   STAT CARDS
+   ========================================================= */
 
 .admin-projects-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .admin-projects-stats > button {
-  min-height: 86px;
-
-  padding: 16px;
-
+  min-height: 104px;
+  border: 1px solid #e8ebf2;
+  border-radius: 15px;
+  background: #ffffff;
+  padding: 17px 18px;
   display: flex;
   align-items: center;
-  gap: 13px;
-
-  border: 1px solid #e0e7f0;
-  border-radius: 14px;
-
-  background: #ffffff;
-  color: #0b1736;
-
+  gap: 14px;
   text-align: left;
-
   cursor: pointer;
-
-  box-shadow:
-    0 6px 20px rgba(11, 23, 54, 0.025);
-
+  box-shadow: 0 2px 7px rgba(16, 24, 40, 0.025);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -219,621 +187,609 @@
 }
 
 .admin-projects-stats > button:hover {
-  border-color: #cbd9ec;
-
-  box-shadow:
-    0 10px 26px rgba(11, 23, 54, 0.055);
-
-  transform: translateY(-2px);
+  border-color: #d6def7;
+  box-shadow: 0 6px 18px rgba(31, 52, 99, 0.07);
+  transform: translateY(-1px);
 }
 
 .admin-projects-stats > button.active {
-  border-color: #a9c6fb;
-
-  background: #fafdff;
-
-  box-shadow:
-    0 10px 26px rgba(18, 100, 255, 0.07);
-}
-
-.admin-projects-stats > button > span:last-child {
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.admin-projects-stats strong {
-  color: #0b1736;
-
-  font-size: 23px;
-  line-height: 1;
-  font-weight: 800;
-
-  letter-spacing: -0.03em;
-}
-
-.admin-projects-stats small {
-  color: #7d8a9e;
-
-  font-size: 10px;
-  font-weight: 650;
+  border-color: #b8c7f3;
+  background: #f8faff;
+  box-shadow: 0 0 0 2px rgba(49, 87, 213, 0.06);
 }
 
 .admin-project-stat-icon {
   width: 40px;
   height: 40px;
   flex: 0 0 40px;
-
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 11px;
 }
 
 .admin-project-stat-icon.all {
-  background: #edf5ff;
-  color: #1264ff;
+  background: #edf2ff;
+  color: #3157d5;
 }
 
 .admin-project-stat-icon.pending {
-  background: #fff7e8;
-  color: #b77900;
+  background: #fff1e7;
+  color: #e8873f;
 }
 
 .admin-project-stat-icon.approved {
-  background: #eefaf3;
-  color: #18864b;
+  background: #dcfaed;
+  color: #079669;
 }
 
 .admin-project-stat-icon.rejected {
-  background: #fff3f3;
-  color: #c63636;
+  background: #ffe8e8;
+  color: #e44343;
+}
+
+.admin-projects-stats > button > span:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-projects-stats strong {
+  color: #101828;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.admin-projects-stats small {
+  color: #667085;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
 }
 
 /* =========================================================
    TOOLBAR
-========================================================= */
+   ========================================================= */
 
 .admin-projects-toolbar {
-  min-height: 68px;
-
-  padding: 12px 15px;
-
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-
-  margin-bottom: 16px;
-
-  border: 1px solid #e0e7f0;
-  border-radius: 14px;
-
+  padding: 13px 16px;
+  margin-bottom: 14px;
   background: #ffffff;
-
-  box-shadow:
-    0 5px 18px rgba(11, 23, 54, 0.025);
+  border: 1px solid #e8ebf2;
+  border-radius: 14px;
+  box-shadow: 0 2px 7px rgba(16, 24, 40, 0.025);
 }
 
 .admin-project-search {
-  width: min(620px, 100%);
-
+  width: min(470px, 100%);
+  height: 42px;
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 0 13px;
-
-  border: 1px solid #dce4ee;
-  border-radius: 9px;
-
-  background: #f9fbfd;
-
+  border: 1px solid #e0e5ef;
+  border-radius: 10px;
+  background: #f8faff;
+  color: #667085;
   transition:
     border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .admin-project-search:focus-within {
-  border-color: #9ebdf5;
-
   background: #ffffff;
-
-  box-shadow:
-    0 0 0 3px rgba(18, 100, 255, 0.07);
-}
-
-.admin-project-search svg {
-  flex: 0 0 auto;
-  color: #8492a6;
+  border-color: #9fb1e8;
+  box-shadow: 0 0 0 3px rgba(49, 87, 213, 0.08);
 }
 
 .admin-project-search input {
   width: 100%;
-  height: 42px;
-
-  border: none;
+  min-width: 0;
+  border: 0;
   outline: none;
-
   background: transparent;
-  color: #182641;
-
-  font-family: inherit;
-  font-size: 13px;
+  color: #101828;
+  font: inherit;
+  font-size: 12px;
 }
 
 .admin-project-search input::placeholder {
-  color: #9aa6b7;
+  color: #98a2b3;
 }
 
 .admin-project-results {
-  flex: 0 0 auto;
-
-  color: #7d8a9e;
-
+  color: #667085;
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 550;
+  white-space: nowrap;
 }
 
 /* =========================================================
    ERROR
-========================================================= */
+   ========================================================= */
 
 .admin-projects-error {
-  margin-bottom: 18px;
-  padding: 14px 16px;
-
-  border: 1px solid #f1c6c6;
+  margin-bottom: 14px;
+  padding: 13px 15px;
+  border: 1px solid #f4c7c7;
   border-radius: 10px;
-
-  background: #fff7f7;
-  color: #b42318;
-
-  font-size: 13px;
-  line-height: 1.5;
+  background: #fff5f5;
+  color: #c62828;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 /* =========================================================
-   TABLE
-========================================================= */
+   TABLE WRAPPER
+   ========================================================= */
 
 .admin-projects-table-wrapper {
+  width: 100%;
   overflow-x: auto;
-
-  border: 1px solid #e0e7f0;
-  border-radius: 16px;
-
+  border: 1px solid #e8ebf2;
+  border-radius: 15px;
   background: #ffffff;
-
-  box-shadow:
-    0 7px 24px rgba(11, 23, 54, 0.035);
-
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.025);
   scrollbar-width: thin;
+  scrollbar-color: #cbd2df transparent;
 }
 
 .admin-projects-table {
   width: 100%;
-
-  min-width: 980px;
-
-  border-collapse: collapse;
+  min-width: 930px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
 }
 
-.admin-projects-table thead {
-  background: #f8fafd;
-}
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
 
-.admin-projects-table th {
-  padding: 15px 17px;
-
-  border-bottom: 1px solid #e6ecf3;
-
-  color: #718097;
-
-  font-size: 10px;
+.admin-projects-table thead th {
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid #e8ebf2;
+  background: #f8faff;
+  color: #667085;
+  font-size: 9px;
+  line-height: 1.2;
   font-weight: 800;
   letter-spacing: 0.08em;
-
   text-align: left;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.admin-projects-table td {
-  padding: 16px 17px;
-
-  border-bottom: 1px solid #edf1f5;
-
-  vertical-align: middle;
+.admin-projects-table thead th:first-child {
+  width: 28%;
+  padding-left: 20px;
+  border-top-left-radius: 15px;
 }
 
+.admin-projects-table thead th:nth-child(2) {
+  width: 19%;
+}
+
+.admin-projects-table thead th:nth-child(3) {
+  width: 17%;
+}
+
+.admin-projects-table thead th:nth-child(4) {
+  width: 13%;
+}
+
+.admin-projects-table thead th:nth-child(5) {
+  width: 12%;
+}
+
+.admin-projects-table thead th:last-child {
+  width: 11%;
+  border-top-right-radius: 15px;
+}
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
 .admin-projects-table tbody tr {
-  transition:
-    background 0.18s ease;
+  transition: background 0.18s ease;
 }
 
 .admin-projects-table tbody tr:hover {
-  background: #fbfdff;
+  background: #fafbff;
+}
+
+.admin-projects-table tbody td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #edf0f5;
+  vertical-align: middle;
 }
 
 .admin-projects-table tbody tr:last-child td {
-  border-bottom: none;
+  border-bottom: 0;
+}
+
+.admin-projects-table tbody td:first-child {
+  padding-left: 20px;
 }
 
 /* =========================================================
    PROJECT CELL
-========================================================= */
+   ========================================================= */
 
 .admin-project-cell {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-
-  min-width: 210px;
 }
 
 .admin-project-image {
-  width: 56px;
-  height: 56px;
-  flex: 0 0 56px;
-
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  overflow: hidden;
-
-  border: 1px solid #e0e7ef;
-  border-radius: 10px;
-
-  background: #f1f4f8;
-  color: #9aa6b7;
+  border: 1px solid #e2e6ee;
+  border-radius: 9px;
+  background: #eef2f7;
+  color: #7b8798;
 }
 
 .admin-project-image img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: cover;
 }
 
 .admin-project-cell > div:last-child {
   min-width: 0;
-
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .admin-project-cell strong {
-  max-width: 230px;
-
   overflow: hidden;
-
-  color: #17233d;
-
-  font-size: 13px;
+  color: #172033;
+  font-size: 12px;
   line-height: 1.35;
-  font-weight: 800;
-
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .admin-project-cell span {
-  color: #8996a9;
-
+  color: #98a2b3;
   font-size: 10px;
-  font-weight: 650;
+  line-height: 1.25;
 }
 
 /* =========================================================
    DEVELOPER
-========================================================= */
+   ========================================================= */
 
 .admin-developer-cell {
-  min-width: 160px;
-
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .admin-developer-cell strong {
-  color: #26334d;
-
-  font-size: 12px;
-  font-weight: 750;
+  overflow: hidden;
+  color: #344054;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-developer-cell span {
-  max-width: 190px;
-
   overflow: hidden;
-
-  color: #8996a9;
-
-  font-size: 10px;
-
+  color: #98a2b3;
+  font-size: 9px;
+  line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 /* =========================================================
    LOCATION
-========================================================= */
+   ========================================================= */
 
 .admin-project-location {
   display: block;
-
-  max-width: 190px;
-
-  color: #58677f;
-
-  font-size: 11px;
+  max-width: 150px;
+  color: #475467;
+  font-size: 10px;
   line-height: 1.45;
 }
 
 /* =========================================================
    PRICE
-========================================================= */
+   ========================================================= */
 
 .admin-project-price {
-  color: #17233d;
-
+  display: block;
+  color: #172033;
   font-size: 12px;
-  font-weight: 800;
-
+  line-height: 1.35;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 /* =========================================================
    STATUS
-========================================================= */
+   ========================================================= */
 
 .admin-project-status {
-  min-height: 29px;
-
-  padding: 0 9px;
-
+  min-width: 76px;
+  min-height: 28px;
+  width: fit-content;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-
+  padding: 5px 10px;
   border-radius: 999px;
-
-  font-size: 10px;
-  font-weight: 800;
-
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 700;
   text-transform: capitalize;
   white-space: nowrap;
 }
 
 .admin-project-status.pending {
-  background: #fff6e5;
-  color: #a66a00;
+  background: #fff0df;
+  color: #c66b28;
+  border: 1px solid #f9d6b1;
 }
 
 .admin-project-status.approved {
-  background: #eaf8f0;
-  color: #16834a;
+  background: #d9faeb;
+  color: #087f5b;
+  border: 1px solid #b9efd9;
 }
 
 .admin-project-status.rejected {
-  background: #fff0f0;
-  color: #c33434;
+  background: #ffe3e3;
+  color: #d92d20;
+  border: 1px solid #f7c4c4;
 }
 
 /* =========================================================
    ACTIONS
-========================================================= */
+   ========================================================= */
 
 .admin-project-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 6px;
 }
 
 .admin-project-action {
-  width: 33px;
-  height: 33px;
-
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  border: 1px solid #e0e6ee;
+  border: 1px solid #e4e7ec;
   border-radius: 8px;
-
   background: #ffffff;
-
-  cursor: pointer;
+  color: #667085;
   text-decoration: none;
-
+  cursor: pointer;
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
+    color 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .admin-project-action:hover {
   transform: translateY(-1px);
 }
 
-.admin-project-action.view {
-  color: #52637d;
-}
-
 .admin-project-action.view:hover {
-  border-color: #b9c8dc;
-  background: #f6f9fd;
-  color: #1264ff;
+  border-color: #c7d2f6;
+  background: #f0f4ff;
+  color: #3157d5;
 }
 
 .admin-project-action.approve {
-  color: #18864b;
+  color: #079669;
 }
 
 .admin-project-action.approve:hover {
-  border-color: #a9ddc0;
-  background: #eefaf3;
+  border-color: #a9ead1;
+  background: #ecfcf5;
 }
 
 .admin-project-action.reject {
-  color: #c63636;
+  color: #e44343;
 }
 
 .admin-project-action.reject:hover {
-  border-color: #efb6b6;
+  border-color: #f6c2c2;
   background: #fff3f3;
 }
 
 .admin-project-action.delete {
-  color: #8b97a8;
+  color: #98a2b3;
 }
 
 .admin-project-action.delete:hover {
-  border-color: #efb6b6;
+  border-color: #f2bcbc;
   background: #fff3f3;
-  color: #c63636;
+  color: #d92d20;
 }
 
 /* =========================================================
    LOADING
-========================================================= */
+   ========================================================= */
 
 .admin-projects-loading {
-  min-height: 300px;
-
+  min-height: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 13px;
-
-  border: 1px solid #e0e7f0;
-  border-radius: 16px;
-
+  border: 1px solid #e8ebf2;
+  border-radius: 15px;
   background: #ffffff;
-
-  color: #7d8a9e;
 }
 
 .admin-project-loading-spinner {
-  width: 30px;
-  height: 30px;
-
-  border: 3px solid #e4ebf4;
-  border-top-color: #1264ff;
-
+  width: 34px;
+  height: 34px;
+  margin-bottom: 13px;
+  border: 3px solid #e8edf7;
+  border-top-color: #3157d5;
   border-radius: 50%;
-
   animation: admin-projects-spin 0.8s linear infinite;
 }
 
 .admin-projects-loading p {
   margin: 0;
-
+  color: #667085;
   font-size: 12px;
 }
 
 /* =========================================================
-   EMPTY
-========================================================= */
+   EMPTY STATE
+   ========================================================= */
 
 .admin-projects-empty {
-  min-height: 300px;
-
-  padding: 40px 20px;
-
+  min-height: 320px;
+  padding: 50px 24px;
+  border: 1px solid #e8ebf2;
+  border-radius: 15px;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  border: 1px solid #e0e7f0;
-  border-radius: 16px;
-
-  background: #ffffff;
-
   text-align: center;
 }
 
 .admin-projects-empty > div {
   width: 56px;
   height: 56px;
-
-  margin-bottom: 14px;
-
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 14px;
-
-  background: #edf5ff;
-  color: #1264ff;
+  border-radius: 15px;
+  background: #edf2ff;
+  color: #3157d5;
 }
 
 .admin-projects-empty h3 {
-  margin: 0;
-
-  color: #182641;
-
+  margin: 0 0 6px;
+  color: #172033;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .admin-projects-empty p {
-  max-width: 400px;
-
-  margin: 7px 0 0;
-
-  color: #8996a9;
-
+  max-width: 380px;
+  margin: 0;
+  color: #98a2b3;
   font-size: 12px;
   line-height: 1.5;
 }
 
 /* =========================================================
-   TABLET
-========================================================= */
+   RESPONSIVE - LARGE TABLETS
+   ========================================================= */
 
-@media (max-width: 1050px) {
-  .admin-projects-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* =========================================================
-   SMALL LAPTOP / TABLET
-========================================================= */
-
-@media (max-width: 800px) {
+@media (max-width: 1100px) {
   .admin-projects-page {
-    padding: 34px 21px 70px;
+    padding: 25px 22px 35px;
+  }
+
+  .admin-projects-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .admin-projects-header {
     align-items: flex-start;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .admin-projects-page {
+    padding: 20px 15px 30px;
+  }
+
+  .admin-projects-header {
     flex-direction: column;
-    gap: 20px;
+    align-items: stretch;
+    gap: 18px;
   }
 
   .admin-projects-refresh {
-    align-self: flex-start;
+    width: 100%;
+  }
+
+  .admin-projects-title-row {
+    gap: 11px;
+  }
+
+  .admin-projects-title-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .admin-projects-title-row h1 {
+    font-size: 28px;
+  }
+
+  .admin-projects-title-row p {
+    font-size: 12px;
+  }
+
+  .admin-projects-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .admin-projects-stats > button {
+    min-height: 92px;
+    padding: 14px;
+  }
+
+  .admin-project-stat-icon {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
   }
 
   .admin-projects-toolbar {
-    align-items: stretch;
     flex-direction: column;
+    align-items: stretch;
   }
 
   .admin-project-search {
@@ -846,170 +802,80 @@
 }
 
 /* =========================================================
-   MOBILE
-========================================================= */
+   RESPONSIVE - MOBILE
+   ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 520px) {
   .admin-projects-page {
-    padding: 26px 14px 55px;
-  }
-
-  .admin-projects-header {
-    margin-bottom: 25px;
+    padding: 16px 11px 25px;
   }
 
   .admin-projects-back {
-    margin-bottom: 14px;
+    margin-bottom: 15px;
   }
 
   .admin-projects-title-row {
-    gap: 11px;
+    align-items: flex-start;
   }
 
   .admin-projects-title-icon {
-    width: 43px;
-    height: 43px;
-    flex-basis: 43px;
-    border-radius: 12px;
+    display: none;
+  }
+
+  .admin-projects-title-row h1 {
+    font-size: 25px;
+  }
+
+  .admin-projects-title-row p {
+    margin-top: 7px;
+    font-size: 11px;
   }
 
   .admin-projects-label {
     font-size: 9px;
   }
 
-  .admin-projects-title-row h1 {
-    font-size: 30px;
-  }
-
-  .admin-projects-title-row p {
-    margin-top: 8px;
-    font-size: 12px;
-  }
-
-  .admin-projects-refresh {
-    width: 100%;
-  }
-
-  /* Stats */
-
   .admin-projects-stats {
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-
-    margin-bottom: 14px;
+    grid-template-columns: 1fr;
   }
 
   .admin-projects-stats > button {
-    min-height: 78px;
-    padding: 12px;
-    gap: 9px;
-
-    border-radius: 12px;
-  }
-
-  .admin-project-stat-icon {
-    width: 35px;
-    height: 35px;
-    flex-basis: 35px;
+    min-height: 76px;
   }
 
   .admin-projects-stats strong {
-    font-size: 20px;
+    font-size: 22px;
   }
-
-  .admin-projects-stats small {
-    font-size: 9px;
-  }
-
-  /* Toolbar */
 
   .admin-projects-toolbar {
     padding: 11px;
-    gap: 10px;
-    border-radius: 12px;
   }
 
-  .admin-project-search input {
+  .admin-project-search {
     height: 40px;
-    font-size: 12px;
   }
-
-  /* Table */
 
   .admin-projects-table-wrapper {
-    border-radius: 13px;
+    border-radius: 12px;
   }
 
   .admin-projects-table {
     min-width: 900px;
   }
-
-  .admin-projects-table th {
-    padding: 13px 14px;
-    font-size: 9px;
-  }
-
-  .admin-projects-table td {
-    padding: 13px 14px;
-  }
-
-  .admin-project-image {
-    width: 50px;
-    height: 50px;
-    flex-basis: 50px;
-  }
-
-  .admin-project-cell strong {
-    font-size: 12px;
-  }
-
-  .admin-project-cell span {
-    font-size: 9px;
-  }
-
-  .admin-developer-cell strong {
-    font-size: 11px;
-  }
-
-  .admin-developer-cell span {
-    font-size: 9px;
-  }
-
-  .admin-project-action {
-    width: 31px;
-    height: 31px;
-  }
 }
 
 /* =========================================================
-   VERY SMALL DEVICES
-========================================================= */
+   ACCESSIBILITY
+   ========================================================= */
 
-@media (max-width: 380px) {
-  .admin-projects-page {
-    padding-left: 11px;
-    padding-right: 11px;
-  }
+.admin-projects-refresh:focus-visible,
+.admin-project-action:focus-visible,
+.admin-projects-stats > button:focus-visible,
+.admin-projects-back:focus-visible {
+  outline: 3px solid rgba(49, 87, 213, 0.2);
+  outline-offset: 2px;
+}
 
-  .admin-projects-title-row h1 {
-    font-size: 27px;
-  }
-
-  .admin-projects-stats {
-    gap: 7px;
-  }
-
-  .admin-projects-stats > button {
-    padding: 10px;
-  }
-
-  .admin-project-stat-icon {
-    width: 32px;
-    height: 32px;
-    flex-basis: 32px;
-  }
-
-  .admin-projects-stats strong {
-    font-size: 18px;
-  }
+.admin-project-search input:focus-visible {
+  outline: none;
 }
