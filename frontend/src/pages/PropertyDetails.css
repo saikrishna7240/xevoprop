@@ -1537,3 +1537,167 @@
     height: 28px;
   }
 }
+
+/* ======================================================
+   PROPERTY MEDIA
+====================================================== */
+
+.property-gallery-main {
+  position: relative;
+  overflow: hidden;
+}
+
+.property-main-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  object-fit: cover;
+  background: #eef2f7;
+}
+
+video.property-main-image {
+  object-fit: contain;
+  background: #061b32;
+}
+
+/* ======================================================
+   ALL MEDIA THUMBNAILS
+====================================================== */
+
+.property-gallery-thumbnails {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 2px 4px;
+  scrollbar-width: thin;
+}
+
+.gallery-thumbnail {
+  position: relative;
+  flex: 0 0 92px;
+  width: 92px;
+  height: 68px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: #eef2f7;
+  cursor: pointer;
+}
+
+.gallery-thumbnail.active {
+  border-color: #0d4779;
+}
+
+.gallery-thumbnail img,
+.gallery-thumbnail video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-video-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #061b32;
+}
+
+.property-video-thumbnail video {
+  opacity: 0.75;
+}
+
+.property-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(6, 27, 50, 0.88);
+  color: #ffffff;
+  font-size: 11px;
+  transform: translate(-50%, -50%);
+}
+
+/* ======================================================
+   SELLER DETAILS
+====================================================== */
+
+.owner-details {
+  min-width: 0;
+}
+
+.owner-details > span {
+  display: block;
+  margin-bottom: 3px;
+  color: #7c8797;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.owner-details > strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #10243b;
+  font-size: 15px;
+}
+
+.owner-contact {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  color: #526173;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.owner-contact:hover {
+  color: #0d4779;
+}
+
+.owner-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 1;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e4eaf2;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #10243b;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.owner-action-button:hover {
+  border-color: #0d4779;
+  color: #0d4779;
+}
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media (max-width: 768px) {
+  .property-main-image {
+    min-height: 320px;
+  }
+
+  .gallery-thumbnail {
+    flex-basis: 78px;
+    width: 78px;
+    height: 60px;
+  }
+}

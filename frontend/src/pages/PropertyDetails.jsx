@@ -49,61 +49,79 @@ const getValue = (property, keys, fallback = "") => {
   return fallback;
 };
 
-const getImageList = (property) => {
-  if (!property) return FALLBACK_IMAGES;
+const getPropertyMedia = (property) => {
+  if (!property) return [];
 
-  const images = [];
+  const media = Array.isArray(property.property_images)
+    ? property.property_images
+    : [];
 
-  // Array-based image fields
-  const arrayFields = [
-    property.images,
-    property.image_urls,
-    property.gallery,
-    property.photos,
-  ];
+  const normalizedMedia = media
+    .map((item) => {
+      if (!item) return null;
 
-  arrayFields.forEach((value) => {
-    if (Array.isArray(value)) {
-      value.forEach((item) => {
-        if (typeof item === "string" && item.trim()) {
-          images.push(item);
-        } else if (item && typeof item === "object") {
-          const url =
-            item.url ||
-            item.secure_url ||
-            item.image_url ||
-            item.image ||
-            item.src;
+      const url =
+        item.image_url ||
+        item.url ||
+        item.secure_url ||
+        item.image ||
+        item.src;
 
-          if (url) {
-            images.push(url);
-          }
-        }
-      });
-    }
-  });
+      if (!url) return null;
 
-  // Single-image fields
-  const singleFields = [
-    property.image,
-    property.image_url,
-    property.cover_image,
-    property.photo,
-    property.property_image,
-  ];
+      const mediaType =
+        item.media_type === "video" ||
+        item.type === "video" ||
+        item.resource_type === "video"
+          ? "video"
+          : "image";
 
-  singleFields.forEach((value) => {
-    if (typeof value === "string" && value.trim()) {
-      images.push(value);
-    }
-  });
+      return {
+        id: item.id,
+        url,
+        type: mediaType,
+        sort_order: item.sort_order ?? 0,
+      };
+    })
+    .filter(Boolean)
+    .sort(
+      (a, b) =>
+        a.sort_order - b.sort_order ||
+        Number(a.id || 0) - Number(b.id || 0)
+    );
 
-  // Remove duplicates
-  const uniqueImages = [...new Set(images)];
+  /*
+   * If the property_images table has no records,
+   * use the property's cover image.
+   */
+  if (normalizedMedia.length > 0) {
+    return normalizedMedia;
+  }
 
-  return uniqueImages.length > 0
-    ? uniqueImages
-    : FALLBACK_IMAGES;
+  const coverImage =
+    property.image ||
+    property.image_url ||
+    property.cover_image ||
+    property.photo ||
+    property.property_image;
+
+  if (coverImage) {
+    return [
+      {
+        id: "cover",
+        url: coverImage,
+        type: "image",
+        sort_order: 0,
+      },
+    ];
+  }
+
+  return FALLBACK_IMAGES.map((url, index) => ({
+    id: `fallback-${index}`,
+    url,
+    type: "image",
+    sort_order: index,
+  }));
 };
 
 const formatPrice = (price) => {
@@ -136,7 +154,7 @@ const PropertyDetails = () => {
   const [similarLoading, setSimilarLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeMedia, setActiveMedia] = useState(0);
   const [saved, setSaved] = useState(false);
 
   const [form, setForm] = useState({
@@ -217,10 +235,13 @@ const PropertyDetails = () => {
     fetchSimilar();
   }, [id]);
 
-  const images = useMemo(
-    () => getImageList(property),
-    [property]
-  );
+  const media = useMemo(
+  () => getPropertyMedia(property),
+  [property]
+);
+
+const currentMedia =
+  media[activeMedia] || media[0];
 
   const title = getValue(property, [
     "title",
@@ -286,18 +307,29 @@ const PropertyDetails = () => {
     "rera_id",
   ]);
 
-  const ownerName = getValue(property, [
-    "owner_name",
-    "seller_name",
-    "developer_name",
-    "listed_by",
-  ], "Property Owner");
+ const seller = property?.seller || {};
 
-  const ownerPhone = getValue(property, [
-    "owner_phone",
-    "seller_phone",
-    "phone",
-  ]);
+const ownerName =
+  seller.name ||
+  seller.username ||
+  property?.owner_name ||
+  property?.seller_name ||
+  property?.developer_name ||
+  property?.listed_by ||
+  "Property Owner";
+
+const ownerPhone =
+  seller.phone ||
+  property?.owner_phone ||
+  property?.seller_phone ||
+  property?.phone ||
+  "";
+
+const ownerEmail =
+  seller.email ||
+  property?.owner_email ||
+  property?.seller_email ||
+  "";
 
   const propertyId = getValue(property, [
     "id",
@@ -451,77 +483,141 @@ const PropertyDetails = () => {
       <main className="property-details-container">
 
         {/* GALLERY */}
-        <section className="property-gallery-section">
+        {/* GALLERY */}
+<section className="property-gallery-section">
 
-          <div className="property-gallery-main">
+  <div className="property-gallery-main">
+
+    {currentMedia?.type === "video" ? (
+      <video
+        className="property-main-image"
+        src={currentMedia.url}
+        controls
+        playsInline
+        preload="metadata"
+      />
+    ) : (
+      <img
+        src={currentMedia?.url}
+        alt={title}
+        className="property-main-image"
+        onError={(event) => {
+          event.currentTarget.src = FALLBACK_IMAGES[0];
+        }}
+      />
+    )}
+
+    <div className="gallery-overlay-top">
+
+      <div className="gallery-verification">
+        <ShieldCheck size={15} />
+        Verified Property
+      </div>
+
+      <button
+        className={`gallery-save ${
+          saved ? "saved" : ""
+        }`}
+        onClick={() => setSaved(!saved)}
+        aria-label="Save property"
+      >
+        <Heart
+          size={19}
+          fill={saved ? "currentColor" : "none"}
+        />
+      </button>
+
+    </div>
+
+    {media.length > 1 && (
+      <>
+        <button
+          className="gallery-arrow gallery-arrow-left"
+          onClick={() =>
+            setActiveMedia((current) =>
+              current === 0
+                ? media.length - 1
+                : current - 1
+            )
+          }
+          aria-label="Previous media"
+        >
+          <ChevronLeft size={23} />
+        </button>
+
+        <button
+          className="gallery-arrow gallery-arrow-right"
+          onClick={() =>
+            setActiveMedia((current) =>
+              current === media.length - 1
+                ? 0
+                : current + 1
+            )
+          }
+          aria-label="Next media"
+        >
+          <ChevronRight size={23} />
+        </button>
+      </>
+    )}
+
+    <div className="gallery-counter">
+      {activeMedia + 1} / {media.length}
+    </div>
+
+  </div>
+
+  {/* ALL MEDIA THUMBNAILS */}
+  {media.length > 0 && (
+    <div className="property-gallery-thumbnails">
+
+      {media.map((item, index) => (
+        <button
+          key={`${item.id || item.url}-${index}`}
+          type="button"
+          className={`gallery-thumbnail ${
+            activeMedia === index
+              ? "active"
+              : ""
+          }`}
+          onClick={() =>
+            setActiveMedia(index)
+          }
+          aria-label={`View media ${index + 1}`}
+        >
+
+          {item.type === "video" ? (
+            <div className="property-video-thumbnail">
+
+              <video
+                src={item.url}
+                muted
+                preload="metadata"
+              />
+
+              <span className="property-video-play">
+                ▶
+              </span>
+
+            </div>
+          ) : (
             <img
-              src={images[activeImage]}
-              alt={title}
-              className="property-main-image"
+              src={item.url}
+              alt={`${title} ${index + 1}`}
+              onError={(event) => {
+                event.currentTarget.src =
+                  FALLBACK_IMAGES[0];
+              }}
             />
+          )}
 
-            <div className="gallery-overlay-top">
-              <div className="gallery-verification">
-                <ShieldCheck size={15} />
-                Verified Property
-              </div>
+        </button>
+      ))}
 
-              <button
-                className={`gallery-save ${
-                  saved ? "saved" : ""
-                }`}
-                onClick={() => setSaved(!saved)}
-                aria-label="Save property"
-              >
-                <Heart
-                  size={19}
-                  fill={saved ? "currentColor" : "none"}
-                />
-              </button>
-            </div>
+    </div>
+  )}
 
-            {images.length > 1 && (
-              <>
-                <button
-                  className="gallery-arrow gallery-arrow-left"
-                  onClick={previousImage}
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={23} />
-                </button>
-
-                <button
-                  className="gallery-arrow gallery-arrow-right"
-                  onClick={nextImage}
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={23} />
-                </button>
-              </>
-            )}
-
-            <div className="gallery-counter">
-              {activeImage + 1} / {images.length}
-            </div>
-          </div>
-
-          <div className="property-gallery-thumbnails">
-            {images.slice(0, 5).map((image, index) => (
-              <button
-                key={`${image}-${index}`}
-                className={`gallery-thumbnail ${
-                  activeImage === index ? "active" : ""
-                }`}
-                onClick={() => setActiveImage(index)}
-              >
-                <img
-                  src={image}
-                  alt={`${title} ${index + 1}`}
-                />
-              </button>
-            ))}
-          </div>
-        </section>
+</section>
 
         {/* MAIN CONTENT */}
         <section className="property-details-layout">
@@ -793,19 +889,39 @@ const PropertyDetails = () => {
 
               <div className="owner-card">
 
-                <div className="owner-avatar">
-                  <UserRound size={21} />
-                </div>
+  <div className="owner-avatar">
+    <UserRound size={21} />
+  </div>
 
-                <div>
-                  <span>LISTED BY</span>
-                  <strong>{ownerName}</strong>
+  <div className="owner-details">
 
-                  {ownerPhone && (
-                    <small>{ownerPhone}</small>
-                  )}
-                </div>
-              </div>
+    <span>LISTED BY</span>
+
+    <strong>{ownerName}</strong>
+
+    {ownerPhone && (
+      <a
+        href={`tel:${ownerPhone}`}
+        className="owner-contact"
+      >
+        <Phone size={14} />
+        {ownerPhone}
+      </a>
+    )}
+
+    {ownerEmail && (
+      <a
+        href={`mailto:${ownerEmail}`}
+        className="owner-contact"
+      >
+        <Mail size={14} />
+        {ownerEmail}
+      </a>
+    )}
+
+  </div>
+
+</div>
 
               <form
                 className="enquiry-form"
@@ -889,10 +1005,25 @@ const PropertyDetails = () => {
                   Schedule Visit
                 </button>
 
-                <button type="button">
-                  <Phone size={17} />
-                  Call Owner
-                </button>
+                {ownerPhone && (
+  <a
+    href={`tel:${ownerPhone}`}
+    className="owner-action-button"
+  >
+    <Phone size={17} />
+    Call Owner
+  </a>
+)}
+
+{ownerEmail && (
+  <a
+    href={`mailto:${ownerEmail}`}
+    className="owner-action-button"
+  >
+    <Mail size={17} />
+    Email Owner
+  </a>
+)}
 
               </div>
 

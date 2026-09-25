@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Clock3,
   Home,
+  LogOut,
   RefreshCw,
   ShieldCheck,
   Users,
@@ -46,6 +47,13 @@ function AdminDashboard() {
   const getToken = () => {
     return localStorage.getItem("token");
   };
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("user");
+
+  window.location.replace("/login");
+};
 
   const loadDashboard = async () => {
     try {
@@ -201,6 +209,14 @@ function AdminDashboard() {
               ? "Refreshing..."
               : "Refresh Data"}
           </button>
+           <button
+    type="button"
+    className="admin-logout-button"
+    onClick={handleLogout}
+  >
+    <LogOut size={16} />
+    Logout
+  </button>
 
         </header>
 

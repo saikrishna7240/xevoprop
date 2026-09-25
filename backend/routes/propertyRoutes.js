@@ -190,6 +190,14 @@ router.get("/:id", async (req, res) => {
         p.status,
         p.created_at,
 
+        /* Seller details */
+        u.id AS seller_id,
+        u.username AS seller_username,
+        u.name AS seller_name,
+        u.email AS seller_email,
+        u.phone AS seller_phone,
+
+        /* All property media */
         COALESCE(
           json_agg(
             json_build_object(
@@ -207,13 +215,22 @@ router.get("/:id", async (req, res) => {
 
       FROM properties p
 
+      LEFT JOIN users u
+        ON p.owner_id = u.id
+
       LEFT JOIN property_images pi
         ON pi.property_id = p.id
 
       WHERE p.id = $1
         AND p.status = 'approved'
 
-      GROUP BY p.id
+      GROUP BY
+        p.id,
+        u.id,
+        u.username,
+        u.name,
+        u.email,
+        u.phone
       `,
       [id]
     );
@@ -225,14 +242,27 @@ router.get("/:id", async (req, res) => {
       });
     }
 
+    const property = result.rows[0];
+
     res.json({
       success: true,
-      property: result.rows[0],
+
+      property: {
+        ...property,
+
+        seller: {
+          id: property.seller_id,
+          username: property.seller_username,
+          name: property.seller_name,
+          email: property.seller_email,
+          phone: property.seller_phone,
+        },
+      },
     });
   } catch (error) {
     console.error(
-      "Get property error:",
-      error.message
+      "Get property details error:",
+      error
     );
 
     res.status(500).json({
