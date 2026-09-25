@@ -144,39 +144,34 @@ function Navbar() {
     }
 
     if (role === "Developer") {
-      return [
-        {
-          label: "Dashboard",
-          path: "/dashboard",
-          icon: LayoutDashboard,
-        },
-        {
-          label: "My Projects",
-          path: "/my-projects",
-          icon: Building2,
-        },
-        {
-          label: "Add Project",
-          path: "/add-project",
-          icon: Plus,
-        },
-        {
-          label: "My Properties",
-          path: "/my-properties",
-          icon: Home,
-        },
-        {
-          label: "Leads",
-          path: "/leads",
-          icon: BarChart3,
-        },
-        {
-          label: "Project Enquiries",
-          path: "/project-enquiries",
-          icon: MessageCircle,
-        },
-      ];
-    }
+  return [
+    {
+      label: "Dashboard",
+      path: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      label: "My Projects",
+      path: "/my-projects",
+      icon: Building2,
+    },
+    {
+      label: "Add Project",
+      path: "/add-project",
+      icon: Plus,
+    },
+    {
+      label: "Leads",
+      path: "/leads",
+      icon: BarChart3,
+    },
+    {
+      label: "Project Enquiries",
+      path: "/project-enquiries",
+      icon: MessageCircle,
+    },
+  ];
+}
 
     if (role === "Admin") {
       return [
