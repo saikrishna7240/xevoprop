@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bell": "^10.0.0",
+    "docx-preview": "^0.4.1",
     "framer-motion": "^13.1.1",
     "lucide-react": "^1.37.0",
     "react": "^19.2.8",
