@@ -171,7 +171,7 @@ function Navbar() {
       icon: MessageCircle,
     },
   ];
-}
+} ``
 
     if (role === "Admin") {
       return [
