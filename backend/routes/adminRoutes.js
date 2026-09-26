@@ -433,6 +433,7 @@ SELECT
   p.*,
 
   u.username AS developer_username,
+  u.name AS developer_name,
   u.email AS developer_email,
 
   COALESCE(
