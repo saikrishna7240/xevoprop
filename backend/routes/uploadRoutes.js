@@ -154,6 +154,10 @@ router.post(
       );
       console.log("================================");
 
+      /* -----------------------------------------------------
+         CHECK FILE
+      ----------------------------------------------------- */
+
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -161,6 +165,10 @@ router.post(
             "Please upload the digitally signed agreement.",
         });
       }
+
+      /* -----------------------------------------------------
+         CHECK PROJECT OWNERSHIP
+      ----------------------------------------------------- */
 
       const projectResult = await pool.query(
         `
@@ -179,6 +187,10 @@ router.post(
             "You are not the owner of this project.",
         });
       }
+
+      /* -----------------------------------------------------
+         CONFIRMATIONS
+      ----------------------------------------------------- */
 
       const accepted =
         String(req.body.accepted) === "true";
@@ -208,6 +220,10 @@ router.post(
         });
       }
 
+      /* -----------------------------------------------------
+         UPLOAD AGREEMENT TO CLOUDINARY
+      ----------------------------------------------------- */
+
       const uploadResult = await new Promise(
         (resolve, reject) => {
           const stream =
@@ -236,6 +252,10 @@ router.post(
         "Signed agreement uploaded:",
         uploadResult.secure_url
       );
+
+      /* -----------------------------------------------------
+         SAVE AGREEMENT IN DATABASE
+      ----------------------------------------------------- */
 
       const agreementResult =
         await pool.query(
@@ -291,7 +311,8 @@ router.post(
             agreementResult.rows[0].project_id,
 
           agreement_version:
-            agreementResult.rows[0].agreement_version,
+            agreementResult.rows[0]
+              .agreement_version,
 
           signed_agreement_url:
             agreementResult.rows[0]
@@ -324,6 +345,204 @@ router.post(
         message:
           error.message ||
           "Failed to upload signed agreement.",
+      });
+    }
+  }
+);
+
+/* =========================================================
+   ADMIN VIEW SIGNED PROJECT AGREEMENT
+   ---------------------------------------------------------
+   This route fetches the Cloudinary file from the backend
+   and sends the actual file to the admin browser.
+
+   This prevents the frontend/Vite index.html from being
+   opened instead of the uploaded agreement.
+========================================================= */
+
+router.get(
+  "/project/:projectId/agreement/view",
+
+  authenticateToken,
+
+  authorizeRoles("Admin"),
+
+  async (req, res) => {
+    try {
+      const { projectId } = req.params;
+
+      console.log("================================");
+      console.log(
+        "ADMIN AGREEMENT VIEW REQUEST"
+      );
+      console.log("Project ID:", projectId);
+      console.log("Admin ID:", req.user.id);
+      console.log("================================");
+
+      /* -----------------------------------------------------
+         GET LATEST AGREEMENT
+      ----------------------------------------------------- */
+
+      const agreementResult =
+        await pool.query(
+          `
+          SELECT
+            pa.id,
+            pa.project_id,
+            pa.signed_agreement_url,
+            pa.created_at
+          FROM project_agreements pa
+          WHERE pa.project_id = $1
+          ORDER BY pa.created_at DESC
+          LIMIT 1
+          `,
+          [projectId]
+        );
+
+      if (
+        agreementResult.rows.length === 0
+      ) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "No agreement found for this project.",
+        });
+      }
+
+      const agreement =
+        agreementResult.rows[0];
+
+      /* -----------------------------------------------------
+         CHECK URL
+      ----------------------------------------------------- */
+
+      if (
+        !agreement.signed_agreement_url
+      ) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Agreement document URL is missing.",
+        });
+      }
+
+      console.log(
+        "Cloudinary agreement URL:",
+        agreement.signed_agreement_url
+      );
+
+      /* -----------------------------------------------------
+         FETCH FILE FROM CLOUDINARY
+         Node fetch automatically follows redirects.
+      ----------------------------------------------------- */
+
+      const cloudinaryResponse =
+        await fetch(
+          agreement.signed_agreement_url
+        );
+
+      if (!cloudinaryResponse.ok) {
+        console.error(
+          "CLOUDINARY RESPONSE ERROR:",
+          cloudinaryResponse.status,
+          cloudinaryResponse.statusText
+        );
+
+        return res.status(502).json({
+          success: false,
+          message:
+            "Unable to retrieve the agreement document from Cloudinary.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         GET CONTENT TYPE
+      ----------------------------------------------------- */
+
+      const contentType =
+        cloudinaryResponse.headers.get(
+          "content-type"
+        ) ||
+        "application/octet-stream";
+
+      console.log(
+        "Agreement content type:",
+        contentType
+      );
+
+      /* -----------------------------------------------------
+         PROTECT AGAINST HTML RESPONSE
+         If Cloudinary/configuration returns HTML instead
+         of the actual agreement, do not send it to admin.
+      ----------------------------------------------------- */
+
+      if (
+        contentType
+          .toLowerCase()
+          .includes("text/html")
+      ) {
+        console.error(
+          "Cloudinary returned HTML instead of agreement."
+        );
+
+        return res.status(502).json({
+          success: false,
+          message:
+            "The stored agreement URL did not return the actual document.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         SEND FILE TO ADMIN
+      ----------------------------------------------------- */
+
+      const fileBuffer =
+        Buffer.from(
+          await cloudinaryResponse.arrayBuffer()
+        );
+
+      res.setHeader(
+        "Content-Type",
+        contentType
+      );
+
+      res.setHeader(
+        "Content-Length",
+        fileBuffer.length
+      );
+
+      /*
+        inline allows browsers that support the file type
+        to display it directly.
+
+        PDF will normally open inside the browser.
+        DOC/DOCX may still be downloaded by the browser,
+        because browsers do not natively display Word files.
+      */
+      res.setHeader(
+        "Content-Disposition",
+        "inline"
+      );
+
+      console.log(
+        "Sending agreement to admin:",
+        fileBuffer.length,
+        "bytes"
+      );
+
+      return res.send(fileBuffer);
+    } catch (error) {
+      console.error(
+        "ADMIN AGREEMENT VIEW ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+
+        message:
+          error.message ||
+          "Failed to open agreement document.",
       });
     }
   }
@@ -808,7 +1027,6 @@ router.post(
    UPLOAD PROJECT MEDIA
    IMAGE + VIDEO
 
-   IMPORTANT:
    AddProject.jsx uses:
    /upload/project/:projectId/media
 
@@ -1026,46 +1244,51 @@ router.post(
         );
 
       /* -----------------------------------------------------
-   UPDATE PROJECT COVER IMAGE
-   Always use the first uploaded image
-   Videos are never used as cover
------------------------------------------------------ */
+         UPDATE PROJECT COVER IMAGE
 
-if (mediaType === "image") {
-  const coverResult = await pool.query(
-    `
-    SELECT media_url
-    FROM project_media
-    WHERE project_id = $1
-      AND media_type = 'image'
-    ORDER BY sort_order ASC, id ASC
-    LIMIT 1
-    `,
-    [projectId]
-  );
+         Always use the first uploaded image.
+         Videos are never used as cover.
+      ----------------------------------------------------- */
 
-  const coverImage =
-    coverResult.rows.length > 0
-      ? coverResult.rows[0].media_url
-      : null;
+      if (mediaType === "image") {
+        const coverResult =
+          await pool.query(
+            `
+            SELECT media_url
+            FROM project_media
+            WHERE project_id = $1
+              AND media_type = 'image'
+            ORDER BY
+              sort_order ASC,
+              id ASC
+            LIMIT 1
+            `,
+            [projectId]
+          );
 
-  await pool.query(
-    `
-    UPDATE projects
-    SET
-      image = $1,
-      updated_at = CURRENT_TIMESTAMP
-    WHERE id = $2
-      AND developer_id = $3
-    `,
-    [
-      coverImage,
-      projectId,
-      req.user.id,
-    ]
-  );
-}
-    
+        const coverImage =
+          coverResult.rows.length > 0
+            ? coverResult.rows[0]
+                .media_url
+            : null;
+
+        await pool.query(
+          `
+          UPDATE projects
+          SET
+            image = $1,
+            updated_at =
+              CURRENT_TIMESTAMP
+          WHERE id = $2
+            AND developer_id = $3
+          `,
+          [
+            coverImage,
+            projectId,
+            req.user.id,
+          ]
+        );
+      }
 
       /* -----------------------------------------------------
          RESPONSE

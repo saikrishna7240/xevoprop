@@ -36,7 +36,16 @@ function AdminProjects() {
       });
 
       const data = await response.json();
+console.log("ADMIN PROJECTS RESPONSE:", data);
 
+data.projects?.forEach((project) => {
+  console.log(
+    "PROJECT:",
+    project.name,
+    "AGREEMENT:",
+    project.agreement?.signed_agreement_url
+  );
+});
       if (!response.ok) {
         throw new Error(data.message || "Failed to load projects");
       }
@@ -86,6 +95,59 @@ function AdminProjects() {
         (project.status || "pending").toLowerCase() === status
     ).length;
   };
+
+  const handleViewAgreement = async (projectId) => {
+  try {
+    const token = getToken();
+
+    const response = await fetch(
+      `${API_URL}/upload/project/${projectId}/agreement/view`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      let message = "Failed to open agreement";
+
+      try {
+        const data = await response.json();
+        message = data.message || message;
+      } catch {
+        // Ignore JSON parsing error
+      }
+
+      throw new Error(message);
+    }
+
+    const blob = await response.blob();
+
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    window.open(
+      blobUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+    setTimeout(() => {
+      window.URL.revokeObjectURL(blobUrl);
+    }, 60000);
+  } catch (error) {
+    console.error(
+      "VIEW AGREEMENT ERROR:",
+      error
+    );
+
+    alert(
+      error.message ||
+        "Unable to open agreement document."
+    );
+  }
+};
 
   const handleApprove = async (id) => {
     const confirmed = window.confirm(
@@ -415,15 +477,14 @@ function AdminProjects() {
 
                       <td>
   {project.agreement?.signed_agreement_url ? (
-  <a
-    href={project.agreement.signed_agreement_url}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="admin-project-document"
-  >
-    <Eye size={15} />
-    View Document
-  </a>
+  <button
+  type="button"
+  onClick={() => handleViewAgreement(project.id)}
+  className="admin-project-document"
+>
+  <Eye size={15} />
+  View Document
+</button>
 ) : (
   <span className="admin-no-document">
     No Document
