@@ -45,6 +45,7 @@ const AddProject = () => {
     type: "Apartment",
     units: "",
     price: "",
+    project_status: "Upcoming",
     description: "",
   });
 
@@ -290,6 +291,7 @@ const AddProject = () => {
           type: formData.type,
           units: formData.units.trim(),
           price: formData.price.trim(),
+          project_status: formData.project_status,
           description: formData.description.trim(),
         }),
       });
@@ -513,6 +515,21 @@ const AddProject = () => {
                     </option>
                   </select>
                 </div>
+
+                <div className="form-group">
+  <label>Project Status</label>
+
+  <select
+    name="project_status"
+    value={formData.project_status}
+    onChange={handleChange}
+  >
+    <option value="Upcoming">Upcoming</option>
+    <option value="Under Construction">Under Construction</option>
+    <option value="Ready to Move">Ready to Move</option>
+    <option value="Completed">Completed</option>
+  </select>
+</div>
 
                 <div className="form-group">
                   <label>

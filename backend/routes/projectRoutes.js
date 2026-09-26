@@ -427,6 +427,7 @@ router.post(
         price,
         image,
         description,
+        project_status,
       } = req.body;
 
       if (
@@ -456,7 +457,8 @@ router.post(
           price,
           image,
           description,
-          status
+          status,
+          project_status
         )
         VALUES (
           $1,
@@ -468,7 +470,8 @@ router.post(
           $7,
           $8,
           $9,
-          'pending'
+          'pending',
+          $10
         )
         RETURNING *
         `,
@@ -482,6 +485,7 @@ router.post(
           price || null,
           image || null,
           description || null,
+          project_status ?? "Upcoming",
         ]
       );
 
