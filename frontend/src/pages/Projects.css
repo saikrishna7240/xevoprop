@@ -2077,3 +2077,145 @@
     font-size: 10px;
   }
 }
+
+/* =========================================================
+   PROJECT CARD - VERIFIED / STATUS BADGE ALIGNMENT
+========================================================= */
+
+.projects-page .project-card-image {
+  position: relative;
+}
+
+.projects-page .project-card-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+
+  width: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  z-index: 10;
+}
+
+/* VERIFIED BADGE */
+
+.projects-page .project-verified {
+  position: static;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  min-height: 34px;
+  padding: 7px 12px;
+
+  gap: 6px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.96);
+  color: #08784f;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+/* APPROVED / STATUS BADGE */
+
+.projects-page .project-status {
+  position: static;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  min-height: 34px;
+  padding: 7px 12px;
+
+  margin: 0;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+/* APPROVED */
+
+.projects-page .project-status.approved {
+  background: rgba(8, 120, 79, 0.95);
+  color: #ffffff;
+}
+
+/* PENDING */
+
+.projects-page .project-status.pending {
+  background: rgba(245, 158, 11, 0.95);
+  color: #ffffff;
+}
+
+/* REJECTED */
+
+.projects-page .project-status.rejected {
+  background: rgba(220, 38, 38, 0.95);
+  color: #ffffff;
+}
+
+/* AVAILABLE / ACTIVE */
+
+.projects-page .project-status.available,
+.projects-page .project-status.active {
+  background: rgba(8, 120, 79, 0.95);
+  color: #ffffff;
+}
+
+/* ICON INSIDE VERIFIED */
+
+.projects-page .project-verified svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 520px) {
+  .projects-page .project-card-top {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .projects-page .project-verified,
+  .projects-page .project-status {
+    min-height: 32px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .projects-page .project-verified svg {
+    width: 13px;
+    height: 13px;
+  }
+}
