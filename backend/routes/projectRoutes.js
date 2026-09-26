@@ -115,7 +115,6 @@ router.get("/public/:id", async (req, res) => {
               'name', u.name,
               'email', u.email,
               'phone', u.phone,
-              'is_cerified', u.is_cerified,
               'is_active', u.is_active
             )
           ELSE NULL
