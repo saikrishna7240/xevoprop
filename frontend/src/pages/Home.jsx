@@ -458,7 +458,7 @@ export default function Home() {
                         handleSearch();
                       }
                     }}
-                    placeholder="Indiranagar, Whitefield, Bandra West..."
+                    placeholder="Enter the location..."
                   />
 
                 </div>

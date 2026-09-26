@@ -6,20 +6,16 @@ import {
   Bath,
   BedDouble,
   Building2,
-  CalendarDays,
   Check,
   ChevronDown,
   ChevronRight,
-  Filter,
   Heart,
-  Home,
   MapPin,
   Maximize2,
   Phone,
   RotateCcw,
   Search,
   SlidersHorizontal,
-  Sparkles,
   X,
 } from "lucide-react";
 
@@ -54,16 +50,7 @@ const BHK_OPTIONS = [
   "5+ BHK",
 ];
 
-const AMENITIES = [
-  "Parking",
-  "Swimming Pool",
-  "Gym",
-  "Security",
-  "Power Backup",
-  "Lift",
-  "Club House",
-  "Garden",
-];
+
 
 const SORT_OPTIONS = [
   {
@@ -90,10 +77,6 @@ const getImage = (property) => {
 
   if (!property) return fallback;
 
-  /* -------------------------------------------------------
-     PROPERTY MEDIA ARRAY
-  ------------------------------------------------------- */
-
   const media =
     property.property_images ||
     property.images ||
@@ -102,7 +85,6 @@ const getImage = (property) => {
     [];
 
   if (Array.isArray(media)) {
-    /* Prefer an actual image */
     const imageMedia = media.find((item) => {
       if (!item) return false;
 
@@ -137,10 +119,6 @@ const getImage = (property) => {
       if (imageUrl) return imageUrl;
     }
   }
-
-  /* -------------------------------------------------------
-     FALLBACK TO PROPERTY COVER IMAGE
-  ------------------------------------------------------- */
 
   const directImage =
     property.image ||
@@ -197,7 +175,11 @@ function getType(property) {
 }
 
 function getPrice(property) {
-  return property?.price || property?.price_range || "Price on Request";
+  return (
+    property?.price ||
+    property?.price_range ||
+    "Price on Request"
+  );
 }
 
 function getNumericPrice(property) {
@@ -223,7 +205,10 @@ function getNumericPrice(property) {
     return number * 10000000;
   }
 
-  if (text.includes("lakh") || text.includes("lac")) {
+  if (
+    text.includes("lakh") ||
+    text.includes("lac")
+  ) {
     return number * 100000;
   }
 
@@ -267,7 +252,11 @@ function getPossession(property) {
 }
 
 function getPropertyId(property, index) {
-  return property?.id || property?._id || `property-${index}`;
+  return (
+    property?.id ||
+    property?._id ||
+    `property-${index}`
+  );
 }
 
 function getPropertyText(property) {
@@ -315,21 +304,27 @@ export default function Properties() {
     searchParams.get("location") || ""
   );
 
-  const [selectedType, setSelectedType] = useState(
-    searchParams.get("type") ||
-      searchParams.get("propertyType") ||
-      ""
-  );
+  const [selectedType, setSelectedType] =
+    useState(
+      searchParams.get("type") ||
+        searchParams.get("propertyType") ||
+        ""
+    );
 
-  const [selectedBhk, setSelectedBhk] = useState([]);
+  const [selectedBhk, setSelectedBhk] =
+    useState([]);
 
   const [budget, setBudget] = useState("");
 
-  const [selectedAmenities, setSelectedAmenities] =
-    useState([]);
+ 
 
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] =
+    useState("newest");
 
+  /*
+   * This state now controls the normal
+   * filter panel instead of a mobile sidebar.
+   */
   const [showMobileFilters, setShowMobileFilters] =
     useState(false);
 
@@ -401,7 +396,8 @@ export default function Properties() {
      * PROPERTY TYPE
      */
     if (selectedType) {
-      const type = selectedType.toLowerCase();
+      const type =
+        selectedType.toLowerCase();
 
       result = result.filter((property) => {
         const propertyType =
@@ -419,7 +415,8 @@ export default function Properties() {
      */
     if (selectedBhk.length > 0) {
       result = result.filter((property) => {
-        const bhk = getBhkNumber(property);
+        const bhk =
+          getBhkNumber(property);
 
         return selectedBhk.some((item) => {
           if (item === "5+ BHK") {
@@ -427,7 +424,9 @@ export default function Properties() {
           }
 
           const required =
-            Number(item.match(/\d+/)?.[0]) || 0;
+            Number(
+              item.match(/\d+/)?.[0]
+            ) || 0;
 
           return bhk === required;
         });
@@ -439,7 +438,8 @@ export default function Properties() {
      */
     if (budget) {
       result = result.filter((property) => {
-        const price = getNumericPrice(property);
+        const price =
+          getNumericPrice(property);
 
         if (!price) {
           return true;
@@ -501,18 +501,16 @@ export default function Properties() {
       result.sort((a, b) => {
         const areaA =
           parseFloat(
-            String(getArea(a)).replace(
-              /,/g,
-              ""
-            )
+            String(
+              getArea(a)
+            ).replace(/,/g, "")
           ) || 0;
 
         const areaB =
           parseFloat(
-            String(getArea(b)).replace(
-              /,/g,
-              ""
-            )
+            String(
+              getArea(b)
+            ).replace(/,/g, "")
           ) || 0;
 
         return areaB - areaA;
@@ -539,15 +537,7 @@ export default function Properties() {
     );
   };
 
-  const toggleAmenity = (amenity) => {
-    setSelectedAmenities((current) =>
-      current.includes(amenity)
-        ? current.filter(
-            (item) => item !== amenity
-          )
-        : [...current, amenity]
-    );
-  };
+  
 
   const toggleSave = (id) => {
     setSavedProperties((current) =>
@@ -564,21 +554,24 @@ export default function Properties() {
     setSelectedType("");
     setSelectedBhk([]);
     setBudget("");
-    setSelectedAmenities([]);
+    
     setSortBy("newest");
   };
 
   const activeFilterCount =
     (selectedType ? 1 : 0) +
     selectedBhk.length +
-    (budget ? 1 : 0) +
-    selectedAmenities.length;
+    (budget ? 1 : 0);
 
   const handleSearch = () => {
-    const params = new URLSearchParams();
+    const params =
+      new URLSearchParams();
 
     if (activeMode) {
-      params.set("intent", activeMode);
+      params.set(
+        "intent",
+        activeMode
+      );
     }
 
     if (search.trim()) {
@@ -612,6 +605,7 @@ export default function Properties() {
         <div className="properties-container">
 
           <div className="properties-breadcrumb">
+
             <button
               type="button"
               onClick={() => navigate("/")}
@@ -622,11 +616,13 @@ export default function Properties() {
             <ChevronRight size={13} />
 
             <span>Properties</span>
+
           </div>
 
           <div className="properties-heading-row">
 
             <div>
+
               <span className="properties-kicker">
                 <span></span>
                 XEVOPROP PROPERTY MARKETPLACE
@@ -639,24 +635,30 @@ export default function Properties() {
               </h1>
 
               <p>
-                Explore verified residential and
-                commercial properties across
-                India's leading markets.
+                Explore verified residential
+                and commercial properties
+                across India's leading markets.
               </p>
+
             </div>
 
             <div className="properties-header-stat">
+
               <Building2 size={18} />
 
               <div>
+
                 <strong>
-                  {properties.length || "45,000+"}
+                  {properties.length ||
+                    "45,000+"}
                 </strong>
 
                 <span>
                   Properties available
                 </span>
+
               </div>
+
             </div>
 
           </div>
@@ -680,7 +682,10 @@ export default function Properties() {
               {[
                 ["buy", "Buy"],
                 ["rent", "Rent"],
-                ["commercial", "Commercial"],
+                [
+                  "commercial",
+                  "Commercial",
+                ],
               ].map(([value, label]) => (
                 <button
                   type="button"
@@ -707,6 +712,7 @@ export default function Properties() {
                 <MapPin size={18} />
 
                 <div>
+
                   <label>
                     LOCATION OR LOCALITY
                   </label>
@@ -729,6 +735,7 @@ export default function Properties() {
                     }}
                     placeholder="Search city, locality or landmark"
                   />
+
                 </div>
 
               </div>
@@ -738,6 +745,7 @@ export default function Properties() {
                 <Building2 size={17} />
 
                 <div>
+
                   <label>
                     PROPERTY TYPE
                   </label>
@@ -764,16 +772,21 @@ export default function Properties() {
                         </option>
                       )
                     )}
+
                   </select>
+
                 </div>
 
               </div>
 
               <div className="properties-search-select">
 
-                <WalletIcon />
+                <span className="wallet-icon">
+                  ₹
+                </span>
 
                 <div>
+
                   <label>
                     BUDGET
                   </label>
@@ -809,7 +822,9 @@ export default function Properties() {
                     <option value="300-plus">
                       ₹3 Cr+
                     </option>
+
                   </select>
+
                 </div>
 
               </div>
@@ -832,255 +847,147 @@ export default function Properties() {
       </section>
 
       {/* =====================================================
-          MAIN MARKETPLACE
+          FILTERS
+          FILTER BUTTON + EXPANDABLE PANEL
       ===================================================== */}
 
-      <section className="properties-marketplace">
+      <section className="properties-filter-section">
 
         <div className="properties-container">
 
-          {/* Mobile filter button */}
+          <div className="properties-filter-toolbar">
 
-          <button
-            type="button"
-            className="mobile-filter-button"
-            onClick={() =>
-              setShowMobileFilters(true)
-            }
-          >
-            <SlidersHorizontal size={16} />
-            Filters
+            <div className="properties-filter-toolbar-left">
 
-            {activeFilterCount > 0 && (
-              <span>
-                {activeFilterCount}
-              </span>
+              <button
+                type="button"
+                className={`properties-filter-button ${
+                  showMobileFilters
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() =>
+                  setShowMobileFilters(
+                    (current) =>
+                      !current
+                  )
+                }
+              >
+                <SlidersHorizontal
+                  size={17}
+                />
+
+                <span>Filters</span>
+
+                {activeFilterCount >
+                  0 && (
+                  <span className="properties-filter-count">
+                    {activeFilterCount}
+                  </span>
+                )}
+
+                <ChevronDown
+                  size={15}
+                  className={
+                    showMobileFilters
+                      ? "filter-arrow rotated"
+                      : "filter-arrow"
+                  }
+                />
+              </button>
+
+              {activeFilterCount > 0 && (
+                <span className="filter-summary">
+                  {activeFilterCount} filter
+                  {activeFilterCount > 1
+                    ? "s"
+                    : ""}{" "}
+                  selected
+                </span>
+              )}
+
+            </div>
+
+            {showMobileFilters && (
+              <button
+                type="button"
+                className="properties-filter-reset"
+                onClick={clearFilters}
+              >
+                <RotateCcw size={13} />
+                Reset
+              </button>
             )}
-          </button>
 
-          <div className="properties-layout">
+          </div>
 
-            {/* =================================================
-                SIDEBAR
-            ================================================= */}
+          {showMobileFilters && (
+            <div className="properties-filter-panel">
 
-            <aside
-              className={`properties-sidebar ${
-                showMobileFilters
-                  ? "mobile-open"
-                  : ""
-              }`}
-            >
+              <div className="properties-filter-panel-header">
 
-              <div className="mobile-filter-header">
+                <div>
+                  <span>
+                    REFINE YOUR SEARCH
+                  </span>
 
-                <strong>Filters</strong>
+                  <h3>
+                    Find exactly what you need
+                  </h3>
+                </div>
 
                 <button
                   type="button"
+                  className="properties-filter-close"
                   onClick={() =>
                     setShowMobileFilters(
                       false
                     )
                   }
+                  aria-label="Close filters"
                 >
                   <X size={18} />
                 </button>
 
               </div>
 
-              <div className="filter-header">
+              <div className="properties-filter-groups">
 
-                <div>
-                  <strong>Filters</strong>
+                {/* PROPERTY TYPE */}
 
-                  {activeFilterCount > 0 && (
+                <div className="filter-group">
+
+                  <div className="filter-group-title">
+
                     <span>
-                      {activeFilterCount} selected
+                      Property Type
                     </span>
-                  )}
-                </div>
 
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                >
-                  <RotateCcw size={12} />
-                  Reset
-                </button>
+                    <ChevronDown
+                      size={14}
+                    />
 
-              </div>
+                  </div>
 
-              {/* Property Type */}
-
-              <div className="filter-group">
-
-                <div className="filter-group-title">
-                  <span>Property Type</span>
-                  <ChevronDown size={14} />
-                </div>
-
-                <div className="filter-options">
-
-                  {PROPERTY_TYPES.map(
-                    (type) => (
-                      <label
-                        className="filter-checkbox"
-                        key={type}
-                      >
-                        <input
-                          type="radio"
-                          name="propertyType"
-                          checked={
-                            selectedType ===
-                            type
-                          }
-                          onChange={() =>
-                            setSelectedType(
-                              type
-                            )
-                          }
-                        />
-
-                        <span className="custom-checkbox">
-                          <Check size={10} />
-                        </span>
-
-                        <span>{type}</span>
-                      </label>
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* BHK */}
-
-              <div className="filter-group">
-
-                <div className="filter-group-title">
-                  <span>BHK</span>
-                  <ChevronDown size={14} />
-                </div>
-
-                <div className="bhk-filter-grid">
-
-                  {BHK_OPTIONS.map(
-                    (bhk) => (
-                      <button
-                        type="button"
-                        key={bhk}
-                        className={
-                          selectedBhk.includes(
-                            bhk
-                          )
-                            ? "active"
-                            : ""
-                        }
-                        onClick={() =>
-                          toggleBhk(bhk)
-                        }
-                      >
-                        {bhk.replace(
-                          " BHK",
-                          ""
-                        )}
-                      </button>
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* Budget */}
-
-              <div className="filter-group">
-
-                <div className="filter-group-title">
-                  <span>Budget</span>
-                  <ChevronDown size={14} />
-                </div>
-
-                <select
-                  className="sidebar-select"
-                  value={budget}
-                  onChange={(event) =>
-                    setBudget(
-                      event.target.value
-                    )
-                  }
-                >
-                  <option value="">
-                    Any budget
-                  </option>
-
-                  <option value="under-50">
-                    Under ₹50 Lakhs
-                  </option>
-
-                  <option value="50-100">
-                    ₹50L – ₹1 Cr
-                  </option>
-
-                  <option value="100-150">
-                    ₹1 Cr – ₹1.5 Cr
-                  </option>
-
-                  <option value="150-300">
-                    ₹1.5 Cr – ₹3 Cr
-                  </option>
-
-                  <option value="300-plus">
-                    ₹3 Cr+
-                  </option>
-                </select>
-
-              </div>
-
-              {/* Amenities */}
-
-              <div className="filter-group">
-
-                <button
-                  type="button"
-                  className="filter-group-title filter-expand-button"
-                  onClick={() =>
-                    setShowAdvanced(
-                      !showAdvanced
-                    )
-                  }
-                >
-                  <span>Amenities</span>
-
-                  <ChevronDown
-                    size={14}
-                    className={
-                      showAdvanced
-                        ? "rotated"
-                        : ""
-                    }
-                  />
-                </button>
-
-                {showAdvanced && (
                   <div className="filter-options">
 
-                    {AMENITIES.map(
-                      (amenity) => (
+                    {PROPERTY_TYPES.map(
+                      (type) => (
                         <label
                           className="filter-checkbox"
-                          key={amenity}
+                          key={type}
                         >
+
                           <input
-                            type="checkbox"
-                            checked={selectedAmenities.includes(
-                              amenity
-                            )}
+                            type="radio"
+                            name="propertyType"
+                            checked={
+                              selectedType ===
+                              type
+                            }
                             onChange={() =>
-                              toggleAmenity(
-                                amenity
+                              setSelectedType(
+                                type
                               )
                             }
                           />
@@ -1090,264 +997,419 @@ export default function Properties() {
                           </span>
 
                           <span>
-                            {amenity}
+                            {type}
                           </span>
+
                         </label>
                       )
                     )}
 
                   </div>
-                )}
 
-              </div>
-
-              <button
-                type="button"
-                className="sidebar-apply-button"
-                onClick={() =>
-                  setShowMobileFilters(
-                    false
-                  )
-                }
-              >
-                Show{" "}
-                {filteredProperties.length}{" "}
-                Properties
-              </button>
-
-            </aside>
-
-            {/* =================================================
-                RESULTS
-            ================================================= */}
-
-            <div className="properties-results">
-
-              <div className="results-toolbar">
-
-                <div>
-                  <span className="results-kicker">
-                    PROPERTY LISTINGS
-                  </span>
-
-                  <h2>
-                    {search
-                      ? `Properties in ${search}`
-                      : "Properties for you"}
-                  </h2>
-
-                  <p>
-                    {filteredProperties.length}{" "}
-                    properties matching your
-                    requirements
-                  </p>
                 </div>
 
-                <div className="sort-wrapper">
+                {/* BHK */}
 
-                  <ArrowDownUp size={14} />
+                <div className="filter-group">
+
+                  <div className="filter-group-title">
+
+                    <span>BHK</span>
+
+                    <ChevronDown
+                      size={14}
+                    />
+
+                  </div>
+
+                  <div className="bhk-filter-grid">
+
+                    {BHK_OPTIONS.map(
+                      (bhk) => (
+                        <button
+                          type="button"
+                          key={bhk}
+                          className={
+                            selectedBhk.includes(
+                              bhk
+                            )
+                              ? "active"
+                              : ""
+                          }
+                          onClick={() =>
+                            toggleBhk(bhk)
+                          }
+                        >
+                          {bhk.replace(
+                            " BHK",
+                            ""
+                          )}
+                        </button>
+                      )
+                    )}
+
+                  </div>
+
+                </div>
+
+                {/* BUDGET */}
+
+                <div className="filter-group">
+
+                  <div className="filter-group-title">
+
+                    <span>Budget</span>
+
+                    <ChevronDown
+                      size={14}
+                    />
+
+                  </div>
 
                   <select
-                    value={sortBy}
+                    className="sidebar-select"
+                    value={budget}
                     onChange={(event) =>
-                      setSortBy(
+                      setBudget(
                         event.target.value
                       )
                     }
                   >
-                    {SORT_OPTIONS.map(
-                      (option) => (
-                        <option
-                          value={option.value}
-                          key={option.value}
-                        >
-                          {option.label}
-                        </option>
-                      )
-                    )}
+                    <option value="">
+                      Any budget
+                    </option>
+
+                    <option value="under-50">
+                      Under ₹50 Lakhs
+                    </option>
+
+                    <option value="50-100">
+                      ₹50L – ₹1 Cr
+                    </option>
+
+                    <option value="100-150">
+                      ₹1 Cr – ₹1.5 Cr
+                    </option>
+
+                    <option value="150-300">
+                      ₹1.5 Cr – ₹3 Cr
+                    </option>
+
+                    <option value="300-plus">
+                      ₹3 Cr+
+                    </option>
+
                   </select>
 
                 </div>
 
+              
+
+                
+
               </div>
 
-              {/* Active filters */}
+              <div className="properties-filter-panel-footer">
 
-              {(search ||
-                selectedType ||
-                selectedBhk.length > 0 ||
-                budget ||
-                selectedAmenities.length >
-                  0) && (
-                <div className="active-filters">
+                <div>
+                  <strong>
+                    {filteredProperties.length}
+                  </strong>
 
                   <span>
-                    Active filters:
+                    properties found
                   </span>
+                </div>
 
-                  {search && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSearch("")
-                      }
-                    >
-                      {search}
-                      <X size={11} />
-                    </button>
-                  )}
-
-                  {selectedType && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setSelectedType("")
-                      }
-                    >
-                      {selectedType}
-                      <X size={11} />
-                    </button>
-                  )}
-
-                  {selectedBhk.map(
-                    (bhk) => (
-                      <button
-                        type="button"
-                        key={bhk}
-                        onClick={() =>
-                          toggleBhk(bhk)
-                        }
-                      >
-                        {bhk}
-                        <X size={11} />
-                      </button>
-                    )
-                  )}
-
-                  {budget && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setBudget("")
-                      }
-                    >
-                      Budget
-                      <X size={11} />
-                    </button>
-                  )}
+                <div className="properties-filter-actions">
 
                   <button
                     type="button"
-                    className="clear-all"
-                    onClick={clearFilters}
-                  >
-                    Clear all
-                  </button>
-
-                </div>
-              )}
-
-              {/* Property Grid */}
-
-              {loading ? (
-                <div className="properties-grid">
-
-                  {[1, 2, 3, 4, 5, 6].map(
-                    (item) => (
-                      <PropertySkeleton
-                        key={item}
-                      />
-                    )
-                  )}
-
-                </div>
-              ) : error ? (
-                <div className="properties-empty">
-
-                  <Building2 size={35} />
-
-                  <h3>
-                    Unable to load properties
-                  </h3>
-
-                  <p>
-                    Please try refreshing the
-                    page or check your connection.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      window.location.reload()
-                    }
-                  >
-                    Try Again
-                  </button>
-
-                </div>
-              ) : filteredProperties.length ===
-                0 ? (
-                <div className="properties-empty">
-
-                  <Search size={35} />
-
-                  <h3>
-                    No properties found
-                  </h3>
-
-                  <p>
-                    Try changing your location,
-                    property type, budget or
-                    filters.
-                  </p>
-
-                  <button
-                    type="button"
+                    className="properties-filter-clear-button"
                     onClick={clearFilters}
                   >
                     Clear Filters
                   </button>
 
-                </div>
-              ) : (
-                <div className="properties-grid">
-
-                  {filteredProperties.map(
-                    (property, index) => {
-                      const id =
-                        getPropertyId(
-                          property,
-                          index
-                        );
-
-                      const saved =
-                        savedProperties.includes(
-                          id
-                        );
-
-                      return (
-                        <PropertyCard
-                          key={id}
-                          property={property}
-                          index={index}
-                          saved={saved}
-                          onSave={() =>
-                            toggleSave(id)
-                          }
-                          onView={() =>
-                            navigate(
-                              `/properties/${id}`
-                            )
-                          }
-                        />
-                      );
+                  <button
+                    type="button"
+                    className="properties-filter-apply-button"
+                    onClick={() =>
+                      setShowMobileFilters(
+                        false
+                      )
                     }
-                  )}
+                  >
+                    Show{" "}
+                    {
+                      filteredProperties.length
+                    }{" "}
+                    Properties
+                  </button>
 
                 </div>
-              )}
+
+              </div>
 
             </div>
+          )}
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          MAIN MARKETPLACE
+      ===================================================== */}
+
+      <section className="properties-marketplace">
+
+        <div className="properties-container">
+
+          <div className="properties-results">
+
+            {/* =================================================
+                RESULTS TOOLBAR
+            ================================================= */}
+
+            <div className="results-toolbar">
+
+              <div>
+
+                <span className="results-kicker">
+                  PROPERTY LISTINGS
+                </span>
+
+                <h2>
+                  {search
+                    ? `Properties in ${search}`
+                    : "Properties for you"}
+                </h2>
+
+                <p>
+                  {filteredProperties.length}{" "}
+                  properties matching your
+                  requirements
+                </p>
+
+              </div>
+
+              <div className="sort-wrapper">
+
+                <ArrowDownUp size={14} />
+
+                <select
+                  value={sortBy}
+                  onChange={(event) =>
+                    setSortBy(
+                      event.target.value
+                    )
+                  }
+                >
+
+                  {SORT_OPTIONS.map(
+                    (option) => (
+                      <option
+                        value={option.value}
+                        key={option.value}
+                      >
+                        {option.label}
+                      </option>
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+            </div>
+
+            {/* =================================================
+                ACTIVE FILTERS
+            ================================================= */}
+
+            {(search ||
+              selectedType ||
+              selectedBhk.length > 0 ||
+              budget) && (
+
+              <div className="active-filters">
+
+                <span>
+                  Active filters:
+                </span>
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSearch("")
+                    }
+                  >
+                    {search}
+                    <X size={11} />
+                  </button>
+                )}
+
+                {selectedType && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedType("")
+                    }
+                  >
+                    {selectedType}
+                    <X size={11} />
+                  </button>
+                )}
+
+                {selectedBhk.map(
+                  (bhk) => (
+                    <button
+                      type="button"
+                      key={bhk}
+                      onClick={() =>
+                        toggleBhk(bhk)
+                      }
+                    >
+                      {bhk}
+                      <X size={11} />
+                    </button>
+                  )
+                )}
+
+                {budget && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setBudget("")
+                    }
+                  >
+                    Budget
+                    <X size={11} />
+                  </button>
+                )}
+
+                
+
+                <button
+                  type="button"
+                  className="clear-all"
+                  onClick={clearFilters}
+                >
+                  Clear all
+                </button>
+
+              </div>
+            )}
+
+            {/* =================================================
+                PROPERTY GRID
+            ================================================= */}
+
+            {loading ? (
+              <div className="properties-grid">
+
+                {[1, 2, 3, 4, 5, 6].map(
+                  (item) => (
+                    <PropertySkeleton
+                      key={item}
+                    />
+                  )
+                )}
+
+              </div>
+            ) : error ? (
+
+              <div className="properties-empty">
+
+                <Building2 size={35} />
+
+                <h3>
+                  Unable to load properties
+                </h3>
+
+                <p>
+                  Please try refreshing the
+                  page or check your connection.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    window.location.reload()
+                  }
+                >
+                  Try Again
+                </button>
+
+              </div>
+
+            ) : filteredProperties.length ===
+              0 ? (
+
+              <div className="properties-empty">
+
+                <Search size={35} />
+
+                <h3>
+                  No properties found
+                </h3>
+
+                <p>
+                  Try changing your location,
+                  property type, budget or
+                  filters.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                >
+                  Clear Filters
+                </button>
+
+              </div>
+
+            ) : (
+
+              <div className="properties-grid">
+
+                {filteredProperties.map(
+                  (property, index) => {
+
+                    const id =
+                      getPropertyId(
+                        property,
+                        index
+                      );
+
+                    const saved =
+                      savedProperties.includes(
+                        id
+                      );
+
+                    return (
+                      <PropertyCard
+                        key={id}
+                        property={property}
+                        index={index}
+                        saved={saved}
+                        onSave={() =>
+                          toggleSave(id)
+                        }
+                        onView={() =>
+                          navigate(
+                            `/properties/${id}`
+                          )
+                        }
+                      />
+                    );
+                  }
+                )}
+
+              </div>
+            )}
 
           </div>
 
@@ -1361,7 +1423,7 @@ export default function Properties() {
 
 /* =========================================================
    PROPERTY CARD
-   ========================================================= */
+========================================================= */
 
 function PropertyCard({
   property,
@@ -1372,8 +1434,11 @@ function PropertyCard({
 }) {
   const type = getType(property);
 
-  const bedrooms = getBedrooms(property);
-  const bathrooms = getBathrooms(property);
+  const bedrooms =
+    getBedrooms(property);
+
+  const bathrooms =
+    getBathrooms(property);
 
   return (
     <article className="market-property-card">
@@ -1415,13 +1480,20 @@ function PropertyCard({
         >
           <Heart
             size={17}
-            fill={saved ? "currentColor" : "none"}
+            fill={
+              saved
+                ? "currentColor"
+                : "none"
+            }
           />
         </button>
 
         <div className="market-property-location">
+
           <MapPin size={11} />
+
           {getLocation(property)}
+
         </div>
 
       </div>
@@ -1453,6 +1525,7 @@ function PropertyCard({
           {bedrooms && (
             <div>
               <BedDouble size={13} />
+
               <span>
                 {bedrooms}
               </span>
@@ -1462,6 +1535,7 @@ function PropertyCard({
           {bathrooms && (
             <div>
               <Bath size={13} />
+
               <span>
                 {bathrooms} Bath
               </span>
@@ -1469,10 +1543,13 @@ function PropertyCard({
           )}
 
           <div>
+
             <Maximize2 size={12} />
+
             <span>
               {getArea(property)}
             </span>
+
           </div>
 
         </div>
@@ -1506,7 +1583,7 @@ function PropertyCard({
 
 /* =========================================================
    SKELETON
-   ========================================================= */
+========================================================= */
 
 function PropertySkeleton() {
   return (
@@ -1529,17 +1606,5 @@ function PropertySkeleton() {
       </div>
 
     </div>
-  );
-}
-
-/* =========================================================
-   WALLET ICON
-   ========================================================= */
-
-function WalletIcon() {
-  return (
-    <span className="wallet-icon">
-      ₹
-    </span>
   );
 }

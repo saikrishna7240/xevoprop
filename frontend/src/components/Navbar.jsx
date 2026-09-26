@@ -57,17 +57,14 @@ function Navbar() {
       label: "Buy",
       path: "/properties",
     },
-    {
-      label: "Rent",
-      path: "/properties?listingType=rent",
-    },
+    
     {
       label: "Projects",
       path: "/projects",
     },
     {
       label: "Commercial",
-      path: "/properties?type=commercial",
+      path: "/properties",
     },
   ];
 

@@ -370,7 +370,26 @@ router.get("/projects", async (req, res) => {
         p.*,
 
         u.username AS developer_username,
-        u.email AS developer_email
+        u.email AS developer_email,
+
+        COALESCE(
+          (
+            SELECT json_build_object(
+              'id', pa.id,
+              'signed_agreement_url', pa.signed_agreement_url,
+              'accepted', pa.accepted,
+              'information_confirmed', pa.information_confirmed,
+              'authorization_confirmed', pa.authorization_confirmed,
+              'accepted_at', pa.accepted_at,
+              'created_at', pa.created_at
+            )
+            FROM project_agreements pa
+            WHERE pa.project_id = p.id
+            ORDER BY pa.created_at DESC
+            LIMIT 1
+          ),
+          NULL
+        ) AS agreement
 
       FROM projects p
 
@@ -410,56 +429,37 @@ router.get("/projects", async (req, res) => {
    GET SINGLE PROJECT
 ========================================================= */
 
-router.get(
-  "/projects/:id",
-  async (req, res) => {
-    try {
-      const { id } = req.params;
+SELECT
+  p.*,
 
-      const result = await pool.query(
-        `
-        SELECT
-          p.*,
+  u.username AS developer_username,
+  u.email AS developer_email,
 
-          u.username AS developer_username,
-          u.email AS developer_email
+  COALESCE(
+    (
+      SELECT json_build_object(
+        'id', pa.id,
+        'signed_agreement_url', pa.signed_agreement_url,
+        'accepted', pa.accepted,
+        'information_confirmed', pa.information_confirmed,
+        'authorization_confirmed', pa.authorization_confirmed,
+        'accepted_at', pa.accepted_at,
+        'created_at', pa.created_at
+      )
+      FROM project_agreements pa
+      WHERE pa.project_id = p.id
+      ORDER BY pa.created_at DESC
+      LIMIT 1
+    ),
+    NULL
+  ) AS agreement
 
-        FROM projects p
+FROM projects p
 
-        LEFT JOIN users u
-          ON p.developer_id = u.id
+LEFT JOIN users u
+  ON p.developer_id = u.id
 
-        WHERE p.id = $1
-        `,
-        [id]
-      );
-
-      if (result.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Project not found.",
-        });
-      }
-
-      res.json({
-        success: true,
-        project: result.rows[0],
-      });
-    } catch (error) {
-      console.error(
-        "ADMIN PROJECT DETAILS ERROR:",
-        error
-      );
-
-      res.status(500).json({
-        success: false,
-        message:
-          error.message ||
-          "Failed to load project.",
-      });
-    }
-  }
-);
+WHERE p.id = $1
 
 /* =========================================================
    APPROVE PROJECT

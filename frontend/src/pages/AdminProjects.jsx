@@ -346,6 +346,7 @@ function AdminProjects() {
                   <th>Developer</th>
                   <th>Location</th>
                   <th>Price</th>
+                  <th>Agreement</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -411,6 +412,24 @@ function AdminProjects() {
                           {project.price || "Price on request"}
                         </strong>
                       </td>
+
+                      <td>
+  {project.agreement?.signed_agreement_url ? (
+    <a
+      href={project.agreement.signed_agreement_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="admin-project-document"
+    >
+      <Eye size={15} />
+      View Document
+    </a>
+  ) : (
+    <span className="admin-no-document">
+      No Document
+    </span>
+  )}
+</td>
 
                       <td>
                         <span
