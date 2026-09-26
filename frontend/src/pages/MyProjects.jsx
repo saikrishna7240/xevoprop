@@ -167,21 +167,24 @@ function MyProjects() {
 
   const imageMedia = mediaList.find((media) => {
     const type = String(
-      media?.media_type || media?.type || "image"
+      media?.media_type ||
+        media?.type ||
+        "image"
     ).toLowerCase();
 
     return (
       type !== "video" &&
-      (
+      Boolean(
         media?.media_url ||
-        media?.url ||
-        media?.secure_url ||
-        media?.image_url
+          media?.url ||
+          media?.secure_url ||
+          media?.image_url
       )
     );
   });
 
   return (
+    project?.project_image ||
     imageMedia?.media_url ||
     imageMedia?.url ||
     imageMedia?.secure_url ||
@@ -339,24 +342,27 @@ function MyProjects() {
                     key={project.id}
                   >
                     <div className="project-image-wrap">
-  {project.project_image ? (
+  {getProjectImage(project) ? (
     <img
-      src={project.project_image}
+      src={getProjectImage(project)}
       alt={project.name}
       className="project-image"
       onError={(event) => {
         console.error(
           "PROJECT IMAGE FAILED:",
-          project.project_image
+          getProjectImage(project)
         );
 
+        event.currentTarget.onerror = null;
         event.currentTarget.src = FALLBACK_IMAGE;
       }}
     />
   ) : (
-    <div className="project-image-placeholder">
-      <Building2 size={32} />
-    </div>
+    <img
+      src={FALLBACK_IMAGE}
+      alt={project.name}
+      className="project-image"
+    />
   )}
 
   <span
