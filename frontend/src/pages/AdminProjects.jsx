@@ -415,20 +415,20 @@ function AdminProjects() {
 
                       <td>
   {project.agreement?.signed_agreement_url ? (
-    <a
-      href={project.agreement.signed_agreement_url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="admin-project-document"
-    >
-      <Eye size={15} />
-      View Document
-    </a>
-  ) : (
-    <span className="admin-no-document">
-      No Document
-    </span>
-  )}
+  <a
+    href={project.agreement.signed_agreement_url}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="admin-project-document"
+  >
+    <Eye size={15} />
+    View Document
+  </a>
+) : (
+  <span className="admin-no-document">
+    No Document
+  </span>
+)}
 </td>
 
                       <td>
