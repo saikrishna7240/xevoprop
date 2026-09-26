@@ -157,38 +157,64 @@ function MyProjects() {
   };
 
   const getProjectImage = (project) => {
+  /* =====================================================
+     1. GET PROJECT MEDIA
+     Uploaded project images are stored here
+  ===================================================== */
+
   const mediaList = Array.isArray(project?.project_media)
-    ? [...project.project_media].sort(
-        (a, b) =>
-          Number(a?.sort_order ?? 0) -
-          Number(b?.sort_order ?? 0)
-      )
+    ? [...project.project_media]
+        .filter(Boolean)
+        .sort(
+          (a, b) =>
+            Number(a?.sort_order ?? 0) -
+            Number(b?.sort_order ?? 0)
+        )
     : [];
 
-  const imageMedia = mediaList.find((media) => {
-    const type = String(
+  /* =====================================================
+     2. FIND FIRST IMAGE
+     Ignore videos
+  ===================================================== */
+
+  const uploadedImage = mediaList.find((media) => {
+    const mediaType = String(
       media?.media_type ||
         media?.type ||
-        "image"
+        ""
     ).toLowerCase();
 
+    const imageUrl =
+      media?.media_url ||
+      media?.url ||
+      media?.secure_url ||
+      media?.image_url;
+
     return (
-      type !== "video" &&
-      Boolean(
-        media?.media_url ||
-          media?.url ||
-          media?.secure_url ||
-          media?.image_url
-      )
+      mediaType !== "video" &&
+      Boolean(imageUrl)
     );
   });
 
+  /* =====================================================
+     3. IMPORTANT
+     PRIORITY:
+     
+     uploaded project_media
+             ↓
+     project_image
+             ↓
+     projects.image
+             ↓
+     fallback
+  ===================================================== */
+
   return (
+    uploadedImage?.media_url ||
+    uploadedImage?.url ||
+    uploadedImage?.secure_url ||
+    uploadedImage?.image_url ||
     project?.project_image ||
-    imageMedia?.media_url ||
-    imageMedia?.url ||
-    imageMedia?.secure_url ||
-    imageMedia?.image_url ||
     project?.image ||
     project?.image_url ||
     ""
