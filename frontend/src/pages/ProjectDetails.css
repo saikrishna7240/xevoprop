@@ -1,7 +1,7 @@
 /* =========================================================
    XEVOPROP
    PROJECT DETAILS
-   FINAL UI
+   UPDATED UI
 ========================================================= */
 
 .project-details-page {
@@ -49,7 +49,7 @@
 .project-details-topbar {
   width: 100%;
 
-  min-height: 46px;
+  min-height: 50px;
 
   display: flex;
   align-items: center;
@@ -65,13 +65,13 @@
 
   align-items: center;
 
-  gap: 6px;
+  gap: 7px;
 
-  padding: 7px 10px;
+  padding: 9px 13px;
 
   border: 1px solid #e1e7ef;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   background: #ffffff;
 
@@ -79,7 +79,7 @@
 
   font-family: inherit;
 
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 650;
 
   cursor: pointer;
@@ -87,7 +87,8 @@
   transition:
     color 0.18s ease,
     border-color 0.18s ease,
-    background 0.18s ease;
+    background 0.18s ease,
+    transform 0.18s ease;
 }
 
 .project-back-button:hover {
@@ -96,6 +97,8 @@
   border-color: #b8dcca;
 
   background: #f4fbf7;
+
+  transform: translateY(-1px);
 }
 
 .project-topbar-status {
@@ -103,17 +106,17 @@
 
   align-items: center;
 
-  gap: 5px;
+  gap: 6px;
 
-  padding: 6px 10px;
+  padding: 8px 12px;
 
-  border-radius: 15px;
+  border-radius: 18px;
 
   background: #e7f7ef;
 
   color: #087c52;
 
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -129,7 +132,7 @@
 .project-gallery-section {
   width: 100%;
 
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .project-main-media {
@@ -138,27 +141,33 @@
   width: 100%;
 
   height: clamp(
-    430px,
-    42vw,
-    600px
+    460px,
+    45vw,
+    680px
   );
 
   overflow: hidden;
 
   border: 1px solid #dce4ed;
 
-  border-radius: 10px;
+  border-radius: 14px;
 
-  background: #12243a;
+  background: #e9eef3;
 
   box-shadow:
-    0 8px 24px
+    0 10px 30px
     rgba(
       20,
       39,
       60,
       0.12
     );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
 }
 
 .project-main-media-element {
@@ -167,9 +176,16 @@
 
   display: block;
 
-  object-fit: cover;
+  /*
+    IMPORTANT:
+    contain keeps the complete property
+    image/video visible instead of cropping it.
+  */
+  object-fit: contain;
 
   object-position: center;
+
+  background: #e9eef3;
 }
 
 
@@ -184,8 +200,8 @@
 
   z-index: 5;
 
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
 
   display: flex;
 
@@ -200,7 +216,7 @@
     255,
     255,
     255,
-    0.94
+    0.95
   );
 
   color: #24384c;
@@ -211,31 +227,36 @@
   cursor: pointer;
 
   box-shadow:
-    0 3px 12px
+    0 4px 14px
     rgba(
       0,
       0,
       0,
-      0.15
+      0.16
     );
 
   transition:
     background 0.18s ease,
-    color 0.18s ease;
+    color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .project-gallery-arrow:hover {
   background: #087c52;
 
   color: #ffffff;
+
+  transform:
+    translateY(-50%)
+    scale(1.04);
 }
 
 .project-gallery-prev {
-  left: 12px;
+  left: 16px;
 }
 
 .project-gallery-next {
-  right: 12px;
+  right: 16px;
 }
 
 
@@ -246,14 +267,14 @@
 .project-media-counter {
   position: absolute;
 
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
 
   z-index: 5;
 
-  padding: 6px 9px;
+  padding: 7px 11px;
 
-  border-radius: 14px;
+  border-radius: 16px;
 
   background: rgba(
     8,
@@ -264,7 +285,7 @@
 
   color: #ffffff;
 
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -276,8 +297,8 @@
 .project-current-video-label {
   position: absolute;
 
-  left: 12px;
-  bottom: 12px;
+  left: 16px;
+  bottom: 16px;
 
   z-index: 5;
 
@@ -285,17 +306,17 @@
 
   align-items: center;
 
-  gap: 5px;
+  gap: 6px;
 
-  padding: 6px 9px;
+  padding: 8px 11px;
 
-  border-radius: 15px;
+  border-radius: 17px;
 
   background: #087c52;
 
   color: #ffffff;
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -312,14 +333,16 @@
   grid-template-columns:
     repeat(
       auto-fit,
-      minmax(90px, 1fr)
+      minmax(105px, 1fr)
     );
 
-  gap: 7px;
+  gap: 9px;
 
-  margin-top: 7px;
+  margin-top: 9px;
 
   overflow-x: auto;
+
+  scrollbar-width: thin;
 }
 
 .project-media-thumbnail {
@@ -327,7 +350,7 @@
 
   width: 100%;
 
-  height: 72px;
+  height: 90px;
 
   padding: 0;
 
@@ -335,23 +358,42 @@
 
   border: 2px solid transparent;
 
-  border-radius: 6px;
+  border-radius: 8px;
 
-  background: #ffffff;
+  background: #e9eef3;
 
   cursor: pointer;
 
   transition:
     border-color 0.18s ease,
-    transform 0.18s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .project-media-thumbnail:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 5px 14px
+    rgba(
+      20,
+      39,
+      60,
+      0.12
+    );
 }
 
 .project-media-thumbnail.active {
   border-color: #087c52;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(
+      8,
+      124,
+      82,
+      0.08
+    );
 }
 
 .project-media-thumbnail img,
@@ -379,8 +421,8 @@
   top: 50%;
   left: 50%;
 
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
 
@@ -420,7 +462,7 @@
 
   align-items: start;
 
-  margin-top: 18px;
+  margin-top: 24px;
 }
 
 .project-details-main {
@@ -437,7 +479,7 @@
 .project-heading-block {
   width: 100%;
 
-  padding: 2px 0 12px;
+  padding: 2px 0 16px;
 }
 
 .project-type-label {
@@ -445,17 +487,17 @@
 
   align-items: center;
 
-  min-height: 21px;
+  min-height: 26px;
 
-  padding: 4px 8px;
+  padding: 5px 10px;
 
-  border-radius: 4px;
+  border-radius: 5px;
 
   background: #e8f1fb;
 
   color: #536a82;
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 750;
 
   text-transform: uppercase;
@@ -464,19 +506,19 @@
 }
 
 .project-heading-block h1 {
-  margin: 7px 0 5px;
+  margin: 10px 0 7px;
 
   color: #102238;
 
   font-size: clamp(
-    26px,
+    30px,
     3vw,
-    39px
+    44px
   );
 
   font-weight: 800;
 
-  line-height: 1.1;
+  line-height: 1.12;
 
   letter-spacing: -0.035em;
 }
@@ -488,11 +530,11 @@
 
   flex-wrap: wrap;
 
-  gap: 5px;
+  gap: 7px;
 
   color: #69788a;
 
-  font-size: 10px;
+  font-size: 14px;
 
   line-height: 1.5;
 }
@@ -522,32 +564,32 @@
 
   gap: 15px;
 
-  padding: 15px 17px;
+  padding: 18px 20px;
 
   border: 1px solid #e0e7ef;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
   background: #ffffff;
 
   box-shadow:
-    0 4px 13px
+    0 5px 16px
     rgba(
       24,
       44,
       66,
-      0.04
+      0.05
     );
 }
 
 .project-price-label {
   display: block;
 
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 
   color: #7c8997;
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 750;
 
   text-transform: uppercase;
@@ -560,7 +602,7 @@
 
   color: #14283c;
 
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
 
   line-height: 1.1;
@@ -573,15 +615,15 @@
 
   justify-content: center;
 
-  gap: 6px;
+  gap: 7px;
 
-  min-height: 38px;
+  min-height: 42px;
 
-  padding: 8px 13px;
+  padding: 9px 16px;
 
   border: 0;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   background: #087c52;
 
@@ -589,16 +631,22 @@
 
   font-family: inherit;
 
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 750;
 
   cursor: pointer;
 
   white-space: nowrap;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
 }
 
 .project-inline-enquiry:hover {
   background: #056b47;
+
+  transform: translateY(-1px);
 }
 
 
@@ -612,9 +660,9 @@
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
 
-  gap: 7px;
+  gap: 9px;
 
-  margin-top: 9px;
+  margin-top: 11px;
 }
 
 .project-spec {
@@ -624,22 +672,39 @@
 
   align-items: center;
 
-  gap: 8px;
+  gap: 10px;
 
-  min-height: 64px;
+  min-height: 76px;
 
-  padding: 10px;
+  padding: 13px;
 
   border: 1px solid #e1e8ef;
 
-  border-radius: 7px;
+  border-radius: 8px;
 
   background: #ffffff;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.project-spec:hover {
+  border-color: #cfdbe7;
+
+  box-shadow:
+    0 4px 14px
+    rgba(
+      24,
+      44,
+      66,
+      0.04
+    );
 }
 
 .project-spec > svg {
-  width: 19px;
-  min-width: 19px;
+  width: 21px;
+  min-width: 21px;
 
   color: #087c52;
 }
@@ -647,21 +712,25 @@
 .project-spec span {
   display: block;
 
-  color: #8793a0;
+  color: #718094;
 
-  font-size: 7px;
+  font-size: 12px;
+
+  line-height: 1.4;
 }
 
 .project-spec strong {
   display: block;
 
-  margin-top: 3px;
+  margin-top: 4px;
 
-  color: #2a3d51;
+  color: #263b50;
 
-  font-size: 10px;
+  font-size: 15px;
 
   font-weight: 750;
+
+  line-height: 1.35;
 
   overflow-wrap: anywhere;
 }
@@ -674,25 +743,34 @@
 .project-content-section {
   width: 100%;
 
-  margin-top: 14px;
+  margin-top: 17px;
 
-  padding: 18px;
+  padding: 21px;
 
   border: 1px solid #e0e7ef;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
   background: #ffffff;
+
+  box-shadow:
+    0 3px 12px
+    rgba(
+      24,
+      44,
+      66,
+      0.025
+    );
 }
 
 .project-section-heading span {
   display: block;
 
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 
   color: #087c52;
 
-  font-size: 7px;
+  font-size: 10px;
   font-weight: 800;
 
   letter-spacing: 0.09em;
@@ -703,7 +781,7 @@
 
   color: #15283d;
 
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 750;
 
   line-height: 1.2;
@@ -712,13 +790,13 @@
 }
 
 .project-description {
-  margin: 10px 0 0;
+  margin: 14px 0 0;
 
-  color: #687789;
+  color: #5f6f80;
 
-  font-size: 10px;
+  font-size: 15px;
 
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 
@@ -732,31 +810,31 @@
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 7px;
+  gap: 9px;
 
-  margin-top: 13px;
+  margin-top: 15px;
 }
 
 .project-highlight-row {
-  min-height: 49px;
+  min-height: 58px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 7px;
+  gap: 9px;
 
-  padding: 9px;
+  padding: 12px;
 
-  border-radius: 5px;
+  border-radius: 7px;
 
   background: #f1f6fc;
 
   color: #53667b;
 
-  font-size: 8px;
+  font-size: 13px;
 
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .project-highlight-row svg {
@@ -782,7 +860,7 @@
 
   border: 1px solid #dce5ee;
 
-  border-radius: 10px;
+  border-radius: 11px;
 
   background: #ffffff;
 
@@ -802,7 +880,7 @@
 ========================================================= */
 
 .project-enquiry-header {
-  padding: 21px 19px;
+  padding: 23px 20px;
 
   background:
     linear-gradient(
@@ -817,11 +895,11 @@
 .project-enquiry-header > span {
   display: block;
 
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 
   color: #5bdcab;
 
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 
   letter-spacing: 0.08em;
@@ -832,7 +910,7 @@
 
   color: #ffffff;
 
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
 
   line-height: 1.2;
@@ -841,13 +919,13 @@
 }
 
 .project-enquiry-header p {
-  margin: 8px 0 0;
+  margin: 9px 0 0;
 
   color: #b9c7d5;
 
-  font-size: 9px;
+  font-size: 13px;
 
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 
@@ -862,9 +940,9 @@
 
   flex-direction: column;
 
-  gap: 11px;
+  gap: 13px;
 
-  padding: 16px;
+  padding: 18px;
 }
 
 .project-input-group {
@@ -874,11 +952,11 @@
 .project-input-group label {
   display: block;
 
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 
   color: #52667b;
 
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -891,7 +969,7 @@
 .project-input-wrapper > svg {
   position: absolute;
 
-  left: 11px;
+  left: 12px;
   top: 50%;
 
   color: #8795a4;
@@ -913,7 +991,7 @@
 
   border: 1px solid #d8e2eb;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   background: #f7f9fc;
 
@@ -923,9 +1001,9 @@
 
   font-family: inherit;
 
-  font-size: 10px;
+  font-size: 14px;
 
-  line-height: 1.45;
+  line-height: 1.5;
 
   box-sizing: border-box;
 
@@ -937,24 +1015,25 @@
 
 .project-input-wrapper input,
 .project-input-group > input {
-  height: 40px;
+  height: 44px;
 
   padding:
-    0 11px 0 36px;
+    0 12px 0 38px;
 }
 
 .project-input-wrapper textarea,
 .project-input-group > textarea {
-  min-height: 90px;
+  min-height: 100px;
 
-  padding: 10px 11px 10px 36px;
+  padding:
+    11px 12px 11px 38px;
 
   resize: vertical;
 }
 
 .project-input-group > input,
 .project-input-group > textarea {
-  padding-left: 11px;
+  padding-left: 12px;
 }
 
 .project-input-wrapper input::placeholder,
@@ -994,15 +1073,15 @@
 
   align-items: flex-start;
 
-  gap: 6px;
+  gap: 7px;
 
-  padding: 9px 10px;
+  padding: 10px 11px;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
-  font-size: 8px;
+  font-size: 12px;
 
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .project-form-status.success {
@@ -1033,18 +1112,18 @@
 .project-submit-button {
   width: 100%;
 
-  min-height: 43px;
+  min-height: 46px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  gap: 7px;
+  gap: 8px;
 
   border: 0;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   background: #087c52;
 
@@ -1052,7 +1131,7 @@
 
   font-family: inherit;
 
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 750;
 
   cursor: pointer;
@@ -1091,8 +1170,8 @@
 ========================================================= */
 
 .project-button-spinner {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
 
   border: 2px solid
     rgba(
@@ -1123,7 +1202,7 @@
 ========================================================= */
 
 .project-enquiry-note {
-  min-height: 43px;
+  min-height: 48px;
 
   display: flex;
 
@@ -1131,17 +1210,17 @@
 
   justify-content: center;
 
-  gap: 6px;
+  gap: 7px;
 
-  padding: 9px 13px;
+  padding: 10px 14px;
 
   border-top: 1px solid #edf1f5;
 
   color: #82909e;
 
-  font-size: 8px;
+  font-size: 11px;
 
-  line-height: 1.4;
+  line-height: 1.45;
 
   text-align: center;
 }
@@ -1226,8 +1305,8 @@
 
   z-index: 5;
 
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
 
@@ -1280,12 +1359,12 @@
 
   color: #687789;
 
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .project-details-spinner {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
 
   border: 3px solid #dce6ef;
 
@@ -1311,11 +1390,11 @@
 
   margin: 100px auto;
 
-  padding: 35px;
+  padding: 38px;
 
   border: 1px solid #e0e7ef;
 
-  border-radius: 10px;
+  border-radius: 11px;
 
   background: #ffffff;
 
@@ -1332,15 +1411,15 @@
 }
 
 .project-error-icon {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  margin: 0 auto 13px;
+  margin: 0 auto 14px;
 
   border-radius: 50%;
 
@@ -1352,11 +1431,11 @@
 .project-error-label {
   display: block;
 
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 
   color: #087c52;
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
 
   letter-spacing: 0.08em;
@@ -1367,17 +1446,17 @@
 
   color: #15283d;
 
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .project-details-error p {
-  margin: 9px 0 18px;
+  margin: 10px 0 20px;
 
   color: #778596;
 
-  font-size: 10px;
+  font-size: 14px;
 
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .project-primary-button {
@@ -1385,13 +1464,13 @@
 
   align-items: center;
 
-  gap: 6px;
+  gap: 7px;
 
-  padding: 10px 15px;
+  padding: 11px 17px;
 
   border: 0;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   background: #087c52;
 
@@ -1399,10 +1478,20 @@
 
   font-family: inherit;
 
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 700;
 
   cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.project-primary-button:hover {
+  background: #056b47;
+
+  transform: translateY(-1px);
 }
 
 
@@ -1433,11 +1522,15 @@
   }
 
   .project-enquiry-header {
-    padding: 23px 20px;
+    padding: 25px 21px;
   }
 
   .project-enquiry-header h2 {
-    font-size: 23px;
+    font-size: 25px;
+  }
+
+  .project-main-media {
+    height: 600px;
   }
 }
 
@@ -1473,25 +1566,25 @@
   }
 
   .project-heading-block h1 {
-    font-size: 42px;
+    font-size: 44px;
   }
 
   .project-enquiry-header {
-    padding: 25px 22px;
+    padding: 27px 23px;
   }
 
   .project-enquiry-header h2 {
-    font-size: 25px;
+    font-size: 27px;
   }
 
   .project-input-wrapper input,
   .project-input-group > input {
-    height: 43px;
+    height: 46px;
   }
 
   .project-input-wrapper textarea,
   .project-input-group > textarea {
-    min-height: 100px;
+    min-height: 105px;
   }
 }
 
@@ -1520,15 +1613,30 @@
   }
 
   .project-main-media {
-    height: 440px;
+    height: 460px;
   }
 
   .project-heading-block h1 {
-    font-size: 29px;
+    font-size: 32px;
+  }
+
+  .project-location {
+    font-size: 13px;
   }
 
   .project-enquiry-header h2 {
-    font-size: 20px;
+    font-size: 21px;
+  }
+
+  .project-enquiry-header p {
+    font-size: 12px;
+  }
+
+  .project-input-wrapper input,
+  .project-input-wrapper textarea,
+  .project-input-group > input,
+  .project-input-group > textarea {
+    font-size: 13px;
   }
 }
 
@@ -1557,7 +1665,15 @@
   }
 
   .project-main-media {
-    height: 420px;
+    height: 460px;
+  }
+
+  .project-specs {
+    gap: 9px;
+  }
+
+  .project-enquiry-header h2 {
+    font-size: 24px;
   }
 }
 
@@ -1574,21 +1690,40 @@
 
   .project-details-topbar {
     margin-top: 6px;
+
+    min-height: 46px;
+  }
+
+  .project-back-button {
+    padding: 8px 10px;
+
+    font-size: 12px;
   }
 
   .project-topbar-status {
-    font-size: 8px;
+    padding: 7px 9px;
+
+    font-size: 10px;
   }
 
-  .project-main-media {
-    height: 300px;
 
-    border-radius: 7px;
+  /* -------------------------------------------------------
+     MOBILE GALLERY
+  ------------------------------------------------------- */
+
+  .project-main-media {
+    height: 330px;
+
+    border-radius: 10px;
+  }
+
+  .project-main-media-element {
+    object-fit: contain;
   }
 
   .project-gallery-arrow {
-    width: 31px;
-    height: 31px;
+    width: 36px;
+    height: 36px;
   }
 
   .project-gallery-prev {
@@ -1602,6 +1737,19 @@
   .project-media-counter {
     top: 8px;
     right: 8px;
+
+    padding: 6px 9px;
+
+    font-size: 11px;
+  }
+
+  .project-current-video-label {
+    left: 8px;
+    bottom: 8px;
+
+    padding: 7px 9px;
+
+    font-size: 10px;
   }
 
   .project-media-thumbnails {
@@ -1610,39 +1758,145 @@
         auto-fit,
         minmax(78px, 1fr)
       );
+
+    gap: 7px;
   }
 
   .project-media-thumbnail {
-    height: 58px;
+    height: 70px;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE HEADING
+  ------------------------------------------------------- */
+
+  .project-heading-block {
+    padding-bottom: 13px;
+  }
+
+  .project-type-label {
+    min-height: 24px;
+
+    padding: 5px 9px;
+
+    font-size: 10px;
   }
 
   .project-heading-block h1 {
-    font-size: 26px;
+    margin-top: 9px;
+
+    font-size: 28px;
+
+    line-height: 1.15;
   }
+
+  .project-location {
+    font-size: 14px;
+
+    gap: 6px;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE PRICE
+  ------------------------------------------------------- */
 
   .project-price-block {
     flex-direction: column;
 
     align-items: flex-start;
+
+    gap: 13px;
+
+    padding: 16px;
+  }
+
+  .project-price-label {
+    font-size: 10px;
+  }
+
+  .project-price-block strong {
+    font-size: 26px;
   }
 
   .project-inline-enquiry {
     width: 100%;
+
+    min-height: 44px;
+
+    font-size: 13px;
   }
+
+
+  /* -------------------------------------------------------
+     MOBILE SPECS
+  ------------------------------------------------------- */
 
   .project-specs {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
+
+    gap: 8px;
   }
 
-  .project-highlight-list {
-    grid-template-columns:
-      1fr;
+  .project-spec {
+    min-height: 70px;
+
+    padding: 12px;
   }
+
+  .project-spec span {
+    font-size: 12px;
+  }
+
+  .project-spec strong {
+    font-size: 15px;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE CONTENT
+  ------------------------------------------------------- */
 
   .project-content-section {
-    padding: 15px;
+    padding: 17px;
+
+    margin-top: 13px;
   }
+
+  .project-section-heading span {
+    font-size: 10px;
+  }
+
+  .project-section-heading h2 {
+    font-size: 22px;
+  }
+
+  .project-description {
+    font-size: 15px;
+
+    line-height: 1.75;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE HIGHLIGHTS
+  ------------------------------------------------------- */
+
+  .project-highlight-list {
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+  }
+
+  .project-highlight-row {
+    min-height: 55px;
+
+    padding: 11px;
+
+    font-size: 13px;
+  }
+
 
   .project-details-layout {
     margin-bottom: 80px;
@@ -1697,7 +1951,7 @@
 
     color: #85919e;
 
-    font-size: 8px;
+    font-size: 11px;
   }
 
   .project-mobile-enquiry-bar strong {
@@ -1707,12 +1961,12 @@
 
     color: #182b40;
 
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 800;
   }
 
   .project-mobile-enquiry-bar button {
-    min-height: 42px;
+    min-height: 44px;
 
     display: inline-flex;
 
@@ -1722,11 +1976,11 @@
 
     gap: 6px;
 
-    padding: 9px 14px;
+    padding: 9px 15px;
 
     border: 0;
 
-    border-radius: 6px;
+    border-radius: 7px;
 
     background: #087c52;
 
@@ -1734,7 +1988,7 @@
 
     font-family: inherit;
 
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 750;
 
     cursor: pointer;
@@ -1771,17 +2025,39 @@
   .project-enquiry-modal
     .project-enquiry-header {
     padding:
-      22px 17px;
+      23px 18px;
+  }
+
+  .project-enquiry-modal
+    .project-enquiry-header > span {
+    font-size: 10px;
   }
 
   .project-enquiry-modal
     .project-enquiry-header h2 {
-    font-size: 22px;
+    font-size: 23px;
+  }
+
+  .project-enquiry-modal
+    .project-enquiry-header p {
+    font-size: 13px;
   }
 
   .project-enquiry-modal
     .project-enquiry-form {
-    padding: 15px;
+    padding: 16px;
+  }
+
+  .project-enquiry-modal
+    .project-input-group label {
+    font-size: 12px;
+  }
+
+  .project-enquiry-modal
+    .project-input-group input,
+  .project-enquiry-modal
+    .project-input-group textarea {
+    font-size: 14px;
   }
 
 }
@@ -1798,19 +2074,31 @@
   }
 
   .project-main-media {
-    height: 250px;
+    height: 280px;
   }
 
   .project-heading-block h1 {
-    font-size: 23px;
+    font-size: 25px;
+  }
+
+  .project-location {
+    font-size: 13px;
   }
 
   .project-price-block strong {
-    font-size: 21px;
+    font-size: 23px;
   }
 
   .project-section-heading h2 {
-    font-size: 18px;
+    font-size: 20px;
+  }
+
+  .project-description {
+    font-size: 14px;
+  }
+
+  .project-highlight-row {
+    font-size: 12px;
   }
 
   .project-mobile-enquiry-bar {
@@ -1818,10 +2106,19 @@
       8px 9px;
   }
 
+  .project-mobile-enquiry-bar span {
+    font-size: 10px;
+  }
+
+  .project-mobile-enquiry-bar strong {
+    font-size: 16px;
+  }
+
   .project-mobile-enquiry-bar button {
     padding:
       8px 11px;
 
-    font-size: 9px;
+    font-size: 11px;
   }
+
 }

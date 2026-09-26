@@ -41,7 +41,7 @@
     Arial,
     sans-serif;
 
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
 
   overflow-x: hidden;
@@ -826,7 +826,7 @@
 .project-card-image {
   position: relative;
 
-  height: 190px;
+  height: 210px;
 
   overflow: hidden;
 
@@ -875,15 +875,16 @@
 
   z-index: 2;
 
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  top: 12px;
+  left: 12px;
+  right: 12px;
 
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
 
-  gap: 7px;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .project-verified,
@@ -893,19 +894,21 @@
 
   gap: 4px;
 
-  min-height: 21px;
+  min-height: 28px;
 
-  padding: 4px 7px;
+  padding: 6px 10px;
 
   border-radius: 999px;
 
-  font-size: 7px;
+  font-size: 11px;
   font-weight: 750;
 
   line-height: 1;
 
   box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.08);
+    0 2px 7px rgba(0, 0, 0, 0.10);
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .project-verified {
@@ -915,9 +918,11 @@
 }
 
 .project-status {
+  margin-left: auto;
   background: rgba(11, 20, 37, 0.88);
 
   color: #ffffff;
+  flex: 0 0 auto;
 }
 
 .project-status.approved,
@@ -958,7 +963,7 @@
 
   color: #788595;
 
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .project-card-location svg {
@@ -984,7 +989,7 @@
 
   color: #182638;
 
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 750;
 
   line-height: 1.35;
@@ -1023,7 +1028,7 @@
 
   color: #5d6b7c;
 
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .project-card-info svg {
@@ -1064,9 +1069,9 @@
 
   color: #788595;
 
-  font-size: 9px;
+  font-size: 12px;
 
-  line-height: 1.55;
+  line-height: 1.6;
 
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1100,7 +1105,7 @@
 
   color: #7c8897;
 
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .project-card-developer svg {
@@ -1124,7 +1129,7 @@
 
   color: #ffffff;
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
 
   text-decoration: none;
@@ -1699,5 +1704,376 @@
     animation-iteration-count: 1 !important;
 
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   PROJECT CARD IMAGE + STATUS ALIGNMENT FIX
+   ========================================================= */
+
+.project-card-image {
+  min-height: 210px;
+}
+
+.project-card-image > img {
+  object-fit: cover;
+  object-position: center;
+  background: #e7edf4;
+}
+
+.project-card-top {
+  width: calc(100% - 24px);
+}
+
+.project-verified,
+.project-status {
+  max-width: 48%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-verified span,
+.project-status {
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RESPONSIVE FONT / IMAGE IMPROVEMENTS
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .project-card-image {
+    height: 235px;
+    min-height: 235px;
+  }
+
+  .project-card-content {
+    padding: 15px;
+  }
+
+  .project-card-location {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .project-card-content h2 {
+    font-size: 19px;
+  }
+
+  .project-card-info {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .project-card-info > div {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .project-card-description {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .project-card-developer {
+    font-size: 11px;
+  }
+
+  .project-view-btn {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .project-verified,
+  .project-status {
+    min-height: 29px;
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 520px) {
+  .project-card-image {
+    height: 225px;
+    min-height: 225px;
+  }
+
+  .project-card-top {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .project-card-content h2 {
+    font-size: 19px;
+  }
+
+  .project-card-location {
+    font-size: 11px;
+  }
+
+  .project-card-info > div {
+    font-size: 11px;
+  }
+
+  .project-card-description {
+    font-size: 12px;
+  }
+
+  .project-card-developer {
+    font-size: 11px;
+  }
+
+  .project-view-btn {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 380px) {
+  .project-card-image {
+    height: 210px;
+    min-height: 210px;
+  }
+
+  .project-verified,
+  .project-status {
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+
+  .project-card-content h2 {
+    font-size: 18px;
+  }
+}
+
+
+/* =========================================================
+   FINAL PROJECT CARD FIX
+   Image + typography + badge alignment
+========================================================= */
+
+.projects-page .project-card-image {
+  position: relative;
+  height: 220px;
+  min-height: 220px;
+  overflow: hidden;
+  background: #e5ebf2;
+}
+
+.projects-page .project-card-image > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.projects-page .project-card-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  width: auto;
+  flex-wrap: nowrap;
+}
+
+.projects-page .project-verified,
+.projects-page .project-status {
+  flex: 0 0 auto;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1;
+
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.projects-page .project-verified {
+  background: rgba(247, 255, 251, 0.97);
+  color: #08784f;
+}
+
+.projects-page .project-status {
+  margin-left: auto;
+  background: rgba(7, 87, 62, 0.94);
+  color: #ffffff;
+}
+
+.projects-page .project-card-content {
+  padding: 16px;
+}
+
+.projects-page .project-card-location {
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #687789;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.projects-page .project-card-location svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+}
+
+.projects-page .project-card-location span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projects-page .project-card-content h2 {
+  min-height: 0;
+  margin: 0;
+  color: #172437;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.projects-page .project-card-info {
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.projects-page .project-card-info > div {
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: #eef4fb;
+  color: #56687b;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.projects-page .project-card-info svg {
+  width: 17px;
+  height: 17px;
+}
+
+.projects-page .project-card-description {
+  margin: 11px 0 0;
+  color: #687789;
+  font-size: 12px;
+  line-height: 1.6;
+  -webkit-line-clamp: 2;
+}
+
+.projects-page .project-card-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
+.projects-page .project-card-developer {
+  gap: 6px;
+  color: #748294;
+  font-size: 11px;
+}
+
+.projects-page .project-card-developer svg {
+  width: 16px;
+  height: 16px;
+}
+
+.projects-page .project-view-btn {
+  min-height: 38px;
+  padding: 8px 12px;
+  gap: 6px;
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .projects-page .project-card-image {
+    height: 240px;
+    min-height: 240px;
+  }
+
+  .projects-page .project-card-top {
+    top: 11px;
+    left: 11px;
+    right: 11px;
+  }
+
+  .projects-page .project-card-content {
+    padding: 16px;
+  }
+
+  .projects-page .project-card-content h2 {
+    font-size: 20px;
+  }
+
+  .projects-page .project-card-location {
+    font-size: 12px;
+  }
+
+  .projects-page .project-card-info > div {
+    font-size: 12px;
+  }
+
+  .projects-page .project-card-description {
+    font-size: 12px;
+  }
+
+  .projects-page .project-verified,
+  .projects-page .project-status {
+    min-height: 30px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 400px) {
+  .projects-page .project-card-image {
+    height: 225px;
+    min-height: 225px;
+  }
+
+  .projects-page .project-card-content h2 {
+    font-size: 19px;
+  }
+
+  .projects-page .project-card-location {
+    font-size: 11px;
+  }
+
+  .projects-page .project-card-info > div {
+    font-size: 11px;
+  }
+
+  .projects-page .project-card-description {
+    font-size: 11px;
+  }
+
+  .projects-page .project-verified,
+  .projects-page .project-status {
+    min-height: 28px;
+    padding: 5px 8px;
+    font-size: 10px;
   }
 }

@@ -115,10 +115,42 @@ function Projects() {
   ];
 
   const getProjectImage = (project) => {
+    const mediaList = Array.isArray(project?.project_media)
+      ? [...project.project_media]
+          .filter(Boolean)
+          .sort(
+            (a, b) =>
+              Number(a?.sort_order ?? 0) -
+              Number(b?.sort_order ?? 0)
+          )
+      : [];
+
+    const imageMedia = mediaList.find((item) => {
+      const mediaType = String(
+        item?.media_type ||
+        item?.type ||
+        "image"
+      ).toLowerCase();
+
+      return (
+        mediaType !== "video" &&
+        Boolean(
+          item?.media_url ||
+          item?.url ||
+          item?.secure_url ||
+          item?.image_url
+        )
+      );
+    });
+
     return (
-      project.image ||
-      project.image_url ||
-      project.cover_image ||
+      project?.image ||
+      project?.image_url ||
+      project?.cover_image ||
+      imageMedia?.media_url ||
+      imageMedia?.url ||
+      imageMedia?.secure_url ||
+      imageMedia?.image_url ||
       ""
     );
   };

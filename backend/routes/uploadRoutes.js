@@ -22,7 +22,7 @@ cloudinary.config({
 });
 
 /* =========================================================
-   PROJECT IMAGE MULTER
+   PROJECT IMAGE UPLOAD
 ========================================================= */
 
 const upload = multer({
@@ -42,10 +42,8 @@ const upload = multer({
 });
 
 /* =========================================================
-   PROPERTY MEDIA MULTER
-   Supports:
-   - Images
-   - Videos
+   PROPERTY MEDIA UPLOAD
+   IMAGE + VIDEO
 ========================================================= */
 
 const propertyMediaUpload = multer({
@@ -72,10 +70,8 @@ const propertyMediaUpload = multer({
 });
 
 /* =========================================================
-   PROJECT MEDIA MULTER
-   Supports:
-   - Images
-   - Videos
+   PROJECT MEDIA UPLOAD
+   IMAGE + VIDEO
 ========================================================= */
 
 const projectMediaUpload = multer({
@@ -102,11 +98,8 @@ const projectMediaUpload = multer({
 });
 
 /* =========================================================
-   SIGNED AGREEMENT MULTER
-   Supports:
-   - PDF
-   - DOC
-   - DOCX
+   AGREEMENT UPLOAD
+   PDF + DOC + DOCX
 ========================================================= */
 
 const agreementUpload = multer({
@@ -161,10 +154,6 @@ router.post(
       );
       console.log("================================");
 
-      /* -----------------------------------------------------
-         CHECK FILE
-      ----------------------------------------------------- */
-
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -172,10 +161,6 @@ router.post(
             "Please upload the digitally signed agreement.",
         });
       }
-
-      /* -----------------------------------------------------
-         CHECK PROJECT OWNER
-      ----------------------------------------------------- */
 
       const projectResult = await pool.query(
         `
@@ -195,10 +180,6 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         AGREEMENT VALUES
-      ----------------------------------------------------- */
-
       const accepted =
         String(req.body.accepted) === "true";
 
@@ -215,10 +196,6 @@ router.post(
       const agreementVersion =
         req.body.agreement_version || "1.0";
 
-      /* -----------------------------------------------------
-         FINAL VALIDATION
-      ----------------------------------------------------- */
-
       if (
         !accepted ||
         !informationConfirmed ||
@@ -230,10 +207,6 @@ router.post(
             "All agreement confirmations are required.",
         });
       }
-
-      /* -----------------------------------------------------
-         CLOUDINARY RAW UPLOAD
-      ----------------------------------------------------- */
 
       const uploadResult = await new Promise(
         (resolve, reject) => {
@@ -263,10 +236,6 @@ router.post(
         "Signed agreement uploaded:",
         uploadResult.secure_url
       );
-
-      /* -----------------------------------------------------
-         SAVE AGREEMENT
-      ----------------------------------------------------- */
 
       const agreementResult =
         await pool.query(
@@ -317,21 +286,28 @@ router.post(
 
         agreement: {
           id: agreementResult.rows[0].id,
+
           project_id:
             agreementResult.rows[0].project_id,
+
           agreement_version:
             agreementResult.rows[0].agreement_version,
+
           signed_agreement_url:
             agreementResult.rows[0]
               .signed_agreement_url,
+
           accepted:
             agreementResult.rows[0].accepted,
+
           information_confirmed:
             agreementResult.rows[0]
               .information_confirmed,
+
           authorization_confirmed:
             agreementResult.rows[0]
               .authorization_confirmed,
+
           accepted_at:
             agreementResult.rows[0].accepted_at,
         },
@@ -344,6 +320,7 @@ router.post(
 
       return res.status(500).json({
         success: false,
+
         message:
           error.message ||
           "Failed to upload signed agreement.",
@@ -352,14 +329,17 @@ router.post(
   }
 );
 
-// ============================================================
-// DELETE PROJECT MEDIA
-// ============================================================
+/* =========================================================
+   DELETE PROJECT MEDIA
+========================================================= */
 
 router.delete(
   "/project/media/:mediaId",
+
   authenticateToken,
+
   authorizeRoles("Developer"),
+
   async (req, res) => {
     try {
       const { mediaId } = req.params;
@@ -371,10 +351,6 @@ router.delete(
           message: "Invalid media ID",
         });
       }
-
-      // --------------------------------------------------------
-      // FIND MEDIA + VERIFY PROJECT OWNERSHIP
-      // --------------------------------------------------------
 
       const mediaResult = await pool.query(
         `
@@ -402,10 +378,6 @@ router.delete(
 
       const media = mediaResult.rows[0];
 
-      // --------------------------------------------------------
-      // DELETE DATABASE RECORD
-      // --------------------------------------------------------
-
       await pool.query(
         `
         DELETE FROM project_media
@@ -414,13 +386,12 @@ router.delete(
         [mediaId]
       );
 
-      // --------------------------------------------------------
-      // RESPONSE
-      // --------------------------------------------------------
-
       return res.status(200).json({
         success: true,
-        message: "Project media deleted successfully.",
+
+        message:
+          "Project media deleted successfully.",
+
         media: {
           id: media.id,
           project_id: media.project_id,
@@ -436,7 +407,8 @@ router.delete(
 
       return res.status(500).json({
         success: false,
-        message: "Failed to delete project media.",
+        message:
+          "Failed to delete project media.",
         error: error.message,
       });
     }
@@ -444,7 +416,7 @@ router.delete(
 );
 
 /* =========================================================
-   TEST UPLOAD ROUTE
+   TEST ROUTE
 ========================================================= */
 
 router.get("/test", (req, res) => {
@@ -461,8 +433,11 @@ router.get("/test", (req, res) => {
 
 router.post(
   "/property/:propertyId",
+
   authenticateToken,
+
   authorizeRoles("Seller"),
+
   propertyMediaUpload.single("media"),
 
   async (req, res) => {
@@ -470,26 +445,27 @@ router.post(
       const { propertyId } = req.params;
 
       console.log("================================");
-      console.log("PROPERTY MEDIA UPLOAD REQUEST");
+      console.log(
+        "PROPERTY MEDIA UPLOAD REQUEST"
+      );
       console.log("Property ID:", propertyId);
       console.log("User:", req.user);
+
       console.log(
         "File:",
         req.file
           ? req.file.originalname
           : "NO FILE"
       );
+
       console.log(
         "MIME:",
         req.file
           ? req.file.mimetype
           : "NO FILE"
       );
-      console.log("================================");
 
-      /* -----------------------------------------------------
-         CHECK FILE
-      ----------------------------------------------------- */
+      console.log("================================");
 
       if (!req.file) {
         return res.status(400).json({
@@ -498,10 +474,6 @@ router.post(
             "Please select an image or video.",
         });
       }
-
-      /* -----------------------------------------------------
-         CHECK PROPERTY OWNER
-      ----------------------------------------------------- */
 
       const propertyResult =
         await pool.query(
@@ -527,10 +499,6 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         DETERMINE MEDIA TYPE
-      ----------------------------------------------------- */
-
       const isVideo =
         req.file.mimetype.startsWith(
           "video/"
@@ -539,10 +507,6 @@ router.post(
       const mediaType = isVideo
         ? "video"
         : "image";
-
-      /* -----------------------------------------------------
-         CLOUDINARY UPLOAD
-      ----------------------------------------------------- */
 
       const uploadResult =
         await new Promise(
@@ -576,10 +540,6 @@ router.post(
         uploadResult.secure_url
       );
 
-      /* -----------------------------------------------------
-         GET NEXT SORT ORDER
-      ----------------------------------------------------- */
-
       const sortResult =
         await pool.query(
           `
@@ -598,10 +558,6 @@ router.post(
         sortResult.rows[0]
           .next_sort_order
       );
-
-      /* -----------------------------------------------------
-         SAVE MEDIA
-      ----------------------------------------------------- */
 
       const mediaResult =
         await pool.query(
@@ -630,12 +586,6 @@ router.post(
         mediaResult.rows[0]
       );
 
-      /* -----------------------------------------------------
-         SET FIRST IMAGE AS PROPERTY COVER
-         
-         Videos should NEVER become the main cover.
-      ----------------------------------------------------- */
-
       if (
         mediaType === "image" &&
         !propertyResult.rows[0].image
@@ -655,10 +605,6 @@ router.post(
         );
       }
 
-      /* -----------------------------------------------------
-         RESPONSE
-      ----------------------------------------------------- */
-
       return res.status(201).json({
         success: true,
 
@@ -669,8 +615,12 @@ router.post(
 
         media: {
           id: mediaResult.rows[0].id,
-          url: uploadResult.secure_url,
+
+          url:
+            uploadResult.secure_url,
+
           type: mediaType,
+
           sort_order: sortOrder,
         },
 
@@ -686,6 +636,7 @@ router.post(
 
       return res.status(500).json({
         success: false,
+
         message:
           error.message ||
           "Failed to upload property media.",
@@ -694,154 +645,17 @@ router.post(
   }
 );
 
-// ============================================================
-// UPLOAD PROJECT MEDIA (IMAGE / VIDEO)
-// POST /api/upload/project/:projectId/media
-// ============================================================
-router.post(
-  "/project/:projectId/media",
-  authenticateToken,
-  authorizeRoles("Developer"),
-  projectMediaUpload.single("media"),
-  async (req, res) => {
-    try {
-      const { projectId } = req.params;
-
-      // --------------------------------------------------------
-      // Check file
-      // --------------------------------------------------------
-      if (!req.file) {
-        return res.status(400).json({
-          success: false,
-          message: "Project media file is required",
-        });
-      }
-
-      // --------------------------------------------------------
-      // Verify project belongs to logged-in developer
-      // --------------------------------------------------------
-      const projectResult = await pool.query(
-        `
-        SELECT id
-        FROM projects
-        WHERE id = $1
-          AND developer_id = $2
-        `,
-        [projectId, req.user.id]
-      );
-
-      if (projectResult.rows.length === 0) {
-        return res.status(403).json({
-          success: false,
-          message: "You are not authorized to upload media for this project",
-        });
-      }
-
-      // --------------------------------------------------------
-      // Determine media type
-      // --------------------------------------------------------
-      const mediaType = req.file.mimetype.startsWith("video/")
-        ? "video"
-        : "image";
-
-      // --------------------------------------------------------
-      // Get sort order
-      // --------------------------------------------------------
-      let sortOrder = Number(req.body.sort_order);
-
-      if (!Number.isInteger(sortOrder) || sortOrder < 0) {
-        const sortResult = await pool.query(
-          `
-          SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_sort_order
-          FROM project_media
-          WHERE project_id = $1
-          `,
-          [projectId]
-        );
-
-        sortOrder = Number(sortResult.rows[0].next_sort_order);
-      }
-
-      // --------------------------------------------------------
-      // Upload to Cloudinary
-      // --------------------------------------------------------
-      const uploadResult = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            folder: "xevoprop/projects",
-            resource_type: "auto",
-          },
-          (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          }
-        );
-
-        uploadStream.end(req.file.buffer);
-      });
-
-      // --------------------------------------------------------
-      // Save media information in PostgreSQL
-      // --------------------------------------------------------
-      const result = await pool.query(
-        `
-        INSERT INTO project_media (
-          project_id,
-          media_url,
-          media_type,
-          sort_order
-        )
-        VALUES ($1, $2, $3, $4)
-        RETURNING *
-        `,
-        [
-          projectId,
-          uploadResult.secure_url,
-          mediaType,
-          sortOrder,
-        ]
-      );
-
-      // --------------------------------------------------------
-      // Success response
-      // --------------------------------------------------------
-      return res.status(201).json({
-        success: true,
-        message:
-          mediaType === "video"
-            ? "Project video uploaded successfully"
-            : "Project image uploaded successfully",
-        media: {
-          id: result.rows[0].id,
-          project_id: result.rows[0].project_id,
-          url: result.rows[0].media_url,
-          type: result.rows[0].media_type,
-          sort_order: result.rows[0].sort_order,
-        },
-      });
-    } catch (error) {
-      console.error("PROJECT MEDIA UPLOAD ERROR:", error);
-
-      return res.status(500).json({
-        success: false,
-        message: "Failed to upload project media",
-        error: error.message,
-      });
-    }
-  }
-);
-
 /* =========================================================
-   UPLOAD PROJECT IMAGE
+   OLD PROJECT IMAGE UPLOAD
 ========================================================= */
 
 router.post(
   "/project/:projectId",
+
   authenticateToken,
+
   authorizeRoles("Developer"),
+
   upload.single("image"),
 
   async (req, res) => {
@@ -857,17 +671,15 @@ router.post(
         projectId
       );
       console.log("User:", req.user);
+
       console.log(
         "File:",
         req.file
           ? req.file.originalname
           : "NO FILE"
       );
-      console.log("================================");
 
-      /* -----------------------------------------------------
-         CHECK FILE
-      ----------------------------------------------------- */
+      console.log("================================");
 
       if (!req.file) {
         return res.status(400).json({
@@ -876,10 +688,6 @@ router.post(
             "Please select an image.",
         });
       }
-
-      /* -----------------------------------------------------
-         CHECK PROJECT OWNER
-      ----------------------------------------------------- */
 
       const projectResult =
         await pool.query(
@@ -905,10 +713,6 @@ router.post(
         });
       }
 
-      /* -----------------------------------------------------
-         CLOUDINARY UPLOAD
-      ----------------------------------------------------- */
-
       const uploadResult =
         await new Promise(
           (resolve, reject) => {
@@ -918,7 +722,8 @@ router.post(
                   folder:
                     "xevoprop/projects",
 
-                  resource_type: "image",
+                  resource_type:
+                    "image",
                 },
 
                 (error, result) => {
@@ -940,10 +745,6 @@ router.post(
         "Project image uploaded:",
         uploadResult.secure_url
       );
-
-      /* -----------------------------------------------------
-         SAVE IMAGE URL
-      ----------------------------------------------------- */
 
       const result =
         await pool.query(
@@ -976,6 +777,7 @@ router.post(
 
       return res.status(201).json({
         success: true,
+
         message:
           "Project image uploaded successfully.",
 
@@ -993,9 +795,304 @@ router.post(
 
       return res.status(500).json({
         success: false,
+
         message:
           error.message ||
           "Failed to upload project image.",
+      });
+    }
+  }
+);
+
+/* =========================================================
+   UPLOAD PROJECT MEDIA
+   IMAGE + VIDEO
+
+   IMPORTANT:
+   AddProject.jsx uses:
+   /upload/project/:projectId/media
+
+   field name:
+   media
+========================================================= */
+
+router.post(
+  "/project/:projectId/media",
+
+  authenticateToken,
+
+  authorizeRoles("Developer"),
+
+  projectMediaUpload.single("media"),
+
+  async (req, res) => {
+    try {
+      const { projectId } = req.params;
+
+      console.log("================================");
+      console.log(
+        "PROJECT MEDIA UPLOAD REQUEST"
+      );
+      console.log(
+        "Project ID:",
+        projectId
+      );
+      console.log(
+        "Developer ID:",
+        req.user.id
+      );
+
+      console.log(
+        "File:",
+        req.file
+          ? req.file.originalname
+          : "NO FILE"
+      );
+
+      console.log(
+        "MIME:",
+        req.file
+          ? req.file.mimetype
+          : "NO FILE"
+      );
+
+      console.log("================================");
+
+      /* -----------------------------------------------------
+         CHECK FILE
+      ----------------------------------------------------- */
+
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please select an image or video.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         CHECK PROJECT OWNERSHIP
+      ----------------------------------------------------- */
+
+      const projectResult =
+        await pool.query(
+          `
+          SELECT
+            id,
+            image
+          FROM projects
+          WHERE id = $1
+            AND developer_id = $2
+          `,
+          [
+            projectId,
+            req.user.id,
+          ]
+        );
+
+      if (
+        projectResult.rows.length === 0
+      ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You are not the owner of this project.",
+        });
+      }
+
+      /* -----------------------------------------------------
+         DETERMINE MEDIA TYPE
+      ----------------------------------------------------- */
+
+      const mediaType =
+        req.file.mimetype.startsWith(
+          "video/"
+        )
+          ? "video"
+          : "image";
+
+      /* -----------------------------------------------------
+         CLOUDINARY UPLOAD
+      ----------------------------------------------------- */
+
+      const uploadResult =
+        await new Promise(
+          (resolve, reject) => {
+            const stream =
+              cloudinary.uploader.upload_stream(
+                {
+                  folder:
+                    "xevoprop/projects",
+
+                  resource_type:
+                    "auto",
+                },
+
+                (error, result) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(result);
+                  }
+                }
+              );
+
+            stream.end(
+              req.file.buffer
+            );
+          }
+        );
+
+      console.log(
+        "Project media uploaded:",
+        uploadResult.secure_url
+      );
+
+      /* -----------------------------------------------------
+         SORT ORDER
+      ----------------------------------------------------- */
+
+      const requestedSortOrder =
+        Number(
+          req.body.sort_order
+        );
+
+      let sortOrder;
+
+      if (
+        Number.isFinite(
+          requestedSortOrder
+        )
+      ) {
+        sortOrder =
+          requestedSortOrder;
+      } else {
+        const sortResult =
+          await pool.query(
+            `
+            SELECT
+              COALESCE(
+                MAX(sort_order),
+                -1
+              ) + 1 AS next_sort_order
+            FROM project_media
+            WHERE project_id = $1
+            `,
+            [projectId]
+          );
+
+        sortOrder =
+          Number(
+            sortResult.rows[0]
+              .next_sort_order
+          );
+      }
+
+      /* -----------------------------------------------------
+         SAVE PROJECT MEDIA
+      ----------------------------------------------------- */
+
+      const mediaResult =
+        await pool.query(
+          `
+          INSERT INTO project_media
+          (
+            project_id,
+            media_url,
+            media_type,
+            sort_order
+          )
+          VALUES
+          (
+            $1,
+            $2,
+            $3,
+            $4
+          )
+          RETURNING
+            id,
+            project_id,
+            media_url,
+            media_type,
+            sort_order,
+            created_at
+          `,
+          [
+            projectId,
+            uploadResult.secure_url,
+            mediaType,
+            sortOrder,
+          ]
+        );
+
+      /* -----------------------------------------------------
+         FIRST IMAGE BECOMES PROJECT COVER
+         VIDEO NEVER BECOMES COVER
+      ----------------------------------------------------- */
+
+      if (
+        mediaType === "image" &&
+        !projectResult.rows[0].image
+      ) {
+        await pool.query(
+          `
+          UPDATE projects
+          SET
+            image = $1,
+            updated_at =
+              CURRENT_TIMESTAMP
+          WHERE id = $2
+            AND developer_id = $3
+          `,
+          [
+            uploadResult.secure_url,
+            projectId,
+            req.user.id,
+          ]
+        );
+      }
+
+      /* -----------------------------------------------------
+         RESPONSE
+      ----------------------------------------------------- */
+
+      return res.status(201).json({
+        success: true,
+
+        message:
+          mediaType === "video"
+            ? "Project video uploaded successfully."
+            : "Project image uploaded successfully.",
+
+        media: {
+          id:
+            mediaResult.rows[0].id,
+
+          url:
+            mediaResult.rows[0]
+              .media_url,
+
+          type:
+            mediaResult.rows[0]
+              .media_type,
+
+          sort_order:
+            mediaResult.rows[0]
+              .sort_order,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "PROJECT MEDIA UPLOAD ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+
+        message:
+          error.message ||
+          "Failed to upload project media.",
       });
     }
   }
@@ -1021,10 +1118,6 @@ router.delete(
         propertyId,
         imageId,
       } = req.params;
-
-      /* -----------------------------------------------------
-         DELETE MEDIA
-      ----------------------------------------------------- */
 
       const result =
         await pool.query(
@@ -1057,12 +1150,6 @@ router.delete(
         });
       }
 
-      /* -----------------------------------------------------
-         GET NEXT IMAGE FOR COVER
-         
-         Do not use a video as property.image.
-      ----------------------------------------------------- */
-
       const firstImage =
         await pool.query(
           `
@@ -1070,15 +1157,13 @@ router.delete(
           FROM property_images
           WHERE property_id = $1
             AND media_type = 'image'
-          ORDER BY sort_order ASC, id ASC
+          ORDER BY
+            sort_order ASC,
+            id ASC
           LIMIT 1
           `,
           [propertyId]
         );
-
-      /* -----------------------------------------------------
-         UPDATE PROPERTY COVER
-      ----------------------------------------------------- */
 
       await pool.query(
         `
@@ -1098,6 +1183,7 @@ router.delete(
 
       return res.json({
         success: true,
+
         message:
           "Property media deleted successfully.",
       });
@@ -1109,6 +1195,7 @@ router.delete(
 
       return res.status(500).json({
         success: false,
+
         message:
           error.message ||
           "Failed to delete property media.",
@@ -1198,7 +1285,7 @@ router.put(
         imageResult.rows[0];
 
       /* -----------------------------------------------------
-         PRIMARY MUST BE AN IMAGE
+         PRIMARY MUST BE IMAGE
       ----------------------------------------------------- */
 
       if (
@@ -1261,6 +1348,7 @@ router.put(
 
       return res.json({
         success: true,
+
         message:
           "Primary image updated successfully.",
       });
@@ -1272,6 +1360,7 @@ router.put(
 
       return res.status(500).json({
         success: false,
+
         message:
           error.message ||
           "Failed to set primary image.",
@@ -1281,7 +1370,7 @@ router.put(
 );
 
 /* =========================================================
-   EXPORT ROUTER
+   EXPORT
 ========================================================= */
 
 module.exports = router;
