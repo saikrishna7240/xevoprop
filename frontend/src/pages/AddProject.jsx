@@ -288,9 +288,7 @@ const AddProject = () => {
           location: completeLocation,
           city: formData.city.trim(),
           type: formData.type,
-          units: formData.units
-            ? Number(formData.units)
-            : null,
+          units: formData.units.trim(),
           price: formData.price.trim(),
           description: formData.description.trim(),
         }),
@@ -522,11 +520,11 @@ const AddProject = () => {
                   </label>
 
                   <input
-                    type="number"
+                    type="text"
                     name="units"
                     value={formData.units}
                     onChange={handleChange}
-                    placeholder="e.g. 120"
+                    placeholder="e.g. 120 Units"
                     min="0"
                   />
                 </div>
