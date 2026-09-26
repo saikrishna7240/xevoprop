@@ -89,47 +89,66 @@ router.get("/public/:id", async (req, res) => {
     }
 
     const result = await pool.query(
-      `
-      SELECT
-        p.id,
-        p.developer_id,
-        p.name,
-        p.type,
-        p.location,
-        p.city,
-        p.units,
-        p.price,
-        p.image,
-        p.description,
-        p.status,
-        p.created_at,
-        p.updated_at,
+  `
+  SELECT
+    p.id,
+    p.developer_id,
+    p.name,
+    p.type,
+    p.location,
+    p.city,
+    p.units,
+    p.price,
+    p.image,
+    p.description,
+    p.status,
+    p.created_at,
+    p.updated_at,
 
-        COALESCE(
-          (
-            SELECT json_agg(
-              json_build_object(
-                'id', pm.id,
-                'media_url', pm.media_url,
-                'media_type', pm.media_type,
-                'sort_order', pm.sort_order,
-                'created_at', pm.created_at
-              )
-              ORDER BY pm.sort_order, pm.id
-            )
-            FROM project_media pm
-            WHERE pm.project_id = p.id
-          ),
-          '[]'
-        ) AS project_media
+    /* Developer / Owner Information */
+    CASE
+      WHEN u.id IS NOT NULL THEN
+        json_build_object(
+          'id', u.id,
+          'username', u.username,
+          'name', u.name,
+          'email', u.email,
+          'phone', u.phone,
+          'is_cerified', u.is_cerified,
+          'is_active', u.is_active
+        )
+      ELSE NULL
+    END AS developer,
 
-      FROM projects p
+    /* Project Media */
+    COALESCE(
+      (
+        SELECT json_agg(
+          json_build_object(
+            'id', pm.id,
+            'media_url', pm.media_url,
+            'media_type', pm.media_type,
+            'sort_order', pm.sort_order,
+            'created_at', pm.created_at
+          )
+          ORDER BY pm.sort_order, pm.id
+        )
+        FROM project_media pm
+        WHERE pm.project_id = p.id
+      ),
+      '[]'
+    ) AS project_media
 
-      WHERE p.id = $1
-        AND p.status = 'approved'
-      `,
-      [id]
-    );
+  FROM projects p
+
+  LEFT JOIN users u
+    ON u.id = p.developer_id
+
+  WHERE p.id = $1
+    AND p.status = 'approved'
+  `,
+  [id]
+);
 
     if (result.rows.length === 0) {
       return res.status(404).json({

@@ -13,6 +13,7 @@ import {
   Phone,
   Play,
   ShieldCheck,
+  UserRound,
   Users,
   X,
 } from "lucide-react";
@@ -171,6 +172,22 @@ function ProjectDetails() {
   const description =
     project?.description ||
     "Project details will be updated soon.";
+    const developer = project?.developer || {};
+
+const ownerName =
+  developer.name ||
+  developer.username ||
+  "Project Developer";
+
+const ownerPhone =
+  developer.phone || "";
+
+const ownerEmail =
+  developer.email || "";
+
+const isCertified =
+  developer.is_cerified === true ||
+  developer.is_cerified === "true";
 
   const handlePrevious = () => {
     setActiveMedia((current) =>
@@ -708,6 +725,57 @@ function ProjectDetails() {
                 contact you.
               </p>
             </div>
+            {/* PROJECT OWNER / DEVELOPER */}
+<div className="project-owner-card">
+
+  <div className="project-owner-avatar">
+    <UserRound size={21} />
+  </div>
+
+  <div className="project-owner-details">
+
+    <span className="project-owner-label">
+      PROJECT DEVELOPER
+    </span>
+
+    <strong>
+      {ownerName}
+    </strong>
+
+    <small>
+      Project Developer / Owner
+    </small>
+
+    {ownerPhone && (
+      <a
+        href={`tel:${ownerPhone}`}
+        className="project-owner-contact"
+      >
+        <Phone size={14} />
+        {ownerPhone}
+      </a>
+    )}
+
+    {ownerEmail && (
+      <a
+        href={`mailto:${ownerEmail}`}
+        className="project-owner-contact"
+      >
+        <Mail size={14} />
+        {ownerEmail}
+      </a>
+    )}
+
+  </div>
+
+  {isCertified && (
+    <span className="project-owner-certified">
+      <ShieldCheck size={12} />
+      Certified
+    </span>
+  )}
+
+</div>
 
             <form
               className="project-enquiry-form"
