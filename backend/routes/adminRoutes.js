@@ -429,39 +429,76 @@ router.get("/projects", async (req, res) => {
    GET SINGLE PROJECT
 ========================================================= */
 
-SELECT
-  p.*,
+router.get(
+  "/projects/:id",
+  async (req, res) => {
+    try {
+      const { id } = req.params;
 
-  u.username AS developer_username,
-  u.name AS developer_name,
-  u.email AS developer_email,
+      const result = await pool.query(
+        `
+        SELECT
+          p.*,
 
-  COALESCE(
-    (
-      SELECT json_build_object(
-        'id', pa.id,
-        'signed_agreement_url', pa.signed_agreement_url,
-        'accepted', pa.accepted,
-        'information_confirmed', pa.information_confirmed,
-        'authorization_confirmed', pa.authorization_confirmed,
-        'accepted_at', pa.accepted_at,
-        'created_at', pa.created_at
-      )
-      FROM project_agreements pa
-      WHERE pa.project_id = p.id
-      ORDER BY pa.created_at DESC
-      LIMIT 1
-    ),
-    NULL
-  ) AS agreement
+          u.username AS developer_username,
+          u.name AS developer_name,
+          u.email AS developer_email,
 
-FROM projects p
+          COALESCE(
+            (
+              SELECT json_build_object(
+                'id', pa.id,
+                'signed_agreement_url', pa.signed_agreement_url,
+                'accepted', pa.accepted,
+                'information_confirmed', pa.information_confirmed,
+                'authorization_confirmed', pa.authorization_confirmed,
+                'accepted_at', pa.accepted_at,
+                'created_at', pa.created_at
+              )
+              FROM project_agreements pa
+              WHERE pa.project_id = p.id
+              ORDER BY pa.created_at DESC
+              LIMIT 1
+            ),
+            NULL
+          ) AS agreement
 
-LEFT JOIN users u
-  ON p.developer_id = u.id
+        FROM projects p
 
-WHERE p.id = $1
+        LEFT JOIN users u
+          ON p.developer_id = u.id
 
+        WHERE p.id = $1
+        `,
+        [id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Project not found.",
+        });
+      }
+
+      res.json({
+        success: true,
+        project: result.rows[0],
+      });
+    } catch (error) {
+      console.error(
+        "ADMIN PROJECT DETAILS ERROR:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          error.message ||
+          "Failed to load project.",
+      });
+    }
+  }
+);
 /* =========================================================
    APPROVE PROJECT
 ========================================================= */
