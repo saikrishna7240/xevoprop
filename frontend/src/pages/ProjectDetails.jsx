@@ -659,6 +659,17 @@ const isCertified =
                   </strong>
                 </div>
               </div>
+
+              <div className="project-spec">
+    <Building2 size={19} />
+
+    <div>
+      <span>Project status</span>
+      <strong>
+        {project.project_status || "Upcoming"}
+      </strong>
+    </div>
+  </div>
             </div>
 
             {/* DESCRIPTION */}
