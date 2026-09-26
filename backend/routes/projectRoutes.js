@@ -206,6 +206,24 @@ router.get(
             0
           ) AS video_count,
 
+          COALESCE(
+  (
+    SELECT json_agg(
+      json_build_object(
+        'id', pm.id,
+        'media_url', pm.media_url,
+        'media_type', pm.media_type,
+        'sort_order', pm.sort_order,
+        'created_at', pm.created_at
+      )
+      ORDER BY pm.sort_order, pm.id
+    )
+    FROM project_media pm
+    WHERE pm.project_id = p.id
+  ),
+  '[]'
+) AS project_media,
+
           (
             SELECT json_build_object(
               'id', pa.id,

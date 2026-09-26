@@ -1026,31 +1026,46 @@ router.post(
         );
 
       /* -----------------------------------------------------
-         FIRST IMAGE BECOMES PROJECT COVER
-         VIDEO NEVER BECOMES COVER
-      ----------------------------------------------------- */
+   UPDATE PROJECT COVER IMAGE
+   Always use the first uploaded image
+   Videos are never used as cover
+----------------------------------------------------- */
 
-      if (
-        mediaType === "image" &&
-        !projectResult.rows[0].image
-      ) {
-        await pool.query(
-          `
-          UPDATE projects
-          SET
-            image = $1,
-            updated_at =
-              CURRENT_TIMESTAMP
-          WHERE id = $2
-            AND developer_id = $3
-          `,
-          [
-            uploadResult.secure_url,
-            projectId,
-            req.user.id,
-          ]
-        );
-      }
+if (mediaType === "image") {
+  const coverResult = await pool.query(
+    `
+    SELECT media_url
+    FROM project_media
+    WHERE project_id = $1
+      AND media_type = 'image'
+    ORDER BY sort_order ASC, id ASC
+    LIMIT 1
+    `,
+    [projectId]
+  );
+
+  const coverImage =
+    coverResult.rows.length > 0
+      ? coverResult.rows[0].media_url
+      : null;
+
+  await pool.query(
+    `
+    UPDATE projects
+    SET
+      image = $1,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $2
+      AND developer_id = $3
+    `,
+    [
+      coverImage,
+      projectId,
+      req.user.id,
+    ]
+  );
+}
+    
 
       /* -----------------------------------------------------
          RESPONSE
