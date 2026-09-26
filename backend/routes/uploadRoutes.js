@@ -147,11 +147,32 @@ router.post(
       console.log("Project ID:", projectId);
       console.log("Developer ID:", req.user.id);
       console.log(
-        "File:",
-        req.file
-          ? req.file.originalname
-          : "NO FILE"
-      );
+  "File:",
+  req.file
+    ? req.file.originalname
+    : "NO FILE"
+);
+
+console.log(
+  "Agreement MIME:",
+  req.file
+    ? req.file.mimetype
+    : "NO FILE"
+);
+
+console.log(
+  "Agreement Size:",
+  req.file
+    ? req.file.size
+    : "NO FILE"
+);
+
+console.log(
+  "Agreement Buffer:",
+  req.file
+    ? req.file.buffer?.length
+    : "NO FILE"
+);
       console.log("================================");
 
       /* -----------------------------------------------------
