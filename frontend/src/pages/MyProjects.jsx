@@ -339,12 +339,17 @@ function MyProjects() {
                     key={project.id}
                   >
                     <div className="project-image-wrap">
-  {getProjectImage(project) ? (
+  {project.project_image ? (
     <img
-      src={getProjectImage(project)}
+      src={project.project_image}
       alt={project.name}
       className="project-image"
       onError={(event) => {
+        console.error(
+          "PROJECT IMAGE FAILED:",
+          project.project_image
+        );
+
         event.currentTarget.src = FALLBACK_IMAGE;
       }}
     />
