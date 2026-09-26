@@ -794,12 +794,8 @@ function EditProject() {
             type:
               formData.type,
 
-            units:
-              formData.units
-                ? Number(
-                    formData.units
-                  )
-                : null,
+           units:
+  formData.units.trim() || null,
 
             price:
               formData.price.trim() ||
@@ -1172,7 +1168,7 @@ function EditProject() {
                 </label>
 
                 <input
-                  type="number"
+                  type="text"
                   name="units"
                   min="0"
                   value={formData.units}
