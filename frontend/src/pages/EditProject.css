@@ -1157,3 +1157,81 @@
     height: 95px;
   }
 }
+/* =========================================================
+   FIX EDIT PROJECT SECTION LAYOUT
+   Heading must be above the form fields
+========================================================= */
+
+.edit-project-page .project-form-section {
+  display: block !important;
+  width: 100%;
+}
+
+/* Section heading must occupy the full width */
+
+.edit-project-page .project-form-heading {
+  width: 100%;
+  display: flex !important;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 0 0 16px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+/* Heading text area */
+
+.edit-project-page .project-form-heading > div {
+  min-width: 0;
+  flex: 1;
+}
+
+/* Fields must start below heading */
+
+.edit-project-page .project-form-grid {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  clear: both;
+}
+
+/* Full-width fields */
+
+.edit-project-page .project-form-group.full {
+  grid-column: 1 / -1;
+}
+
+/* Prevent labels/fields from being squeezed */
+
+.edit-project-page .project-form-group {
+  width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   MEDIA SECTION
+========================================================= */
+
+.edit-project-page .edit-media-heading {
+  width: 100%;
+}
+
+.edit-project-page .edit-project-media-grid {
+  width: 100%;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+  .edit-project-page .project-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-project-page .project-form-group.full {
+    grid-column: auto;
+  }
+}
