@@ -694,6 +694,146 @@ router.post(
   }
 );
 
+// ============================================================
+// UPLOAD PROJECT MEDIA (IMAGE / VIDEO)
+// POST /api/upload/project/:projectId/media
+// ============================================================
+router.post(
+  "/project/:projectId/media",
+  authenticateToken,
+  authorizeRoles("Developer"),
+  projectMediaUpload.single("media"),
+  async (req, res) => {
+    try {
+      const { projectId } = req.params;
+
+      // --------------------------------------------------------
+      // Check file
+      // --------------------------------------------------------
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Project media file is required",
+        });
+      }
+
+      // --------------------------------------------------------
+      // Verify project belongs to logged-in developer
+      // --------------------------------------------------------
+      const projectResult = await pool.query(
+        `
+        SELECT id
+        FROM projects
+        WHERE id = $1
+          AND developer_id = $2
+        `,
+        [projectId, req.user.id]
+      );
+
+      if (projectResult.rows.length === 0) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not authorized to upload media for this project",
+        });
+      }
+
+      // --------------------------------------------------------
+      // Determine media type
+      // --------------------------------------------------------
+      const mediaType = req.file.mimetype.startsWith("video/")
+        ? "video"
+        : "image";
+
+      // --------------------------------------------------------
+      // Get sort order
+      // --------------------------------------------------------
+      let sortOrder = Number(req.body.sort_order);
+
+      if (!Number.isInteger(sortOrder) || sortOrder < 0) {
+        const sortResult = await pool.query(
+          `
+          SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_sort_order
+          FROM project_media
+          WHERE project_id = $1
+          `,
+          [projectId]
+        );
+
+        sortOrder = Number(sortResult.rows[0].next_sort_order);
+      }
+
+      // --------------------------------------------------------
+      // Upload to Cloudinary
+      // --------------------------------------------------------
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "xevoprop/projects",
+            resource_type: "auto",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        uploadStream.end(req.file.buffer);
+      });
+
+      // --------------------------------------------------------
+      // Save media information in PostgreSQL
+      // --------------------------------------------------------
+      const result = await pool.query(
+        `
+        INSERT INTO project_media (
+          project_id,
+          media_url,
+          media_type,
+          sort_order
+        )
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+        `,
+        [
+          projectId,
+          uploadResult.secure_url,
+          mediaType,
+          sortOrder,
+        ]
+      );
+
+      // --------------------------------------------------------
+      // Success response
+      // --------------------------------------------------------
+      return res.status(201).json({
+        success: true,
+        message:
+          mediaType === "video"
+            ? "Project video uploaded successfully"
+            : "Project image uploaded successfully",
+        media: {
+          id: result.rows[0].id,
+          project_id: result.rows[0].project_id,
+          url: result.rows[0].media_url,
+          type: result.rows[0].media_type,
+          sort_order: result.rows[0].sort_order,
+        },
+      });
+    } catch (error) {
+      console.error("PROJECT MEDIA UPLOAD ERROR:", error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to upload project media",
+        error: error.message,
+      });
+    }
+  }
+);
+
 /* =========================================================
    UPLOAD PROJECT IMAGE
 ========================================================= */
