@@ -156,6 +156,42 @@ function MyProjects() {
     return Number.isFinite(count) ? count : 0;
   };
 
+  const getProjectImage = (project) => {
+  const mediaList = Array.isArray(project?.project_media)
+    ? [...project.project_media].sort(
+        (a, b) =>
+          Number(a?.sort_order ?? 0) -
+          Number(b?.sort_order ?? 0)
+      )
+    : [];
+
+  const imageMedia = mediaList.find((media) => {
+    const type = String(
+      media?.media_type || media?.type || "image"
+    ).toLowerCase();
+
+    return (
+      type !== "video" &&
+      (
+        media?.media_url ||
+        media?.url ||
+        media?.secure_url ||
+        media?.image_url
+      )
+    );
+  });
+
+  return (
+    imageMedia?.media_url ||
+    imageMedia?.url ||
+    imageMedia?.secure_url ||
+    imageMedia?.image_url ||
+    project?.image ||
+    project?.image_url ||
+    ""
+  );
+};
+
   const getAgreementStatus = (project) => {
     if (!project.agreement) {
       return {
@@ -303,29 +339,28 @@ function MyProjects() {
                     key={project.id}
                   >
                     <div className="project-image-wrap">
-                      {project.image ? (
-                        <img
-                          src={project.image}
-                          alt={project.name}
-                          className="project-image"
-                          onError={(event) => {
-                            event.currentTarget.src =
-                              FALLBACK_IMAGE;
-                          }}
-                        />
-                      ) : (
-                        <div className="project-image-placeholder">
-                          <Building2 size={32} />
-                        </div>
-                      )}
+  {getProjectImage(project) ? (
+    <img
+      src={getProjectImage(project)}
+      alt={project.name}
+      className="project-image"
+      onError={(event) => {
+        event.currentTarget.src = FALLBACK_IMAGE;
+      }}
+    />
+  ) : (
+    <div className="project-image-placeholder">
+      <Building2 size={32} />
+    </div>
+  )}
 
-                      <span
-                        className={`project-status ${projectStatus.className}`}
-                      >
-                        <StatusIcon size={13} />
-                        {projectStatus.label}
-                      </span>
-                    </div>
+  <span
+    className={`project-status ${projectStatus.className}`}
+  >
+    <StatusIcon size={13} />
+    {projectStatus.label}
+  </span>
+</div>
 
                     <div className="project-card-body">
 
