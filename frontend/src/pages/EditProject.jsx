@@ -45,6 +45,7 @@ function EditProject() {
     type: "Apartment",
     units: "",
     price: "",
+    project_status: "Upcoming",
     description: "",
   });
 
@@ -207,6 +208,8 @@ function EditProject() {
             : "",
         price:
           project.price || "",
+        project_status:
+          project.project_status || "Upcoming",
         description:
           project.description || "",
       });
@@ -800,6 +803,8 @@ function EditProject() {
             price:
               formData.price.trim() ||
               null,
+            project_status:
+              formData.project_status,
 
             description:
               formData.description.trim() ||
@@ -1052,6 +1057,34 @@ function EditProject() {
                   </option>
                 </select>
               </div>
+
+              <div className="project-form-group">
+  <label>
+    Project status
+  </label>
+
+  <select
+    name="project_status"
+    value={formData.project_status}
+    onChange={handleChange}
+  >
+    <option value="Upcoming">
+      Upcoming
+    </option>
+
+    <option value="Under Construction">
+      Under Construction
+    </option>
+
+    <option value="Ready to Move">
+      Ready to Move
+    </option>
+
+    <option value="Completed">
+      Completed
+    </option>
+  </select>
+</div>
 
               <div className="project-form-group">
                 <label>
