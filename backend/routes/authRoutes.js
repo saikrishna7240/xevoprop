@@ -91,7 +91,7 @@ router.post(
         phone,
         password,
         role,
-      } = req.body;
+      } = req.body || {};
 
 
       /* ======================================================
