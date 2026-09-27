@@ -38,9 +38,7 @@ function Dashboard() {
         <div className="dashboard-login-box">
 
           <div className="dashboard-login-brand">
-            <span className="dashboard-logo-mark">
-              X
-            </span>
+            
 
             <span className="dashboard-logo-text">
               XEVO<span>PROP</span>
@@ -321,9 +319,7 @@ function Dashboard() {
             className="dashboard-brand"
           >
 
-            <span className="dashboard-brand-mark">
-              X
-            </span>
+            
 
             <span className="dashboard-brand-name">
               XEVO<span>PROP</span>
@@ -586,8 +582,7 @@ function Dashboard() {
 
 
               <h1>
-                Welcome,{" "}
-                <em>{user.name}.</em>
+                Welcome,{" "}{user.name}.
               </h1>
 
               <p>
@@ -726,21 +721,7 @@ function Dashboard() {
             </div>
 
 
-            <div className="dashboard-account-column dashboard-portfolio">
-
-              <span className="dashboard-card-label">
-                PORTFOLIO DESK
-              </span>
-
-              <strong>
-                Active Member
-              </strong>
-
-              <span>
-                Since 2024
-              </span>
-
-            </div>
+            
 
           </section>
 
@@ -843,31 +824,7 @@ function Dashboard() {
               PROTOCOL BAR
           ================================================= */}
 
-          <section className="dashboard-protocol">
-
-            <div className="dashboard-protocol-icon">
-              <ArrowRight size={21} />
-            </div>
-
-            <div className="dashboard-protocol-content">
-
-              <h3>
-                Multi-Persona Real Estate Protocol
-              </h3>
-
-              <p>
-                Your Xevoprop account keeps your
-                property activity, enquiries and
-                account access connected in one place.
-              </p>
-
-            </div>
-
-            <span className="dashboard-protocol-id">
-              Unified Account
-            </span>
-
-          </section>
+         
 
         </main>
 

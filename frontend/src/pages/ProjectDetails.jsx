@@ -901,15 +901,13 @@ const isCertified =
               </button>
             </form>
 
-            <div className="project-enquiry-note">
-              <ShieldCheck size={16} />
-
-              <span>
-                Your information is shared
-                securely with the project
-                representative.
-              </span>
-            </div>
+            
+            <div className="project-approved-by">
+  <ShieldCheck size={15} />
+  <span>
+    Approved by <strong>Xevoprop Tech</strong>
+  </span>
+</div>
           </aside>
         </section>
       </div>
@@ -1066,6 +1064,8 @@ const isCertified =
                 )}
               </button>
             </form>
+
+            
           </div>
         </div>
       )}

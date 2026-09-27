@@ -2611,3 +2611,849 @@
     font-size: 7px;
   }
 }
+
+/* ================================
+   DEVELOPER / OWNER SECTION
+================================ */
+
+.project-developer-card {
+  width: 100%;
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.project-developer-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.project-developer-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f1f5f9;
+}
+
+.project-developer-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.project-developer-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Developer details */
+
+.project-developer-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.project-developer-item {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+.project-developer-item svg {
+  flex: 0 0 auto;
+}
+
+.project-developer-item-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.project-developer-item-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.project-developer-item-value {
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* Certified badge */
+
+.project-developer-certified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin-top: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 768px) {
+  .project-developer-card {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .project-developer-details {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .project-developer-header {
+    margin-bottom: 16px;
+  }
+
+  .project-developer-title {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-developer-card {
+    padding: 15px;
+  }
+
+  .project-developer-item {
+    padding: 12px;
+  }
+
+  .project-developer-item-value {
+    font-size: 13px;
+  }
+}
+/* =========================================================
+   FINAL ENQUIRY CARD LAYOUT FIX
+========================================================= */
+
+.enquiry-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.enquiry-card-header {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: block !important;
+}
+
+.enquiry-form {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+
+  padding: 20px;
+}
+
+.enquiry-form label {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.enquiry-form input,
+.enquiry-form textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.enquiry-actions {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.enquiry-security {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   MOBILE ENQUIRY
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .property-enquiry-column {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .enquiry-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .enquiry-card-header {
+    width: 100%;
+    padding: 22px 20px 18px;
+  }
+
+  .enquiry-card-header h2 {
+    max-width: 100%;
+    font-size: 24px;
+  }
+
+  .enquiry-card-header p {
+    max-width: 100%;
+  }
+
+  .owner-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .owner-details {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .owner-active {
+    flex-shrink: 0;
+  }
+
+  .enquiry-form {
+    width: 100%;
+    padding: 18px 16px;
+    box-sizing: border-box;
+  }
+
+  .enquiry-form label {
+    width: 100%;
+  }
+
+  .enquiry-form input,
+  .enquiry-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .submit-enquiry-button {
+    width: 100%;
+  }
+
+  .enquiry-actions {
+    width: 100%;
+    padding: 0 16px 16px;
+    box-sizing: border-box;
+  }
+
+  .enquiry-security {
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+
+  .enquiry-security-text {
+    padding: 0 16px 15px;
+    box-sizing: border-box;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+
+  .enquiry-card {
+    border-radius: 12px;
+  }
+
+  .enquiry-card-header {
+    padding: 22px 20px;
+  }
+
+  .enquiry-card-header h2 {
+    font-size: 23px;
+  }
+
+  .enquiry-card-header p {
+    font-size: 13px;
+  }
+
+  .owner-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .owner-avatar {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+
+  .owner-details > strong {
+    font-size: 14px;
+  }
+
+  .owner-contact {
+    font-size: 11px;
+  }
+
+  .owner-active {
+    display: none;
+  }
+
+  .enquiry-form {
+    padding: 16px;
+    gap: 11px;
+  }
+
+  .enquiry-form input {
+    height: 46px;
+  }
+
+  .enquiry-form textarea {
+    min-height: 105px;
+  }
+
+  .submit-enquiry-button {
+    min-height: 46px;
+  }
+}
+
+/* =========================================================
+   PROJECT ENQUIRY CARD - FINAL DESKTOP FIX
+========================================================= */
+
+.project-enquiry-card {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  position: sticky;
+  top: 16px;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  box-sizing: border-box;
+  overflow: hidden;
+
+  border: 1px solid #dce5ee;
+  border-radius: 10px;
+  background: #ffffff;
+
+  box-shadow: 0 9px 25px rgba(21, 42, 63, 0.08);
+}
+
+/* Header must occupy the COMPLETE card width */
+
+.project-enquiry-header {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  display: block !important;
+
+  padding: 24px 22px;
+
+  background: linear-gradient(
+    135deg,
+    #0c1d32,
+    #143149
+  );
+
+  color: #ffffff;
+}
+
+.project-enquiry-header h2 {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.project-enquiry-header p {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 9px 0 0;
+
+  color: #b9c7d5;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   PROJECT OWNER / DEVELOPER
+========================================================= */
+
+.project-owner-card {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 16px 18px;
+
+  background: #f5f8fc;
+
+  border-bottom: 1px solid #e1e7ef;
+}
+
+.project-owner-avatar {
+  width: 48px;
+  height: 48px;
+
+  min-width: 48px;
+  flex: 0 0 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e7f7ef;
+  color: #087c52;
+}
+
+.project-owner-details {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 3px;
+}
+
+.project-owner-label {
+  display: block;
+
+  color: #087c52;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+}
+
+.project-owner-details strong {
+  display: block;
+
+  max-width: 100%;
+
+  color: #14283c;
+
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+
+  overflow-wrap: anywhere;
+}
+
+.project-owner-details small {
+  display: block;
+
+  color: #728194;
+
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.project-owner-contact {
+  max-width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: #52667b;
+
+  font-size: 10px;
+  line-height: 1.3;
+
+  text-decoration: none;
+
+  overflow-wrap: anywhere;
+}
+
+.project-owner-contact:hover {
+  color: #087c52;
+}
+
+.project-owner-contact svg {
+  flex: 0 0 auto;
+  color: #087c52;
+}
+
+.project-owner-certified {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 5px 8px;
+
+  border-radius: 20px;
+
+  background: #e7f7ef;
+  color: #087c52;
+
+  font-size: 8px;
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ENQUIRY FORM
+========================================================= */
+
+.project-enquiry-form {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+
+  gap: 11px;
+
+  padding: 18px;
+}
+
+.project-input-group {
+  width: 100%;
+  min-width: 0;
+}
+
+.project-input-group label {
+  display: block;
+
+  width: 100%;
+
+  margin-bottom: 5px;
+
+  color: #52667b;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.project-input-wrapper,
+.project-input-group {
+  min-width: 0;
+}
+
+.project-input-wrapper input,
+.project-input-wrapper textarea,
+.project-input-group > input,
+.project-input-group > textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1200px) {
+
+  .project-details-layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      390px;
+
+    gap: 28px;
+  }
+
+  .project-enquiry-card {
+    width: 390px;
+    min-width: 390px;
+    max-width: 390px;
+  }
+
+  .project-enquiry-header {
+    padding: 25px 22px;
+  }
+
+  .project-enquiry-header h2 {
+    font-size: 26px;
+  }
+
+  .project-owner-card {
+    padding: 17px 19px;
+  }
+
+  .project-enquiry-form {
+    padding: 19px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
+
+  .project-details-layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      410px;
+
+    gap: 30px;
+  }
+
+  .project-enquiry-card {
+    width: 410px;
+    min-width: 410px;
+    max-width: 410px;
+  }
+
+  .project-enquiry-header {
+    padding: 27px 24px;
+  }
+
+  .project-enquiry-header h2 {
+    font-size: 28px;
+  }
+
+  .project-owner-card {
+    padding: 18px 21px;
+  }
+
+  .project-enquiry-form {
+    padding: 20px 21px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .project-details-layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      320px;
+
+    gap: 18px;
+  }
+
+  .project-enquiry-card {
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
+  }
+
+  .project-owner-card {
+    padding: 14px;
+  }
+
+  .project-owner-certified {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .project-details-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .project-enquiry-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    position: static;
+  }
+
+  .project-owner-card {
+    width: 100%;
+  }
+
+  .project-enquiry-form {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .project-enquiry-header {
+    padding: 22px 18px;
+  }
+
+  .project-enquiry-header h2 {
+    font-size: 23px;
+  }
+
+  .project-enquiry-header p {
+    font-size: 12px;
+  }
+
+  .project-owner-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .project-owner-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    flex-basis: 44px;
+  }
+
+  .project-owner-details strong {
+    font-size: 14px;
+  }
+
+  .project-owner-contact {
+    font-size: 9px;
+  }
+
+  .project-enquiry-form {
+    padding: 16px;
+    gap: 10px;
+  }
+}
+/* =========================================================
+   APPROVED BY XEVOPROP TECH
+========================================================= */
+
+.project-approved-by {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  margin: 24px 0 30px;
+  padding: 10px 14px;
+
+  border-top: 1px solid #e3e9ef;
+
+  color: #7a8795;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.project-approved-by svg {
+  flex: 0 0 auto;
+
+  color: #087c52;
+}
+
+.project-approved-by strong {
+  color: #087c52;
+  font-weight: 750;
+}

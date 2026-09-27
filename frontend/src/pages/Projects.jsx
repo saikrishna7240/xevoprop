@@ -24,6 +24,7 @@ function Projects() {
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All");
+  const [location, setLocation] = useState("All");
   const [projectStatus, setProjectStatus] =
   useState("All");
   const [loading, setLoading] = useState(true);
@@ -77,12 +78,8 @@ function Projects() {
   const filteredProjects = useMemo(() => {
   let result = [...projects];
 
-  /*
-   * SEARCH
-   */
   if (search.trim()) {
-    const keyword =
-      search.toLowerCase().trim();
+    const keyword = search.toLowerCase().trim();
 
     result = result.filter((project) =>
       [
@@ -102,38 +99,31 @@ function Projects() {
     );
   }
 
-  /*
-   * PROJECT TYPE
-   */
   if (type !== "All") {
     result = result.filter(
       (project) =>
         String(project.type || "")
-          .toLowerCase() ===
-        type.toLowerCase()
+          .toLowerCase() === type.toLowerCase()
     );
   }
 
-  /*
-   * PROJECT STATUS
-   */
-  if (projectStatus !== "All") {
-    result = result.filter(
-      (project) =>
-        String(
-          project.project_status || ""
-        ).toLowerCase() ===
-        projectStatus.toLowerCase()
-    );
+  if (location !== "All") {
+    result = result.filter((project) => {
+      const projectLocation = String(
+        project.location ||
+        project.city ||
+        project.state ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+      return projectLocation === location.toLowerCase();
+    });
   }
 
   return result;
-}, [
-  projects,
-  search,
-  type,
-  projectStatus,
-]);
+}, [projects, search, type, location]);
 
   const projectTypes = [
     "All",
@@ -142,6 +132,20 @@ function Projects() {
     "Plot",
     "Commercial",
   ];
+
+  const projectLocations = useMemo(() => {
+  const locations = projects
+    .flatMap((project) => [
+      project.location,
+      project.city,
+      project.state,
+    ])
+    .filter(Boolean)
+    .map((value) => String(value).trim())
+    .filter(Boolean);
+
+  return ["All", ...Array.from(new Set(locations)).sort()];
+}, [projects]);
   const PROJECT_STATUS_OPTIONS = [
   "All",
   "Upcoming",
@@ -265,6 +269,7 @@ function Projects() {
     setSearch("");
     setType("All");
     setProjectStatus("All");
+     setLocation("All");
   };
 
   const activeFilterCount =
@@ -642,22 +647,38 @@ function Projects() {
 
                   <div className="project-filter-group">
 
-                    <div className="project-filter-title">
-                      Location
-                    </div>
+  <div className="project-filter-title">
+    Location
+  </div>
 
-                    <div className="project-location-note">
+  <div className="project-location-select">
 
-                      <MapPin size={15} />
+    <MapPin size={15} />
 
-                      <span>
-                        Search using the
-                        location field
-                      </span>
+    <select
+      value={location}
+      onChange={(e) => {
+        setLocation(e.target.value);
+        setShowMobileFilters(false);
+      }}
+    >
+      {projectLocations.map((projectLocation) => (
+        <option
+          key={projectLocation}
+          value={projectLocation}
+        >
+          {projectLocation === "All"
+            ? "All Locations"
+            : projectLocation}
+        </option>
+      ))}
+    </select>
 
-                    </div>
+    <ChevronDown size={14} />
 
-                  </div>
+  </div>
+
+</div>
 
                 </div>
 
@@ -756,7 +777,7 @@ function Projects() {
               ================================================= */}
 
               {(search ||
-                type !== "All" || projectStatus !== "All") && (
+                type !== "All" || projectStatus !== "All" || location !== "All") && (
 
                 <div className="projects-active-filters">
 
@@ -801,6 +822,15 @@ function Projects() {
                     </button>
                   )}
                   
+                  {location !== "All" && (
+  <button
+    type="button"
+    onClick={() => setLocation("All")}
+  >
+    Location: {location}
+    <X size={13} />
+  </button>
+)}
 
                   <button
                     type="button"

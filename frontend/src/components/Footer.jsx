@@ -180,21 +180,7 @@ function Footer() {
           <div className="footer-column">
             <h4>Support</h4>
 
-            <Link to="/help">
-              Help Center
-            </Link>
-
-            <Link to="/terms">
-              Terms &amp; Conditions
-            </Link>
-
-            <Link to="/privacy">
-              Privacy Policy
-            </Link>
-
-            <Link to="/faq">
-              FAQ
-            </Link>
+            
 
             <Link to="/contact">
               Contact Us

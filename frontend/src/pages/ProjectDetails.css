@@ -2281,3 +2281,38 @@
 
   letter-spacing: 0.03em;
 }
+
+/* =========================================================
+   APPROVED BY XEVOPROP TECH
+========================================================= */
+
+.project-approved-by {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  margin: 24px 0 30px;
+  padding: 10px 14px;
+
+  border-top: 1px solid #e3e9ef;
+
+  color: #7a8795;
+
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.project-approved-by svg {
+  flex: 0 0 auto;
+
+  color: #087c52;
+}
+
+.project-approved-by strong {
+  color: #1c4485;
+  font-weight: 750;
+}

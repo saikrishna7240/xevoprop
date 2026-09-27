@@ -2569,3 +2569,60 @@
 .projects-mobile-filter-button {
   display: none;
 }
+
+/* =====================================================
+   LOCATION FILTER
+===================================================== */
+
+.project-location-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #dfe5eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #66727f;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-location-select:focus-within {
+  border-color: #087c52;
+  box-shadow: 0 0 0 3px rgba(8, 124, 82, 0.08);
+}
+
+.project-location-select svg:first-child {
+  flex: 0 0 auto;
+  color: #087c52;
+}
+
+.project-location-select svg:last-child {
+  flex: 0 0 auto;
+  margin-left: auto;
+  pointer-events: none;
+  color: #7b8794;
+}
+
+.project-location-select select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #26323d;
+  font-size: 13px;
+  font-weight: 600;
+  appearance: none;
+  cursor: pointer;
+  padding: 11px 0;
+}
+
+.project-location-select select option {
+  color: #26323d;
+  background: #ffffff;
+}
