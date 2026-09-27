@@ -6,11 +6,14 @@ const {
   authenticateToken,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
-
+const {
+  sendNotificationEmail,
+} = require("../utils/emailService");
 const router = express.Router();
 
 /* ============================================================
    NOTIFICATION HELPER
+   Creates in-app notification + sends email
 ============================================================ */
 
 const createNotification = async ({
@@ -22,6 +25,11 @@ const createNotification = async ({
   referenceType = null,
 }) => {
   try {
+
+    /* ========================================================
+       1. CREATE IN-APP NOTIFICATION
+    ======================================================== */
+
     await pool.query(
       `
       INSERT INTO notifications (
@@ -43,11 +51,63 @@ const createNotification = async ({
         referenceType,
       ]
     );
+
+    /* ========================================================
+       2. GET RECIPIENT DETAILS
+    ======================================================== */
+
+    const userResult = await pool.query(
+      `
+      SELECT
+        id,
+        name,
+        username,
+        email
+      FROM users
+      WHERE id = $1
+      LIMIT 1
+      `,
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      console.log(
+        "Notification email skipped: user not found."
+      );
+
+      return;
+    }
+
+    const recipient = userResult.rows[0];
+
+    /* ========================================================
+       3. SEND EMAIL
+    ======================================================== */
+
+    await sendNotificationEmail({
+      email: recipient.email,
+
+      name:
+        recipient.name ||
+        recipient.username ||
+        "Xevoprop User",
+
+      title,
+
+      message,
+
+      referenceId,
+
+      referenceType,
+    });
+
   } catch (error) {
+
     /*
-      Notification failure should never break
-      the main enquiry/chat operation.
+      Notification/email failure should NEVER
+      break the main enquiry/chat operation.
     */
+
     console.error(
       "Create notification error:",
       error.message
@@ -1195,5 +1255,218 @@ router.put(
     }
   }
 );
+
+/* ============================================================
+   SEND NOTIFICATION EMAIL
+============================================================ */
+
+const sendNotificationEmail = async ({
+  email,
+  name,
+  title,
+  message,
+  referenceId = null,
+  referenceType = null,
+}) => {
+  if (!email) {
+    console.log(
+      "Notification email skipped: recipient email missing."
+    );
+    return null;
+  }
+
+  const frontendUrl =
+    process.env.FRONTEND_URL ||
+    "http://localhost:5173";
+
+  let actionUrl = frontendUrl;
+
+  if (
+    referenceType === "project_enquiry" &&
+    referenceId
+  ) {
+    actionUrl =
+      `${frontendUrl}/project-enquiries/${referenceId}/chat`;
+  }
+
+  if (
+    referenceType === "property_enquiry" &&
+    referenceId
+  ) {
+    actionUrl =
+      `${frontendUrl}/property-enquiries/${referenceId}`;
+  }
+
+  const recipientName = name || "there";
+
+  const mailOptions = {
+    from:
+      `"${process.env.BREVO_FROM_NAME || "Xevoprop"}" <${process.env.BREVO_FROM_EMAIL}>`,
+
+    to: email,
+
+    subject: `Xevoprop - ${title}`,
+
+    text: `
+Hello ${recipientName},
+
+${message}
+
+Open Xevoprop:
+${actionUrl}
+
+Regards,
+Xevoprop
+`,
+
+    html: `
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>${title}</title>
+</head>
+
+<body style="
+  margin:0;
+  padding:0;
+  background:#f5f7fa;
+  font-family:Arial,Helvetica,sans-serif;
+">
+
+  <div style="
+    max-width:560px;
+    margin:40px auto;
+    background:#ffffff;
+    border:1px solid #e2e8ef;
+  ">
+
+    <div style="
+      padding:24px 28px;
+      background:#061b32;
+      color:#ffffff;
+    ">
+
+      <h2 style="
+        margin:0;
+        font-size:20px;
+      ">
+        XEVOPROP
+      </h2>
+
+      <p style="
+        margin:6px 0 0;
+        color:#b8c8d9;
+        font-size:12px;
+      ">
+        Real estate, made more certain.
+      </p>
+
+    </div>
+
+    <div style="
+      padding:32px 28px;
+    ">
+
+      <p style="
+        margin:0 0 10px;
+        color:#526173;
+        font-size:14px;
+      ">
+        Hello ${recipientName},
+      </p>
+
+      <h2 style="
+        margin:0 0 16px;
+        color:#10243b;
+        font-size:21px;
+      ">
+        ${title}
+      </h2>
+
+      <div style="
+        padding:18px;
+        background:#f3f7ff;
+        border:1px solid #dbe7f5;
+        color:#526173;
+        font-size:14px;
+        line-height:1.6;
+      ">
+        ${message}
+      </div>
+
+      <div style="
+        margin-top:24px;
+      ">
+
+        <a
+          href="${actionUrl}"
+          style="
+            display:inline-block;
+            padding:12px 20px;
+            background:#0d4779;
+            color:#ffffff;
+            text-decoration:none;
+            font-size:13px;
+            font-weight:700;
+          "
+        >
+          Open Xevoprop
+        </a>
+
+      </div>
+
+    </div>
+
+    <div style="
+      padding:18px 28px;
+      background:#f5f7fa;
+      border-top:1px solid #e2e8ef;
+      color:#7c8797;
+      font-size:11px;
+      line-height:1.5;
+    ">
+      This is an automated notification from Xevoprop.
+    </div>
+
+  </div>
+
+</body>
+</html>
+`,
+  };
+
+  try {
+    const info = await transporter.sendMail(
+      mailOptions
+    );
+
+    console.log(
+      `Notification email sent successfully: ${info.messageId}`
+    );
+
+    return info;
+
+  } catch (error) {
+    console.error(
+      "Brevo notification email error:",
+      {
+        message: error.message,
+        code: error.code,
+        command: error.command,
+        response: error.response,
+      }
+    );
+
+    // Email failure should not break
+    // the main enquiry/chat operation.
+    return null;
+  }
+};
 
 module.exports = router;

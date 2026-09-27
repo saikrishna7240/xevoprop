@@ -5,8 +5,19 @@ import {
   CalendarDays,
   Check,
   Building2,
-  UserRound,
   CheckCheck,
+  ShieldCheck,
+  SlidersHorizontal,
+  Search,
+  FileText,
+  Video,
+  Headphones,
+  Handshake,
+  CircleCheck,
+  ChevronRight,
+  LockKeyhole,
+  BarChart3,
+  MapPin,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../lib/api";
@@ -160,10 +171,6 @@ export default function Notifications() {
   ) => {
     await markAsRead(notification);
 
-    /*
-      Project enquiry/chat
-    */
-
     if (
       notification.reference_type ===
       "project_enquiry"
@@ -175,20 +182,10 @@ export default function Notifications() {
       return;
     }
 
-    /*
-      Property enquiry
-    */
-
     if (
       notification.reference_type ===
       "property_enquiry"
     ) {
-      /*
-        Keep the notification page open for now.
-        Property enquiry navigation can be connected
-        to your existing property enquiry page later.
-      */
-
       return;
     }
   };
@@ -248,129 +245,645 @@ export default function Notifications() {
     );
   };
 
+  /* ============================================================
+     NOTIFICATION TYPE LABEL
+  ============================================================ */
+
+  const getNotificationType = (notification) => {
+    const type = String(
+      notification?.type || ""
+    ).toLowerCase();
+
+    if (
+      type.includes("property")
+    ) {
+      return "PROPERTY ENQUIRY";
+    }
+
+    if (
+      type.includes("project")
+    ) {
+      return "PROJECT ENQUIRY";
+    }
+
+    if (
+      type.includes("visit")
+    ) {
+      return "SITE INSPECTION";
+    }
+
+    if (
+      type.includes("chat") ||
+      type.includes("message")
+    ) {
+      return "PROJECT CHAT";
+    }
+
+    return "SYSTEM ACTIVITY";
+  };
+
+  /* ============================================================
+     RENDER
+  ============================================================ */
+
   return (
     <div className="notifications-page">
-      <div className="notifications-container">
 
-        {/* ======================================================
-            HEADER
-        ====================================================== */}
+      {/* ======================================================
+          TOP NAVIGATION
+      ====================================================== */}
 
-        <div className="notifications-header">
-          <span>ACTIVITY CENTER</span>
+      <header className="notifications-topbar">
 
-          <h1>
-            Notifications<span>.</span>
-          </h1>
+        <div className="notifications-brand">
+          <div className="notifications-brand-mark">
+            A
+          </div>
 
-          <p>
-            Stay updated on enquiries, visits and
-            conversations.
-          </p>
-
-          {unreadCount > 0 && (
-            <div className="notifications-header-actions">
-              <span className="notifications-unread-count">
-                {unreadCount} unread
-              </span>
-
-              <button
-                type="button"
-                className="notifications-mark-all"
-                onClick={markAllAsRead}
-              >
-                <CheckCheck size={16} />
-                Mark all as read
-              </button>
-            </div>
-          )}
+          <div>
+            <strong>XEVOPROP</strong>
+            <span>VERIFIED PROPTECH</span>
+          </div>
         </div>
 
-        {/* ======================================================
-            CONTENT
-        ====================================================== */}
+        <div className="notifications-product-name">
+          Xevoprop
+        </div>
 
-        {loading ? (
-          <div className="notifications-empty">
-            <Bell size={30} />
-            <h2>
-              Loading notifications...
-            </h2>
+        <nav className="notifications-nav">
+
+          <button type="button">
+            ← Back to Marketplace
+          </button>
+
+          <button type="button">
+            Secure Sign In
+          </button>
+
+          <button type="button">
+            Create Account
+          </button>
+
+          <button type="button">
+            RERA Verification
+          </button>
+
+          <button type="button">
+            Data Security
+          </button>
+
+        </nav>
+
+        <div className="notifications-security-pill">
+          <ShieldCheck size={14} />
+          256-bit SSL • RERA Verified
+        </div>
+
+        <div className="notifications-profile">
+          <Building2 size={17} />
+        </div>
+
+      </header>
+
+      {/* ======================================================
+          PAGE
+      ====================================================== */}
+
+      <main className="notifications-container">
+
+        {/* ====================================================
+            BREADCRUMB
+        ==================================================== */}
+
+        <div className="notifications-workspace-bar">
+
+          <div className="notifications-breadcrumb">
+            <span>▦</span>
+            <span>Workspace</span>
+            <b>/</b>
+            <strong>Activity & Audits</strong>
           </div>
-        ) : notifications.length === 0 ? (
-          <div className="notifications-empty">
-            <Bell size={30} />
 
-            <h2>
-              You're all caught up
-            </h2>
-
-            <p>
-              New enquiries and messages will
-              appear here.
-            </p>
+          <div className="notifications-engine-status">
+            <span />
+            Real-time Engine Active
           </div>
-        ) : (
-          <div className="notifications-list">
-            {notifications.map(
-              (notification, index) => (
-                <button
-                  type="button"
-                  className={`notification-card ${
-                    notification.is_read
-                      ? "read"
-                      : "unread"
-                  }`}
-                  key={
-                    notification.id ||
-                    `${notification.type}-${notification.reference_id}-${index}`
-                  }
-                  onClick={() =>
-                    handleNotificationClick(
-                      notification
-                    )
-                  }
-                >
-                  <div className="notification-icon">
-                    {getNotificationIcon(
-                      notification.type
-                    )}
-                  </div>
 
-                  <div className="notification-card-content">
-                    <div className="notification-card-title">
-                      <strong>
-                        {notification.title}
-                      </strong>
+          <button
+            type="button"
+            className="notifications-preferences"
+          >
+            <SlidersHorizontal size={14} />
+            Preferences
+          </button>
 
-                      {!notification.is_read && (
-                        <span className="notification-new-dot" />
-                      )}
-                    </div>
+        </div>
 
-                    <p>
-                      {notification.message}
-                    </p>
+        {/* ====================================================
+            MAIN GRID
+        ==================================================== */}
 
-                    <span>
-                      {formatDate(
-                        notification.created_at
-                      )}
+        <section className="notifications-layout">
+
+          {/* ==================================================
+              LEFT COLUMN
+          ================================================== */}
+
+          <div className="notifications-main">
+
+            {/* ================================================
+                ACTIVITY HEADER
+            ================================================ */}
+
+            <section className="notifications-activity-card">
+
+              <div className="notifications-activity-top">
+
+                <div>
+
+                  <div className="notifications-kicker-row">
+                    <span className="notifications-kicker">
+                      ACTIVITY CENTER
+                    </span>
+
+                    <span className="notifications-monitored">
+                      <ShieldCheck size={13} />
+                      RERA Monitored
                     </span>
                   </div>
 
-                  {notification.is_read && (
-                    <Check
-                      className="notification-read-icon"
-                      size={14}
-                    />
-                  )}
+                  <h1>
+                    Notifications<span>.</span>
+                  </h1>
+
+                  <p>
+                    Stay updated on verified buyer
+                    enquiries, physical site visits,
+                    and developer negotiations.
+                  </p>
+
+                </div>
+
+                <div className="notifications-header-actions">
+
+                  <span className="notifications-unread-count">
+                    {unreadCount} unread
+                  </span>
+
+                  <button
+                    type="button"
+                    className="notifications-mark-all"
+                    onClick={markAllAsRead}
+                    disabled={unreadCount === 0}
+                  >
+                    <CheckCheck size={15} />
+                    Mark all as read
+                  </button>
+
+                </div>
+
+              </div>
+
+              {/* FILTER BAR */}
+
+              <div className="notifications-filter-bar">
+
+                <button
+                  type="button"
+                  className="notification-filter active"
+                >
+                  All
+                  <span>
+                    ({notifications.length})
+                  </span>
                 </button>
-              )
+
+                <button
+                  type="button"
+                  className="notification-filter"
+                >
+                  Unread
+                  <span>
+                    {unreadCount > 0
+                      ? ` ${unreadCount}`
+                      : ""}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  className="notification-filter"
+                >
+                  Enquiries
+                </button>
+
+                <button
+                  type="button"
+                  className="notification-filter"
+                >
+                  Site Visits
+                </button>
+
+                <button
+                  type="button"
+                  className="notification-filter"
+                >
+                  System & Status
+                </button>
+
+                <div className="notifications-search">
+
+                  <Search size={15} />
+
+                  <input
+                    type="text"
+                    placeholder="Search notifications..."
+                  />
+
+                </div>
+
+              </div>
+
+            </section>
+
+            {/* ================================================
+                NOTIFICATIONS
+            ================================================ */}
+
+            {loading ? (
+
+              <div className="notifications-state-card">
+
+                <Bell size={28} />
+
+                <h2>
+                  Loading notifications...
+                </h2>
+
+                <p>
+                  Checking your latest activity.
+                </p>
+
+              </div>
+
+            ) : notifications.length === 0 ? (
+
+              <div className="notifications-state-card">
+
+                <Bell size={28} />
+
+                <h2>
+                  You're all caught up
+                </h2>
+
+                <p>
+                  New enquiries and messages will
+                  appear here.
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="notifications-list">
+
+                {notifications.map(
+                  (notification, index) => (
+
+                    <button
+                      type="button"
+                      className={`notification-card ${
+                        notification.is_read
+                          ? "read"
+                          : "unread"
+                      }`}
+                      key={
+                        notification.id ||
+                        `${notification.type}-${notification.reference_id}-${index}`
+                      }
+                      onClick={() =>
+                        handleNotificationClick(
+                          notification
+                        )
+                      }
+                    >
+
+                      <div className="notification-icon">
+
+                        {getNotificationIcon(
+                          notification.type
+                        )}
+
+                      </div>
+
+                      <div className="notification-card-content">
+
+                        <div className="notification-meta-row">
+
+                          <span className="notification-type">
+
+                            {!notification.is_read && (
+                              <span className="notification-new-dot" />
+                            )}
+
+                            {getNotificationType(
+                              notification
+                            )}
+
+                          </span>
+
+                          <span className="notification-meta-divider">
+                            •
+                          </span>
+
+                          <span className="notification-reference">
+                            {notification.reference_type
+                              ?.replaceAll(
+                                "_",
+                                " "
+                              )}
+                          </span>
+
+                        </div>
+
+                        <div className="notification-card-title">
+
+                          <strong>
+                            {notification.title}
+                          </strong>
+
+                          <span className="notification-date">
+                            {formatDate(
+                              notification.created_at
+                            )}
+                          </span>
+
+                        </div>
+
+                        <p>
+                          {notification.message}
+                        </p>
+
+                        <div className="notification-card-bottom">
+
+                          {notification.reference_type ===
+                            "project_enquiry" && (
+                            <span className="notification-action-tag">
+                              <MessageCircle
+                                size={12}
+                              />
+                              Direct Chat
+                            </span>
+                          )}
+
+                          {notification.reference_type ===
+                            "property_enquiry" && (
+                            <span className="notification-action-tag">
+                              <FileText
+                                size={12}
+                              />
+                              View Enquiry
+                            </span>
+                          )}
+
+                          {notification.type ===
+                            "visit" && (
+                            <span className="notification-action-tag">
+                              <CalendarDays
+                                size={12}
+                              />
+                              View Schedule
+                            </span>
+                          )}
+
+                        </div>
+
+                      </div>
+
+                      {notification.is_read && (
+                        <Check
+                          className="notification-read-icon"
+                          size={15}
+                        />
+                      )}
+
+                    </button>
+
+                  )
+                )}
+
+              </div>
+
             )}
+
+            {/* ================================================
+                SECURITY NOTE
+            ================================================ */}
+
+            <div className="notifications-security-note">
+
+              <LockKeyhole size={15} />
+
+              <span>
+                All activity feeds are secured under
+                Xevoprop Bank-Grade AES-256 telemetry.
+              </span>
+
+              <button type="button">
+                Notification settings & email digests
+                <ChevronRight size={14} />
+              </button>
+
+            </div>
+
           </div>
-        )}
-      </div>
+
+          {/* ==================================================
+              RIGHT COLUMN
+          ================================================== */}
+
+          <aside className="notifications-sidebar">
+
+            {/* ================================================
+                VERIFICATION MATRIX
+            ================================================ */}
+
+            <section className="verification-card">
+
+              <div className="verification-header">
+
+                <span>
+                  VERIFICATION MATRIX
+                </span>
+
+                <i />
+
+              </div>
+
+              <div className="verification-stats">
+
+                <div className="verification-stat">
+
+                  <strong>99.4%</strong>
+
+                  <span>
+                    RERA Authenticity
+                  </span>
+
+                </div>
+
+                <div className="verification-stat">
+
+                  <strong>14m</strong>
+
+                  <span>
+                    Avg Agent Response
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div className="verification-chart-header">
+
+                <span>
+                  Inquiry Volume (This Week)
+                </span>
+
+                <strong>
+                  +28%
+                </strong>
+
+              </div>
+
+              <div className="verification-chart">
+
+                <svg
+                  viewBox="0 0 400 100"
+                  preserveAspectRatio="none"
+                >
+
+                  <path
+                    d="M0 78 C35 75 55 82 90 76 C120 70 128 48 165 48 C205 48 205 56 238 51 C270 45 280 30 320 30 C350 30 370 32 400 25 L400 100 L0 100 Z"
+                  />
+
+                  <path
+                    className="verification-line"
+                    d="M0 78 C35 75 55 82 90 76 C120 70 128 48 165 48 C205 48 205 56 238 51 C270 45 280 30 320 30 C350 30 370 32 400 25"
+                  />
+
+                </svg>
+
+              </div>
+
+              <div className="verification-days">
+
+                <span>Mon</span>
+                <span>Wed</span>
+                <span>Fri</span>
+                <span>Sun</span>
+
+              </div>
+
+            </section>
+
+            {/* ================================================
+                FAST TRACK
+            ================================================ */}
+
+            <section className="fast-track-card">
+
+              <div className="fast-track-top">
+
+                <span>
+                  <CircleCheck size={13} />
+                  Fast Track Enquiry
+                </span>
+
+                <small>
+                  Bangalore East
+                </small>
+
+              </div>
+
+              <div className="fast-track-image">
+
+                <div className="fast-track-overlay">
+
+                  <strong>
+                    The Grand Pavilion • 402
+                  </strong>
+
+                </div>
+
+              </div>
+
+              <div className="fast-track-price">
+
+                <span>
+                  Pending Buyer Decision
+                </span>
+
+                <strong>
+                  ₹ 8.45 Cr
+                </strong>
+
+              </div>
+
+              <p>
+                Next scheduled virtual walk-through
+                starts today at 04:00 PM with the
+                principal architect.
+              </p>
+
+              <button
+                type="button"
+                className="fast-track-button"
+              >
+                <Video size={14} />
+                Join Secure Virtual Room
+              </button>
+
+            </section>
+
+            {/* ================================================
+                CONCIERGE
+            ================================================ */}
+
+            <section className="concierge-card">
+
+              <div className="concierge-icon">
+                <Headphones size={17} />
+              </div>
+
+              <div>
+
+                <h3>
+                  Need Site Visit Logistics?
+                </h3>
+
+                <p>
+                  Xevoprop Concierge coordinates
+                  chauffeured property inspections
+                  across Tier-1 luxury corridors.
+                </p>
+
+                <button type="button">
+                  Request Concierge Call
+                  <ChevronRight size={13} />
+                </button>
+
+              </div>
+
+            </section>
+
+          </aside>
+
+        </section>
+
+      </main>
+
+      
     </div>
   );
 }
