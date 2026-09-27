@@ -291,21 +291,19 @@ const isCertified =
         message: "",
       });
 
-      const response = await apiFetch(
-        "/enquiries/project",
-        {
-          method: "POST",
-          body: {
-            project_id: project.id,
-            name: enquiryForm.name.trim(),
-            email: enquiryForm.email.trim(),
-            phone:
-              enquiryForm.phone.trim() || null,
-            message:
-              enquiryForm.message.trim() || null,
-          },
-        }
-      );
+     const response = await apiFetch(
+  "/enquiries/project",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      project_id: project.id,
+      name: enquiryForm.name.trim(),
+      email: enquiryForm.email.trim(),
+      phone: enquiryForm.phone.trim() || null,
+      message: enquiryForm.message.trim() || null,
+    }),
+  }
+);
 
       if (response?.success === false) {
         throw new Error(
