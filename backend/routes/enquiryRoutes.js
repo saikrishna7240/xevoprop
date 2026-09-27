@@ -977,6 +977,7 @@ router.get(
 
       res.json({
         success: true,
+        enquiry: access.enquiry,
         messages: result.rows,
       });
     } catch (error) {
@@ -1080,7 +1081,7 @@ router.post(
 
       res.status(201).json({
         success: true,
-        message: newMessage,
+        chatMessage: newMessage,
       });
     } catch (error) {
       console.error(
