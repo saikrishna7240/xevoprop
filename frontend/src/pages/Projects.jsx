@@ -140,19 +140,14 @@ if (projectStatus !== "All") {
 
   // LOCATION FILTER
   if (location !== "All") {
-    result = result.filter((project) => {
-      const projectLocation = String(
-        project.location ||
-        project.city ||
-        project.state ||
-        ""
-      )
+  result = result.filter(
+    (project) =>
+      String(project.city || "")
         .trim()
-        .toLowerCase();
-
-      return projectLocation === location.toLowerCase();
-    });
-  }
+        .toLowerCase() ===
+      location.trim().toLowerCase()
+  );
+}
 
   return result;
 }, [
@@ -172,16 +167,15 @@ if (projectStatus !== "All") {
 
   const projectLocations = useMemo(() => {
   const locations = projects
-    .flatMap((project) => [
-      project.location,
-      project.city,
-      project.state,
-    ])
+    .map((project) => project.city)
     .filter(Boolean)
     .map((value) => String(value).trim())
     .filter(Boolean);
 
-  return ["All", ...Array.from(new Set(locations)).sort()];
+  return [
+    "All",
+    ...Array.from(new Set(locations)).sort(),
+  ];
 }, [projects]);
   const PROJECT_STATUS_OPTIONS = [
   "All",
