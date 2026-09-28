@@ -166,29 +166,50 @@ export default function Notifications() {
      NOTIFICATION CLICK
   ============================================================ */
 
-  const handleNotificationClick = async (
-    notification
-  ) => {
-    await markAsRead(notification);
+  const handleNotificationClick = async (notification) => {
+  await markAsRead(notification);
 
-    if (
-      notification.reference_type ===
-      "project_enquiry"
-    ) {
-      navigate(
-        `/project-enquiries/${notification.reference_id}/chat`
-      );
+  // Project enquiry
+  if (
+    notification.reference_type ===
+    "project_enquiry"
+  ) {
+    navigate(
+      `/project-enquiries/${notification.reference_id}/chat`
+    );
+    return;
+  }
 
-      return;
-    }
+  // Property enquiry
+  if (
+    notification.reference_type ===
+    "property_enquiry"
+  ) {
+    return;
+  }
 
-    if (
-      notification.reference_type ===
-      "property_enquiry"
-    ) {
-      return;
-    }
-  };
+  // Project approval
+  if (
+    notification.reference_type ===
+    "project_approval"
+  ) {
+    navigate(
+      `/admin/projects`
+    );
+    return;
+  }
+
+  // Property approval
+  if (
+    notification.reference_type ===
+    "property_approval"
+  ) {
+    navigate(
+      `/admin/properties`
+    );
+    return;
+  }
+};
 
   /* ============================================================
      ICON
@@ -250,38 +271,49 @@ export default function Notifications() {
   ============================================================ */
 
   const getNotificationType = (notification) => {
-    const type = String(
-      notification?.type || ""
-    ).toLowerCase();
+  const type = String(
+    notification?.type || ""
+  ).toLowerCase();
 
-    if (
-      type.includes("property")
-    ) {
-      return "PROPERTY ENQUIRY";
-    }
+  if (
+    type === "property_approval"
+  ) {
+    return "PROPERTY APPROVAL";
+  }
 
-    if (
-      type.includes("project")
-    ) {
-      return "PROJECT ENQUIRY";
-    }
+  if (
+    type === "project_approval"
+  ) {
+    return "PROJECT APPROVAL";
+  }
 
-    if (
-      type.includes("visit")
-    ) {
-      return "SITE INSPECTION";
-    }
+  if (
+    type.includes("property")
+  ) {
+    return "PROPERTY ENQUIRY";
+  }
 
-    if (
-      type.includes("chat") ||
-      type.includes("message")
-    ) {
-      return "PROJECT CHAT";
-    }
+  if (
+    type.includes("project")
+  ) {
+    return "PROJECT ENQUIRY";
+  }
 
-    return "SYSTEM ACTIVITY";
-  };
+  if (
+    type.includes("visit")
+  ) {
+    return "SITE INSPECTION";
+  }
 
+  if (
+    type.includes("chat") ||
+    type.includes("message")
+  ) {
+    return "PROJECT CHAT";
+  }
+
+  return "SYSTEM ACTIVITY";
+};
   /* ============================================================
      RENDER
   ============================================================ */
@@ -513,6 +545,21 @@ export default function Notifications() {
                         </p>
 
                         <div className="notification-card-bottom">
+                          {notification.reference_type ===
+  "project_approval" && (
+  <span className="notification-action-tag">
+    <Building2 size={12} />
+    Review Project
+  </span>
+)}
+
+{notification.reference_type ===
+  "property_approval" && (
+  <span className="notification-action-tag">
+    <Building2 size={12} />
+    Review Property
+  </span>
+)}
 
                           {notification.reference_type ===
                             "project_enquiry" && (
