@@ -15,71 +15,78 @@ function Footer() {
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
 
-  const handleSubscribe = async (event) => {
-    event.preventDefault();
+ const handleSubscribe = async (event) => {
+  event.preventDefault();
 
-    const trimmedEmail = email.trim();
+  const trimmedEmail = email.trim();
 
-    if (!trimmedEmail) {
-      setStatus("error");
-      setMessage("Please enter your email address.");
-      return;
-    }
+  if (!trimmedEmail) {
+    setStatus("error");
+    setMessage("Please enter your email address.");
+    return;
+  }
 
-    const emailPattern =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailPattern.test(trimmedEmail)) {
-      setStatus("error");
-      setMessage("Please enter a valid email address.");
-      return;
-    }
+  if (!emailPattern.test(trimmedEmail)) {
+    setStatus("error");
+    setMessage("Please enter a valid email address.");
+    return;
+  }
 
-    setStatus("loading");
-    setMessage("");
+  setStatus("loading");
+  setMessage("");
 
-    try {
-      /*
-       * FRONTEND SUBSCRIPTION
-       *
-       * This currently simulates a successful subscription.
-       *
-       * When the newsletter API is ready, replace this
-       * section with:
-       *
-       * const response = await fetch(
-       *   `${API_URL}/newsletter/subscribe`,
-       *   {
-       *     method: "POST",
-       *     headers: {
-       *       "Content-Type": "application/json",
-       *     },
-       *     body: JSON.stringify({
-       *       email: trimmedEmail,
-       *     }),
-       *   }
-       * );
-       */
+  try {
+    const API_URL =
+      import.meta.env.VITE_API_URL ||
+      "https://xevoprop.onrender.com/api";
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 700)
+    const response = await fetch(
+      `${API_URL}/newsletter/subscribe`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: trimmedEmail,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message ||
+          "Unable to subscribe right now."
       );
+    }
 
-      setStatus("success");
-      setMessage(
+    setStatus("success");
+
+    setMessage(
+      data?.message ||
         "You're subscribed! We'll keep you updated."
-      );
+    );
 
-      setEmail("");
-    } catch (error) {
-      console.error("Newsletter subscription error:", error);
+    setEmail("");
+  } catch (error) {
+    console.error(
+      "Newsletter subscription error:",
+      error
+    );
 
-      setStatus("error");
-      setMessage(
+    setStatus("error");
+
+    setMessage(
+      error.message ||
         "Something went wrong. Please try again."
-      );
-    }
-  };
+    );
+  }
+};
 
   return (
     <footer className="footer">
