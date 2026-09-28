@@ -102,6 +102,7 @@ router.get("/public/:id", async (req, res) => {
         p.image,
         p.description,
         p.status,
+        p.project_status,
         p.created_at,
         p.updated_at,
 
@@ -204,6 +205,7 @@ router.get(
           p.image,
           p.description,
           p.status,
+          p.project_status,
           p.reviewed_by,
           p.reviewed_at,
           p.rejection_reason,
@@ -325,6 +327,7 @@ router.get(
           p.image,
           p.description,
           p.status,
+          p.project_status,
           p.reviewed_by,
           p.reviewed_at,
           p.rejection_reason,
@@ -605,6 +608,7 @@ router.put(
           units ?? null,
           price || null,
           description || null,
+          project_status || "Upcoming",
           id,
           req.user.id,
         ]
