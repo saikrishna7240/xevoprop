@@ -7,7 +7,12 @@ const {
   authorizeRoles,
 } = require("../middleware/authMiddleware");
 
+const {
+  notifyAdmin,
+} = require("../utils/adminNotification");
 const router = express.Router();
+
+
 
 /* ============================================================
    PUBLIC PROJECTS
@@ -493,12 +498,20 @@ router.post(
         ]
       );
 
-      res.status(201).json({
-        success: true,
-        message:
-          "Project submitted successfully for admin approval",
-        project: result.rows[0],
-      });
+      await notifyAdmin({
+  type: "project_approval",
+  title: "New Project Requires Approval",
+  message: `${result.rows[0].name} has been submitted for admin approval.`,
+  referenceId: result.rows[0].id,
+  referenceType: "project_approval",
+});
+
+res.status(201).json({
+  success: true,
+  message:
+    "Project submitted successfully for admin approval",
+  project: result.rows[0],
+});
     } catch (error) {
       console.error(
         "Create project error:",
@@ -614,12 +627,20 @@ router.put(
         ]
       );
 
-      res.json({
-        success: true,
-        message:
-          "Project updated and submitted for review",
-        project: result.rows[0],
-      });
+      await notifyAdmin({
+  type: "project_approval",
+  title: "Project Updated - Approval Required",
+  message: `${result.rows[0].name} was updated and requires admin approval again.`,
+  referenceId: result.rows[0].id,
+  referenceType: "project_approval",
+});
+
+res.json({
+  success: true,
+  message:
+    "Project updated and submitted for review",
+  project: result.rows[0],
+});
     } catch (error) {
       console.error(
         "Update project error:",

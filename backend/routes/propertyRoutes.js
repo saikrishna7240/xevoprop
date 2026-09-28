@@ -6,8 +6,12 @@ const {
   authenticateToken,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
+const {
+  notifyAdmin,
+} = require("../utils/adminNotification");
 
 const router = express.Router();
+
 
 /* ============================================================
    GET ALL PUBLIC PROPERTIES
@@ -385,6 +389,13 @@ router.post(
           "pending",
         ]
       );
+      await notifyAdmin({
+  type: "property_approval",
+  title: "New Property Requires Approval",
+  message: `${result.rows[0].title} has been submitted for admin approval.`,
+  referenceId: result.rows[0].id,
+  referenceType: "property_approval",
+});
 
       res.status(201).json({
         success: true,
@@ -555,12 +566,20 @@ router.put(
         });
       }
 
-      res.json({
-        success: true,
-        message:
-          "Property updated and submitted for admin approval",
-        property: result.rows[0],
-      });
+      await notifyAdmin({
+  type: "property_approval",
+  title: "Property Updated - Approval Required",
+  message: `${result.rows[0].title} was updated and requires admin approval again.`,
+  referenceId: result.rows[0].id,
+  referenceType: "property_approval",
+});
+
+res.json({
+  success: true,
+  message:
+    "Property updated and submitted for admin approval",
+  property: result.rows[0],
+});
     } catch (error) {
       console.error(
         "Update property error:",
