@@ -1095,6 +1095,7 @@ export default function Home() {
                   Explore Properties
                   <ArrowRight size={15} />
                 </button>
+                
 
               </div>
             )}
@@ -1110,6 +1111,19 @@ export default function Home() {
               }
             >
               Explore all properties
+              <ArrowRight size={16} />
+            </button>
+
+          </div>
+          <div className="xp-properties-bottom">
+
+            <button
+              type="button"
+              onClick={() =>
+                navigate("/projects")
+              }
+            >
+              Explore all projects
               <ArrowRight size={16} />
             </button>
 

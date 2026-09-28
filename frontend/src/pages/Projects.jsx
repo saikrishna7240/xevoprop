@@ -59,6 +59,17 @@ function Projects() {
         ? data
         : data.projects || [];
 
+        console.log("PROJECT DATA:", projectList);
+console.log(
+  "PROJECT STATUSES:",
+  projectList.map((project) => ({
+    id: project.id,
+    name: project.name,
+    status: project.status,
+    project_status: project.project_status,
+  }))
+);
+
       setProjects(projectList);
     } catch (err) {
       console.error(
@@ -75,9 +86,10 @@ function Projects() {
     }
   };
 
-  const filteredProjects = useMemo(() => {
+ const filteredProjects = useMemo(() => {
   let result = [...projects];
 
+  // SEARCH FILTER
   if (search.trim()) {
     const keyword = search.toLowerCase().trim();
 
@@ -99,14 +111,34 @@ function Projects() {
     );
   }
 
+  // PROJECT TYPE FILTER
   if (type !== "All") {
     result = result.filter(
       (project) =>
         String(project.type || "")
+          .trim()
           .toLowerCase() === type.toLowerCase()
     );
   }
 
+  // PROJECT STATUS FILTER
+
+if (projectStatus !== "All") {
+  result = result.filter((project) => {
+    const status = String(
+      project.project_status ||
+      project.projectStatus ||
+      project.status ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+    return status === projectStatus.trim().toLowerCase();
+  });
+}
+
+  // LOCATION FILTER
   if (location !== "All") {
     result = result.filter((project) => {
       const projectLocation = String(
@@ -123,8 +155,13 @@ function Projects() {
   }
 
   return result;
-}, [projects, search, type, location]);
-
+}, [
+  projects,
+  search,
+  type,
+  projectStatus,
+  location,
+]);
   const projectTypes = [
     "All",
     "Apartment",

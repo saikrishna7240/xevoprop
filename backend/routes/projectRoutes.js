@@ -29,6 +29,7 @@ router.get("/public", async (req, res) => {
         p.image,
         p.description,
         p.status,
+        p.project_status,
         p.created_at,
         p.updated_at,
 
@@ -536,6 +537,7 @@ router.put(
         units,
         price,
         description,
+        project_status,
       } = req.body;
 
       if (
@@ -585,13 +587,14 @@ router.put(
           units = $5,
           price = $6,
           description = $7,
+          project_status = $8,
           status = 'pending',
           reviewed_by = NULL,
           reviewed_at = NULL,
           rejection_reason = NULL,
           updated_at = CURRENT_TIMESTAMP
-        WHERE id = $8
-          AND developer_id = $9
+        WHERE id = $9
+          AND developer_id = $10
         RETURNING *
         `,
         [
