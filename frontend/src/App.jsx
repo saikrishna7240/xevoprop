@@ -38,6 +38,7 @@ import ProjectEnquiryChat from "./pages/ProjectEnquiryChat";
 import MyProjects from "./pages/MyProjects";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
+import NewsletterSubscribers from "./pages/NewsletterSubscribers";
 
 function App() {
   return (
@@ -233,6 +234,11 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/admin/newsletter"
+  element={<NewsletterSubscribers />}
+/>
 
         <Route
           path="/my-properties"

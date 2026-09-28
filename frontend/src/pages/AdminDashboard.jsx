@@ -15,6 +15,7 @@ import {
   RefreshCw,
   ShieldCheck,
   SlidersHorizontal,
+  Mail,
   Users,
   X,
   XCircle,
@@ -350,20 +351,12 @@ function AdminDashboard() {
 
 
             <Link
-              to="/admin/properties"
-              className="admin-sidebar-link"
-              onClick={() =>
-                setSidebarOpen(false)
-              }
-            >
-              <SlidersHorizontal
-                size={17}
-              />
-
-              <span>
-                Marketplace Operations
-              </span>
-            </Link>
+  to="/admin/newsletter"
+  className="admin-sidebar-link"
+>
+  <Mail size={18} />
+  <span>Newsletter</span>
+</Link>
 
 
             <div className="admin-sidebar-link disabled">

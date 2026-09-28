@@ -1,0 +1,250 @@
+.newsletter-subscribers-page {
+  min-height: 100vh;
+  background: #f6f8f7;
+  padding: 40px 24px;
+}
+
+.newsletter-subscribers-container {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+/* HEADER */
+
+.newsletter-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.newsletter-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #087c52;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.newsletter-page-header h1 {
+  margin: 0;
+  color: #18212b;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 750;
+}
+
+.newsletter-page-header p {
+  margin: 8px 0 0;
+  color: #74808c;
+  font-size: 14px;
+}
+
+/* REFRESH */
+
+.newsletter-refresh-button {
+  border: 1px solid #d8e0dc;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #26332d;
+  padding: 10px 17px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.newsletter-refresh-button:hover {
+  border-color: #087c52;
+  color: #087c52;
+}
+
+.newsletter-refresh-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* STATS */
+
+.newsletter-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.newsletter-stat-card {
+  background: #ffffff;
+  border: 1px solid #e4e9e6;
+  border-radius: 10px;
+  padding: 20px 22px;
+}
+
+.newsletter-stat-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: #7a858f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.newsletter-stat-card strong {
+  color: #18212b;
+  font-size: 27px;
+  font-weight: 750;
+}
+
+/* MAIN CARD */
+
+.newsletter-subscribers-card {
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #e2e7e4;
+  border-radius: 10px;
+}
+
+.newsletter-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e8ecea;
+}
+
+.newsletter-table-header h2 {
+  margin: 0;
+  color: #202b25;
+  font-size: 17px;
+  font-weight: 720;
+}
+
+.newsletter-table-header p {
+  margin: 5px 0 0;
+  color: #87918c;
+  font-size: 12px;
+}
+
+.newsletter-count {
+  color: #68746e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* TABLE */
+
+.newsletter-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.newsletter-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.newsletter-table th {
+  padding: 13px 24px;
+  background: #fafbfa;
+  border-bottom: 1px solid #e8ecea;
+  color: #78837e;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.8px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.newsletter-table td {
+  padding: 17px 24px;
+  border-bottom: 1px solid #edf0ee;
+  color: #56615b;
+  font-size: 13px;
+}
+
+.newsletter-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.newsletter-table tbody tr:hover {
+  background: #fbfcfb;
+}
+
+.newsletter-email {
+  color: #26332d;
+  font-weight: 600;
+}
+
+/* STATUS */
+
+.newsletter-status {
+  display: inline-flex;
+  align-items: center;
+  min-width: 62px;
+  justify-content: center;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.newsletter-status.active {
+  background: #e8f7f0;
+  color: #087c52;
+}
+
+.newsletter-status.inactive {
+  background: #f1f2f2;
+  color: #7a817d;
+}
+
+/* STATES */
+
+.newsletter-state {
+  padding: 55px 24px;
+  color: #7a8580;
+  font-size: 13px;
+  text-align: center;
+}
+
+.newsletter-error {
+  color: #b42318;
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+  .newsletter-subscribers-page {
+    padding: 26px 16px;
+  }
+
+  .newsletter-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .newsletter-page-header h1 {
+    font-size: 27px;
+  }
+
+  .newsletter-refresh-button {
+    width: 100%;
+  }
+
+  .newsletter-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .newsletter-table-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .newsletter-table th,
+  .newsletter-table td {
+    padding: 13px 18px;
+  }
+}

@@ -102,4 +102,38 @@ router.post("/subscribe", async (req, res) => {
   }
 });
 
+
+/* =========================================================
+   GET ALL NEWSLETTER SUBSCRIBERS
+========================================================= */
+
+router.get("/subscribers", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        id,
+        email,
+        subscribed_at,
+        is_active,
+        updated_at
+      FROM newsletter_subscribers
+      ORDER BY subscribed_at DESC
+    `);
+
+    return res.status(200).json({
+      success: true,
+      subscribers: result.rows,
+    });
+  } catch (error) {
+    console.error(
+      "Get newsletter subscribers error:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch newsletter subscribers.",
+    });
+  }
+});
 module.exports = router;
