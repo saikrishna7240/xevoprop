@@ -1,4 +1,7 @@
 const { pool } = require("../config/db");
+const {
+  sendNotificationEmail,
+} = require("./sendEmail");
 
 const notifyAdmin = async ({
   type,
@@ -8,20 +11,31 @@ const notifyAdmin = async ({
   referenceType,
 }) => {
   try {
+    // Get all admin users
     const adminResult = await pool.query(
       `
-      SELECT id
+      SELECT
+        id,
+        name,
+        email
       FROM users
       WHERE LOWER(role) = 'admin'
-      `,
+      `
     );
 
     if (adminResult.rows.length === 0) {
-      console.log("No admin users found for notification.");
+      console.log(
+        "No admin users found for notification."
+      );
       return;
     }
 
     for (const admin of adminResult.rows) {
+
+      /* =====================================================
+         1. CREATE IN-APP NOTIFICATION
+      ===================================================== */
+
       await pool.query(
         `
         INSERT INTO notifications (
@@ -43,11 +57,41 @@ const notifyAdmin = async ({
           referenceType,
         ]
       );
+
+      console.log(
+        `In-app notification created for admin ${admin.email}`
+      );
+
+      /* =====================================================
+         2. SEND EMAIL NOTIFICATION
+      ===================================================== */
+
+      try {
+        await sendNotificationEmail({
+          email: admin.email,
+          name: admin.name,
+          title,
+          message,
+          referenceId,
+          referenceType,
+        });
+
+        console.log(
+          `Admin notification email sent to ${admin.email}`
+        );
+
+      } catch (emailError) {
+        console.error(
+          `Failed to send admin email to ${admin.email}:`,
+          emailError.message
+        );
+      }
     }
 
     console.log(
-      `Admin notification created for ${adminResult.rows.length} admin(s).`
+      `Admin notifications processed for ${adminResult.rows.length} admin(s).`
     );
+
   } catch (error) {
     console.error(
       "Admin notification error:",
