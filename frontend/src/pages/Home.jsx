@@ -249,6 +249,9 @@ export default function Home() {
   const [properties, setProperties] = useState([]);
   const [loadingProperties, setLoadingProperties] = useState(true);
 
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
+
   const [activeIntent, setActiveIntent] = useState("Buy");
   const [location, setLocation] = useState("");
   const [propertyType, setPropertyType] = useState("");
@@ -292,9 +295,51 @@ export default function Home() {
     fetchProperties();
   }, []);
 
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoadingProjects(true);
+
+        const response = await fetch(
+          `${API_URL}/projects/public`
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to fetch projects");
+        }
+
+        const data = await response.json();
+
+        const projectList = Array.isArray(data)
+          ? data
+          : data?.projects ||
+            data?.data ||
+            data?.results ||
+            [];
+
+        setProjects(
+          Array.isArray(projectList)
+            ? projectList
+            : []
+        );
+      } catch (error) {
+        console.error("Home projects error:", error);
+        setProjects([]);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   const featuredProperties = useMemo(() => {
     return properties.slice(0, 3);
   }, [properties]);
+
+  const featuredProjects = useMemo(() => {
+    return projects.slice(0, 3);
+  }, [projects]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -1113,6 +1158,227 @@ export default function Home() {
               Explore all properties
               <ArrowRight size={16} />
             </button>
+
+          </div>
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          FEATURED PROJECTS
+      ===================================================== */}
+
+      <section className="xp-section xp-projects-section">
+
+        <div className="xp-container">
+
+          <div className="xp-section-heading-row">
+
+            <div>
+
+              <div className="xp-section-kicker">
+
+                <span></span>
+
+                CURATED PROJECTS
+
+              </div>
+
+              <h2>
+                Explore Featured Projects
+              </h2>
+
+              <p>
+                Discover verified residential and
+                commercial projects from developers
+                across growing locations.
+              </p>
+
+            </div>
+
+            <button
+              type="button"
+              className="xp-projects-view-all"
+              onClick={() =>
+                navigate("/projects")
+              }
+            >
+              View all projects
+              <ArrowRight size={14} />
+            </button>
+
+          </div>
+
+          <div className="xp-project-grid">
+
+            {loadingProjects ? (
+              [1, 2, 3].map((item) => (
+                <div
+                  className="xp-project-card xp-project-skeleton"
+                  key={item}
+                >
+                  <div className="xp-project-skeleton-image" />
+
+                  <div className="xp-project-skeleton-content">
+                    <div />
+                    <div />
+                    <div />
+                  </div>
+                </div>
+              ))
+            ) : featuredProjects.length > 0 ? (
+              featuredProjects.map((project) => {
+
+                const projectStatus =
+                  project?.project_status ||
+                  "Upcoming";
+
+                return (
+                  <article
+                    className="xp-project-card"
+                    key={project.id}
+                  >
+
+                    <div className="xp-project-image">
+
+                      {project?.image ? (
+                        <img
+                          src={project.image}
+                          alt={
+                            project.name ||
+                            "Project"
+                          }
+                          onError={(event) => {
+                            event.currentTarget.style.display =
+                              "none";
+                          }}
+                        />
+                      ) : (
+                        <div className="xp-project-image-placeholder">
+                          <Building2 size={34} />
+                        </div>
+                      )}
+
+                      <div className="xp-project-top">
+
+                        <span className="xp-project-verified">
+                          <ShieldCheck size={12} />
+                          Verified
+                        </span>
+
+                        <span className="xp-project-status">
+                          {projectStatus}
+                        </span>
+
+                      </div>
+
+                      <div className="xp-project-location">
+
+                        <MapPin size={12} />
+
+                        <span>
+                          {project.location ||
+                            project.city ||
+                            "Location unavailable"}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    <div className="xp-project-content">
+
+                      <div className="xp-project-type-row">
+
+                        <span>
+                          {project.type ||
+                            "Residential"}
+                        </span>
+
+                        {project.price && (
+                          <strong>
+                            {project.price}
+                          </strong>
+                        )}
+
+                      </div>
+
+                      <h3>
+                        {project.name ||
+                          "Untitled Project"}
+                      </h3>
+
+                      <div className="xp-project-specs">
+
+                        <div>
+                          <small>TYPE</small>
+                          <strong>
+                            {project.type ||
+                              "Residential"}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <small>UNITS</small>
+                          <strong>
+                            {project.units ??
+                              "—"}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <small>STATUS</small>
+                          <strong>
+                            {projectStatus}
+                          </strong>
+                        </div>
+
+                      </div>
+
+                      <button
+                        type="button"
+                        className="xp-project-view-button"
+                        onClick={() =>
+                          navigate(
+                            `/projects/${project.id}`
+                          )
+                        }
+                      >
+                        View Project
+                        <ArrowRight size={14} />
+                      </button>
+
+                    </div>
+
+                  </article>
+                );
+              })
+            ) : (
+              <div className="xp-projects-empty">
+
+                <Building2 size={32} />
+
+                <h3>
+                  Projects are being updated
+                </h3>
+
+                <p>
+                  Explore the projects marketplace
+                  to discover upcoming developments.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate("/projects")
+                  }
+                >
+                  Explore Projects
+                  <ArrowRight size={15} />
+                </button>
+
+              </div>
+            )}
 
           </div>
           <div className="xp-properties-bottom">

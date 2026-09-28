@@ -2494,3 +2494,493 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================================================
+   FEATURED PROJECTS
+   ========================================================= */
+
+.xp-projects-section {
+  background: #ffffff;
+}
+
+.xp-projects-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #168a69;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.xp-projects-view-all:hover {
+  color: #075d47;
+}
+
+/* =========================================================
+   PROJECT GRID
+   ========================================================= */
+
+.xp-project-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 17px;
+}
+
+/* =========================================================
+   PROJECT CARD
+   ========================================================= */
+
+.xp-project-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #dfe5ec;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 12px rgba(21, 38, 62, 0.045);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.xp-project-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 23px rgba(21, 38, 62, 0.1);
+}
+
+/* =========================================================
+   PROJECT IMAGE
+   ========================================================= */
+
+.xp-project-image {
+  position: relative;
+
+  height: 190px;
+
+  overflow: hidden;
+
+  background: #e9eef5;
+}
+
+.xp-project-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.3s ease;
+}
+
+.xp-project-card:hover
+.xp-project-image img {
+  transform: scale(1.025);
+}
+
+.xp-project-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  place-items: center;
+
+  color: #9aa7b6;
+
+  background: #edf1f6;
+}
+
+/* =========================================================
+   PROJECT TOP BADGES
+   ========================================================= */
+
+.xp-project-top {
+  position: absolute;
+
+  top: 9px;
+  left: 9px;
+  right: 9px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 7px;
+}
+
+.xp-project-verified,
+.xp-project-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 5px 7px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.93);
+
+  color: #344356;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  line-height: 1;
+
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.xp-project-verified {
+  color: #08784f;
+}
+
+.xp-project-status {
+  max-width: 150px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PROJECT LOCATION
+   ========================================================= */
+
+.xp-project-location {
+  position: absolute;
+
+  right: 9px;
+  bottom: 9px;
+  left: 9px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.55);
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+.xp-project-location span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   PROJECT CONTENT
+   ========================================================= */
+
+.xp-project-content {
+  padding: 14px 13px 13px;
+}
+
+.xp-project-type-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+.xp-project-type-row span {
+  color: #7b8796;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.xp-project-type-row strong {
+  color: #182233;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.xp-project-content h3 {
+  min-height: 38px;
+
+  margin: 6px 0 8px;
+
+  color: #152234;
+
+  font-size: 15px;
+  font-weight: 750;
+
+  line-height: 1.35;
+}
+
+/* =========================================================
+   PROJECT SPECS
+   ========================================================= */
+
+.xp-project-specs {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  margin-top: 7px;
+
+  padding: 8px 5px;
+
+  border-radius: 6px;
+
+  background: #eef4fd;
+}
+
+.xp-project-specs > div {
+  min-width: 0;
+
+  text-align: center;
+}
+
+.xp-project-specs > div + div {
+  border-left: 1px solid #d9e3f0;
+}
+
+.xp-project-specs small,
+.xp-project-specs strong {
+  display: block;
+}
+
+.xp-project-specs small {
+  color: #8490a0;
+
+  font-size: 8px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  text-transform: uppercase;
+}
+
+.xp-project-specs strong {
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  color: #263447;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   PROJECT BUTTON
+   ========================================================= */
+
+.xp-project-view-button {
+  width: 100%;
+
+  min-height: 33px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin-top: 11px;
+
+  padding: 7px 10px;
+
+  border: 1px solid #08784f;
+  border-radius: 5px;
+
+  background: #08784f;
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.xp-project-view-button:hover {
+  background: #05613f;
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   PROJECT EMPTY
+   ========================================================= */
+
+.xp-projects-empty {
+  grid-column: 1 / -1;
+
+  min-height: 240px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  border: 1px dashed #d6dee9;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #8a95a4;
+
+  text-align: center;
+}
+
+.xp-projects-empty h3 {
+  margin: 10px 0 4px;
+
+  color: #233144;
+
+  font-size: 17px;
+}
+
+.xp-projects-empty p {
+  margin: 0 0 15px;
+
+  font-size: 11px;
+}
+
+.xp-projects-empty button {
+  min-height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 8px 15px;
+
+  border: 0;
+  border-radius: 5px;
+
+  background: #05090f;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   PROJECT SKELETON
+   ========================================================= */
+
+.xp-project-skeleton {
+  pointer-events: none;
+}
+
+.xp-project-skeleton-image {
+  height: 190px;
+
+  background: #edf1f5;
+}
+
+.xp-project-skeleton-content {
+  padding: 16px 13px;
+}
+
+.xp-project-skeleton-content div {
+  height: 10px;
+
+  margin-bottom: 10px;
+
+  border-radius: 4px;
+
+  background: #edf1f5;
+}
+
+.xp-project-skeleton-content div:nth-child(1) {
+  width: 35%;
+}
+
+.xp-project-skeleton-content div:nth-child(2) {
+  width: 72%;
+}
+
+.xp-project-skeleton-content div:nth-child(3) {
+  width: 100%;
+
+  height: 45px;
+
+  margin-top: 14px;
+}
+
+/* =========================================================
+   PROJECT RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .xp-project-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .xp-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .xp-project-image {
+    height: 205px;
+  }
+
+  .xp-projects-view-all {
+    margin-top: 5px;
+  }
+}
