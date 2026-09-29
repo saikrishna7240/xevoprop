@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   ArrowRight,
   CheckCircle2,
@@ -7,11 +9,78 @@ import {
   Phone,
   ShieldCheck,
 } from "lucide-react";
+
 import { Link } from "react-router-dom";
+
+import { apiFetch } from "../lib/api";
 
 import "./Contact.css";
 
 function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+
+  // =====================================================
+  // HANDLE FORM INPUTS
+  // =====================================================
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  // =====================================================
+  // SUBMIT CONTACT FORM
+  // =====================================================
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      setSubmitting(true);
+
+      const data = await apiFetch("/contact", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+
+      alert(
+        data.message ||
+          "Thank you! Your message has been received."
+      );
+
+      // Clear form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error(
+        "Contact submission error:",
+        error
+      );
+
+      alert(
+        error.message ||
+          "Unable to send your message. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="contact-page">
 
@@ -111,9 +180,11 @@ function Contact() {
 
                 <div className="contact-detail-content">
                   <span>Email</span>
+
                   <strong>
                     contact@xevoprop.com
                   </strong>
+
                   <small>
                     Send us your enquiry anytime
                   </small>
@@ -129,7 +200,7 @@ function Contact() {
               {/* PHONE */}
 
               <a
-                href="tel: +917013438613"
+                href="tel:+917013438613"
                 className="contact-detail"
               >
 
@@ -138,13 +209,19 @@ function Contact() {
                 </div>
 
                 <div className="contact-detail-content">
-                  <span>Phone</span>
+
+                  <span>
+                    Phone
+                  </span>
+
                   <strong>
-                     +91 70134 38613
+                    +91 70134 38613
                   </strong>
+
                   <small>
                     Speak directly with our team
                   </small>
+
                 </div>
 
                 <ArrowRight
@@ -163,14 +240,20 @@ function Contact() {
                 </div>
 
                 <div className="contact-detail-content">
-                  <span>Location</span>
+
+                  <span>
+                    Location
+                  </span>
+
                   <strong>
                     India
                   </strong>
+
                   <small>
                     Serving property participants
                     across India
                   </small>
+
                 </div>
 
               </div>
@@ -186,6 +269,7 @@ function Contact() {
               </div>
 
               <div>
+
                 <strong>
                   Need property assistance?
                 </strong>
@@ -195,6 +279,7 @@ function Contact() {
                   and our team can help you identify
                   the right next step.
                 </p>
+
               </div>
 
             </div>
@@ -214,6 +299,7 @@ function Contact() {
               </div>
 
               <div>
+
                 <span>
                   SEND A MESSAGE
                 </span>
@@ -226,22 +312,19 @@ function Contact() {
                   Share a few details and we'll
                   understand your enquiry.
                 </p>
+
               </div>
 
             </div>
 
             <form
               className="contact-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-
-                alert(
-                  "Thank you! Your message has been received."
-                );
-              }}
+              onSubmit={handleSubmit}
             >
 
               <div className="contact-form-row">
+
+                {/* NAME */}
 
                 <div className="contact-field">
 
@@ -251,11 +334,16 @@ function Contact() {
 
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="Your name"
                     required
                   />
 
                 </div>
+
+                {/* EMAIL */}
 
                 <div className="contact-field">
 
@@ -265,6 +353,9 @@ function Contact() {
 
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="Your email"
                     required
                   />
@@ -273,13 +364,20 @@ function Contact() {
 
               </div>
 
+              {/* SUBJECT */}
+
               <div className="contact-field">
 
                 <label>
                   Subject
                 </label>
 
-                <select defaultValue="" required>
+                <select
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                >
 
                   <option
                     value=""
@@ -312,6 +410,8 @@ function Contact() {
 
               </div>
 
+              {/* MESSAGE */}
+
               <div className="contact-field">
 
                 <label>
@@ -319,12 +419,17 @@ function Contact() {
                 </label>
 
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows="6"
                   placeholder="Tell us how we can help..."
                   required
                 />
 
               </div>
+
+              {/* FORM FOOTER */}
 
               <div className="contact-form-footer">
 
@@ -336,9 +441,15 @@ function Contact() {
                 <button
                   type="submit"
                   className="contact-submit"
+                  disabled={submitting}
                 >
-                  Send Message
+
+                  {submitting
+                    ? "Sending..."
+                    : "Send Message"}
+
                   <ArrowRight size={16} />
+
                 </button>
 
               </div>
