@@ -39,6 +39,7 @@ import MyProjects from "./pages/MyProjects";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
 import NewsletterSubscribers from "./pages/NewsletterSubscribers";
+import AdminContacts from "./pages/AdminContacts";
 
 function App() {
   return (
@@ -179,6 +180,11 @@ function App() {
       <ProjectEnquiriesBuyer />
     </ProtectedRoute>
   }
+/>
+
+<Route
+  path="/admin/contacts"
+  element={<AdminContacts />}
 />
 
 <Route

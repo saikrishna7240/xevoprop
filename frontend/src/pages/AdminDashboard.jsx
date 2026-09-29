@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Mail,
+  MessageCircle,
   Users,
   X,
   XCircle,
@@ -356,6 +357,20 @@ function AdminDashboard() {
 >
   <Mail size={18} />
   <span>Newsletter</span>
+</Link>
+
+<Link
+  to="/admin/contacts"
+  className="admin-sidebar-link"
+  onClick={() =>
+    setSidebarOpen(false)
+  }
+>
+  <MessageCircle size={17} />
+
+  <span>
+    Contact Enquiries
+  </span>
 </Link>
 
 

@@ -24,6 +24,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const newsletterRoutes = require("./routes/newsletterRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const contactAdminRoutes = require("./routes/contactAdminRoutes");
 
 const app = express();
 
@@ -159,6 +160,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 
 app.use("/api/contact", contactRoutes);
+
+app.use("/api/admin/contacts", contactAdminRoutes);
 
 // ======================================================
 // DATABASE TEST ROUTES
