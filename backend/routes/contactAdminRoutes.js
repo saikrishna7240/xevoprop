@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const { pool } = require("../config/db");
-const authenticateToken = require("../middleware/authMiddleware");
-
+const {
+  authenticateToken,
+} = require("../middleware/authMiddleware");
 // =====================================================
 // ADMIN - GET ALL CONTACT ENQUIRIES
 // =====================================================
